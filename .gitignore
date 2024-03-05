@@ -55,3 +55,7 @@ MANIFEST
 
 # Idea projects files
 foapy.iws
+*.iws
+*.iml
+.idea
+.idea/
