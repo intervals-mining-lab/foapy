@@ -141,18 +141,23 @@ conda activate foapy
 ### Clone the repository
 
 1. Create an user account on GitHub if you do not already have one.
+2. Configure GPG signature if you do not have one already. You can follow the
+   * [Generating a new GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
+   * [Adding a GPG key to your GitHub account](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account)
+   * [Telling Git about your signing key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key)
+   * [Associating an email with your GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/associating-an-email-with-your-gpg-key)
 
-2. Fork the project [repository]: click on the *Fork* button near the top of the
+3. Fork the project [repository]: click on the *Fork* button near the top of the
    page. This creates a copy of the code under your account on GitHub.
 
-3. Clone this copy to your local disk:
+4. Clone this copy to your local disk:
 
    ```
    git clone git@github.com:YourLogin/foapy.git
    cd foapy
    ```
 
-4. You should run:
+5. You should run:
 
    ```
    pip install -U pip setuptools -e .
@@ -163,7 +168,7 @@ conda activate foapy
    ```{todo} if you are not using pre-commit, please remove the following item:
    ```
 
-5. Install [pre-commit]:
+6. Install [pre-commit]:
 
    ```
    pip install pre-commit
@@ -192,10 +197,13 @@ conda activate foapy
 
    ```
    git add <MODIFIED FILES>
-   git commit
+   git commit -S
    ```
 
    to record your changes in [git].
+
+   Use signed commits with the `-S` flag or configure your git to always sign.
+   You can read more about this in the [GitHub documentation](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
 
    ```{todo} if you are not using pre-commit, please remove the following item:
    ```
