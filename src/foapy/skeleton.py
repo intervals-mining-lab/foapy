@@ -26,8 +26,8 @@ import sys
 
 from foapy import __version__
 
-__author__ = "Igor Rodionov"
-__copyright__ = "Igor Rodionov"
+__author__ = "FOARLab"
+__copyright__ = "FOARLab"
 __license__ = "BSD-3-Clause"
 
 _logger = logging.getLogger(__name__)

@@ -2,8 +2,8 @@ import pytest
 
 from foapy.skeleton import fib, main
 
-__author__ = "Igor Rodionov"
-__copyright__ = "Igor Rodionov"
+__author__ = "FOARLab"
+__copyright__ = "FOARLab"
 __license__ = "BSD-3-Clause"
 
 
