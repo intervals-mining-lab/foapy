@@ -52,3 +52,10 @@ MANIFEST
 .venv*/
 .conda*/
 .python-version
+
+# Idea projects files
+foapy.iws
+*.iws
+*.iml
+.idea
+.idea/
