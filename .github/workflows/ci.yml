@@ -69,10 +69,6 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
       - uses: actions/setup-python@v5
         id: setup-python
         with:
@@ -99,10 +95,6 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
       - name: Finalize coverage report
         uses: coverallsapp/github-action@master
         with:
