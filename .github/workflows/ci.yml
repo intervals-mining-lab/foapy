@@ -26,9 +26,6 @@ concurrency:
     ${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 
-env:
-  COVERALLS_SERVICE_NUMBER: ${{ github.run_id }}-${{ github.run_attempt }}
-
 jobs:
   prepare:
     runs-on: ubuntu-latest
