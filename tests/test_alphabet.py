@@ -1,4 +1,4 @@
-from ..src.foapy.alphabet import alphabet
+from foapy.alphabet import alphabet
 
 
 def test_alphabet():
