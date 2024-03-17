@@ -3,6 +3,7 @@ from numpy.ma.testutils import assert_equal
 
 from foapy.ma_alphabet import ma_alphabet
 
+
 class TestMaFunctions:
     """
     Test functions for masked_arrays

@@ -1,6 +1,7 @@
 import numpy as np
 import numpy.ma as ma
 
+
 def ma_alphabet(mask_arr) -> np.ma.MaskedArray:
     """
     Implementation of ordered set - alphabet of elements.
@@ -83,4 +84,3 @@ def ma_alphabet(mask_arr) -> np.ma.MaskedArray:
         elif arr_index not in result_arr:  # Adding alphabet values
             result_arr.append(arr_index)
     return ma.masked_array(result_arr)  # Return and convert array
-
