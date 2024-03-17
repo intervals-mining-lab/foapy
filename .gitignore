@@ -59,4 +59,5 @@ foapy.iws
 *.iws
 *.iml
 .idea
+*.ipr
 .idea/
