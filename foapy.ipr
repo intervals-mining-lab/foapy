@@ -14,9 +14,7 @@
       <module fileurl="file://$PROJECT_DIR$/foapy.iml" filepath="$PROJECT_DIR$/foapy.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 (venv)" project-jdk-type="Python SDK">
-    <output url="file://$PROJECT_DIR$/out" />
-  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10" project-jdk-type="Python SDK" />
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
   </component>

@@ -1,6 +1,5 @@
 from foapy.alphabet import alphabet
 
-
 def test_alphabet():
     """Test list of unique array elements"""
     # ----test_1----
