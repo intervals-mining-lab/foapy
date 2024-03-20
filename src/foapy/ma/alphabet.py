@@ -83,7 +83,9 @@ def alphabet(X) -> np.ma.MaskedArray:
             return Exception
         elif ma.getdata(X)[arr_index] not in result_arr:  # Adding alphabet values
             result_arr.append(ma.getdata(X)[arr_index])
-    return ma.masked_array( # Return and convert array
+    return ma.masked_array(  # Return and convert array
         result_arr,
-        mask=[1 if mask_obj in unique_mask_obj else 0 for mask_obj in result_arr], #list comprehension to get mask
-    )  
+        mask=[
+            1 if mask_obj in unique_mask_obj else 0 for mask_obj in result_arr
+        ],  # list comprehension to get mask
+    )

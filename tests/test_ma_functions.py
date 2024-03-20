@@ -1,6 +1,8 @@
+from unittest import TestCase
+
 import numpy.ma as ma
 from numpy.ma.testutils import assert_equal
-from unittest import TestCase
+
 from foapy.ma.alphabet import alphabet
 
 
