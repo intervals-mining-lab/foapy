@@ -1,69 +1,56 @@
 import numpy.ma as ma
 from numpy.ma.testutils import assert_equal
+from unittest import TestCase
+from foapy.ma.alphabet import alphabet
 
-from foapy.ma_alphabet import ma_alphabet
 
-
-class TestMaFunctions:
+class TestMaAlphabet(TestCase):
     """
-    Test functions for masked_arrays
+    Test list of unique masked_array elements
     """
 
-    def test_ma_alphabet(self):
-        """Test list of unique masked_array elements"""
-        # ----test_1----
+    def test_string_values_with_mask(self):
         assert_equal(
-            ma_alphabet(
+            alphabet(
                 ma.masked_array(["a", "c", "c", "e", "d", "a"], [0, 0, 0, 1, 0, 0])
             ),
-            ma.masked_array(["a", "c", ma.masked, "d"]),
+            ma.masked_array(["a", "c", "e", "d"], mask=[0, 0, 1, 0]),
         )
 
-        # ----test_2----
+    def test_string_values_with_no_mask(self):
         assert_equal(
-            ma_alphabet(
+            alphabet(
                 ma.masked_array(["a", "c", "c", "e", "d", "a"], [0, 0, 0, 0, 0, 0])
             ),
-            ma.masked_array(["a", "c", "e", "d"]),
+            ma.masked_array(["a", "c", "e", "d"], mask=[0, 0, 0, 0]),
         )
 
-        # ----test_3----
+    def test_integer_values_with_no_mask(self):
         assert_equal(
-            ma_alphabet(ma.masked_array([1, 2, 2, 3, 4, 1], [0, 0, 0, 0, 0, 0])),
-            ma.masked_array([1, 2, 3, 4]),
+            alphabet(ma.masked_array([1, 2, 2, 3, 4, 1], [0, 0, 0, 0, 0, 0])),
+            ma.masked_array([1, 2, 3, 4], mask=[0, 0, 0, 0]),
         )
 
-        # ----test_4----
-        assert_equal(ma_alphabet(ma.masked_array([], [])), [])
+    def test_with_no_values(self):
+        assert_equal(alphabet(ma.masked_array([], [])), [])
 
-        # ----test_5----
+    def test_several_mask_obj(self):
         assert_equal(
-            ma_alphabet(
+            alphabet(
                 ma.masked_array(
-                    ["a", "b", "c", "a", "b", "c", "c", "c", "b", "a", "c", "b", "c"],
-                    [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
+                    ["a", "b", "c", "c", "b", "a"],
+                    [0, 1, 1, 1, 1, 0],
                 )
             ),
-            ma.masked_array(["a", ma.masked, "c"]),
+            ma.masked_array(["a", "b", "c"], mask=[0, 1, 1]),
         )
 
-        # ----test_6----
+    def test_with_exception(self):
         assert_equal(
-            ma_alphabet(
+            alphabet(
                 ma.masked_array(
-                    ["a", "b", "c", "a", "b", "c", "c", "c", "b", "a", "c", "b", "c"],
-                    [0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
-                )
-            ),
-            ma.masked_array(["a", ma.masked]),
-        )
-
-        # ----test_7----
-        assert_equal(
-            ma_alphabet(
-                ma.masked_array(
-                    ["a", "b", "c", "a", "b", "c", "c", "c", "b", "a", "c", "b", "c"],
-                    [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+                    ["a", "b", "c", "a", "b", "c", "b", "a"],
+                    [0, 1, 0, 0, 0, 0, 1, 0],
                 )
             ),
             Exception,

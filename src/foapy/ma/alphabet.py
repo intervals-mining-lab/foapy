@@ -2,7 +2,7 @@ import numpy as np
 import numpy.ma as ma
 
 
-def ma_alphabet(mask_arr) -> np.ma.MaskedArray:
+def alphabet(X) -> np.ma.MaskedArray:
     """
     Implementation of ordered set - alphabet of elements.
     Alphabet is list of all unique elements in particular sequence.
@@ -65,7 +65,7 @@ def ma_alphabet(mask_arr) -> np.ma.MaskedArray:
     >>> masked_a = ma.masked_array(a, mask)
     >>> b = ma_alphabet(masked_a)
     >>> b
-    ['а' --]
+    ['а' -- --]
 
     ----7----
     >>> a = ['a', 'b', 'c', 'a', 'b', 'c', 'c', 'c', 'b', 'a', 'c', 'b', 'c']
@@ -77,10 +77,13 @@ def ma_alphabet(mask_arr) -> np.ma.MaskedArray:
     """
 
     result_arr = []
-    unique_mask_obj = ma.unique(ma.getdata(mask_arr)[mask_arr.mask])
-    for arr_index in mask_arr:
-        if arr_index in unique_mask_obj:  # Checking for exception
+    unique_mask_obj = np.unique(ma.getdata(X)[X.mask])
+    for arr_index in range(len(X)):
+        if X[arr_index] in unique_mask_obj:  # Checking for exception
             return Exception
-        elif arr_index not in result_arr:  # Adding alphabet values
-            result_arr.append(arr_index)
-    return ma.masked_array(result_arr)  # Return and convert array
+        elif ma.getdata(X)[arr_index] not in result_arr:  # Adding alphabet values
+            result_arr.append(ma.getdata(X)[arr_index])
+    return ma.masked_array( # Return and convert array
+        result_arr,
+        mask=[1 if mask_obj in unique_mask_obj else 0 for mask_obj in result_arr], #list comprehension to get mask
+    )  
