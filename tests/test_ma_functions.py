@@ -1,9 +1,10 @@
 from unittest import TestCase
 
 import numpy.ma as ma
+import pytest
 from numpy.ma.testutils import assert_equal
 
-from foapy.ma.alphabet import alphabet
+from foapy.ma.alphabet import InconsistentOrderException, alphabet
 
 
 class TestMaAlphabet(TestCase):
@@ -12,48 +13,43 @@ class TestMaAlphabet(TestCase):
     """
 
     def test_string_values_with_mask(self):
-        assert_equal(
-            alphabet(
-                ma.masked_array(["a", "c", "c", "e", "d", "a"], [0, 0, 0, 1, 0, 0])
-            ),
-            ma.masked_array(["a", "c", "e", "d"], mask=[0, 0, 1, 0]),
-        )
+        X = ma.masked_array(["a", "c", "c", "e", "d", "a"], [0, 0, 0, 1, 0, 0])
+        expected = ma.masked_array(["a", "c", "e", "d"], mask=[0, 0, 1, 0])
+        exists = alphabet(X)
+        assert_equal(expected, exists)
 
     def test_string_values_with_no_mask(self):
-        assert_equal(
-            alphabet(
-                ma.masked_array(["a", "c", "c", "e", "d", "a"], [0, 0, 0, 0, 0, 0])
-            ),
-            ma.masked_array(["a", "c", "e", "d"], mask=[0, 0, 0, 0]),
-        )
+        X = ma.masked_array(["a", "c", "c", "e", "d", "a"], [0, 0, 0, 0, 0, 0])
+        expected = ma.masked_array(["a", "c", "e", "d"], mask=[0, 0, 0, 0])
+        exists = alphabet(X)
+        assert_equal(expected, exists)
 
     def test_integer_values_with_no_mask(self):
-        assert_equal(
-            alphabet(ma.masked_array([1, 2, 2, 3, 4, 1], [0, 0, 0, 0, 0, 0])),
-            ma.masked_array([1, 2, 3, 4], mask=[0, 0, 0, 0]),
-        )
+        X = ma.masked_array([1, 2, 2, 3, 4, 1], [0, 0, 0, 0, 0, 0])
+        expected = ma.masked_array([1, 2, 3, 4], mask=[0, 0, 0, 0])
+        exists = alphabet(X)
+        assert_equal(expected, exists)
 
     def test_with_no_values(self):
-        assert_equal(alphabet(ma.masked_array([], [])), [])
+        X = ma.masked_array([], [])
+        expected = ma.masked_array([], mask=[])
+        exists = alphabet(X)
+        assert_equal(expected, exists)
 
     def test_several_mask_obj(self):
-        assert_equal(
-            alphabet(
-                ma.masked_array(
-                    ["a", "b", "c", "c", "b", "a"],
-                    [0, 1, 1, 1, 1, 0],
-                )
-            ),
-            ma.masked_array(["a", "b", "c"], mask=[0, 1, 1]),
-        )
+        X = ma.masked_array(["a", "b", "c", "c", "b", "a"], [0, 1, 1, 1, 1, 0])
+        expected = ma.masked_array(["a", "b", "c"], mask=[0, 1, 1])
+        exists = alphabet(X)
+        assert_equal(expected, exists)
 
     def test_with_exception(self):
-        assert_equal(
-            alphabet(
-                ma.masked_array(
-                    ["a", "b", "c", "a", "b", "c", "b", "a"],
-                    [0, 1, 0, 0, 0, 0, 1, 0],
-                )
-            ),
-            Exception,
+        X = ma.masked_array(
+            ["a", "b", "c", "a", "b", "c", "b", "a"], [0, 1, 0, 0, 0, 0, 1, 0]
         )
+
+        with pytest.raises(InconsistentOrderException) as e_info:
+            alphabet(X)
+            self.assertEqual(
+                "Element b have mask and unmasked appearance",
+                e_info.message,
+            )

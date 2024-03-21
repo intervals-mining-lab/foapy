@@ -2,6 +2,10 @@ import numpy as np
 import numpy.ma as ma
 
 
+class InconsistentOrderException(Exception):  # initialise Exception class
+    pass
+
+
 def alphabet(X) -> np.ma.MaskedArray:
     """
     Implementation of ordered set - alphabet of elements.
@@ -80,7 +84,9 @@ def alphabet(X) -> np.ma.MaskedArray:
     unique_mask_obj = np.unique(ma.getdata(X)[X.mask])
     for arr_index in range(len(X)):
         if X[arr_index] in unique_mask_obj:  # Checking for exception
-            return Exception
+            raise InconsistentOrderException(
+                {"message": f"Element{X[arr_index]} have mask and unmasked appearance"}
+            )
         elif ma.getdata(X)[arr_index] not in result_arr:  # Adding alphabet values
             result_arr.append(ma.getdata(X)[arr_index])
     return ma.masked_array(  # Return and convert array
