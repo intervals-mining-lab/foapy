@@ -2,7 +2,7 @@ import numpy as np
 import numpy.ma as ma
 
 
-class InconsistentOrderException(Exception):  # initialise Exception class
+class InconsistentOrderException(Exception):  # Initialise Exception class
     pass
 
 
@@ -10,7 +10,8 @@ def alphabet(X) -> np.ma.MaskedArray:
     """
     Implementation of ordered set - alphabet of elements.
     Alphabet is list of all unique elements in particular sequence.
-    Parametres
+
+    Parameters
     ----------
     X: masked_array
         Array to get unique values.
@@ -80,18 +81,26 @@ def alphabet(X) -> np.ma.MaskedArray:
     Exception
     """
 
-    result_arr = []
-    unique_mask_obj = np.unique(ma.getdata(X)[X.mask])
-    for arr_index in range(len(X)):
-        if X[arr_index] in unique_mask_obj:  # Checking for exception
+    if X.ndim > 1:  # Checking for d1 array
+        raise InconsistentOrderException(
+            {"message": "Incorrect array form. Excpected d1 array"}
+        )
+
+    unique_mask_X = np.unique(ma.getdata(X)[X.mask])
+    for i in X:
+        if i in unique_mask_X:  # Checking for exception
             raise InconsistentOrderException(
-                {"message": f"Element{X[arr_index]} have mask and unmasked appearance"}
+                {"message": f"Element {i} have mask and unmasked appearance"}
             )
-        elif ma.getdata(X)[arr_index] not in result_arr:  # Adding alphabet values
-            result_arr.append(ma.getdata(X)[arr_index])
+    result_arr = np.array([])
+    for i in ma.getdata(X):
+        if i not in result_arr:
+            result_arr = np.append(result_arr, i)
+            # Adding alphabet values
+
     return ma.masked_array(  # Return and convert array
         result_arr,
         mask=[
-            1 if mask_obj in unique_mask_obj else 0 for mask_obj in result_arr
+            1 if mask_obj in unique_mask_X else 0 for mask_obj in result_arr
         ],  # list comprehension to get mask
     )
