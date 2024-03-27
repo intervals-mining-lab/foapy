@@ -54,7 +54,7 @@ class TestMaAlphabet(TestCase):
 
     def test_with_no_values(self):
         X = ma.masked_array([], mask=[])
-        expected = ma.masked_array([], mask=[], dtype="<U32")
+        expected = ma.masked_array([], mask=[])
         exists = alphabet(X)
         assert_equal(expected, exists)
 
