@@ -1,6 +1,10 @@
 import numpy as np
 
 
+class InconsistentOrderException(Exception):  # Initialise Exception class
+    pass
+
+
 def alphabet(X) -> np.ndarray:
     """
     Implementation of ordered set - alphabet of elements.
@@ -34,10 +38,20 @@ def alphabet(X) -> np.ndarray:
     >>> result
     []
     """
-    result = []
+    convert_arr = np.array(X)
+    print(np.shape(convert_arr))
+    if convert_arr.ndim > 1:  # Checking for d1 array
+        raise InconsistentOrderException(
+            {"message": "Incorrect array form. Excpected d1 array"}
+        )
+    result = np.array([])
 
-    for i in X:
+    for i in convert_arr:
         if i not in result:
-            result.append(i)
+
+            result = np.append(result, i)
 
     return result
+
+
+print(type(alphabet([1, 2, 3])))
