@@ -4,7 +4,7 @@ import numpy.ma as ma
 import pytest
 from numpy.ma.testutils import assert_equal
 
-from foapy.ma.alphabet import InconsistentOrderException, alphabet
+from foapy.ma.alphabet import InconsistentOrderException, Not1DArrayException, alphabet
 
 
 class TestMaAlphabet(TestCase):
@@ -14,17 +14,13 @@ class TestMaAlphabet(TestCase):
 
     def test_string_values_with_mask(self):
         X = ma.masked_array(["a", "c", "c", "e", "d", "a"], mask=[0, 0, 0, 1, 0, 0])
-        expected = ma.masked_array(
-            ["a", "c", "e", "d"], mask=[0, 0, 1, 0], dtype="<U32"
-        )
+        expected = ma.masked_array(["a", "c", "e", "d"], mask=[0, 0, 1, 0])
         exists = alphabet(X)
         assert_equal(expected, exists)
 
     def test_string_values_with_no_mask(self):
         X = ma.masked_array(["a", "c", "c", "e", "d", "a"], mask=[0, 0, 0, 0, 0, 0])
-        expected = ma.masked_array(
-            ["a", "c", "e", "d"], mask=[0, 0, 0, 0], dtype="<U32"
-        )
+        expected = ma.masked_array(["a", "c", "e", "d"], mask=[0, 0, 0, 0])
         exists = alphabet(X)
         assert_equal(expected, exists)
 
@@ -48,7 +44,7 @@ class TestMaAlphabet(TestCase):
 
     def test_with_single_string_value_with_mask(self):
         X = ma.masked_array(["a"], mask=[1])
-        expected = ma.masked_array(["a"], mask=[1], dtype="<U32")
+        expected = ma.masked_array(["a"], mask=[1])
         exists = alphabet(X)
         assert_equal(expected, exists)
 
@@ -60,7 +56,7 @@ class TestMaAlphabet(TestCase):
 
     def test_several_mask_obj(self):
         X = ma.masked_array(["a", "b", "c", "c", "b", "a"], mask=[0, 1, 1, 1, 1, 0])
-        expected = ma.masked_array(["a", "b", "c"], mask=[0, 1, 1], dtype="<U32")
+        expected = ma.masked_array(["a", "b", "c"], mask=[0, 1, 1])
         exists = alphabet(X)
         assert_equal(expected, exists)
 
@@ -77,11 +73,11 @@ class TestMaAlphabet(TestCase):
             )
 
     def test_with_d2_array_exception(self):
-        X = ma.masked_array([[[2, 2, 2], [2, 2, 2]]], mask=[[0, 0, 0], [0, 0, 0]])
-        with pytest.raises(InconsistentOrderException) as e_info:
+        X = ma.masked_array([[2, 2, 2], [2, 2, 2]], mask=[[0, 0, 0], [0, 0, 0]])
+        with pytest.raises(Not1DArrayException) as e_info:
             alphabet(X)
             self.assertEqual(
-                "Incorrect array form. Excpected d1 array",
+                "Incorrect array form. Excpected d1 array, exists 2",
                 e_info.message,
             )
 
@@ -90,9 +86,9 @@ class TestMaAlphabet(TestCase):
             [[[1], [3]], [[6], [9]], [[6], [3]]],
             mask=[[[1], [0]], [[0], [0]], [[0], [0]]],
         )
-        with pytest.raises(InconsistentOrderException) as e_info:
+        with pytest.raises(Not1DArrayException) as e_info:
             alphabet(X)
             self.assertEqual(
-                "Incorrect array form. Excpected d1 array",
+                "Incorrect array form. Excpected d1 array, exists 3",
                 e_info.message,
             )

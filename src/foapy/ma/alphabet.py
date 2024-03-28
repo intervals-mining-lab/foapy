@@ -2,7 +2,13 @@ import numpy as np
 import numpy.ma as ma
 
 
-class InconsistentOrderException(Exception):  # Initialise Exception class
+class InconsistentOrderException(
+    Exception
+):  # Initialise Exception class for wrong mask
+    pass
+
+
+class Not1DArrayException(Exception):  # Initialise Exception class for not d1 arrays
     pass
 
 
@@ -18,8 +24,8 @@ def alphabet(X) -> np.ma.MaskedArray:
 
     Returns
     -------
-    result: masked_array or Exception
-        Exception if wrong mask, masked_array otherwise.
+    result: masked_array or Exception.
+        Exception if wrong mask or not d1 array, masked_array otherwise.
 
     Examples
     --------
@@ -79,11 +85,19 @@ def alphabet(X) -> np.ma.MaskedArray:
     >>> b = ma_alphabet(masked_a)
     >>> b
     Exception
+
+     ----8----
+    >>> a = [[2, 2, 2], [2, 2, 2]]
+    >>> mask = [[0, 0, 0], [0, 0, 0]]
+    >>> masked_a = ma.masked_array(a, mask)
+    >>> b = ma_alphabet(masked_a)
+    >>> b
+    Exception
     """
 
     if X.ndim > 1:  # Checking for d1 array
-        raise InconsistentOrderException(
-            {"message": "Incorrect array form. Excpected d1 array"}
+        raise Not1DArrayException(
+            {"message": f"Incorrect array form. Expected d1 array, exists {X.ndim}"}
         )
 
     unique_mask_X = np.unique(ma.getdata(X)[X.mask])
@@ -92,10 +106,10 @@ def alphabet(X) -> np.ma.MaskedArray:
             raise InconsistentOrderException(
                 {"message": f"Element {i} have mask and unmasked appearance"}
             )
-    result_arr = np.array([])
+    result_arr = []
     for i in ma.getdata(X):
         if i not in result_arr:
-            result_arr = np.append(result_arr, i)
+            result_arr.append(i)
             # Adding alphabet values
 
     return ma.masked_array(  # Return and convert array
