@@ -4,7 +4,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-from foapy.alphabet import InconsistentOrderException, alphabet
+from foapy.alphabet import alphabet
+from foapy.exceptions import Not1DArrayException
 
 
 class TestAlphabet(TestCase):
@@ -30,19 +31,19 @@ class TestAlphabet(TestCase):
 
     def test_with_d2_array_exception(self):
         X = [[[2, 2, 2], [2, 2, 2]]]
-        with pytest.raises(InconsistentOrderException) as e_info:
+        with pytest.raises(Not1DArrayException) as e_info:
             alphabet(X)
             self.assertEqual(
-                "Incorrect array form. Excpected d1 array",
+                "Incorrect array form. Excpected d1 array, exists 2",
                 e_info.message,
             )
 
     def test_with_d3_array_exception(self):
         X = [[[1], [3]], [[6], [9]], [[6], [3]]]
-        with pytest.raises(InconsistentOrderException) as e_info:
+        with pytest.raises(Not1DArrayException) as e_info:
             alphabet(X)
             self.assertEqual(
-                "Incorrect array form. Excpected d1 array",
+                "Incorrect array form. Excpected d1 array, exists 3",
                 e_info.message,
             )
 

@@ -1,8 +1,6 @@
 import numpy as np
 
-
-class InconsistentOrderException(Exception):  # Initialise Exception class
-    pass
+from foapy.exceptions import Not1DArrayException
 
 
 def alphabet(X) -> np.ndarray:
@@ -16,7 +14,8 @@ def alphabet(X) -> np.ndarray:
 
     Returns
     —-----
-    result: array.
+    result: np.array or Exception
+    Exception if not d1 array, np.array otherwise.
 
     Examples
     —------
@@ -33,25 +32,30 @@ def alphabet(X) -> np.ndarray:
     [0, 1, 2, 3, 4]
 
     ---3----
-    >>> a = [0, 1, 2, 3, 4]
+    >>> a = []
     >>> result = alphabet(a)
     >>> result
     []
+
+    ---4----
+    >>> a = [[2, 2, 2], [2, 2, 2]]
+    >>> result = alphabet(a)
+    >>> result
+    Exception
     """
-    convert_arr = np.array(X)
-    print(np.shape(convert_arr))
+    convert_arr = np.asanyarray(X)
     if convert_arr.ndim > 1:  # Checking for d1 array
-        raise InconsistentOrderException(
-            {"message": "Incorrect array form. Excpected d1 array"}
+        raise Not1DArrayException(
+            {
+                "message": "Incorrect array form. Expected d1 array,"
+                + f"exists {convert_arr.ndim}"
+            }
         )
-    result = np.array([])
+    result = []
 
     for i in convert_arr:
         if i not in result:
 
-            result = np.append(result, i)
+            result.append(i)
 
-    return result
-
-
-print(type(alphabet([1, 2, 3])))
+    return np.array(result)
