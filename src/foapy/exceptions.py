@@ -1,6 +1,6 @@
-class Not1DArrayException(Exception):  # Initialise Exception class
+class Not1DArrayException(Exception):
     pass
 
 
-class InconsistentOrderException(Exception):  # Initialise Exception class
+class InconsistentOrderException(Exception): 
     pass

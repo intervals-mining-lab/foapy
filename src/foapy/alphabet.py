@@ -55,7 +55,6 @@ def alphabet(X) -> np.ndarray:
 
     for i in convert_arr:
         if i not in result:
-
             result.append(i)
 
     return np.array(result)
