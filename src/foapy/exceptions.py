@@ -2,5 +2,5 @@ class Not1DArrayException(Exception):
     pass
 
 
-class InconsistentOrderException(Exception): 
+class InconsistentOrderException(Exception):
     pass
