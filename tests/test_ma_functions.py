@@ -4,7 +4,8 @@ import numpy.ma as ma
 import pytest
 from numpy.ma.testutils import assert_equal
 
-from foapy.ma.alphabet import InconsistentOrderException, Not1DArrayException, alphabet
+from foapy.exceptions import InconsistentOrderException, Not1DArrayException
+from foapy.ma.alphabet import alphabet
 
 
 class TestMaAlphabet(TestCase):

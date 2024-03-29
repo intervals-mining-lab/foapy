@@ -1,15 +1,7 @@
 import numpy as np
 import numpy.ma as ma
 
-
-class InconsistentOrderException(
-    Exception
-):  # Initialise Exception class for wrong mask
-    pass
-
-
-class Not1DArrayException(Exception):  # Initialise Exception class for not d1 arrays
-    pass
+from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 
 
 def alphabet(X) -> np.ma.MaskedArray:
