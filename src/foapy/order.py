@@ -3,6 +3,7 @@ import numpy as np
 from foapy.alphabet import alphabet
 from foapy.exceptions import Not1DArrayException
 
+
 def order(X, return_alphabet=False):
     """
     Find array sequence  in order of their appearance
@@ -54,7 +55,7 @@ def order(X, return_alphabet=False):
     >>> b = order(a)
     >>> b
     [0, 1, 1, 2, 3, 0]
-    
+
      ----6----
     >>> a = [[2, 2, 2], [2, 2, 2]]
     >>> b = order(a)
@@ -82,7 +83,7 @@ def order(X, return_alphabet=False):
 
     for i in convert_arr:  # getting mask for array
         result.append(np.where(alphabet_values == i)[0][0])
-        
+
     if return_alphabet:
         return np.array(result), alphabet_values
 
