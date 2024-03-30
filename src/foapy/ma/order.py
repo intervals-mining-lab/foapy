@@ -131,7 +131,7 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
     for i in result:  # getting mask for array
         mask_line = []
         for j in i:
-            if j == None:
+            if j is None:
                 mask_line.append(1)
             else:
                 mask_line.append(0)
