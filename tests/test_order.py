@@ -54,3 +54,12 @@ class TestMaOrder(TestCase):
                 "Incorrect array form. Excpected d1 array, exists 3",
                 e_info.message,
             )
+
+    def test_with_return_alphabet(self):
+        X = ["a", "c", "c", "e", "d", "a"]
+        expected_alphabet = ["a", "c", "e", "d"]
+        expected_array = [0, 1, 1, 2, 3, 0]
+
+        exists_array, exists_alphabet = order(X, True)
+        assert_array_equal(expected_alphabet, exists_alphabet)
+        assert_array_equal(expected_array, exists_array)
