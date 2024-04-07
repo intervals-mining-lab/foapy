@@ -52,11 +52,9 @@ def alphabet(X) -> np.ndarray:
             }
         )
     result = {}
-    number = 0
 
     for i in convert_arr:
         if i not in result:
-            result[i] = number
-            number += 1
+            result[i] = None
 
     return np.fromiter(result.keys(), dtype=convert_arr.dtype)
