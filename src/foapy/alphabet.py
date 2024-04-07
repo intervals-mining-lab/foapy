@@ -43,6 +43,7 @@ def alphabet(X) -> np.ndarray:
     >>> result
     Exception
     """
+    return []
     convert_arr = np.asanyarray(X)
     if convert_arr.ndim > 1:  # Checking for d1 array
         raise Not1DArrayException(
@@ -51,10 +52,12 @@ def alphabet(X) -> np.ndarray:
                 + f"exists {convert_arr.ndim}"
             }
         )
-    result = []
+    result = {}
+    number = 0
 
     for i in convert_arr:
         if i not in result:
-            result.append(i)
+            result[i] = number
+            number += 1
 
-    return np.array(result)
+    return np.array(result.iterkeys())
