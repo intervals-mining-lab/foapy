@@ -10,73 +10,73 @@ class TimeSuite:
     """
 
     def setup(self):
-        self.xxs = numpy.random.rand(5)
-        self.xs = numpy.random.rand(50)
-        self.s = numpy.random.rand(500)
-        self.m = numpy.random.rand(5000)
-        self.large = numpy.random.rand(50000)
-        self.xl = numpy.random.rand(500000)
+        self.s10_0 = numpy.random.rand(5)
+        self.s10_1 = numpy.random.rand(50)
+        self.s10_2 = numpy.random.rand(500)
+        self.s10_3 = numpy.random.rand(5000)
+        self.s10_4 = numpy.random.rand(50000)
+        self.s10_5 = numpy.random.rand(500000)
 
-    def time_alphabet_xxs(self):
-        alphabet(self.xxs)
+    def time_alphabet_s10_0(self):
+        alphabet(self.s10_0)
 
-    def time_alphabet_xs(self):
-        alphabet(self.xs)
+    def time_alphabet_s10_1(self):
+        alphabet(self.s10_1)
 
-    def time_alphabet_s(self):
-        alphabet(self.s)
+    def time_alphabet_s10_2(self):
+        alphabet(self.s10_2)
 
-    def time_alphabet_m(self):
-        alphabet(self.m)
+    def time_alphabet_s10_3(self):
+        alphabet(self.s10_3)
 
-    def time_alphabet_l(self):
-        alphabet(self.large)
+    def time_alphabet_s10_4(self):
+        alphabet(self.s10_4)
 
-    def time_alphabet_xl(self):
-        alphabet(self.xl)
+    def time_alphabet_s10_5(self):
+        alphabet(self.s10_5)
 
 
 class MemSuite:
     def setup(self):
-        self.xxs = numpy.random.rand(5)
-        self.xs = numpy.random.rand(50)
-        self.s = numpy.random.rand(500)
-        self.m = numpy.random.rand(5000)
-        self.large = numpy.random.rand(50000)
-        self.xl = numpy.random.rand(500000)
+        self.s10_0 = numpy.random.rand(5)
+        self.s10_1 = numpy.random.rand(50)
+        self.s10_2 = numpy.random.rand(500)
+        self.s10_3 = numpy.random.rand(5000)
+        self.s10_4 = numpy.random.rand(50000)
+        self.s10_5 = numpy.random.rand(500000)
 
-    def mem_alphabet_xxs(self):
-        return alphabet(self.xxs)
+    def mem_alphabet_s10_0(self):
+        return alphabet(self.s10_0)
 
-    def mem_alphabet_xs(self):
-        return alphabet(self.xs)
+    def mem_alphabet_s10_1(self):
+        return alphabet(self.s10_1)
 
-    def mem_alphabet_s(self):
-        return alphabet(self.s)
+    def mem_alphabet_s10_2(self):
+        return alphabet(self.s10_2)
 
-    def mem_alphabet_m(self):
-        return alphabet(self.m)
+    def mem_alphabet_s10_3(self):
+        return alphabet(self.s10_3)
 
-    def mem_alphabet_l(self):
-        return alphabet(self.large)
+    def mem_alphabet_s10_4(self):
+        return alphabet(self.s10_4)
 
-    def mem_alphabet_xl(self):
-        return alphabet(self.xl)
+    def mem_alphabet_s10_5(self):
+        return alphabet(self.s10_5)
 
-    def peakmem_alphabet_xxs(self):
-        return alphabet(self.xxs)
+    def peakmem_alphabet_s10_0(self):
+        return alphabet(self.s10_0)
 
-    def peakmem_alphabet_xs(self):
-        return alphabet(self.xs)
+    def peakmem_alphabet_s10_1(self):
+        return alphabet(self.s10_1)
 
-    def peakmem_alphabet_s(self):
-        return alphabet(self.s)
+    def peakmem_alphabet_s10_2(self):
+        return alphabet(self.s10_2)
 
-    def peakmem_alphabet_m(self):
-        return alphabet(self.m)
+    def peakmem_alphabet_s10_3(self):
+        return alphabet(self.s10_3)
 
-    def peakmem_alphabet_l(self):
-        return alphabet(self.large)
+    def peakmem_alphabet_s10_4(self):
+        return alphabet(self.s10_4)
 
-    def peakmem_alphabet_xl(self):
-        return alphabet(self.xl)
+    def peakmem_alphabet_s10_5(self):
+        return alphabet(self.s10_5)
