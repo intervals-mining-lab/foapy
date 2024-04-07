@@ -116,6 +116,7 @@ jobs:
       - name: Run benchmark
         run: |-
           cd ./benchmarks
+          asv setup
           asv check -E existing
           asv machine --yes
           asv continuous ${{ github.event.pull_request.base.sha }} ${{ github.sha }}
