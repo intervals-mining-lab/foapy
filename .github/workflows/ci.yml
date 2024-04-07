@@ -110,10 +110,10 @@ jobs:
         id: setup-python
         with: {python-version: "3.11"}
       - name: Install ASV
-        run: >-
+        run: |-
           pipx install --python '${{ steps.setup-python.outputs.python-path }}' asv
       - name: Run benchmark
-        run: >-
+        run: |-
           cd ./benchmarks
           asv run --python=same
 
