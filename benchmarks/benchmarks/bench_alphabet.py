@@ -46,19 +46,37 @@ class MemSuite:
         self.xl = numpy.random.rand(500000)
 
     def mem_alphabet_xxs(self):
-        alphabet(self.xxs)
+        return alphabet(self.xxs)
 
     def mem_alphabet_xs(self):
-        alphabet(self.xs)
+        return alphabet(self.xs)
 
     def mem_alphabet_s(self):
-        alphabet(self.s)
+        return alphabet(self.s)
 
     def mem_alphabet_m(self):
-        alphabet(self.m)
+        return alphabet(self.m)
 
     def mem_alphabet_l(self):
-        alphabet(self.large)
+        return alphabet(self.large)
 
     def mem_alphabet_xl(self):
-        alphabet(self.xl)
+        return alphabet(self.xl)
+
+    def peakmem_alphabet_xxs(self):
+        return alphabet(self.xxs)
+
+    def peakmem_alphabet_xs(self):
+        return alphabet(self.xs)
+
+    def peakmem_alphabet_s(self):
+        return alphabet(self.s)
+
+    def peakmem_alphabet_m(self):
+        return alphabet(self.m)
+
+    def peakmem_alphabet_l(self):
+        return alphabet(self.large)
+
+    def peakmem_alphabet_xl(self):
+        return alphabet(self.xl)
