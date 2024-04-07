@@ -16,6 +16,8 @@ class TimeSuite:
         self.s10_3 = numpy.random.rand(5000)
         self.s10_4 = numpy.random.rand(50000)
         self.s10_5 = numpy.random.rand(500000)
+        self.s10_6 = numpy.random.rand(5000000)
+        self.s10_7 = numpy.random.rand(50000000)
 
     def time_alphabet_s10_0(self):
         alphabet(self.s10_0)
@@ -35,6 +37,12 @@ class TimeSuite:
     def time_alphabet_s10_5(self):
         alphabet(self.s10_5)
 
+    def time_alphabet_s10_6(self):
+        alphabet(self.s10_6)
+
+    def time_alphabet_s10_7(self):
+        alphabet(self.s10_7)
+
 
 class MemSuite:
     def setup(self):
@@ -44,6 +52,8 @@ class MemSuite:
         self.s10_3 = numpy.random.rand(5000)
         self.s10_4 = numpy.random.rand(50000)
         self.s10_5 = numpy.random.rand(500000)
+        self.s10_6 = numpy.random.rand(5000000)
+        self.s10_7 = numpy.random.rand(50000000)
 
     def mem_alphabet_s10_0(self):
         return alphabet(self.s10_0)
@@ -63,6 +73,12 @@ class MemSuite:
     def mem_alphabet_s10_5(self):
         return alphabet(self.s10_5)
 
+    def mem_alphabet_s10_6(self):
+        return alphabet(self.s10_6)
+
+    def mem_alphabet_s10_7(self):
+        return alphabet(self.s10_7)
+
     def peakmem_alphabet_s10_0(self):
         return alphabet(self.s10_0)
 
@@ -80,3 +96,9 @@ class MemSuite:
 
     def peakmem_alphabet_s10_5(self):
         return alphabet(self.s10_5)
+
+    def peakmem_alphabet_s10_6(self):
+        return alphabet(self.s10_6)
+
+    def peakmem_alphabet_s10_7(self):
+        return alphabet(self.s10_7)
