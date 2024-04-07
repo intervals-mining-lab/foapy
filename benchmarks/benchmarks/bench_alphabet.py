@@ -1,104 +1,50 @@
 import numpy
+from numpy import fix
 
 from foapy.alphabet import alphabet
 
-
-class TimeSuite:
-    """
-    An example benchmark that times the performance of various kinds
-    of iterating over dictionaries in Python.
-    """
-
-    def setup(self):
-        self.s10_0 = numpy.random.rand(5)
-        self.s10_1 = numpy.random.rand(50)
-        self.s10_2 = numpy.random.rand(500)
-        self.s10_3 = numpy.random.rand(5000)
-        self.s10_4 = numpy.random.rand(50000)
-        self.s10_5 = numpy.random.rand(500000)
-        self.s10_6 = numpy.random.rand(5000000)
-        self.s10_7 = numpy.random.rand(50000000)
-
-    def time_alphabet_s10_0(self):
-        alphabet(self.s10_0)
-
-    def time_alphabet_s10_1(self):
-        alphabet(self.s10_1)
-
-    def time_alphabet_s10_2(self):
-        alphabet(self.s10_2)
-
-    def time_alphabet_s10_3(self):
-        alphabet(self.s10_3)
-
-    def time_alphabet_s10_4(self):
-        alphabet(self.s10_4)
-
-    def time_alphabet_s10_5(self):
-        alphabet(self.s10_5)
-
-    def time_alphabet_s10_6(self):
-        alphabet(self.s10_6)
-
-    def time_alphabet_s10_7(self):
-        alphabet(self.s10_7)
+length = [5, 50, 500, 5000, 50000, 500000, 5000000, 50000000]
 
 
-class MemSuite:
-    def setup(self):
-        self.s10_0 = numpy.random.rand(5)
-        self.s10_1 = numpy.random.rand(50)
-        self.s10_2 = numpy.random.rand(500)
-        self.s10_3 = numpy.random.rand(5000)
-        self.s10_4 = numpy.random.rand(50000)
-        self.s10_5 = numpy.random.rand(500000)
-        self.s10_6 = numpy.random.rand(5000000)
-        self.s10_7 = numpy.random.rand(50000000)
+def best_case(length):
+    return numpy.ones((length,), dtype=int)
 
-    def mem_alphabet_s10_0(self):
-        return alphabet(self.s10_0)
 
-    def mem_alphabet_s10_1(self):
-        return alphabet(self.s10_1)
+def dna_case(length):
+    nucleotides = ["A", "C", "G", "T"]
+    return numpy.random.choice(nucleotides, length)
 
-    def mem_alphabet_s10_2(self):
-        return alphabet(self.s10_2)
 
-    def mem_alphabet_s10_3(self):
-        return alphabet(self.s10_3)
+def normal_case(length):
+    alphabet = numpy.arange(0, fix(length * 0.2), dtype=int)
+    return numpy.random.choice(alphabet, length)
 
-    def mem_alphabet_s10_4(self):
-        return alphabet(self.s10_4)
 
-    def mem_alphabet_s10_5(self):
-        return alphabet(self.s10_5)
+def worst_case(length):
+    return numpy.random.rand(length)
 
-    def mem_alphabet_s10_6(self):
-        return alphabet(self.s10_6)
 
-    def mem_alphabet_s10_7(self):
-        return alphabet(self.s10_7)
+class AlphabetSuite:
+    params = (length, ["Best", "DNA", "Normal", "Worst"])
+    param_names = ["length", "case"]
 
-    def peakmem_alphabet_s10_0(self):
-        return alphabet(self.s10_0)
+    data = None
 
-    def peakmem_alphabet_s10_1(self):
-        return alphabet(self.s10_1)
+    def setup(self, length, case):
+        if case == "Best":
+            self.data = best_case(length)
+        elif case == "DNA":
+            self.data = dna_case(length)
+        elif case == "Normal":
+            self.data = normal_case(length)
+        elif case == "Worst":
+            self.data = worst_case(length)
 
-    def peakmem_alphabet_s10_2(self):
-        return alphabet(self.s10_2)
+    def time_alphabet(self, length, case):
+        alphabet(self.data)
 
-    def peakmem_alphabet_s10_3(self):
-        return alphabet(self.s10_3)
+    def mem_alphabet(self, length, case):
+        return alphabet(self.data)
 
-    def peakmem_alphabet_s10_4(self):
-        return alphabet(self.s10_4)
-
-    def peakmem_alphabet_s10_5(self):
-        return alphabet(self.s10_5)
-
-    def peakmem_alphabet_s10_6(self):
-        return alphabet(self.s10_6)
-
-    def peakmem_alphabet_s10_7(self):
-        return alphabet(self.s10_7)
+    def peakmem_alphabet(self, length, case):
+        return alphabet(self.data)
