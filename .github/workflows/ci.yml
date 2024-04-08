@@ -125,11 +125,14 @@ jobs:
           asv continuous ${{ github.event.pull_request.base.sha }} HEAD || true
           REPORT=$(asv compare ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
           echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
-          echo "report=${REPORT}" >> $GITHUB_OUTPUT
+          REPORT="${REPORT}"
+          echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
+          echo "${REPORT}" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
 
       - uses: mshick/add-pr-comment@v2
         with:
-          message: ${{ steps.benchmark.outputs.report }}
+          message: ${{ env.REPORT_RESULT }}
 
   publish:
     needs: benchmark
