@@ -117,8 +117,8 @@ jobs:
         run: |-
           cd ./benchmarks
           asv setup -v || true
-          asv continuous ${{ github.event.pull_request.base.sha }} HEAD || true
-          asv compare ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed >> $GITHUB_STEP_SUMMARY
+          asv continuous benchmarks HEAD || true
+          asv compare benchmarks HEAD --split --only-changed >> $GITHUB_STEP_SUMMARY
 
   publish:
     needs: benchmark
