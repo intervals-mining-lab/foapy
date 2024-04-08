@@ -115,13 +115,21 @@ jobs:
       - name: Install ASV
         run: |-
           pipx install --python '${{ steps.setup-python.outputs.python-path }}' asv virtualenv build
+
       - name: Run benchmark
+        id: benchmark
         run: |-
           cd ./benchmarks
           asv machine --yes || true
           asv setup -v || true
           asv continuous ${{ github.event.pull_request.base.sha }} HEAD || true
-          asv compare ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed >> $GITHUB_STEP_SUMMARY
+          REPORT=$(asv compare ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
+          echo ${REPORT} >> $GITHUB_STEP_SUMMARY
+          echo "report=${REPORT}" >> $GITHUB_OUTPUT
+
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message: ${{ steps.benchmark.outputs.report }}
 
   publish:
     needs: benchmark
