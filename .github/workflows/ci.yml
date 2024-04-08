@@ -112,7 +112,7 @@ jobs:
         with: {python-version: "3.11"}
       - name: Install ASV
         run: |-
-          pipx install --python '${{ steps.setup-python.outputs.python-path }}' asv virtualenv packaging build
+          pipx install --python '${{ steps.setup-python.outputs.python-path }}' asv virtualenv build
       - name: Run benchmark
         run: |-
           cd ./benchmarks
