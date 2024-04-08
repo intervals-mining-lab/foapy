@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 concurrency:
   group: >-
@@ -101,8 +102,42 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
 
-  publish:
+  benchmark:
     needs: finalize
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'push' && ! contains(github.ref, 'refs/tags/') }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        id: setup-python
+        with: {python-version: "3.11"}
+      - name: Install ASV
+        run: |-
+          pipx install --python '${{ steps.setup-python.outputs.python-path }}' asv virtualenv build
+
+      - name: Run benchmark
+        id: benchmark
+        run: |-
+          cd ./benchmarks
+          asv machine --yes || true
+          asv setup -v || true
+          asv continuous ${{ github.event.pull_request.base.sha }} HEAD || true
+          REPORT=$(asv compare ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
+          echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
+          REPORT="${REPORT}"
+          echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
+          echo "${REPORT}" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message: |-
+            ${{ env.REPORT_RESULT }}
+
+  publish:
+    needs: benchmark
     if: ${{ github.event_name == 'push' && contains(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-latest
     permissions:

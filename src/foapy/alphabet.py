@@ -51,10 +51,6 @@ def alphabet(X) -> np.ndarray:
                 + f"exists {convert_arr.ndim}"
             }
         )
-    result = []
 
-    for i in convert_arr:
-        if i not in result:
-            result.append(i)
-
-    return np.array(result)
+    _, indexes = np.unique(convert_arr, return_index=True)
+    return convert_arr[np.sort(indexes)]
