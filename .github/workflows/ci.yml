@@ -132,6 +132,7 @@ jobs:
           echo 'EOF' >> $GITHUB_ENV
 
       - uses: mshick/add-pr-comment@v2
+        if: ${{ env.REPORT_RESULT != '' }}
         with:
           message: |-
             ${{ env.REPORT_RESULT }}
