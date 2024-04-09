@@ -1,9 +1,22 @@
+import os
+
 import numpy
+from asv_runner.benchmarks.mark import skip_params_if
 from numpy import fix
 
 from foapy.alphabet import alphabet
 
 length = [5, 50, 500, 5000, 50000, 500000, 5000000, 50000000]
+skip = [
+    (5000000, "Worst"),
+    (5000000, "DNA"),
+    (5000000, "Normal"),
+    (5000000, "Best"),
+    (50000000, "Worst"),
+    (50000000, "DNA"),
+    (50000000, "Normal"),
+    (50000000, "Best"),
+]
 
 
 def best_case(length):
@@ -40,11 +53,14 @@ class AlphabetSuite:
         elif case == "Worst":
             self.data = worst_case(length)
 
+    @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def time_alphabet(self, length, case):
         alphabet(self.data)
 
+    @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def mem_alphabet(self, length, case):
         return alphabet(self.data)
 
+    @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def peakmem_alphabet(self, length, case):
         return alphabet(self.data)
