@@ -37,7 +37,6 @@ def normal_case(length):
     alphabet = numpy.random.choice(
         numpy.arange(0, fix(length * 0.2), dtype=int), length
     )
-    print(alphabet)
     generate_mask = numpy.unique(
         numpy.random.choice(alphabet, numpy.random.randint(0, length))
     )
