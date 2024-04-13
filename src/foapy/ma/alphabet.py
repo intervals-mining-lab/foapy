@@ -94,19 +94,19 @@ def alphabet(X) -> np.ma.MaskedArray:
 
     unique_mask_X = np.unique(ma.getdata(X)[X.mask])
     for i in X:
-        if i in unique_mask_X:  # Checking for exception
+        if i in unique_mask_X:  # Checking for exception O(n)
             raise InconsistentOrderException(
                 {"message": f"Element {i} have mask and unmasked appearance"}
             )
-    result_arr = []
+    result_arr = {}
     for i in ma.getdata(X):
         if i not in result_arr:
-            result_arr.append(i)
+            result_arr[i] = i
             # Adding alphabet values
 
     return ma.masked_array(  # Return and convert array
-        result_arr,
+        list(result_arr.keys()),
         mask=[
-            1 if mask_obj in unique_mask_X else 0 for mask_obj in result_arr
+            1 if mask_obj in unique_mask_X else 0 for mask_obj in result_arr.keys()
         ],  # list comprehension to get mask
     )

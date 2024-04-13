@@ -1,9 +1,10 @@
 import os
 
 import numpy
+import numpy.ma as ma
 from asv_runner.benchmarks.mark import skip_params_if
 from numpy import fix
-import numpy.ma as ma
+
 from foapy.ma.order import order
 
 length = [5, 50, 500, 5000, 50000, 500000, 5000000, 50000000]
@@ -42,7 +43,7 @@ def worst_case(length):
     return ma.masked_array(alphabet)
 
 
-class MaAlphabetSuite:
+class MaOrderSuite:
     params = (length, ["Best", "DNA", "Normal", "Worst"])
     param_names = ["length", "case"]
 

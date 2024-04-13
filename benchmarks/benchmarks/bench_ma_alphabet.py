@@ -1,9 +1,10 @@
 import os
 
 import numpy
+import numpy.ma as ma
 from asv_runner.benchmarks.mark import skip_params_if
 from numpy import fix
-import numpy.ma as ma
+
 from foapy.ma.alphabet import alphabet
 
 length = [5, 50, 500, 5000, 50000, 500000, 5000000, 50000000]
@@ -32,11 +33,13 @@ def dna_case(length):
 
 
 def normal_case(length):
+
     alphabet = numpy.random.choice(
         numpy.arange(0, fix(length * 0.2), dtype=int), length
     )
+    print(alphabet)
     generate_mask = numpy.unique(
-        numpy.random.choice(alphabet, numpy.random.randint(0, length * 0.1))
+        numpy.random.choice(alphabet, numpy.random.randint(0, length))
     )
     mask = ([1 if mask_obj in generate_mask else 0 for mask_obj in alphabet],)
 
@@ -46,7 +49,7 @@ def normal_case(length):
 def worst_case(length):
     alphabet = numpy.random.rand(length)
     generate_mask = numpy.unique(
-        numpy.random.choice(alphabet, numpy.random.randint(0, length * 0.2))
+        numpy.random.choice(alphabet, numpy.random.randint(0, length))
     )
     mask = ([1 if mask_obj in generate_mask else 0 for mask_obj in alphabet],)
 
