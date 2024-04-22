@@ -81,8 +81,14 @@ def order(X, return_alphabet=False):
 
     result = np.empty(shape=convert_arr.shape, dtype=int)
 
+    alphabet_seq = {}
+    counter = 0
+    for i in alphabet_values:
+        alphabet_seq[i] = counter
+        counter += 1
+
     for idx, i in enumerate(convert_arr):  # getting for array
-        result[idx] = np.where(alphabet_values == i)[0][0]
+        result[idx] = alphabet_seq[i]
 
     if return_alphabet:
         return result, alphabet_values
