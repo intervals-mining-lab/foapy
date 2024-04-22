@@ -79,12 +79,12 @@ def order(X, return_alphabet=False):
         )
     alphabet_values = alphabet(X)
 
-    result = []
+    result = np.empty(shape=convert_arr.shape, dtype=int)
 
-    for i in convert_arr:  # getting mask for array
-        result.append(np.where(alphabet_values == i)[0][0])
+    for idx, i in enumerate(convert_arr):  # getting for array
+        result[idx] = np.where(alphabet_values == i)[0][0]
 
     if return_alphabet:
-        return np.array(result), alphabet_values
+        return result, alphabet_values
 
-    return np.array(result)
+    return result
