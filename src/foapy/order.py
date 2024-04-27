@@ -88,4 +88,3 @@ def order(X, return_alphabet=False):
         return result, alphabet_values
 
     return result
-  
