@@ -2,12 +2,16 @@ import os
 
 from asv_runner.benchmarks.mark import skip_params_if
 
-from foapy.alphabet import alphabet
+from foapy.ma.alphabet import alphabet
 
-from .cases import best_case, dna_case, normal_case, worst_case
+from .ma_cases import best_case, dna_case, normal_case, worst_case
 
 length = [5, 50, 500, 5000, 50000, 500000, 5000000, 50000000]
 skip = [
+    (500000, "Worst"),
+    (500000, "DNA"),
+    (500000, "Best"),
+    (500000, "Normal"),
     (5000000, "Worst"),
     (5000000, "DNA"),
     (5000000, "Normal"),
@@ -19,7 +23,7 @@ skip = [
 ]
 
 
-class AlphabetSuite:
+class MaAlphabetSuite:
     params = (length, ["Best", "DNA", "Normal", "Worst"])
     param_names = ["length", "case"]
 
