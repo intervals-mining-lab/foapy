@@ -1,5 +1,4 @@
 import numpy
-
 from numpy import fix
 
 
