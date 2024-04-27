@@ -1,10 +1,10 @@
 import os
 
-import numpy
 from asv_runner.benchmarks.mark import skip_params_if
-from numpy import fix
 
 from foapy.alphabet import alphabet
+
+from .cases import best_case, dna_case, normal_case, worst_case
 
 length = [5, 50, 500, 5000, 50000, 500000, 5000000, 50000000]
 skip = [
@@ -17,24 +17,6 @@ skip = [
     (50000000, "Normal"),
     (50000000, "Best"),
 ]
-
-
-def best_case(length):
-    return numpy.ones((length,), dtype=int)
-
-
-def dna_case(length):
-    nucleotides = ["A", "C", "G", "T"]
-    return numpy.random.choice(nucleotides, length)
-
-
-def normal_case(length):
-    alphabet = numpy.arange(0, fix(length * 0.2), dtype=int)
-    return numpy.random.choice(alphabet, length)
-
-
-def worst_case(length):
-    return numpy.random.rand(length)
 
 
 class AlphabetSuite:
