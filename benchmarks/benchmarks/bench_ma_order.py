@@ -22,6 +22,7 @@ skip = [
     (50000000, "Best"),
 ]
 
+
 class MaOrderSuite:
     params = (length, ["Best", "DNA", "Normal", "Worst"])
     param_names = ["length", "case"]

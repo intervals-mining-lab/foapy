@@ -7,6 +7,7 @@ from numpy.ma.testutils import assert_equal
 from foapy.exceptions import Not1DArrayException
 from foapy.ma.order import order
 
+
 class TestMaOrder(TestCase):
     """
     Test list of masked_array sequence
