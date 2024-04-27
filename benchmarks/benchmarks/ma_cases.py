@@ -2,6 +2,7 @@ import numpy
 import numpy.ma as ma
 from numpy import fix
 
+
 def best_case(length):
     return ma.masked_array(numpy.ones((length,), dtype=int), mask=[0] * length)
 
