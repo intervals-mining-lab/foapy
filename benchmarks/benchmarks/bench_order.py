@@ -3,7 +3,7 @@ import os
 from .cases import best_case, dna_case, normal_case, worst_case
 from asv_runner.benchmarks.mark import skip_params_if
 
-from foapy.alphabet import alphabet
+from foapy.order import order
 
 length = [5, 50, 500, 5000, 50000, 500000, 5000000, 50000000]
 skip = [
@@ -19,7 +19,7 @@ skip = [
 
 
 
-class AlphabetSuite:
+class OrderSuite:
     params = (length, ["Best", "DNA", "Normal", "Worst"])
     param_names = ["length", "case"]
 
@@ -36,13 +36,13 @@ class AlphabetSuite:
             self.data = worst_case(length)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def time_alphabet(self, length, case):
-        alphabet(self.data)
+    def time_order(self, length, case):
+        order(self.data)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def mem_alphabet(self, length, case):
-        return alphabet(self.data)
+    def mem_order(self, length, case):
+        return order(self.data)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def peakmem_alphabet(self, length, case):
-        return alphabet(self.data)
+    def peakmem_order(self, length, case):
+        return order(self.data)
