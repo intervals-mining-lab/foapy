@@ -109,7 +109,6 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
     >>> b
     Exception
     """
-
     if X.ndim > 1:  # Checking for d1 array
         raise Not1DArrayException(
             {"message": f"Incorrect array form. Expected d1 array, exists {X.ndim}"}
@@ -117,27 +116,20 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
 
     alphabet_values = alphabet(X)
 
-    result = []
-    for i in alphabet_values:  # getting array sequence
-        one_line_array = []
-        for j in X:
-            if i == j:
-                one_line_array.append(np.where(alphabet_values == i)[0][0])
-            else:
-                one_line_array.append(None)
-        result.append(one_line_array)
+    result = np.empty((len(alphabet_values), (len(X))), np.int64)
+    mask = np.ones((len(alphabet_values), (len(X))), np.int64)
 
-    mask = []
-    for i in result:  # getting mask for array
-        mask_line = []
-        for j in i:
-            if j is None:
-                mask_line.append(1)
-            else:
-                mask_line.append(0)
-        mask.append(mask_line)
+    alphabet_seq = {}
+    counter = 0
+    for i in ma.getdata(alphabet_values):
+        alphabet_seq[counter] = i
+        counter += 1
+    for idx_row, i in alphabet_seq.items():  # getting array sequence
+        for idx_col, j in enumerate(ma.getdata(X)):
+            if i == j:
+                result[idx_row][idx_col] = idx_row
+                mask[idx_row][idx_col] = 0
 
     if return_alphabet:  # Checking for get alhabet (optional)
         return ma.masked_array(result, mask=mask), alphabet_values
-
     return ma.masked_array(result, mask=mask)

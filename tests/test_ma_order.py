@@ -112,7 +112,7 @@ class TestMaOrder(TestCase):
 
     def test_with_no_values(self):
         X = ma.masked_array([])
-        expected = ma.masked_array([])
+        expected = ma.masked_array([]).ravel
         exists = order(X)
         assert_equal(expected, exists)
 
