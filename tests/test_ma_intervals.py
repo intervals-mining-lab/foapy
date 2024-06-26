@@ -13,12 +13,6 @@ class TestMaIntervals(TestCase):
     Test list of masked_array sequence
     """
 
-    # def test_int_values_start_binding_Normal_mode(self):
-    #     X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
-    #     expected = [[1, 2, 1], [2, 3]]
-    #     exists = intervals(X, 1, 2)
-    #     assert_equal(expected, exists)
-
     def test_str_values_start_None(self):
         X = ma.masked_array(
             ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
@@ -26,32 +20,13 @@ class TestMaIntervals(TestCase):
         expected = [[5], [1, 4], [], []]
         exists = intervals(X, 1, 1)
         assert_equal(expected, exists)
-    
+
     def test_empty_start_None(self):
-        X = ma.masked_array(
-            [], mask=[]
-        )
+        X = ma.masked_array([], mask=[])
         expected = []
         exists = intervals(X, 1, 1)
         assert_equal(expected, exists)
-    
 
-    # def test_str_values_end_binding_None_mode(self):
-    #     X = ma.masked_array(
-    #         ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
-    #     )
-    #     expected = [[5], [1, 4], [], []]
-    #     exists = intervals(X, 2, 1)
-    #     assert_equal(expected, exists)
-
-    # def test_str_same_values_start_binding_Normal_mode(self):
-    #     X = ma.masked_array(
-    #         ['E','E','E'], mask=[0, 0, 0]
-    #     )
-    #     expected = [[1,1,1]]
-    #     exists = intervals(X, 1, 2)
-    #     assert_equal(expected, exists)
-    
     def test_with_d3_array_exception(self):
         X = ma.masked_array(
             [[[1], [3]], [[6], [9]], [[6], [3]]],

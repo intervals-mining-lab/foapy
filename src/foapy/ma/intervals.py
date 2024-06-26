@@ -1,12 +1,12 @@
-import numpy as np
 import numpy.ma as ma
+
 from foapy.ma.order import order
-from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 
 
 def intervals(X, binding, mode):
     """
-    Finding array of array of intervals of the uniform  sequences in the given input sequence
+    Finding array of array of intervals of the uniform
+    sequences in the given input sequence
 
     Parameters
     ----------
@@ -18,13 +18,34 @@ def intervals(X, binding, mode):
         End = 2 – Intervals are extracted from right to left.
 
     mode: int
-        None = 1 - Both interval from the start of the sequence to the first element occurrence and interval from the last element occurrence to the end of the sequence are not taken into account.
+        None = 1 - Both interval from the start of the sequence
+        to the first element occurrence
+        and interval from the
+        last element occurrence to the end of the sequence are not taken into account.
 
-        Normal = 2 - Interval from the start of the sequence to the first occurrence of the element (in case of binding to the beginning) or interval from the last occurrence of the element to the end of the sequence (in case of binding to the end) is taken into account.
+        Normal = 2 - Interval from the start of the sequence to the first occurrence of
+        the element (in case of binding to the beginning) or interval from the
+        last occurrence
+        of the element to the end of the sequence (in case of binding to the end)
+        is taken into account.
 
-        Cycle = 3 - Interval from the start of the sequence to the first element occurrence and interval from the last element occurrence to the end of the sequence are summed into one interval (as if sequence was cyclic). Interval is placed either in the beginning of intervals array (in case of binding to the beginning) or in the end (in case of binding to the end).
+        Cycle = 3 - Interval from the start of the sequence to the first
+        element occurrence
+        and interval from the last element occurrence to the end of the
+        sequence are summed
+        into one interval (as if sequence was cyclic). Interval is
+        placed either in the
+        beginning of intervals array (in case of binding to the
+        beginning) or in the end
+        (in case of binding to the end).
 
-        Redundant = 4 - Both interval from start of the sequence to the first element occurrence and the interval from the last element occurrence to the end of the sequence are taken into account. Their placement in results array is determined by the binding.
+        Redundant = 4 - Both interval from start of the sequence
+        to the first element
+        occurrence and the interval from the last element occurrence
+        to the end of the
+        sequence are taken into account. Their placement in results
+        array is determined
+        by the binding.
 
     Returns
     -------
@@ -66,4 +87,3 @@ def intervals(X, binding, mode):
         pass
     if binding == 2 and mode == 4:  # binding End, mode=Redundant
         pass
-
