@@ -116,16 +116,16 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
 
     alphabet_values = alphabet(X)
 
-    result = np.empty((len(alphabet_values), (len(X))), np.int64)
-    mask = np.ones((len(alphabet_values), (len(X))), np.int64)
-
     alphabet_seq = {}
     counter = 0
-    for i in ma.getdata(alphabet_values):
-        alphabet_seq[counter] = i
-        counter += 1
+    for i in alphabet_values:
+        if ma.is_masked(i) is False:
+            alphabet_seq[counter] = i
+            counter += 1
+    result = np.empty((len(alphabet_seq), (len(X))), np.int64)
+    mask = np.ones((len(alphabet_seq), (len(X))), np.int64)
     for idx_row, i in alphabet_seq.items():  # getting array sequence
-        for idx_col, j in enumerate(ma.getdata(X)):
+        for idx_col, j in enumerate(X):
             if i == j:
                 result[idx_row][idx_col] = idx_row
                 mask[idx_row][idx_col] = 0
