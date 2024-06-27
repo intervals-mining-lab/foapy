@@ -26,4 +26,22 @@ def intervals(X, binding, mode):
                     row.append(idx_row)
             col += 1
 
+    elif binding == 2 and mode == 1:  # binding End, mode=None
+        col = len(order_list) - 1
+        temp_result = []
+        for idx_row in range(len(order_list) - 1, -1, -1):
+            i = order_list[idx_row]
+            for j in range(col, -1, -1):
+                if i == order_list[j] and idx_row in row:
+                    temp_result.append(counter - j)
+                    counter = j
+                    break
+                if i == order_list[j] and idx_row not in row:
+                    counter = j
+                    first_elements_arr.append(order_list[j])
+                    row.append(idx_row)
+            col -= 1
+
+        result.extend(temp_result[::-1])  # Adding temporary results in reverse order
+
     return result
