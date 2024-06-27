@@ -27,6 +27,56 @@ class TestMaIntervals(TestCase):
         exists = intervals(X, 1, 1)
         assert_equal(expected, exists)
 
+    def test_int_values_start_None(self):
+        X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
+        expected = [[2, 1], [3]]
+        exists = intervals(X, 1, 1)
+        assert_equal(expected, exists)
+
+    def test_int_values_with_not_all_mask_start_None(self):
+        X = ma.masked_array([4, 250, 8, 250], mask=[1, 0, 1, 0])
+        expected = [[2]]
+        exists = intervals(X, 1, 1)
+        assert_equal(expected, exists)
+
+    def test_int_values_start_None_all_mask(self):
+        X = ma.masked_array([2, 250, 8], mask=[0, 0, 0])
+        expected = [[], [], []]
+        exists = intervals(X, 1, 1)
+        assert_equal(expected, exists)
+
+    def test_empty_end_None(self):
+        X = ma.masked_array([], mask=[])
+        expected = []
+        exists = intervals(X, 2, 1)
+        assert_equal(expected, exists)
+
+    def test_int_values_with_not_all_mask_end_None(self):
+        X = ma.masked_array([4, 250, 8, 250], mask=[1, 0, 1, 0])
+        expected = [[2]]
+        exists = intervals(X, 2, 1)
+        assert_equal(expected, exists)
+
+    def test_str_values_end_None(self):
+        X = ma.masked_array(
+            ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
+        )
+        expected = [[5], [1, 4], [], []]
+        exists = intervals(X, 2, 1)
+        assert_equal(expected, exists)
+
+    def test_int_values_end_None(self):
+        X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
+        expected = [[2, 1], [3]]
+        exists = intervals(X, 2, 1)
+        assert_equal(expected, exists)
+
+    def test_int_values_end_None_all_mask(self):
+        X = ma.masked_array([2, 250, 8], mask=[0, 0, 0])
+        expected = [[], [], []]
+        exists = intervals(X, 2, 1)
+        assert_equal(expected, exists)
+
     def test_with_d3_array_exception(self):
         X = ma.masked_array(
             [[[1], [3]], [[6], [9]], [[6], [3]]],

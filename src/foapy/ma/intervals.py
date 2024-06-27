@@ -74,7 +74,19 @@ def intervals(X, binding, mode):
             result.append(col_result)
         return result
     if binding == 2 and mode == 1:  # binding End, mode=None
-        pass
+        first_elements_arr = []
+        for i in order_list:
+            col_result = []
+            for idx_col, j in enumerate(i[::-1]):
+                if j not in first_elements_arr and ma.is_masked(j) is False:
+                    first_elements_arr.append(j)
+                    counter = idx_col
+                    continue
+                if ma.is_masked(j) is False:
+                    col_result.insert(0, idx_col - counter)
+                    counter = idx_col
+            result.append(col_result)
+        return result
     if binding == 1 and mode == 2:  # binding Start, mode=Normal
         pass
     if binding == 2 and mode == 2:  # binding End, mode=Normal
