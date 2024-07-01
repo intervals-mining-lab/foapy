@@ -44,4 +44,17 @@ def intervals(X, binding, mode):
 
         result.extend(temp_result[::-1])  # Adding temporary results in reverse order
 
+    elif binding == 1 and mode == 2:  # binding Start, mode=Normal
+        first_occurrences = {}
+
+        for idx, elem in enumerate(order_list):
+            if elem not in first_occurrences:
+                first_occurrences[elem] = idx
+                interval = idx + 1
+            else:
+                interval = idx - first_occurrences[elem]
+
+            result.append(interval)
+            first_occurrences[elem] = idx
+
     return result
