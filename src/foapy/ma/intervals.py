@@ -88,7 +88,23 @@ def intervals(X, binding, mode):
             result.append(col_result)
         return result
     if binding == 1 and mode == 2:  # binding Start, mode=Normal
-        pass
+        first_elements_arr = []
+        counter = 0
+        for i in order_list:  # getting array sequence
+            col_result = []
+            for idx_col, j in enumerate(i):
+                if j not in first_elements_arr and ma.is_masked(j) is False:
+                    first_elements_arr.append(j)
+                    col_result.append(idx_col + 1)
+                    counter = idx_col
+                    continue
+                if ma.is_masked(j) is False:
+
+                    col_result.append(idx_col - counter)
+                    counter = idx_col
+
+            result.append(col_result)
+        return result
     if binding == 2 and mode == 2:  # binding End, mode=Normal
         pass
     if binding == 1 and mode == 3:  # binding Start, mode=Cycle
@@ -99,3 +115,7 @@ def intervals(X, binding, mode):
         pass
     if binding == 2 and mode == 4:  # binding End, mode=Redundant
         pass
+
+
+X = ma.masked_array(["c", "c", "c"], mask=[0, 0, 0])
+print(intervals(X, 1, 2))

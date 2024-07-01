@@ -2,7 +2,7 @@ import numpy as np
 import numpy.ma as ma
 
 from foapy.alphabet import alphabet
-from foapy.exceptions import Not1DArrayException
+from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 
 
 def order(X, return_alphabet=False) -> np.ma.MaskedArray:
@@ -116,6 +116,13 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
 
     alphabet_values = alphabet(X)
 
+    for i in X:
+        if (
+            i in ma.getdata(alphabet_values)[alphabet_values.mask]
+        ):  # Checking for exception O(n)
+            raise InconsistentOrderException(
+                {"message": f"Element {i} have mask and unmasked appearance"}
+            )
     alphabet_seq = {}
     counter = 0
     for i in alphabet_values:
