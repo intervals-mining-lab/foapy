@@ -57,4 +57,21 @@ def intervals(X, binding, mode):
             result.append(interval)
             first_occurrences[elem] = idx
 
+    elif binding == 2 and mode == 2:  # binding End, mode=Normal
+        last_occurrences = {}
+        col = len(order_list)
+
+        for idx in range(col - 1, -1, -1):
+            elem = order_list[idx]
+            if elem not in last_occurrences:
+                last_occurrences[elem] = idx
+                interval = col - idx
+            else:
+                interval = last_occurrences[elem] - idx
+
+            result.append(interval)
+            last_occurrences[elem] = idx
+
+        result.reverse()
+
     return result
