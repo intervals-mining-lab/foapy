@@ -115,6 +115,42 @@ class TestMaIntervals(TestCase):
         exists = intervals(X, 1, 2)
         assert_equal(expected, exists)
 
+    # End Normal
+    def test_int_values_end_normal(self):
+        X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
+        expected = [[2, 1, 2], [3, 1]]
+        exists = intervals(X, 2, 2)
+        assert_equal(expected, exists)
+
+    def test_str_values_end_normal(self):
+        X = ma.masked_array(
+            ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
+        )
+        expected = [[5, 2], [1, 4, 1], [4], [3]]
+        exists = intervals(X, 2, 2)
+        assert_equal(expected, exists)
+
+    def test_empty_End_Normal_with_mask(self):
+        X = ma.masked_array(
+            ["a", "b", "c", "a", "b", "c", "c", "c", "b", "a", "c", "b", "c"],
+            mask=[0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+        )
+        expected = [[3, 6, 4]]
+        exists = intervals(X, 2, 2)
+        assert_equal(expected, exists)
+
+    def test_int_values_end_Normal_all_mask(self):
+        X = ma.masked_array([2, 250, 8], mask=[0, 0, 0])
+        expected = [[3], [2], [1]]
+        exists = intervals(X, 2, 2)
+        assert_equal(expected, exists)
+
+    def test_empty_end_Normal(self):
+        X = ma.masked_array([], mask=[])
+        expected = []
+        exists = intervals(X, 2, 2)
+        assert_equal(expected, exists)
+
     # Exceptions
     def test_with_d3_array_exception(self):
         X = ma.masked_array(
