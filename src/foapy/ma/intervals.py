@@ -124,7 +124,6 @@ def intervals(X, binding, mode):
             result.append(col_result)
         return result
     if binding == 1 and mode == 3:  # binding Start, mode=Cycle
-        first_elements_arr = []
         counter = 0
         double_arr = ma.concatenate((order_list, order_list), axis=1)
         for i, j in enumerate(double_arr):  # getting array sequence
