@@ -126,7 +126,7 @@ def intervals(X, binding, mode):
     if binding == 1 and mode == 3:  # binding Start, mode=Cycle
         counter = 0
         double_arr = ma.concatenate((order_list, order_list), axis=1)
-        for i, j in enumerate(double_arr):  # getting array sequence
+        for j in double_arr:  # getting array sequence
             col_result = []
             for idx_row in range(order_list.shape[1], len(j)):
                 if ma.is_masked(j[idx_row]) is False:
