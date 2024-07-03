@@ -1,3 +1,5 @@
+import numpy as np
+
 from foapy.order import order
 
 
@@ -73,5 +75,19 @@ def intervals(X, binding, mode):
             last_occurrences[elem] = idx
 
         result.reverse()
+
+    elif binding == 1 and mode == 3:  # binding Start, mode=Cycle
+        counter = 0
+        double_arr = np.concatenate((order_list, order_list))
+        for idx_row in range(len(order_list), len(double_arr)):
+            counter = idx_row
+            word = double_arr[idx_row]
+
+            for idx_col in range(idx_row - 1, -1, -1):
+                if word == double_arr[idx_col]:
+
+                    result.append(counter - idx_col)
+                    counter = idx_col
+                    break
 
     return result
