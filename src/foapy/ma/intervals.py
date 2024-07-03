@@ -124,14 +124,28 @@ def intervals(X, binding, mode):
             result.append(col_result)
         return result
     if binding == 1 and mode == 3:  # binding Start, mode=Cycle
-        pass
+        first_elements_arr = []
+        counter = 0
+        double_arr = ma.concatenate((order_list, order_list), axis=1)
+        for i, j in enumerate(double_arr):  # getting array sequence
+            col_result = []
+            for idx_row in range(order_list.shape[1], len(j)):
+                if ma.is_masked(j[idx_row]) is False:
+                    counter = idx_row
+                else:
+                    continue
+                for idx_col in range(idx_row - 1, -1, -1):
+                    if ma.is_masked(j[idx_col]) is False:
+                        col_result.append(counter - idx_col)
+                        counter = idx_col
+                        break
+
+            result.append(col_result)
+        return result
+
     if binding == 2 and mode == 3:  # binding End, mode=Cycle
         pass
     if binding == 1 and mode == 4:  # binding Start, mode=Redundant
         pass
     if binding == 2 and mode == 4:  # binding End, mode=Redundant
         pass
-
-
-X = ma.masked_array([2, 250, 8], mask=[0, 0, 0])
-print(intervals(X, 2, 2))
