@@ -153,7 +153,7 @@ class TestMaIntervals(TestCase):
 
     # Start Cycle
 
-    def test_int_values_end_cycle(self):
+    def test_int_values_start_cycle(self):
         X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
         expected = [[2, 2, 1], [2, 3]]
         exists = intervals(X, 1, 3)
@@ -186,6 +186,39 @@ class TestMaIntervals(TestCase):
         assert_equal(expected, exists)
 
     def test_many_values_start_Cycle(self):
+        X = ma.masked_array(["c", "c", "c"], mask=[0, 0, 0])
+        expected = [[1, 1, 1]]
+        exists = intervals(X, 1, 3)
+        assert_equal(expected, exists)
+
+    # End Cycle
+    def test_int_values_end_cycle(self):
+        X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
+        expected = [[2, 1, 2], [3, 2]]
+        exists = intervals(X, 2, 3)
+        assert_equal(expected, exists)
+
+    def test_str_values_end_Cycle(self):
+        X = ma.masked_array(
+            ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
+        )
+        expected = [[5, 2], [1, 4, 2], [7], [7]]
+        exists = intervals(X, 2, 3)
+        assert_equal(expected, exists)
+
+    def test_empty_end_Cycle(self):
+        X = ma.masked_array([], mask=[])
+        expected = []
+        exists = intervals(X, 1, 3)
+        assert_equal(expected, exists)
+
+    def test_single_value_end_Cycle(self):
+        X = ma.masked_array(["c"], mask=[0])
+        expected = [[1]]
+        exists = intervals(X, 1, 3)
+        assert_equal(expected, exists)
+
+    def test_many_values_end_Cycle(self):
         X = ma.masked_array(["c", "c", "c"], mask=[0, 0, 0])
         expected = [[1, 1, 1]]
         exists = intervals(X, 1, 3)
