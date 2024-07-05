@@ -90,4 +90,20 @@ def intervals(X, binding, mode):
                     counter = idx_col
                     break
 
+    elif binding == 2 and mode == 3:  # binding End, mode=Cycle
+        counter = 0
+        double_arr = np.concatenate((order_list, order_list))
+        for idx_row in range(0, len(order_list)):
+            counter = idx_row
+            word = double_arr[idx_row]
+
+            for idx_col in range(idx_row + 1, len(double_arr), 1):
+                if word == double_arr[idx_col]:
+
+                    result.append(-(counter - idx_col))
+                    counter = idx_col
+                    break
     return result
+
+
+print(intervals([2, 4, 2, 2, 4], 2, 3))

@@ -82,3 +82,9 @@ class TestIntervals(TestCase):
         expected = np.array([2, 2, 2, 1, 3])
         exists = intervals(X, 1, 3)
         assert_array_equal(expected, exists)
+
+    def test_int_end_cycle(self):
+        X = [2, 4, 2, 2, 4]
+        expected = np.array([2, 3, 1, 2, 2])
+        exists = intervals(X, 2, 3)
+        assert_array_equal(expected, exists)
