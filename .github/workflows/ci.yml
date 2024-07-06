@@ -78,9 +78,10 @@ jobs:
         uses: actions/download-artifact@v4
         with: {name: python-distribution-files, path: dist/}
       - name: Run tests
-        run: |-
-          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox --installpkg '${{ needs.prepare.outputs.wheel-distribution }}' -- -rFEx --durations 10 --color yes --cov-report=lcov || true # pytest args
-          cat /opt/pipx/logs/*.log
+        run: >-
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}'
+          tox --installpkg '${{ needs.prepare.outputs.wheel-distribution }}'
+          -- -rFEx --durations 10 --color yes --cov-report=lcov # pytest args
       - name: Generate coverage report
         run: pipx run coverage lcov -o coverage.lcov
       - name: Upload partial coverage report
