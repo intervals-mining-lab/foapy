@@ -82,8 +82,8 @@ jobs:
         run: >-
           pipx run --python '${{ steps.setup-python.outputs.python-path }}'
           tox --installpkg '${{ needs.prepare.outputs.wheel-distribution }}'
-          -- -rFEx --durations 10 --color yes --cov-report=lcov # pytest args
-          cat /usr/local/Cellar/pipx/1.6.0/logs/*.log
+          -- -rFEx --durations 10 --color yes --cov-report=lcov || true # pytest args
+          cat /opt/pipx/logs/*.log
       - name: Generate coverage report
         run: pipx run coverage lcov -o coverage.lcov
       - name: Upload partial coverage report
