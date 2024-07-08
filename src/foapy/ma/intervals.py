@@ -1,6 +1,7 @@
 import numpy.ma as ma
 
 from foapy.ma.order import order
+from foapy.order import order as count_occurrences
 
 
 def intervals(X, binding, mode):
@@ -57,21 +58,25 @@ def intervals(X, binding, mode):
 
     """
 
-    order_list = order(X)
     result = []
+    order_list = order(X)
     if binding == 1 and mode == 1:  # binding Start, mode=None
-        first_elements_arr = []
-        for i in order_list:  # getting array sequence
-            col_result = []
-            for idx_col, j in enumerate(i):
-                if j not in first_elements_arr and ma.is_masked(j) is False:
-                    first_elements_arr.append(j)
-                    counter = idx_col
-                    continue
-                if ma.is_masked(j) is False:
-                    col_result.append(idx_col - counter)
-                    counter = idx_col
-            result.append(col_result)
+        first_elements_arr = {}
+        position_elem = {}
+        result_hash = {}
+        for idx, i in enumerate(X):  # getting array sequence
+            if (
+                ma.is_masked(i) is False and i not in first_elements_arr
+            ):  # Checking for conditions
+                first_elements_arr[i] = idx
+                position_elem[i] = idx
+                result_hash[i] = []
+                continue
+            if ma.is_masked(i) is False:
+                result_hash[i].append(idx - position_elem[i])
+                position_elem[i] = idx
+
+        result = list(result_hash.values())
         return result
     if binding == 2 and mode == 1:  # binding End, mode=None
         first_elements_arr = []
@@ -157,6 +162,76 @@ def intervals(X, binding, mode):
             result.append(col_result)
         return result
     if binding == 1 and mode == 4:  # binding Start, mode=Redundant
-        pass
+        ndict = {}
+        for i in count_occurrences(X.compressed()):
+            if i not in ndict:
+                ndict[i] = 1
+            else:
+                ndict[i] += 1
+        first_elements_arr = []
+        for i in order_list:  # getting array sequence
+            col_result = []
+            for idx_col, j in enumerate(i):
+                if j not in first_elements_arr and ma.is_masked(j) is False:
+                    if ndict[j] == 1:
+                        col_result.append(idx_col + 1)
+                        col_result.append(len(X) - idx_col)
+                        counter = idx_col
+                        first_elements_arr.append(j)
+                        continue
+
+                    first_elements_arr.append(j)
+                    col_result.append(idx_col + 1)
+                    counter = idx_col
+                    ndict[j] = ndict[j] - 1
+                    continue
+                if ma.is_masked(j) is False:
+                    if ndict[j] == 1:
+                        col_result.append(idx_col - counter)
+                        col_result.append(len(X) - idx_col)
+                        counter = idx_col
+                        continue
+                    col_result.append(idx_col - counter)
+                    counter = idx_col
+                    ndict[j] = ndict[j] - 1
+
+            result.append(col_result)
+        return result
     if binding == 2 and mode == 4:  # binding End, mode=Redundant
-        pass
+        ndict = {}
+        for i in count_occurrences(X.compressed()):
+            if i not in ndict:
+                ndict[i] = 1
+            else:
+                ndict[i] += 1
+        first_elements_arr = []
+        for i in order_list:  # getting array sequence
+            col_result = []
+            for idx_col, j in enumerate(i[::-1]):
+
+                if j not in first_elements_arr and ma.is_masked(j) is False:
+                    if ndict[j] == 1:
+                        col_result.insert(0, len(X) - idx_col)
+                        col_result.insert(1, idx_col + 1)
+                        counter = idx_col
+                        first_elements_arr.append(j)
+                        continue
+
+                    first_elements_arr.append(j)
+                    col_result.append(idx_col + 1)
+                    counter = idx_col
+                    ndict[j] = ndict[j] - 1
+                    continue
+                if ma.is_masked(j) is False:
+                    if ndict[j] == 1:
+
+                        col_result.insert(0, len(X) - idx_col)
+                        col_result.insert(1, idx_col - counter)
+                        counter = idx_col
+                        continue
+                    col_result.insert(0, idx_col - counter)
+                    counter = idx_col
+                    ndict[j] = ndict[j] - 1
+
+            result.append(col_result)
+        return result

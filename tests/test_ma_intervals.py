@@ -28,6 +28,15 @@ class TestMaIntervals(TestCase):
         exists = intervals(X, 1, 1)
         assert_equal(expected, exists)
 
+    def test_empty_start_None_with_mask(self):
+        X = ma.masked_array(
+            ["a", "b", "c", "a", "b", "c", "c", "c", "b", "a", "c", "b", "c"],
+            mask=[0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+        )
+        expected = [[3, 6]]
+        exists = intervals(X, 1, 1)
+        assert_equal(expected, exists)
+
     def test_int_values_start_None(self):
         X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
         expected = [[2, 1], [3]]
@@ -167,6 +176,15 @@ class TestMaIntervals(TestCase):
         exists = intervals(X, 1, 3)
         assert_equal(expected, exists)
 
+    def test_empty_start_Cycle_with_mask(self):
+        X = ma.masked_array(
+            ["a", "b", "c", "a", "b", "c", "c", "c", "b", "a", "c", "b", "c"],
+            mask=[0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+        )
+        expected = [[4, 3, 6]]
+        exists = intervals(X, 1, 3)
+        assert_equal(expected, exists)
+
     def test_int_values_start_Cycle_no_all_mask(self):
         X = ma.masked_array([2, 250, 8], mask=[0, 0, 0])
         expected = [[3], [3], [3]]
@@ -206,6 +224,15 @@ class TestMaIntervals(TestCase):
         exists = intervals(X, 2, 3)
         assert_equal(expected, exists)
 
+    def test_empty_end_Cycle_with_mask(self):
+        X = ma.masked_array(
+            ["a", "b", "c", "a", "b", "c", "c", "c", "b", "a", "c", "b", "c"],
+            mask=[0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+        )
+        expected = [[3, 6, 4]]
+        exists = intervals(X, 2, 3)
+        assert_equal(expected, exists)
+
     def test_empty_end_Cycle(self):
         X = ma.masked_array([], mask=[])
         expected = []
@@ -222,6 +249,90 @@ class TestMaIntervals(TestCase):
         X = ma.masked_array(["c", "c", "c"], mask=[0, 0, 0])
         expected = [[1, 1, 1]]
         exists = intervals(X, 1, 3)
+        assert_equal(expected, exists)
+
+    # Start Redunant
+    def test_int_values_start_redunant(self):
+        X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
+        expected = [[1, 2, 1, 2], [2, 3, 1]]
+        exists = intervals(X, 1, 4)
+        assert_equal(expected, exists)
+
+    def test_str_values_start_redunant(self):
+        X = ma.masked_array(
+            ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
+        )
+        expected = [[1, 5, 2], [2, 1, 4, 1], [4, 4], [5, 3]]
+        exists = intervals(X, 1, 4)
+        assert_equal(expected, exists)
+
+    def test_empty_start_redunant_with_mask(self):
+        X = ma.masked_array(
+            ["a", "b", "c", "a", "b", "c", "c", "c", "b", "a", "c", "b", "c"],
+            mask=[0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+        )
+        expected = [[1, 3, 6, 4]]
+        exists = intervals(X, 1, 4)
+        assert_equal(expected, exists)
+
+    def test_empty_start_redunant(self):
+        X = ma.masked_array([], mask=[])
+        expected = []
+        exists = intervals(X, 1, 4)
+        assert_equal(expected, exists)
+
+    def test_single_value_start_redunant(self):
+        X = ma.masked_array(["c"], mask=[0])
+        expected = [[1, 1]]
+        exists = intervals(X, 1, 4)
+        assert_equal(expected, exists)
+
+    def test_many_values_start_redunant(self):
+        X = ma.masked_array(["c", "c", "c"], mask=[0, 0, 0])
+        expected = [[1, 1, 1, 1]]
+        exists = intervals(X, 1, 4)
+        assert_equal(expected, exists)
+
+    # End Redunant
+    def test_int_values_end_redunant(self):
+        X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
+        expected = [[1, 2, 1, 2], [2, 3, 1]]
+        exists = intervals(X, 2, 4)
+        assert_equal(expected, exists)
+
+    def test_str_values_end_redunant(self):
+        X = ma.masked_array(
+            ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
+        )
+        expected = [[1, 5, 2], [2, 1, 4, 1], [4, 4], [5, 3]]
+        exists = intervals(X, 2, 4)
+        assert_equal(expected, exists)
+
+    def test_empty_end_redunant_with_mask(self):
+        X = ma.masked_array(
+            ["a", "b", "c", "a", "b", "c", "c", "c", "b", "a", "c", "b", "c"],
+            mask=[0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+        )
+        expected = [[1, 3, 6, 4]]
+        exists = intervals(X, 2, 4)
+        assert_equal(expected, exists)
+
+    def test_empty_end_redunant(self):
+        X = ma.masked_array([], mask=[])
+        expected = []
+        exists = intervals(X, 2, 4)
+        assert_equal(expected, exists)
+
+    def test_single_value_end_redunant(self):
+        X = ma.masked_array(["c"], mask=[0])
+        expected = [[1, 1]]
+        exists = intervals(X, 2, 4)
+        assert_equal(expected, exists)
+
+    def test_many_values_end_redunant(self):
+        X = ma.masked_array(["c", "c", "c"], mask=[0, 0, 0])
+        expected = [[1, 1, 1, 1]]
+        exists = intervals(X, 2, 4)
         assert_equal(expected, exists)
 
     # Exceptions
