@@ -13,7 +13,7 @@ class TestIntervals(TestCase):
 
     def test_int_start_none(self):
         X = [2, 4, 2, 2, 4]
-        expected = np.array([2, 3, 1])
+        expected = np.array([2, 1, 3])
         exists = intervals(X, 1, 1)
         assert_array_equal(expected, exists)
 
@@ -87,4 +87,10 @@ class TestIntervals(TestCase):
         X = [2, 4, 2, 2, 4]
         expected = np.array([2, 3, 1, 2, 2])
         exists = intervals(X, 2, 3)
+        assert_array_equal(expected, exists)
+
+    def test_dna_start_normal(self):
+        X = ["ATC", "CTG", "ATC"]
+        expected = np.array([1, 2, 2])
+        exists = intervals(X, 1, 2)
         assert_array_equal(expected, exists)

@@ -1,32 +1,30 @@
 import numpy as np
 
-from foapy.order import order
-
 
 def intervals(X, binding, mode):
     """
     Finding array of array of intervals of the
     uniform  sequences in the given input sequence
     """
-    order_list = order(X)
+    order_list = X
     result = []
     print(order_list)
     first_elements_arr = []
     counter = 0
     row = []
     if binding == 1 and mode == 1:  # binding Start, mode=None
-        col = 0
-        for idx_row, i in enumerate(order_list):
-            for j in range(col, len(order_list)):
-                if i == order_list[j] and idx_row in row:
-                    result.append(j - counter)
-                    counter = j
-                    break
-                if i == order_list[j] and idx_row not in row:
-                    counter = j
-                    first_elements_arr.append(order_list[j])
-                    row.append(idx_row)
-            col += 1
+        first_elements_arr = {}
+        position_elem = {}
+
+        for idx, i in enumerate(X):
+            if i not in first_elements_arr:
+                first_elements_arr[i] = idx
+                position_elem[i] = idx
+                continue
+            else:
+                interval = idx - position_elem[i]
+                result.append(interval)
+                position_elem[i] = idx
 
     elif binding == 2 and mode == 1:  # binding End, mode=None
         col = len(order_list) - 1
@@ -103,7 +101,8 @@ def intervals(X, binding, mode):
                     result.append(-(counter - idx_col))
                     counter = idx_col
                     break
+
     return result
 
 
-print(intervals([2, 4, 2, 2, 4], 2, 3))
+print(intervals([2, 4, 2, 2, 4], 1, 1))
