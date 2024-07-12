@@ -12,7 +12,7 @@ def intervals(X, binding, mode):
     first_elements_arr = []
     counter = 0
     row = []
-    if binding == 1 and mode == 1:  # binding Start, mode=None
+    if binding == 1 and mode == 1:  #binding Start, mode=None
         first_elements_arr = {}
         position_elem = {}
 
@@ -26,7 +26,7 @@ def intervals(X, binding, mode):
                 result.append(interval)
                 position_elem[i] = idx
 
-    elif binding == 2 and mode == 1:  # binding End, mode=None
+    elif binding == 2 and mode == 1:  #binding End, mode=None
         col = len(order_list) - 1
         temp_result = []
         for idx_row in range(len(order_list) - 1, -1, -1):
@@ -44,7 +44,7 @@ def intervals(X, binding, mode):
 
         result.extend(temp_result[::-1])  # Adding temporary results in reverse order
 
-    elif binding == 1 and mode == 2:  # binding Start, mode=Normal
+    elif binding == 1 and mode == 2:  #binding Start, mode=Normal
         first_occurrences = {}
 
         for idx, elem in enumerate(order_list):
@@ -57,7 +57,7 @@ def intervals(X, binding, mode):
             result.append(interval)
             first_occurrences[elem] = idx
 
-    elif binding == 2 and mode == 2:  # binding End, mode=Normal
+    elif binding == 2 and mode == 2:  #binding End, mode=Normal
         last_occurrences = {}
         col = len(order_list)
 
@@ -74,7 +74,7 @@ def intervals(X, binding, mode):
 
         result.reverse()
 
-    elif binding == 1 and mode == 3:  # binding Start, mode=Cycle
+    elif binding == 1 and mode == 3:  #binding Start, mode=Cycle
         counter = 0
         double_arr = np.concatenate((order_list, order_list))
         for idx_row in range(len(order_list), len(double_arr)):
@@ -88,7 +88,7 @@ def intervals(X, binding, mode):
                     counter = idx_col
                     break
 
-    elif binding == 2 and mode == 3:  # binding End, mode=Cycle
+    elif binding == 2 and mode == 3:  #binding End, mode=Cycle
         counter = 0
         double_arr = np.concatenate((order_list, order_list))
         for idx_row in range(0, len(order_list)):
