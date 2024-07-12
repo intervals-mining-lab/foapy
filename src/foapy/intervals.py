@@ -12,7 +12,7 @@ def intervals(X, binding, mode):
     first_elements_arr = []
     counter = 0
     row = []
-    if binding == 1 and mode == 1:  #binding Start, mode=None
+    if binding == 1 and mode == 1:  # binding Start, mode=None
         first_elements_arr = {}
         position_elem = {}
 
