@@ -25,7 +25,7 @@ class TestIntervals(TestCase):
 
     def test_int_end_none(self):
         X = [2, 4, 2, 2, 4]
-        expected = np.array([2, 1, 3])
+        expected = np.array([2, 3, 1])
         exists = intervals(X, 2, 1)
         assert_array_equal(expected, exists)
 
@@ -93,4 +93,34 @@ class TestIntervals(TestCase):
         X = ["ATC", "CTG", "ATC"]
         expected = np.array([1, 2, 2])
         exists = intervals(X, 1, 2)
+        assert_array_equal(expected, exists)
+
+    def test_int_start_redundant(self):
+        X = [2, 4, 2, 2, 4]
+        expected = np.array([1, 2, 2, 1, 2, 3, 1])
+        exists = intervals(X, 1, 4)
+        assert_array_equal(expected, exists)
+
+    def test_int_end_redundant(self):
+        X = [2, 4, 2, 2, 4]
+        expected = np.array([1, 2, 2, 3, 1, 2, 1])
+        exists = intervals(X, 2, 4)
+        assert_array_equal(expected, exists)
+
+    def test_single_value_2(self):
+        X = ["E"]
+        expected = np.array([1, 1])
+        exists = intervals(X, 1, 4)
+        assert_array_equal(expected, exists)
+
+    def test_string_start_normal_4(self):
+        X = ["E", "E", "E"]
+        expected = np.array([1, 1, 1, 1])
+        exists = intervals(X, 1, 4)
+        assert_array_equal(expected, exists)
+
+    def test_dna_start_redundant(self):
+        X = ["ATC", "CTG", "ATC"]
+        expected = np.array([1, 2, 2, 2, 1])
+        exists = intervals(X, 1, 4)
         assert_array_equal(expected, exists)
