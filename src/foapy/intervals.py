@@ -12,15 +12,14 @@ def intervals(X, binding, mode):
     first_elements_arr = []
     counter = 0
     row = []
+    first_elements = {}
+    position_elem = {}
     if binding == 1 and mode == 1:  # binding Start, mode=None
-        first_elements_arr = {}
-        position_elem = {}
 
         for idx, i in enumerate(X):
-            if i not in first_elements_arr:
-                first_elements_arr[i] = idx
+            if i not in first_elements:
+                first_elements[i] = idx
                 position_elem[i] = idx
-                continue
             else:
                 interval = idx - position_elem[i]
                 result.append(interval)
@@ -45,17 +44,30 @@ def intervals(X, binding, mode):
         result.extend(temp_result[::-1])  # Adding temporary results in reverse order
 
     elif binding == 1 and mode == 2:  # binding Start, mode=Normal
-        first_occurrences = {}
 
-        for idx, elem in enumerate(order_list):
-            if elem not in first_occurrences:
-                first_occurrences[elem] = idx
-                interval = idx + 1
+        """for idx, i in enumerate(order_list):
+        if i not in first_elements:
+            first_elements[i] = idx
+            position_elem[i] = idx
+            interval = idx + 1
+        else:
+            interval = idx - position_elem[i]
+
+        result.append(interval)
+        position_elem[i] = idx"""
+
+        for idx, i in enumerate(X):
+            if i not in first_elements:
+                first_elements[i] = idx
+                position_elem[i] = idx
             else:
-                interval = idx - first_occurrences[elem]
+                interval = idx - position_elem[i]
+                result.append(interval)
+                position_elem[i] = idx
 
-            result.append(interval)
-            first_occurrences[elem] = idx
+        for i in first_elements:
+            counter = first_elements[i]
+            result.insert(counter, counter + 1)
 
     elif binding == 2 and mode == 2:  # binding End, mode=Normal
         last_occurrences = {}
@@ -75,18 +87,19 @@ def intervals(X, binding, mode):
         result.reverse()
 
     elif binding == 1 and mode == 3:  # binding Start, mode=Cycle
-        counter = 0
-        double_arr = np.concatenate((order_list, order_list))
-        for idx_row in range(len(order_list), len(double_arr)):
-            counter = idx_row
-            word = double_arr[idx_row]
 
-            for idx_col in range(idx_row - 1, -1, -1):
-                if word == double_arr[idx_col]:
+        for idx, i in enumerate(X):
+            if i not in first_elements:
+                first_elements[i] = idx
+                position_elem[i] = idx
+            else:
+                interval = idx - position_elem[i]
+                result.append(interval)
+                position_elem[i] = idx
 
-                    result.append(counter - idx_col)
-                    counter = idx_col
-                    break
+        for i in first_elements:
+            counter = first_elements[i]
+            result.insert(counter, len(X) - position_elem[i] + first_elements[i])
 
     elif binding == 2 and mode == 3:  # binding End, mode=Cycle
         counter = 0
@@ -105,4 +118,4 @@ def intervals(X, binding, mode):
     return result
 
 
-print(intervals([2, 4, 2, 2, 4], 1, 1))
+print(intervals([2, 4, 2, 2, 4], 1, 2))
