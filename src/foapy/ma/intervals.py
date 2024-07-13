@@ -99,7 +99,6 @@ def intervals(X, binding, mode):
                 result_hash[i].insert(0, counter + 1)
             for key, value in position_elem.items():
                 result_hash[key].append(len(X) - value)
-        return list(result_hash.values())
     if binding == 2:
         for i in X:
             if ma.is_masked(i) is True:
