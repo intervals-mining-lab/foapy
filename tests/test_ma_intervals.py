@@ -73,14 +73,12 @@ class TestMaIntervals(TestCase):
             ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
         )
         expected = [[5], [1, 4], [], []]
-        # expected=[[4, 1], [5], [], []]
         exists = intervals(X, 2, 1)
         assert_equal(expected, exists)
 
     def test_int_values_end_None(self):
         X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
         expected = [[2, 1], [3]]
-        # expected=[[3], [1, 2]]
         exists = intervals(X, 2, 1)
         assert_equal(expected, exists)
 
@@ -130,7 +128,6 @@ class TestMaIntervals(TestCase):
     def test_int_values_end_normal(self):
         X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
         expected = [[2, 1, 2], [3, 1]]
-        # expected = [[1, 3], [2, 1, 2]]
         exists = intervals(X, 2, 2)
         assert_equal(expected, exists)
 
@@ -139,7 +136,6 @@ class TestMaIntervals(TestCase):
             ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
         )
         expected = [[5, 2], [1, 4, 1], [4], [3]]
-        # expected = [[1, 4, 1], [2, 5], [3], [4]]
         exists = intervals(X, 2, 2)
         assert_equal(expected, exists)
 
@@ -149,14 +145,12 @@ class TestMaIntervals(TestCase):
             mask=[0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
         )
         expected = [[3, 6, 4]]
-        # expected = [[4, 6, 3]]
         exists = intervals(X, 2, 2)
         assert_equal(expected, exists)
 
     def test_int_values_end_Normal_no_all_mask(self):
         X = ma.masked_array([2, 250, 8], mask=[0, 0, 0])
         expected = [[3], [2], [1]]
-        # expected = [[1], [2], [3]]
         exists = intervals(X, 2, 2)
         assert_equal(expected, exists)
 
@@ -219,7 +213,6 @@ class TestMaIntervals(TestCase):
     def test_int_values_end_cycle(self):
         X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
         expected = [[2, 1, 2], [3, 2]]
-        # expected = [[2, 3], [2, 1, 2]]
         exists = intervals(X, 2, 3)
         assert_equal(expected, exists)
 
@@ -228,7 +221,6 @@ class TestMaIntervals(TestCase):
             ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
         )
         expected = [[5, 2], [1, 4, 2], [7], [7]]
-        # expected = [[2, 4, 1], [2, 5], [7], [7]]
         exists = intervals(X, 2, 3)
         assert_equal(expected, exists)
 
@@ -238,7 +230,6 @@ class TestMaIntervals(TestCase):
             mask=[0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
         )
         expected = [[3, 6, 4]]
-        # expected = [[4, 6, 3]]
         exists = intervals(X, 2, 3)
         assert_equal(expected, exists)
 
@@ -306,7 +297,6 @@ class TestMaIntervals(TestCase):
     def test_int_values_end_redunant(self):
         X = ma.masked_array([2, 4, 2, 2, 4], mask=[0, 0, 0, 0, 0])
         expected = [[1, 2, 1, 2], [2, 3, 1]]
-        # expected = [[1, 3, 2], [2, 1, 2, 1]]
         exists = intervals(X, 2, 4)
         assert_equal(expected, exists)
 
@@ -315,7 +305,6 @@ class TestMaIntervals(TestCase):
             ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
         )
         expected = [[1, 5, 2], [2, 1, 4, 1], [4, 4], [5, 3]]
-        # expected = [[1, 4, 1, 2], [2, 5, 1], [3, 5], [4, 4]]
         exists = intervals(X, 2, 4)
         assert_equal(expected, exists)
 
@@ -325,7 +314,6 @@ class TestMaIntervals(TestCase):
             mask=[0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
         )
         expected = [[1, 3, 6, 4]]
-        # expected = [[4, 6, 3, 1]]
         exists = intervals(X, 2, 4)
         assert_equal(expected, exists)
 

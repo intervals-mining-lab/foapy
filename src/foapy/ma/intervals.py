@@ -1,7 +1,6 @@
 import numpy.ma as ma
 
-from foapy.ma.order import order
-from foapy.order import order as count_occurrences
+from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 
 
 def intervals(X, binding, mode):
@@ -51,174 +50,84 @@ def intervals(X, binding, mode):
     Returns
     -------
     result: array or Exception.
-        Exception if not d1 array or wro, array otherwise.
+        Exception if not d1 array or wron mask, array otherwise.
 
     Examples
     --------
 
     """
 
-    result = []
-    order_list = order(X)
-    first_elements_arr = {}
+    if X.ndim > 1:  # Checking for d1 array
+        raise Not1DArrayException(
+            {"message": f"Incorrect array form. Expected d1 array, exists {X.ndim}"}
+        )
+    arr_data = ma.getdata(X)
+    unique_mask_X = ma.unique(arr_data[X.mask])
+    for i in X:
+        if i in unique_mask_X:  # Checking for exception O(n)
+            raise InconsistentOrderException(
+                {"message": f"Element {i} have mask and unmasked appearance"}
+            )
+    first_elements = {}
     position_elem = {}
     result_hash = {}
-    if binding == 1 and mode == 1:  # binding Start, mode=None
+
+    if binding == 1:
         for idx, i in enumerate(X):  # getting array sequence
             if ma.is_masked(i) is True:
                 continue
-            if i not in first_elements_arr:  # Checking for conditions
-                first_elements_arr[i] = idx
+            if i not in first_elements:  # Checking for conditions
+                first_elements[i] = idx
                 position_elem[i] = idx
                 result_hash[i] = []
                 continue
             result_hash[i].append(idx - position_elem[i])
             position_elem[i] = idx
 
-        result = list(result_hash.values())
-        return result
-    if binding == 2 and mode == 1:  # binding End, mode=None
-        # invert_arr = X[::-1]
-        # return intervals(invert_arr,1,1)
-        first_elements_arr = []
-        for i in order_list:
-            col_result = []
-            for idx_col, j in enumerate(i[::-1]):
-                if j not in first_elements_arr and ma.is_masked(j) is False:
-                    first_elements_arr.append(j)
-                    counter = idx_col
-                    continue
-                if ma.is_masked(j) is False:
-                    col_result.insert(0, idx_col - counter)
-                    counter = idx_col
-            result.append(col_result)
-        return result
-    if binding == 1 and mode == 2:  # binding Start, mode=Normal
-        for idx, i in enumerate(X):  # getting array sequence
+        if mode == 2:
+            for i in first_elements:
+                counter = first_elements[i]
+                result_hash[i].insert(0, counter + 1)
+
+        if mode == 3:
+            for key, value in first_elements.items():
+                result_hash[key].insert(0, len(X) - position_elem[key] + value)
+
+        if mode == 4:
+            for i in first_elements:
+                counter = first_elements[i]
+                result_hash[i].insert(0, counter + 1)
+            for key, value in position_elem.items():
+                result_hash[key].append(len(X) - value)
+        return list(result_hash.values())
+    if binding == 2:
+        for i in X:
             if ma.is_masked(i) is True:
                 continue
-            if i not in first_elements_arr:  # Checking for conditions
-                first_elements_arr[i] = idx
-                position_elem[i] = idx
-                result_hash[i] = []
-                result_hash[i].append(idx + 1)
-                continue
-            result_hash[i].append(idx - position_elem[i])
-            position_elem[i] = idx
-
-        result = list(result_hash.values())
-        return result
-    if binding == 2 and mode == 2:  # binding End, mode=Normal
-        # invert_arr = X[::-1]
-        # return intervals(invert_arr,1,2)
-        first_elements_arr = []
-        for i in order_list:  # getting array sequence
-            col_result = []
-            for idx_col, j in enumerate(i[::-1]):
-                if j not in first_elements_arr and ma.is_masked(j) is False:
-                    first_elements_arr.append(j)
-                    col_result.append(idx_col + 1)
-                    counter = idx_col
-                    continue
-                if ma.is_masked(j) is False:
-
-                    col_result.insert(0, idx_col - counter)
-                    counter = idx_col
-
-            result.append(col_result)
-        return result
-    if binding == 1 and mode == 3:  # binding Start, mode=Cycle
-        for idx, i in enumerate(X):  # getting array sequence
+            result_hash[i] = []
+        for idx, i in enumerate(reversed(X)):  # getting array sequence
             if ma.is_masked(i) is True:
                 continue
-            if i not in first_elements_arr:  # Checking for conditions
-                first_elements_arr[i] = idx
+            if i not in first_elements:  # Checking for conditions
+                first_elements[i] = idx
                 position_elem[i] = idx
-                result_hash[i] = []
                 continue
-
-            result_hash[i].append(idx - position_elem[i])
+            result_hash[i].insert(0, idx - position_elem[i])
             position_elem[i] = idx
+        if mode == 2:
+            for i in first_elements:
+                counter = first_elements[i]
+                result_hash[i].append(counter + 1)
 
-        for key, value in first_elements_arr.items():
-            result_hash[key].insert(0, len(X) - position_elem[key] + value)
+        if mode == 3:
+            for key, value in first_elements.items():
+                result_hash[key].append(len(X) - position_elem[key] + value)
 
-        result = list(result_hash.values())
-        return result
+        if mode == 4:
+            for i in first_elements:
+                counter = first_elements[i]
+                result_hash[i].append(counter + 1)
+            for key, value in position_elem.items():
+                result_hash[key].insert(0, len(X) - value)
 
-    if binding == 2 and mode == 3:  # binding End, mode=Cycle
-        # invert_arr = X[::-1]
-        # return intervals(invert_arr,1,3)
-        double_arr = ma.concatenate((order_list, order_list), axis=1)
-        for i, j in enumerate(double_arr):  # getting array sequence
-            col_result = []
-            for idx_row in range(0, order_list.shape[1]):
-                if ma.is_masked(j[idx_row]) is False:
-                    counter = idx_row
-                else:
-                    continue
-                for idx_col in range(idx_row + 1, len(j) + 1, 1):
-                    if ma.is_masked(j[idx_col]) is False:
-                        col_result.append(idx_col - counter)
-                        counter = idx_col
-                        break
-
-            result.append(col_result)
-        return result
-    if binding == 1 and mode == 4:  # binding Start, mode=Redundant
-        for idx, i in enumerate(X):  # getting array sequence
-            if ma.is_masked(i) is True:
-                continue
-            if i not in first_elements_arr:  # Checking for conditions
-                first_elements_arr[i] = idx
-                position_elem[i] = idx
-                result_hash[i] = []
-                result_hash[i].append(idx + 1)
-                continue
-            result_hash[i].append(idx - position_elem[i])
-            position_elem[i] = idx
-        for key, value in position_elem.items():
-            result_hash[key].append(len(X) - value)
-
-        result = list(result_hash.values())
-        return result
-    if binding == 2 and mode == 4:  # binding End, mode=Redundant
-        # invert_arr = X[::-1]
-        # return intervals(invert_arr,1,4)
-        ndict = {}
-        for i in count_occurrences(X.compressed()):
-            if i not in ndict:
-                ndict[i] = 1
-            else:
-                ndict[i] += 1
-        first_elements_arr = []
-        for i in order_list:  # getting array sequence
-            col_result = []
-            for idx_col, j in enumerate(i[::-1]):
-
-                if j not in first_elements_arr and ma.is_masked(j) is False:
-                    if ndict[j] == 1:
-                        col_result.insert(0, len(X) - idx_col)
-                        col_result.insert(1, idx_col + 1)
-                        counter = idx_col
-                        first_elements_arr.append(j)
-                        continue
-
-                    first_elements_arr.append(j)
-                    col_result.append(idx_col + 1)
-                    counter = idx_col
-                    ndict[j] = ndict[j] - 1
-                    continue
-                if ma.is_masked(j) is False:
-                    if ndict[j] == 1:
-
-                        col_result.insert(0, len(X) - idx_col)
-                        col_result.insert(1, idx_col - counter)
-                        counter = idx_col
-                        continue
-                    col_result.insert(0, idx_col - counter)
-                    counter = idx_col
-                    ndict[j] = ndict[j] - 1
-
-            result.append(col_result)
-        return result
+    return list(result_hash.values())
