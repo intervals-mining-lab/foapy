@@ -107,13 +107,13 @@ class TestIntervals(TestCase):
         exists = intervals(X, 2, 4)
         assert_array_equal(expected, exists)
 
-    def test_single_value_2(self):
+    def test_single_redundant(self):
         X = ["E"]
         expected = np.array([1, 1])
         exists = intervals(X, 1, 4)
         assert_array_equal(expected, exists)
 
-    def test_string_start_normal_4(self):
+    def test_string_start_redundant(self):
         X = ["E", "E", "E"]
         expected = np.array([1, 1, 1, 1])
         exists = intervals(X, 1, 4)

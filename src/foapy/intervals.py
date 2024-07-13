@@ -9,68 +9,38 @@ def intervals(X, binding, mode):
     counter = 0
     first_elements = {}
     position_elem = {}
-    if binding == 1:  # binding Start
+    # Reverse the sequence if binding is to the end
+    if binding == 2:
+        X = X[::-1]
 
-        for idx, i in enumerate(X):
-            if i not in first_elements:
-                first_elements[i] = idx
-                position_elem[i] = idx
-            else:
-                interval = idx - position_elem[i]
-                result.append(interval)
-                position_elem[i] = idx
+    for idx, elem in enumerate(X):
+        if elem not in first_elements:
+            first_elements[elem] = idx
+            position_elem[elem] = idx
+        else:
+            interval = idx - position_elem[elem]
+            result.append(interval)
+            position_elem[elem] = idx
 
-        if mode == 2:
-            for i in first_elements:
-                counter = first_elements[i]
-                result.insert(counter, counter + 1)
+    if mode == 2:
+        for elem in first_elements:
+            result.insert(first_elements[elem], first_elements[elem] + 1)
 
-        if mode == 3:
-            for i in first_elements:
-                counter = first_elements[i]
-                result.insert(counter, len(X) - position_elem[i] + first_elements[i])
+    elif mode == 3:
+        for elem in first_elements:
+            result.insert(
+                first_elements[elem],
+                len(X) - position_elem[elem] + first_elements[elem],
+            )
 
-        if mode == 4:
-            for i in first_elements:
-                counter = first_elements[i]
-                result.insert(counter, counter + 1)
-            j = 1
-            for counter in sorted(position_elem.values()):
-                result.insert(counter + j, len(X) - counter)
-                j = j + 1
+    elif mode == 4:
+        for elem in first_elements:
+            result.insert(first_elements[elem], first_elements[elem] + 1)
+        for i, counter in enumerate(sorted(position_elem.values())):
+            result.insert(counter + i + 1, len(X) - counter)
 
-    if binding == 2:  # binding End
-
-        X_rev = X[::-1]
-
-        for idx, i in enumerate(X_rev):
-            if i not in first_elements:
-                first_elements[i] = idx
-                position_elem[i] = idx
-            else:
-                interval = idx - position_elem[i]
-                result.append(interval)
-                position_elem[i] = idx
-
-        if mode == 2:
-            for i in first_elements:
-                counter = first_elements[i]
-                result.insert(counter, counter + 1)
-
-        if mode == 3:
-            for i in first_elements:
-                counter = first_elements[i]
-                result.insert(counter, len(X) - position_elem[i] + first_elements[i])
-
-        if mode == 4:
-            for i in first_elements:
-                counter = first_elements[i]
-                result.insert(counter, counter + 1)
-            j = 1
-            for counter in sorted(position_elem.values()):
-                result.insert(counter + j, len(X) - counter)
-                j += 1
-
+    # Reverse result back if binding is to the end
+    if binding == 2:
         result = result[::-1]
 
     return result
