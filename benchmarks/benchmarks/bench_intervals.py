@@ -74,6 +74,8 @@ skip = [
     (50000000, "Best", 2, 4),
 ]
 
+timeout = 600
+
 
 class IntervalsSuite:
     params = (length, ["Normal"], [1, 2], [2])
