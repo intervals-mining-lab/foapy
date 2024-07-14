@@ -78,7 +78,7 @@ timeout = 600
 
 
 class IntervalsSuite:
-    params = (length, ["Normal"], [1, 2], [2])
+    params = (length, ["Best"], [1, 2], [2])
     param_names = ["length", "case", "binding", "mode"]
 
     data = None
@@ -100,10 +100,6 @@ class IntervalsSuite:
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def time_intervals(self, length, case, binding, mode):
         intervals(self.data, self.binding, self.mode)
-
-    @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def mem_intervals(self, length, case, binding, mode):
-        return intervals(self.data, self.binding, self.mode)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def peakmem_intervals(self, length, case, binding, mode):
