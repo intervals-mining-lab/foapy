@@ -78,7 +78,7 @@ timeout = 600
 
 
 class IntervalsSuite:
-    params = (length, ["Best"], [1, 2], [2])
+    params = (length, ["DNA"], [1, 2], [2])
     param_names = ["length", "case", "binding", "mode"]
 
     data = None

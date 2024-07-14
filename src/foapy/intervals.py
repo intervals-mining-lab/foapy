@@ -28,7 +28,7 @@ def intervals(X, binding, mode):
         else:
             interval = idx - position_elem[elem]
             if mode == 4:
-                result[idx][0] = interval
+                result[idx, 0] = interval
             else:
                 result[idx] = interval
         position_elem[elem] = idx
@@ -37,21 +37,18 @@ def intervals(X, binding, mode):
         result = result[nonzero(result)]
 
     if mode == 2:
-        for elem in first_elements:
-            result[first_elements[elem]] = first_elements[elem] + 1
+        for elem, position in first_elements.items():
+            result[position] = position + 1
 
     elif mode == 3:
-        for elem in first_elements:
-            result[first_elements[elem]] = (
-                len(X) - position_elem[elem] + first_elements[elem]
-            )
+        for elem, position in first_elements.items():
+            result[position] = len(X) - position_elem[elem] + position
 
     elif mode == 4:
-        for elem in first_elements:
-            result[first_elements[elem]][0] = first_elements[elem] + 1
-        for elem in position_elem:
-            counter = position_elem[elem]
-            result[counter][1] = len(X) - counter
+        for elem, position in first_elements.items():
+            result[position, 0] = position + 1
+        for elem, position in position_elem.items():
+            result[position, 1] = len(X) - position
 
         result = result.ravel()
         result = result[nonzero(result)]
