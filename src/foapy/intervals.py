@@ -7,56 +7,64 @@ def intervals(X, binding, mode):
     Finding array of array of intervals of the
     uniform  sequences in the given input sequence
     """
-    convert_arr = np.asanyarray(X)
-    shape = convert_arr.shape
+    ar = np.asanyarray(X)
+    shape = ar.shape
+
+    if shape == (0,):
+        return []
 
     if mode == 4:
         shape = shape + (2,)
 
     result = np.zeros(shape=shape, dtype=int)
 
-    first_elements = {}
-    position_elem = {}
-
-    # Reverse the sequence if binding is to the end
     if binding == 2:
-        convert_arr = convert_arr[::-1]
+        ar = ar[::-1]
 
-    for idx, elem in enumerate(convert_arr):
-        if elem not in first_elements:
-            first_elements[elem] = idx
-        else:
-            interval = idx - position_elem[elem]
-            if mode == 4:
-                result[idx][0] = interval
-            else:
-                result[idx] = interval
-        position_elem[elem] = idx
+    perm = ar.argsort(kind="mergesort")
+    inverse_perm = perm.argsort(kind="mergesort")
 
-    if mode == 1:
-        result = result[nonzero(result)]
+    aux = ar[perm]
 
-    if mode == 2:
-        for elem in first_elements:
-            result[first_elements[elem]] = first_elements[elem] + 1
+    first_mask = np.empty(ar.shape, dtype=np.bool_)
+    first_mask[:1] = True
+    first_mask[1:] = aux[1:] != aux[:-1]
 
-    elif mode == 3:
-        for elem in first_elements:
-            result[first_elements[elem]] = (
-                len(X) - position_elem[elem] + first_elements[elem]
-            )
+    intervals = np.empty(ar.shape, dtype=np.intp)
+    match mode:
+        case 1:
+            intervals[1:] = perm[1:] - perm[:-1]
+            intervals[first_mask] = perm[first_mask] + 1
 
-    elif mode == 4:
-        for elem in first_elements:
-            result[first_elements[elem]][0] = first_elements[elem] + 1
-        for elem in position_elem:
-            counter = position_elem[elem]
-            result[counter][1] = len(X) - counter
+            result = (intervals[inverse_perm])[np.invert(first_mask[inverse_perm])]
 
-        result = result.ravel()
-        result = result[nonzero(result)]
+        case 2:
+            intervals[1:] = perm[1:] - perm[:-1]
+            intervals[first_mask] = perm[first_mask] + 1
+            result = intervals[inverse_perm]
 
-    # Reverse result back if binding is to the end
+        case 3:
+            last_mask = np.empty(ar.shape, dtype=np.bool_)
+            last_mask[-1] = True
+            last_mask[:-1] = aux[1:] != aux[:-1]
+
+            intervals[1:] = perm[1:] - perm[:-1]
+            intervals[first_mask] = len(ar) - perm[last_mask] + perm[first_mask]
+            result = intervals[inverse_perm]
+
+        case 4:
+            last_mask = np.empty(ar.shape, dtype=np.bool_)
+            last_mask[-1] = True
+            last_mask[:-1] = aux[1:] != aux[:-1]
+
+            intervals[1:] = perm[1:] - perm[:-1]
+            intervals[first_mask] = perm[first_mask] + 1
+            result[:, 0] = intervals
+            result[last_mask, 1] = len(X) - perm[last_mask]
+            result = result[inverse_perm]
+            result = result.ravel()
+            result = result[nonzero(result)]
+
     if binding == 2:
         result = result[::-1]
 
