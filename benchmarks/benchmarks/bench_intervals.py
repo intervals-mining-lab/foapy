@@ -1,9 +1,8 @@
 import os
 
-import numpy as np
 from asv_runner.benchmarks.mark import skip_params_if
 
-from foapy.intervals import intervals
+from foapy.intervals import binding, intervals, mode
 
 from .cases import best_case, dna_case, normal_case, worst_case
 
@@ -37,16 +36,14 @@ class IntervalsSuite:
             self.data = normal_case(length)
         elif case == "Worst":
             self.data = worst_case(length)
-        self.mode = np.random.randint(1, 4)
-        self.binding = np.random.randint(1, 2)
+        self.mode = mode.redundant
+        # mode.lossy , mode.normal, mode.cycle, mode.redundant
+        self.binding = binding.start
+        #  binding.start, binding.end
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def time_intervals(self, length, case):
         intervals(self.data, self.binding, self.mode)
-
-    @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def mem_intervals(self, length, case):
-        return intervals(self.data, self.binding, self.mode)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def peakmem_intervals(self, length, case):
