@@ -16,29 +16,14 @@ def intervals(X, binding, mode):
 
     perm = ar.argsort(kind="mergesort")
 
+    inverse_perm = np.empty(ar.shape, dtype=np.intp)
+    for index, x in np.ndenumerate(perm):
+        inverse_perm[x] = index[0]
+
     indecies = np.argwhere(ar[perm[1:]] != ar[perm[:-1]]).ravel()
 
     intervals = np.empty(ar.shape, dtype=np.intp)
     intervals[1:] = perm[1:] - perm[:-1]
-
-    if mode == 3:
-        length = len(ar)
-        first_index = indecies[0]
-        middle_indexes = indecies[:-1]
-        last_index = indecies[-1]
-
-        intervals[0] = perm[0] + length - perm[:-1][first_index]
-        intervals[1:][middle_indexes] = (
-            perm[1:-1][middle_indexes] + length - perm[1:-1][middle_indexes]
-        )
-        intervals[1:][last_index] = perm[1:][last_index] + length - perm[-1]
-    else:
-        intervals[0] = perm[0] + 1
-        intervals[1:][indecies] = perm[1:][indecies] + 1
-
-    inverse_perm = np.empty(ar.shape, dtype=np.intp)
-    for index, x in np.ndenumerate(perm):
-        inverse_perm[x] = index[0]
 
     match mode:
         case 1:
@@ -47,10 +32,26 @@ def intervals(X, binding, mode):
             intervals = intervals[inverse_perm]
             result = intervals[intervals.nonzero()]
         case 2:
+            intervals[0] = perm[0] + 1
+            intervals[1:][indecies] = perm[1:][indecies] + 1
             result = intervals[inverse_perm]
         case 3:
+            length = len(ar)
+            first_index = indecies[0]
+            middle_indexes = indecies[1:-1]
+            last_index = indecies[-1]
+
+            intervals[0] = perm[0] + length - perm[:-1][first_index]
+            intervals[1:][middle_indexes] = (
+                perm[1:][middle_indexes] + length - perm[1:-1][middle_indexes]
+            )
+            intervals[1:][last_index] = perm[1:][last_index] + length - perm[-1]
+
             result = intervals[inverse_perm]
         case 4:
+            intervals[0] = perm[0] + 1
+            intervals[1:][indecies] = perm[1:][indecies] + 1
+
             result = np.zeros(shape=ar.shape + (2,), dtype=int)
             result[:, 0] = intervals
             result[:, 1][indecies] = len(ar) - perm[:-1][indecies]
