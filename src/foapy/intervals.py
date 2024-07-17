@@ -1,13 +1,6 @@
-class binding:
-    start = 1
-    end = 2
+import numpy as np
 
-
-class mode:
-    lossy = 1
-    normal = 2
-    cycle = 3
-    redundant = 4
+from foapy.constants_intervals import binding, mode
 
 
 def intervals(X, bind, mod):
@@ -69,41 +62,50 @@ def intervals(X, bind, mod):
             {"message": "Invalid mode value. Use mode.lossy,normal,cycle or redundant."}
         )
 
-    result = []
-    counter = 0
-    first_elements = {}
-    position_elem = {}
-    # Reverse the sequence if binding is to the end
+    ar = np.asanyarray(X)
+
+    if ar.shape == (0,):
+        return []
+
     if bind == binding.end:
-        X = X[::-1]
+        ar = ar[::-1]
 
-    for idx, elem in enumerate(X):
-        if elem not in first_elements:
-            first_elements[elem] = idx
-            position_elem[elem] = idx
-        else:
-            interval = idx - position_elem[elem]
-            result.append(interval)
-            position_elem[elem] = idx
+    perm = ar.argsort(kind="mergesort")
 
-    if mod == mode.normal:
-        for elem in first_elements:
-            result.insert(first_elements[elem], first_elements[elem] + 1)
+    first_mask = np.empty(ar.shape, dtype=bool)
+    first_mask[:1] = True
+    first_mask[1:] = ar[perm[1:]] != ar[perm[:-1]]
 
+    last_mask = np.empty(ar.shape, dtype=bool)
+    last_mask[-1] = True
+    last_mask[:-1] = first_mask[1:]
+
+    intervals = np.empty(ar.shape, dtype=np.intp)
+    intervals[1:] = perm[1:] - perm[:-1]
+
+    delta = len(ar) - perm[last_mask] if mod == mode.cycle else 1
+    intervals[first_mask] = perm[first_mask] + delta
+
+    inverse_perm = np.empty(ar.shape, dtype=np.intp)
+    for index, x in np.ndenumerate(perm):
+        inverse_perm[x] = index[0]
+
+    if mod == mode.lossy:
+        intervals[first_mask] = 0
+        intervals = intervals[inverse_perm]
+        result = intervals[intervals.nonzero()]
+    elif mod == mode.normal:
+        result = intervals[inverse_perm]
     elif mod == mode.cycle:
-        for elem in first_elements:
-            result.insert(
-                first_elements[elem],
-                len(X) - position_elem[elem] + first_elements[elem],
-            )
-
+        result = intervals[inverse_perm]
     elif mod == mode.redundant:
-        for elem in first_elements:
-            result.insert(first_elements[elem], first_elements[elem] + 1)
-        for i, counter in enumerate(sorted(position_elem.values())):
-            result.insert(counter + i + 1, len(X) - counter)
+        result = np.zeros(shape=ar.shape + (2,), dtype=int)
+        result[:, 0] = intervals
+        result[last_mask, 1] = len(ar) - perm[last_mask]
+        result = result[inverse_perm]
+        result = result.ravel()
+        result = result[result.nonzero()]
 
-    # Reverse result back if binding is to the end
     if bind == binding.end:
         result = result[::-1]
 

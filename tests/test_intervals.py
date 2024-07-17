@@ -4,7 +4,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-from foapy.intervals import binding, intervals, mode
+from foapy.constants_intervals import binding, mode
+from foapy.intervals import intervals
 
 
 class TestIntervals(TestCase):
