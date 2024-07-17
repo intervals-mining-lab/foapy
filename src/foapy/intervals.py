@@ -72,13 +72,14 @@ def intervals(X, bind, mod):
 
     perm = ar.argsort(kind="mergesort")
 
-    first_mask = np.empty(ar.shape, dtype=bool)
-    first_mask[:1] = True
-    first_mask[1:] = ar[perm[1:]] != ar[perm[:-1]]
+    mask_shape = ar.shape
+    mask = np.empty(mask_shape[0] + 1, dtype=bool)
+    mask[:1] = True
+    mask[1:-1] = ar[perm[1:]] != ar[perm[:-1]]
+    mask[-1:] = True  # or  mask[-1] = True
 
-    last_mask = np.empty(ar.shape, dtype=bool)
-    last_mask[-1] = True
-    last_mask[:-1] = first_mask[1:]
+    first_mask = mask[:-1]
+    last_mask = mask[1:]
 
     intervals = np.empty(ar.shape, dtype=np.intp)
     intervals[1:] = perm[1:] - perm[:-1]
@@ -93,7 +94,7 @@ def intervals(X, bind, mod):
     if mod == mode.lossy:
         intervals[first_mask] = 0
         intervals = intervals[inverse_perm]
-        result = intervals[intervals.nonzero()]
+        result = intervals[intervals != 0]
     elif mod == mode.normal:
         result = intervals[inverse_perm]
     elif mod == mode.cycle:
@@ -104,7 +105,7 @@ def intervals(X, bind, mod):
         result[last_mask, 1] = len(ar) - perm[last_mask]
         result = result[inverse_perm]
         result = result.ravel()
-        result = result[result.nonzero()]
+        result = result[result != 0]
 
     if bind == binding.end:
         result = result[::-1]
