@@ -13,7 +13,7 @@ class TestMaIntervals(TestCase):
     Test list of masked_array sequence
     """
 
-    # Start-none
+    # Start-lossy
     def test_str_values_start_None(self):
         X = ma.masked_array(
             ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]

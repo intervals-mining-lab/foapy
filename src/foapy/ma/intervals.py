@@ -171,6 +171,7 @@ def intervals(X, bind, mod):
             )
 
     ar = np.asanyarray(X[~X.mask])  # Removing masked obejcts
+    print(ar)
 
     if ar.shape == (0,):
         return []
@@ -178,11 +179,17 @@ def intervals(X, bind, mod):
     if bind == binding.end:
         ar = ar[::-1]
 
-    perm = ar.argsort(kind="mergesort")
+    perm = []
+    for i in X.argsort(kind="mergesort"):
+        if ma.is_masked(X[i]) is False:
+            perm.append(i)
+    perm = np.asanyarray(perm)
+    print(perm)
+    # perm = ar.argsort(kind="mergesort")
     mask_shape = ar.shape
     mask = np.empty(mask_shape[0] + 1, dtype=bool)
     mask[:1] = True
-    mask[1:-1] = ar[perm[1:]] != ar[perm[:-1]]
+    mask[1:-1] = X[perm[1:]] != X[perm[:-1]]
     mask[-1:] = True  # or  mask[-1] = True
 
     first_mask = mask[:-1]
@@ -191,17 +198,23 @@ def intervals(X, bind, mod):
     intervals = np.empty(ar.shape, dtype=np.intp)
     intervals[1:] = perm[1:] - perm[:-1]
 
-    delta = len(ar) - perm[last_mask] if mod == mode.cycle else 1
+    delta = len(X) - perm[last_mask] if mod == mode.cycle else 1
     intervals[first_mask] = perm[first_mask] + delta
 
-    indecies = np.argwhere(ar[perm[1:]] != ar[perm[:-1]]).ravel()
+    indecies = np.argwhere(X[perm[1:]] != X[perm[:-1]]).ravel()
     cut = indecies + 1
     result_split = np.array_split(intervals, cut)  # Split for 2d array
-
+    print(result_split)
     if mod == mode.lossy:
         # _, indexes = np.unique(result_split, axis=0, return_index=True)
         # result = result_split[np.sort(indexes)]
         result = [i[1:] for i in result_split]
+        # for idx_row, i in enumerate(result_split):
+        #     for idx_col in range(1,len(i)-1):
+        #         print(idx_row, idx_col)
+        #         result_split[idx_row][idx_col] = result_split[idx_row][idx_col]
+        # - result_split[idx_row][idx_col-1]
+        # return result_split
 
     elif mod == mode.normal:
         result = result_split
@@ -220,6 +233,17 @@ def intervals(X, bind, mod):
         result = result_split
 
     if bind == binding.end:
-        result = result[::-1]
+        pass
 
     return result
+
+
+# X = ma.masked_array(
+#             ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
+#         )
+# exists = intervals(X, 2, 2)
+
+# exists = intervals(X, 1, 4)
+
+# print(X)
+# print(exists)
