@@ -367,3 +367,27 @@ class TestMaIntervals(TestCase):
                 "Element b have mask and unmasked appearance",
                 e_info.message,
             )
+
+    def test_with_binding_exception(self):
+        X = ma.masked_array(
+            ["a", "b", "c", "a", "b", "c", "b", "a"], mask=[0, 0, 0, 0, 0, 0, 0, 0]
+        )
+
+        with pytest.raises(ValueError) as e_info:
+            intervals(X, 5, 1)
+            self.assertEqual(
+                "Invalid binding value. Use binding.start or binding.end.",
+                e_info.message,
+            )
+
+    def test_with_mode_exception(self):
+        X = ma.masked_array(
+            ["a", "b", "c", "a", "b", "c", "b", "a"], mask=[0, 0, 0, 0, 0, 0, 0, 0]
+        )
+
+        with pytest.raises(ValueError) as e_info:
+            intervals(X, 1, 6)
+            self.assertEqual(
+                "Invalid binding value. Use binding.start or binding.end.",
+                e_info.message,
+            )
