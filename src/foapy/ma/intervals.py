@@ -210,16 +210,15 @@ def intervals(X, binding, mode):
             intervals[i][1:] = tail_intervals
         # ---------------------
 
-        match mode:
-            case 1:
-                intervals[i] = intervals[i][1:]
-            case 2:
-                intervals[i][:1] = positions[i][:1] + 1
-            case 3:
-                intervals[i][:1] = positions[i][:1] + length - positions[i][-1:]
-            case 4:
-                intervals[i][:1] = positions[i][:1] + 1
-                intervals[i][-1:] = length - positions[i][-1:]
+        if mode == mode_constant.lossy:
+            intervals[i] = intervals[i][1:]
+        elif mode == mode_constant.normal:
+            intervals[i][:1] = positions[i][:1] + 1
+        elif mode == mode_constant.cycle:
+            intervals[i][:1] = positions[i][:1] + length - positions[i][-1:]
+        elif mode == mode_constant.redundant:
+            intervals[i][:1] = positions[i][:1] + 1
+            intervals[i][-1:] = length - positions[i][-1:]
 
     if binding == 2:
         for i, _ in enumerate(intervals):
