@@ -37,10 +37,11 @@ class TestMaOrder(TestCase):
         expected = ma.masked_array(
             [
                 [0, None, 0, None, None],
-                [None, None, None, 1, None],
-                [None, None, None, None, 2],
+                [None, 1, None, None, None],
+                [None, None, None, 2, None],
+                [None, None, None, None, 3],
             ],
-            mask=[[0, 1, 0, 1, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0]],
+            mask=[[0, 1, 0, 1, 1], [1, 0, 1, 1, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0]],
         )
         exists = order(X)
         assert_equal(expected, exists)

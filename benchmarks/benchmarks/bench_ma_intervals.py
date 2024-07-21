@@ -3,6 +3,7 @@ import os
 from asv_runner.benchmarks.mark import skip_params_if
 
 from foapy.ma.intervals import intervals
+from foapy.ma.order import order
 
 from .ma_cases import best_case, dna_case, normal_case, worst_case
 
@@ -76,7 +77,7 @@ skip = [
 timeout = 600
 
 
-class IntervalsSuite:
+class MaIntervalsSuite:
     params = (length, ["Best", "DNA", "Normal", "Worst"], [1, 2], [1, 2, 3, 4])
     param_names = ["length", "case", "binding", "mode"]
 
@@ -86,13 +87,13 @@ class IntervalsSuite:
 
     def setup(self, length, case, binding, mode):
         if case == "Best":
-            self.data = best_case(length)
+            self.data = order(best_case(length))
         elif case == "DNA":
-            self.data = dna_case(length)
+            self.data = order(dna_case(length))
         elif case == "Normal":
-            self.data = normal_case(length)
+            self.data = order(normal_case(length))
         elif case == "Worst":
-            self.data = worst_case(length)
+            self.data = order(worst_case(length))
         self.mode = mode
         self.binding = binding
 

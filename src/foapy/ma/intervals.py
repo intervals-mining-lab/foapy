@@ -1,11 +1,11 @@
 import numpy as np
-import numpy.ma as ma
 
-from foapy.constants_intervals import binding, mode
+from foapy.constants_intervals import binding as binding_constant
+from foapy.constants_intervals import mode as mode_constant
 from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 
 
-def intervals(X, bind, mod):
+def intervals(X, binding, mode):
     """
     Finding array of array of intervals of the uniform
     sequences in the given input sequence
@@ -146,104 +146,83 @@ def intervals(X, bind, mod):
     Exception
     """
     # Validate binding
-    if bind not in {binding.start, binding.end, 1, 2}:
+    if binding not in {binding_constant.start, binding_constant.end, 1, 2}:
         raise ValueError(
             {"message": "Invalid binding value. Use binding.start or binding.end."}
         )
 
     # Validate mode
-    if mod not in {mode.lossy, mode.normal, mode.cycle, mode.redundant, 1, 2, 3, 4}:
+    if mode not in {
+        mode_constant.lossy,
+        mode_constant.normal,
+        mode_constant.cycle,
+        mode_constant.redundant,
+        1,
+        2,
+        3,
+        4,
+    }:
         raise ValueError(
             {"message": "Invalid mode value. Use mode.lossy,normal,cycle or redundant."}
         )
-
-    if X.ndim > 1:  # Checking for d1 array
-        raise Not1DArrayException(
-            {"message": f"Incorrect array form. Expected d1 array, exists {X.ndim}"}
-        )
-
-    arr_data = ma.getdata(X)
-    unique_mask_X = ma.unique(arr_data[X.mask])
-    for i in X:
-        if i in unique_mask_X:  # Checking for exception O(n)
-            raise InconsistentOrderException(
-                {"message": f"Element {i} have mask and unmasked appearance"}
-            )
-
-    ar = np.asanyarray(X[~X.mask])  # Removing masked obejcts
-    print(ar)
-
-    if ar.shape == (0,):
+    if X.shape == (0,):
         return []
 
-    if bind == binding.end:
-        ar = ar[::-1]
+    if X.ndim != 2:  # Checking for d1 array
+        raise Not1DArrayException(
+            {"message": f"Incorrect array form. Expected d2 array, exists {X.ndim}"}
+        )
 
-    perm = []
-    for i in X.argsort(kind="mergesort"):
-        if ma.is_masked(X[i]) is False:
-            perm.append(i)
-    perm = np.asanyarray(perm)
-    print(perm)
-    # perm = ar.argsort(kind="mergesort")
-    mask_shape = ar.shape
-    mask = np.empty(mask_shape[0] + 1, dtype=bool)
-    mask[:1] = True
-    mask[1:-1] = X[perm[1:]] != X[perm[:-1]]
-    mask[-1:] = True  # or  mask[-1] = True
+    length = X.shape[1]
 
-    first_mask = mask[:-1]
-    last_mask = mask[1:]
+    positions = np.empty(X.shape[0], dtype=object)
+    intervals = np.empty(X.shape[0], dtype=object)
 
-    intervals = np.empty(ar.shape, dtype=np.intp)
-    intervals[1:] = perm[1:] - perm[:-1]
+    for i in range(X.shape[0]):
 
-    delta = len(X) - perm[last_mask] if mod == mode.cycle else 1
-    intervals[first_mask] = perm[first_mask] + delta
+        unique = X[i][~X[i].mask]
+        unique = set(unique)
+        if len(unique) > 1:
+            # raise exception
+            raise InconsistentOrderException(
+                {"message": f"Elements {X[i]} have wrong appearance"}
+            )
 
-    indecies = np.argwhere(X[perm[1:]] != X[perm[:-1]]).ravel()
-    cut = indecies + 1
-    result_split = np.array_split(intervals, cut)  # Split for 2d array
-    print(result_split)
-    if mod == mode.lossy:
-        # _, indexes = np.unique(result_split, axis=0, return_index=True)
-        # result = result_split[np.sort(indexes)]
-        result = [i[1:] for i in result_split]
-        # for idx_row, i in enumerate(result_split):
-        #     for idx_col in range(1,len(i)-1):
-        #         print(idx_row, idx_col)
-        #         result_split[idx_row][idx_col] = result_split[idx_row][idx_col]
-        # - result_split[idx_row][idx_col-1]
-        # return result_split
+        ar = X[i] if binding == 1 else X[i][::-1]
+        positions[i] = np.argwhere(ar != None).flatten()  # noqa: E711
+    for i, _ in enumerate(positions):
+        if len(_) == 0:
+            intervals[i] = np.array([], dtype=int)
+            continue
+        tail_intervals = positions[i][1:] - positions[i][:-1]
+        # ---------------------
+        # redunant
+        delta = 2 if mode == 4 else 1
+        intevals_length = tail_intervals.shape[0] + delta
 
-    elif mod == mode.normal:
-        result = result_split
-    elif mod == mode.cycle:
-        result = result_split
-    elif mod == mode.redundant:
-        # result = np.zeros(shape=ar.shape + (2,), dtype=int)
-        # result[:, 0] = intervals
-        # result[last_mask, 1] = len(ar) - perm[last_mask]
-        # result = result[inverse_perm]
-        # result = result.ravel()
-        # result = result[result != 0]
+        intervals[i] = np.empty(intevals_length, dtype=int)
 
-        for idx, i in enumerate(result_split):
-            result_split[idx] = np.insert(i, len(i), len(ar) - perm[last_mask][idx])
-        result = result_split
+        # ---------------------
+        # redunant
+        if mode == 4:
+            intervals[i][1:-1] = tail_intervals
+        else:
+            intervals[i][1:] = tail_intervals
+        # ---------------------
 
-    if bind == binding.end:
-        pass
+        match mode:
+            case 1:
+                intervals[i] = intervals[i][1:]
+            case 2:
+                intervals[i][:1] = positions[i][:1] + 1
+            case 3:
+                intervals[i][:1] = positions[i][:1] + length - positions[i][-1:]
+            case 4:
+                intervals[i][:1] = positions[i][:1] + 1
+                intervals[i][-1:] = length - positions[i][-1:]
 
-    return result
+    if binding == 2:
+        for i, _ in enumerate(intervals):
+            intervals[i] = intervals[i][::-1]
 
-
-# X = ma.masked_array(
-#             ["a", "c", "c", "e", "d", "a", "c"], mask=[0, 0, 0, 0, 0, 0, 0]
-#         )
-# exists = intervals(X, 2, 2)
-
-# exists = intervals(X, 1, 4)
-
-# print(X)
-# print(exists)
+    return intervals

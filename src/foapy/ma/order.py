@@ -1,8 +1,8 @@
 import numpy as np
 import numpy.ma as ma
 
-from foapy.alphabet import alphabet
-from foapy.exceptions import InconsistentOrderException, Not1DArrayException
+from foapy.exceptions import Not1DArrayException
+from foapy.ma.alphabet import alphabet
 
 
 def order(X, return_alphabet=False) -> np.ma.MaskedArray:
@@ -115,22 +115,14 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
         )
 
     alphabet_values = alphabet(X)
+    result = np.empty((len(alphabet_values), (len(X))), np.int64)
+    mask = np.ones((len(alphabet_values), (len(X))), np.int64)
 
-    for i in X:
-        if (
-            i in ma.getdata(alphabet_values)[alphabet_values.mask]
-        ):  # Checking for exception O(n)
-            raise InconsistentOrderException(
-                {"message": f"Element {i} have mask and unmasked appearance"}
-            )
     alphabet_seq = {}
     counter = 0
-    for i in alphabet_values:
-        if ma.is_masked(i) is False:
-            alphabet_seq[counter] = i
-            counter += 1
-    result = np.empty((len(alphabet_seq), (len(X))), np.int64)
-    mask = np.ones((len(alphabet_seq), (len(X))), np.int64)
+    for i in ma.getdata(alphabet_values):
+        alphabet_seq[counter] = i
+        counter += 1
     for idx_row, i in alphabet_seq.items():  # getting array sequence
         for idx_col, j in enumerate(X):
             if i == j:
