@@ -74,7 +74,6 @@ skip = [
     (50000000, "Normal", 2, 4),
     (50000000, "Best", 2, 4),
 ]
-timeout = 600
 
 
 class MaIntervalsSuite:
