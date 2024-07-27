@@ -8,10 +8,10 @@ from .ma_cases import best_case, dna_case, normal_case, worst_case
 
 length = [5, 50, 500, 5000, 50000, 500000, 5000000, 50000000]
 skip = [
-    (500000, "Worst"),
-    (500000, "DNA"),
-    (500000, "Best"),
-    (500000, "Normal"),
+    # (500000, "Worst"),
+    # (500000, "DNA"),
+    # (500000, "Best"),
+    # (500000, "Normal"),
     (5000000, "Worst"),
     (5000000, "DNA"),
     (5000000, "Normal"),
@@ -42,10 +42,6 @@ class MaAlphabetSuite:
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def time_alphabet(self, length, case):
         alphabet(self.data)
-
-    @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def mem_alphabet(self, length, case):
-        return alphabet(self.data)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def peakmem_alphabet(self, length, case):

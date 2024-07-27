@@ -91,23 +91,34 @@ def alphabet(X) -> np.ma.MaskedArray:
         raise Not1DArrayException(
             {"message": f"Incorrect array form. Expected d1 array, exists {X.ndim}"}
         )
-    arr_data = ma.getdata(X)
-    unique_mask_X = np.unique(arr_data[X.mask])
-    for i in X:
-        if i in unique_mask_X:  # Checking for exception O(n)
+
+    data = ma.getdata(X)
+    mask = ma.getmaskarray(X)
+    perm = data.argsort(kind="mergesort")
+
+    mask_shape = data.shape
+    unique_mask = np.empty(mask_shape, dtype=bool)
+    unique_mask[:1] = True
+    unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
+    alphabet_indices = np.sort(perm[unique_mask])
+
+    left_borders = np.argwhere(unique_mask).ravel()
+
+    right_borders = np.empty(left_borders.shape, dtype=int)
+    right_borders[:-1] = left_borders[1:]
+    right_borders[-1:] = len(X)
+
+    for idx, left in np.ndenumerate(left_borders):
+        right = right_borders[idx]
+        valid = (
+            np.all(mask[perm][left:right])
+            if mask[perm][left]
+            else np.all(~mask[perm][left:right])
+        )
+        if not valid:
+            i = data[perm[left]]
             raise InconsistentOrderException(
-                {"message": f"Element {i} have mask and unmasked appearance"}
+                {"message": f"Element '{i}' have mask and unmasked appearance"}
             )
 
-    result_arr = {}
-    for i in arr_data:
-        if i not in result_arr:
-            result_arr[i] = i
-            # Adding alphabet values
-
-    return ma.masked_array(  # Return and convert array
-        list(result_arr.keys()),
-        mask=[
-            1 if mask_obj in unique_mask_X else 0 for mask_obj in result_arr.keys()
-        ],  # list comprehension to get mask
-    )
+    return ma.masked_array(data[alphabet_indices], mask[alphabet_indices])
