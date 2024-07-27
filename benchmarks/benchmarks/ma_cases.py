@@ -8,31 +8,22 @@ def best_case(length):
 
 
 def dna_case(length):
-    nucleotides = ["A", "C", "G", "T"]
-    alphabet = numpy.random.choice(nucleotides, length)
-    generate_mask = numpy.unique(numpy.random.choice(alphabet, 1))
-    mask = ([1 if mask_obj in generate_mask else 0 for mask_obj in alphabet],)
-    return ma.masked_array(alphabet, mask=mask)
-
+    rng = numpy.random.default_rng()
+    alphabet = numpy.asanyarray(["A", "C", "G", "T"])
+    power = len(alphabet)
+    alphabet_mask = numpy.random.choice([True, False], power)
+    indecies = rng.integers(0, power, length)
+    return ma.masked_array(alphabet[indecies], alphabet_mask[indecies])
 
 def normal_case(length):
-
-    alphabet = numpy.random.choice(
-        numpy.arange(0, fix(length * 0.2), dtype=int), length
-    )
-    generate_mask = numpy.unique(
-        numpy.random.choice(alphabet, numpy.random.randint(0, length))
-    )
-    mask = ([1 if mask_obj in generate_mask else 0 for mask_obj in alphabet],)
-
-    return ma.masked_array(alphabet, mask)
-
+    rng = numpy.random.default_rng()
+    power = int(numpy.fix(length * 0.2))
+    alphabet = numpy.random.rand(power)
+    alphabet_mask = numpy.random.choice([True, False], power)
+    indecies = rng.integers(0, power, length)
+    return ma.masked_array(alphabet[indecies], alphabet_mask[indecies])
 
 def worst_case(length):
-    alphabet = numpy.random.rand(length)
-    generate_mask = numpy.unique(
-        numpy.random.choice(alphabet, numpy.random.randint(0, length))
-    )
-    mask = ([1 if mask_obj in generate_mask else 0 for mask_obj in alphabet],)
-
-    return ma.masked_array(alphabet, mask)
+    seq = numpy.random.rand(length)
+    mask = numpy.random.choice([True, False], length)
+    return ma.masked_array(seq, mask)
