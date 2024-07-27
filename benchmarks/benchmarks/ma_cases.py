@@ -6,7 +6,6 @@ from numpy import fix
 def best_case(length):
     return ma.masked_array(numpy.ones((length,), dtype=int), mask=[0] * length)
 
-
 def dna_case(length):
     rng = numpy.random.default_rng()
     alphabet = numpy.asanyarray(["A", "C", "G", "T"])
