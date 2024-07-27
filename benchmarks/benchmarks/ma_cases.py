@@ -18,7 +18,7 @@ def dna_case(length):
 
 def normal_case(length):
     rng = numpy.random.default_rng()
-    power = int(numpy.fix(length * 0.2))
+    power = int(fix(length * 0.2))
     alphabet = numpy.random.rand(power)
     alphabet_mask = numpy.random.choice([True, False], power)
     indecies = rng.integers(0, power, length)
