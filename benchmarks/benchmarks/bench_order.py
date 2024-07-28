@@ -40,9 +40,5 @@ class OrderSuite:
         order(self.data)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def mem_order(self, length, case):
-        return order(self.data)
-
-    @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def peakmem_order(self, length, case):
         return order(self.data)
