@@ -99,6 +99,7 @@ def alphabet(X) -> np.ma.MaskedArray:
     unique_mask = np.empty(mask_shape, dtype=bool)
     unique_mask[:1] = True
     unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
+
     current = False
     for idx, pos in np.ndenumerate(perm):
         is_masked = ma.is_masked(X[pos])
