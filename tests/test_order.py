@@ -8,7 +8,7 @@ from foapy.exceptions import Not1DArrayException
 from foapy.order import order
 
 
-class TestMaOrder(TestCase):
+class TestOrder(TestCase):
     """
     Test list of array sequence
     """
@@ -57,8 +57,8 @@ class TestMaOrder(TestCase):
             )
 
     def test_with_return_alphabet(self):
-        X = ["a", "c", "c", "e", "d", "a"]
-        expected_alphabet = ["a", "c", "e", "d"]
+        X = ["d", "e", "e", "c", "a", "d"]
+        expected_alphabet = ["d", "e", "c", "a"]
         expected_array = [0, 1, 1, 2, 3, 0]
 
         exists_array, exists_alphabet = order(X, True)

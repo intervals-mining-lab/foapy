@@ -76,30 +76,34 @@ def order(X, return_alphabet=False):
 
     perm = data.argsort(kind="mergesort")
 
-    mask_shape = data.shape
-    unique_mask = np.empty(mask_shape, dtype=bool)
+    unique_mask = np.empty(data.shape, dtype=bool)
     unique_mask[:1] = True
     unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
 
-    inverse_perm = np.empty(data.shape, dtype=np.intp)
-    for index, x in np.ndenumerate(perm):
-        inverse_perm[x] = index[0]
+    power = np.count_nonzero(unique_mask)
 
-    result_mask = np.full_like(unique_mask, False)
-    result_mask[:1] = True
-    result_mask[perm[unique_mask]] = True
-    alphabet_values = data[result_mask]
+    groups = np.full_like(perm, -1)
+    groups[perm[unique_mask]] = np.arange(0, power)
+    alphabet_perm = groups[groups != -1]
 
-    alphabet_perm = alphabet_values.argsort(kind="mergesort")
-    groups = np.arange(0, len(alphabet_values))
+    inverse_alphabet_perm = np.empty(power, dtype=np.intp)
+    for idx, pos in np.ndenumerate(alphabet_perm):
+        inverse_alphabet_perm[pos] = idx[0]
+
     result = np.empty(shape=data.shape, dtype=int)
+    inverse_perm = np.empty(data.shape, dtype=np.intp)
 
     current = -1
     for idx, pos in np.ndenumerate(perm):
         if unique_mask[idx]:
             current = current + 1
-        result[idx] = groups[alphabet_perm][current]
+        result[idx] = inverse_alphabet_perm[current]
+        inverse_perm[pos] = idx[0]
 
     if return_alphabet:
-        return result[inverse_perm], alphabet_values
+        result_mask = np.full_like(unique_mask, False)
+        result_mask[:1] = True
+        result_mask[perm[unique_mask]] = True
+        return (result[inverse_perm], data[result_mask])
+
     return result[inverse_perm]
