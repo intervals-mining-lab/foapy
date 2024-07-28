@@ -40,9 +40,5 @@ class AlphabetSuite:
         alphabet(self.data)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def mem_alphabet(self, length, case):
-        return alphabet(self.data)
-
-    @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def peakmem_alphabet(self, length, case):
         return alphabet(self.data)
