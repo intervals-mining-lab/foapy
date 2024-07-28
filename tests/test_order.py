@@ -42,7 +42,7 @@ class TestMaOrder(TestCase):
         with pytest.raises(Not1DArrayException) as e_info:
             order(X)
             self.assertEqual(
-                "Incorrect array form. Excpected d1 array, exists 2",
+                "Incorrect array form. Expected d1 array, exists 2",
                 e_info.message,
             )
 
@@ -51,7 +51,8 @@ class TestMaOrder(TestCase):
         with pytest.raises(Not1DArrayException) as e_info:
             order(X)
             self.assertEqual(
-                "Incorrect array form. Excpected d1 array, exists 3",
+                "Incorrect array form. Expected d1 array, exists 3",
+                "Incorrect array form. Expected d1 array, exists 3",
                 e_info.message,
             )
 

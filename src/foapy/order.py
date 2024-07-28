@@ -1,6 +1,5 @@
 import numpy as np
 
-from foapy.alphabet import alphabet
 from foapy.exceptions import Not1DArrayException
 
 
@@ -69,28 +68,38 @@ def order(X, return_alphabet=False):
     Exception
     """
 
-    convert_arr = np.asanyarray(X)
-    if convert_arr.ndim > 1:  # Checking for d1 array
+    data = np.asanyarray(X)
+    if data.ndim > 1:  # Checking for d1 array
         raise Not1DArrayException(
-            {
-                "message": "Incorrect array form. Expected d1 array,"
-                + f"exists {convert_arr.ndim}"
-            }
+            {"message": f"Incorrect array form. Expected d1 array, exists {data.ndim}"}
         )
-    alphabet_values = alphabet(X)
 
-    result = np.empty(shape=convert_arr.shape, dtype=int)
+    perm = data.argsort(kind="mergesort")
 
-    alphabet_seq = {}
-    counter = 0
-    for i in alphabet_values:
-        alphabet_seq[i] = counter
-        counter += 1
+    mask_shape = data.shape
+    unique_mask = np.empty(mask_shape, dtype=bool)
+    unique_mask[:1] = True
+    unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
 
-    for idx, i in enumerate(convert_arr):  # getting for array
-        result[idx] = alphabet_seq[i]
+    inverse_perm = np.empty(data.shape, dtype=np.intp)
+    for index, x in np.ndenumerate(perm):
+        inverse_perm[x] = index[0]
+
+    result_mask = np.full_like(unique_mask, False)
+    result_mask[:1] = True
+    result_mask[perm[unique_mask]] = True
+    alphabet_values = data[result_mask]
+
+    alphabet_perm = alphabet_values.argsort(kind="mergesort")
+    groups = np.arange(0, len(alphabet_values))
+    result = np.empty(shape=data.shape, dtype=int)
+
+    current = -1
+    for idx, pos in np.ndenumerate(perm):
+        if unique_mask[idx]:
+            current = current + 1
+        result[idx] = groups[alphabet_perm][current]
 
     if return_alphabet:
-        return result, alphabet_values
-
-    return result
+        return result[inverse_perm], alphabet_values
+    return result[inverse_perm]
