@@ -19,13 +19,15 @@ def dna_case(length):
 def normal_case(length):
     rng = numpy.random.default_rng()
     power = int(fix(length * 0.2))
-    alphabet = numpy.random.rand(power)
+    alphabet = numpy.linspace(0, power, power)
     alphabet_mask = numpy.random.choice([True, False], power)
     indecies = rng.integers(0, power, length)
     return ma.masked_array(alphabet[indecies], alphabet_mask[indecies])
 
 
 def worst_case(length):
-    seq = numpy.random.rand(length)
-    mask = numpy.random.choice([True, False], length)
-    return ma.masked_array(seq, mask)
+    power = length
+    alphabet = numpy.linspace(0, power, power)
+    alphabet_mask = numpy.random.choice([True, False], power)
+    indecies = rng.integers(0, power, length)
+    return ma.masked_array(alphabet[indecies], alphabet_mask[indecies])
