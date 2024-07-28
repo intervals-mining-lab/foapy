@@ -93,32 +93,24 @@ def alphabet(X) -> np.ma.MaskedArray:
         )
 
     data = ma.getdata(X)
-    mask = ma.getmaskarray(X)
     perm = data.argsort(kind="mergesort")
 
     mask_shape = data.shape
     unique_mask = np.empty(mask_shape, dtype=bool)
     unique_mask[:1] = True
     unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
-    alphabet_indices = np.sort(perm[unique_mask])
-
-    left_borders = np.argwhere(unique_mask).ravel()
-
-    right_borders = np.empty(left_borders.shape, dtype=int)
-    right_borders[:-1] = left_borders[1:]
-    right_borders[-1:] = len(X)
-
-    for idx, left in np.ndenumerate(left_borders):
-        right = right_borders[idx]
-        valid = (
-            np.all(mask[perm][left:right])
-            if mask[perm][left]
-            else np.all(~mask[perm][left:right])
-        )
-        if not valid:
-            i = data[perm[left]]
+    current = False
+    for idx, pos in np.ndenumerate(perm):
+        is_masked = ma.is_masked(X[pos])
+        if unique_mask[idx]:
+            current = is_masked
+        if current != is_masked:
+            i = data[pos]
             raise InconsistentOrderException(
                 {"message": f"Element '{i}' have mask and unmasked appearance"}
             )
 
-    return ma.masked_array(data[alphabet_indices], mask[alphabet_indices])
+    result_mask = np.full_like(unique_mask, False)
+    result_mask[:1] = True
+    result_mask[perm[unique_mask]] = True
+    return X[result_mask]
