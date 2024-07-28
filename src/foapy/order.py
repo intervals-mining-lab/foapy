@@ -104,6 +104,6 @@ def order(X, return_alphabet=False):
         result_mask = np.full_like(unique_mask, False)
         result_mask[:1] = True
         result_mask[perm[unique_mask]] = True
-        return (result[inverse_perm], data[result_mask])
+        return result[inverse_perm], data[result_mask]
 
     return result[inverse_perm]
