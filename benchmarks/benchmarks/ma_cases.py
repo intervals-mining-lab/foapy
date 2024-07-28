@@ -26,6 +26,7 @@ def normal_case(length):
 
 
 def worst_case(length):
+    rng = numpy.random.default_rng()
     power = length
     alphabet = numpy.linspace(0, power, power)
     alphabet_mask = numpy.random.choice([True, False], power)
