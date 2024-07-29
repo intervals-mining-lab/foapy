@@ -82,26 +82,23 @@ def order(X, return_alphabet=False):
 
     power = np.count_nonzero(unique_mask)
 
-    result = np.empty(data.shape, dtype=np.intp)
-    summary = -1
-    for idx, unique in np.ndenumerate(unique_mask):
-        if unique:
-            summary = summary + 1
-        pos = perm[idx]
-        result[pos] = summary
+    groups = np.full_like(perm, -1)
+    groups[perm[unique_mask]] = np.arange(power)
+    alphabet_perm = groups[groups != -1]
 
-    inverse_alphabet_perm = np.full(power, -1, dtype=np.intp)
-    current = 0
-    for idx, pos in np.ndenumerate(result):
-        if inverse_alphabet_perm[pos] == -1:
-            inverse_alphabet_perm[pos] = current
-            current = current + 1
-        result[idx] = inverse_alphabet_perm[pos]
+    inverse_alphabet_perm = np.empty(power, dtype=np.intp)
+    inverse_alphabet_perm[alphabet_perm] = np.arange(0, power)
+
+    result = np.empty(shape=data.shape, dtype=int)
+    inverse_perm = np.empty(data.shape, dtype=np.intp)
+    inverse_perm[perm] = np.arange(data.shape[0])
+
+    tmp = np.cumsum(unique_mask) - 1
+    result = inverse_alphabet_perm[tmp][inverse_perm]
 
     if return_alphabet:
         result_mask = np.full_like(unique_mask, False)
         result_mask[:1] = True
         result_mask[perm[unique_mask]] = True
-        return (result, data[result_mask])
-
+        return result, data[result_mask]
     return result
