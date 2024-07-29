@@ -82,11 +82,14 @@ def order(X, return_alphabet=False):
 
     power = np.count_nonzero(unique_mask)
 
-    inverse_perm = np.empty(data.shape, dtype=np.intp)
-    for idx, pos in np.ndenumerate(perm):
-        inverse_perm[pos] = idx[0]
+    result = np.empty(data.shape, dtype=np.intp)
+    summary = -1
+    for idx, unique in np.ndenumerate(unique_mask):
+        if unique:
+            summary = summary + 1
+        pos = perm[idx]
+        result[pos] = summary
 
-    result = (np.cumsum(unique_mask) - 1)[inverse_perm]
     inverse_alphabet_perm = np.full(power, -1, dtype=np.intp)
     current = 0
     for idx, pos in np.ndenumerate(result):
