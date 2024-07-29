@@ -18,6 +18,8 @@ skip = [
     (50000000, "Best"),
 ]
 
+timeout = 600
+
 
 class OrderSuite:
     params = (length, ["Best", "DNA", "Normal", "Worst"])
