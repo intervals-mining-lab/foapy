@@ -52,7 +52,6 @@ class TestOrder(TestCase):
             order(X)
             self.assertEqual(
                 "Incorrect array form. Expected d1 array, exists 3",
-                "Incorrect array form. Expected d1 array, exists 3",
                 e_info.message,
             )
 
