@@ -101,6 +101,7 @@ def alphabet(X) -> np.ma.MaskedArray:
     unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
 
     current = False
+    # X[perm].mask
     for idx, pos in np.ndenumerate(perm):
         is_masked = ma.is_masked(X[pos])
         if unique_mask[idx]:
