@@ -69,7 +69,7 @@ class TestMaAlphabet(TestCase):
         with pytest.raises(InconsistentOrderException) as e_info:
             alphabet(X)
             self.assertEqual(
-                "Element b have mask and unmasked appearance",
+                "Element 'b' have mask and unmasked appearance",
                 e_info.message,
             )
 

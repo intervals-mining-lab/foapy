@@ -1,8 +1,8 @@
 import numpy as np
 import numpy.ma as ma
 
-from foapy.alphabet import alphabet
 from foapy.exceptions import Not1DArrayException
+from foapy.ma.alphabet import alphabet
 
 
 def order(X, return_alphabet=False) -> np.ma.MaskedArray:
@@ -115,7 +115,6 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
         )
 
     alphabet_values = alphabet(X)
-
     result = np.empty((len(alphabet_values), (len(X))), np.int64)
     mask = np.ones((len(alphabet_values), (len(X))), np.int64)
 
@@ -125,7 +124,7 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
         alphabet_seq[counter] = i
         counter += 1
     for idx_row, i in alphabet_seq.items():  # getting array sequence
-        for idx_col, j in enumerate(ma.getdata(X)):
+        for idx_col, j in enumerate(X):
             if i == j:
                 result[idx_row][idx_col] = idx_row
                 mask[idx_row][idx_col] = 0
