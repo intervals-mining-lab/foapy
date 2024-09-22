@@ -101,7 +101,9 @@ def alphabet(X) -> np.ma.MaskedArray:
     unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
 
     first_appears_indecies = np.argwhere(unique_mask).ravel()
-    count_true_in_mask_by_slice = np.add.reduceat(X[perm].mask, first_appears_indecies)
+    count_true_in_mask_by_slice = np.add.reduceat(
+        ma.getmaskarray(X[perm]), first_appears_indecies
+    )
     slice_length = np.diff(np.r_[first_appears_indecies, len(X)])
     consistency_index = count_true_in_mask_by_slice / slice_length
     consistency_errors = np.argwhere(
