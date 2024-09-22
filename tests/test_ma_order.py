@@ -4,7 +4,7 @@ import numpy.ma as ma
 import pytest
 from numpy.ma.testutils import assert_equal
 
-from foapy.exceptions import Not1DArrayException
+from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 from foapy.ma.order import order
 
 
@@ -28,6 +28,20 @@ class TestMaOrder(TestCase):
                 [1, 1, 1, 0, 1],
                 [1, 1, 1, 1, 0],
             ],
+        )
+        exists = order(X)
+        assert_equal(expected, exists)
+
+    def test_string_values_with_mask(self):
+        X = ma.masked_array(["a", "b", "a", "c", "d"], mask=[0, 1, 0, 0, 0])
+        expected = ma.masked_array(
+            [
+                [0, None, 0, None, None],
+                [None, 1, None, None, None],
+                [None, None, None, 2, None],
+                [None, None, None, None, 3],
+            ],
+            mask=[[0, 1, 0, 1, 1], [1, 0, 1, 1, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0]],
         )
         exists = order(X)
         assert_equal(expected, exists)
@@ -147,5 +161,17 @@ class TestMaOrder(TestCase):
             order(X)
             self.assertEqual(
                 "Incorrect array form. Excpected d1 array, exists 3",
+                e_info.message,
+            )
+
+    def test_with_exception(self):
+        X = ma.masked_array(
+            ["a", "b", "c", "a", "b", "c", "b", "a"], mask=[0, 1, 0, 0, 0, 0, 1, 0]
+        )
+
+        with pytest.raises(InconsistentOrderException) as e_info:
+            order(X)
+            self.assertEqual(
+                "Element b have mask and unmasked appearance",
                 e_info.message,
             )
