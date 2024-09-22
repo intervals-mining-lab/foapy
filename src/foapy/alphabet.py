@@ -43,14 +43,20 @@ def alphabet(X) -> np.ndarray:
     >>> result
     Exception
     """
-    convert_arr = np.asanyarray(X)
-    if convert_arr.ndim > 1:  # Checking for d1 array
+    data = np.asanyarray(X)
+    if data.ndim > 1:  # Checking for d1 array
         raise Not1DArrayException(
-            {
-                "message": "Incorrect array form. Expected d1 array,"
-                + f"exists {convert_arr.ndim}"
-            }
+            {"message": f"Incorrect array form. Expected d1 array, exists {data.ndim}"}
         )
 
-    _, indexes = np.unique(convert_arr, return_index=True)
-    return convert_arr[np.sort(indexes)]
+    perm = data.argsort(kind="mergesort")
+
+    mask_shape = data.shape
+    unique_mask = np.empty(mask_shape, dtype=bool)
+    unique_mask[:1] = True
+    unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
+
+    result_mask = np.full_like(unique_mask, False)
+    result_mask[:1] = True
+    result_mask[perm[unique_mask]] = True
+    return data[result_mask]

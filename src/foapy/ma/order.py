@@ -3,6 +3,7 @@ import numpy.ma as ma
 
 from foapy.exceptions import Not1DArrayException
 from foapy.ma.alphabet import alphabet
+from foapy.order import order as general_order
 
 
 def order(X, return_alphabet=False) -> np.ma.MaskedArray:
@@ -115,20 +116,15 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
         )
 
     alphabet_values = alphabet(X)
-    result = np.empty((len(alphabet_values), (len(X))), np.int64)
-    mask = np.ones((len(alphabet_values), (len(X))), np.int64)
+    order = general_order(ma.getdata(X))
 
-    alphabet_seq = {}
-    counter = 0
-    for i in ma.getdata(alphabet_values):
-        alphabet_seq[counter] = i
-        counter += 1
-    for idx_row, i in alphabet_seq.items():  # getting array sequence
-        for idx_col, j in enumerate(X):
-            if i == j:
-                result[idx_row][idx_col] = idx_row
-                mask[idx_row][idx_col] = 0
+    power = len(alphabet_values)
+    length = len(X)
 
-    if return_alphabet:  # Checking for get alhabet (optional)
+    result = np.tile(order, power).reshape(power, length)
+    alphabet_indecies = np.arange(power).reshape(power, 1)
+    mask = result != alphabet_indecies
+
+    if return_alphabet:  # Checking for get alphabet (optional)
         return ma.masked_array(result, mask=mask), alphabet_values
     return ma.masked_array(result, mask=mask)

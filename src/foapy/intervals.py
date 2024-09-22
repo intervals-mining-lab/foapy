@@ -88,8 +88,7 @@ def intervals(X, bind, mod):
     intervals[first_mask] = perm[first_mask] + delta
 
     inverse_perm = np.empty(ar.shape, dtype=np.intp)
-    for index, x in np.ndenumerate(perm):
-        inverse_perm[x] = index[0]
+    inverse_perm[perm] = np.arange(ar.shape[0])
 
     if mod == mode.lossy:
         intervals[first_mask] = 0
