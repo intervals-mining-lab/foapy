@@ -91,23 +91,31 @@ def alphabet(X) -> np.ma.MaskedArray:
         raise Not1DArrayException(
             {"message": f"Incorrect array form. Expected d1 array, exists {X.ndim}"}
         )
-    arr_data = ma.getdata(X)
-    unique_mask_X = np.unique(arr_data[X.mask])
-    for i in X:
-        if i in unique_mask_X:  # Checking for exception O(n)
-            raise InconsistentOrderException(
-                {"message": f"Element {i} have mask and unmasked appearance"}
-            )
 
-    result_arr = {}
-    for i in arr_data:
-        if i not in result_arr:
-            result_arr[i] = i
-            # Adding alphabet values
+    data = ma.getdata(X)
+    perm = data.argsort(kind="mergesort")
 
-    return ma.masked_array(  # Return and convert array
-        list(result_arr.keys()),
-        mask=[
-            1 if mask_obj in unique_mask_X else 0 for mask_obj in result_arr.keys()
-        ],  # list comprehension to get mask
+    mask_shape = data.shape
+    unique_mask = np.empty(mask_shape, dtype=bool)
+    unique_mask[:1] = True
+    unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
+
+    first_appears_indecies = np.argwhere(unique_mask).ravel()
+    count_true_in_mask_by_slice = np.add.reduceat(
+        ma.getmaskarray(X[perm]), first_appears_indecies
     )
+    slice_length = np.diff(np.r_[first_appears_indecies, len(X)])
+    consistency_index = count_true_in_mask_by_slice / slice_length
+    consistency_errors = np.argwhere(
+        (consistency_index != 0) & (consistency_index != 1)
+    ).ravel()
+    if len(consistency_errors) > 0:
+        i = data[consistency_errors[0]]
+        raise InconsistentOrderException(
+            {"message": f"Element '{i}' have mask and unmasked appearance"}
+        )
+
+    result_mask = np.full_like(unique_mask, False)
+    result_mask[:1] = True
+    result_mask[perm[unique_mask]] = True
+    return X[result_mask]

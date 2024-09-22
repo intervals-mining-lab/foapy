@@ -18,6 +18,8 @@ skip = [
     (50000000, "Best"),
 ]
 
+timeout = 600
+
 
 class OrderSuite:
     params = (length, ["Best", "DNA", "Normal", "Worst"])
@@ -38,10 +40,6 @@ class OrderSuite:
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def time_order(self, length, case):
         order(self.data)
-
-    @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def mem_order(self, length, case):
-        return order(self.data)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def peakmem_order(self, length, case):
