@@ -100,17 +100,18 @@ def alphabet(X) -> np.ma.MaskedArray:
     unique_mask[:1] = True
     unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
 
-    current = False
-    # X[perm].mask
-    for idx, pos in np.ndenumerate(perm):
-        is_masked = ma.is_masked(X[pos])
-        if unique_mask[idx]:
-            current = is_masked
-        if current != is_masked:
-            i = data[pos]
-            raise InconsistentOrderException(
-                {"message": f"Element '{i}' have mask and unmasked appearance"}
-            )
+    first_appears_indecies = np.argwhere(unique_mask).ravel()
+    count_true_in_mask_by_slice = np.add.reduceat(X[perm].mask, first_appears_indecies)
+    slice_length = np.diff(np.r_[first_appears_indecies, len(X)])
+    consistency_index = count_true_in_mask_by_slice / slice_length
+    consistency_errors = np.argwhere(
+        (consistency_index != 0) & (consistency_index != 1)
+    ).ravel()
+    if len(consistency_errors) > 0:
+        i = data[consistency_errors[0]]
+        raise InconsistentOrderException(
+            {"message": f"Element '{i}' have mask and unmasked appearance"}
+        )
 
     result_mask = np.full_like(unique_mask, False)
     result_mask[:1] = True
