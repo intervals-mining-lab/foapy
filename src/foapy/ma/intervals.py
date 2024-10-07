@@ -182,14 +182,14 @@ def intervals(X, bind, mod):
 
     preserve_previous_ufunc = np.frompyfunc(preserve_previous, 2, 1)
 
-    positions = np.tile(np.arange(0, length + 1), (power, 1))
-    positions[:, :-1][mask] = 0
-    first_indexes = np.min(
-        positions[:, :-1], initial=length, axis=1, where=~mask
-    ).reshape(power, 1)
+    result = np.tile(np.arange(0, length + 1), (power, 1))
+    result[:, :-1][mask] = 0
+    first_indexes = np.min(result[:, :-1], initial=length, axis=1, where=~mask).reshape(
+        power, 1
+    )
 
     inconsistent_first_indexes = np.min(
-        positions[:, :-1], initial=length - 1, axis=1, where=~mask
+        result[:, :-1], initial=length - 1, axis=1, where=~mask
     ).reshape(power, 1)
     inconsistent_indeces = np.argwhere(
         ~np.all(
@@ -207,31 +207,31 @@ def intervals(X, bind, mod):
             {"message": f"Elements {i} have wrong appearance"}
         )
 
-    accumulater_positions = preserve_previous_ufunc.accumulate(positions, axis=1)
-    intervals = np.tile(np.arange(0, length + 1), (power, 1))
-    intervals[:, 1:] = positions[:, 1:] - accumulater_positions[:, :-1]
+    result[:, 1:] = (
+        result[:, 1:] - preserve_previous_ufunc.accumulate(result, axis=1)[:, :-1]
+    )
 
-    delta = intervals[:, -1:] if mod == mode.cycle else 1
+    delta = result[:, -1:] if mod == mode.cycle else 1
 
     np.put_along_axis(
-        intervals,
+        result,
         first_indexes,
-        np.take_along_axis(intervals, first_indexes, 1) + delta,
+        np.take_along_axis(result, first_indexes, 1) + delta,
         1,
     )
-    intervals[mask[:, 0], 0] = -1
-    intervals[np.all(mask, axis=1), -1:] = 0
-    intervals[intervals < 0] = 0
+    result[mask[:, 0], 0] = -1
+    result[np.all(mask, axis=1), -1:] = 0
+    result[result < 0] = 0
 
     if mod == mode.lossy:
-        np.put_along_axis(intervals, first_indexes, 0, 1)
-        result = intervals[:, :-1]
+        np.put_along_axis(result, first_indexes, 0, 1)
+        result = result[:, :-1]
     elif mod == mode.normal:
-        result = intervals[:, :-1]
+        result = result[:, :-1]
     elif mod == mode.cycle:
-        result = intervals[:, :-1]
+        result = result[:, :-1]
     elif mod == mode.redundant:
-        result = intervals
+        result = result
 
     if bind == binding.end:
         # For binding to the end, we need to reverse the result
@@ -240,6 +240,5 @@ def intervals(X, bind, mod):
     size = np.count_nonzero(result, axis=1)
     result = result.ravel()
     result = result[result != 0]
-    result = np.array_split(result, np.cumsum(size)[:-1])
 
-    return result
+    return np.array_split(result, np.cumsum(size)[:-1])
