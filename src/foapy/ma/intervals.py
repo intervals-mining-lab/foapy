@@ -1,11 +1,11 @@
 import numpy as np
+from numpy import ma
 
-from foapy.constants_intervals import binding as binding_constant
-from foapy.constants_intervals import mode as mode_constant
+from foapy.constants_intervals import binding, mode
 from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 
 
-def intervals(X, binding, mode):
+def intervals(X, bind, mod):
     """
     Finding array of array of intervals of the uniform
     sequences in the given input sequence
@@ -145,83 +145,90 @@ def intervals(X, binding, mode):
     >>> b
     Exception
     """
+
     # Validate binding
-    if binding not in {binding_constant.start, binding_constant.end, 1, 2}:
+    if bind not in {binding.start, binding.end}:
         raise ValueError(
             {"message": "Invalid binding value. Use binding.start or binding.end."}
         )
 
     # Validate mode
-    if mode not in {
-        mode_constant.lossy,
-        mode_constant.normal,
-        mode_constant.cycle,
-        mode_constant.redundant,
-        1,
-        2,
-        3,
-        4,
-    }:
+    if mod not in {mode.lossy, mode.normal, mode.cycle, mode.redundant}:
         raise ValueError(
             {"message": "Invalid mode value. Use mode.lossy,normal,cycle or redundant."}
         )
-    if X.shape == (0,):
-        return []
+    # ex.:
+    # ar = ['a', 'c', 'c', 'e', 'd', 'a']
 
-    if X.ndim != 2:  # Checking for d1 array
-        raise Not1DArrayException(
-            {"message": f"Incorrect array form. Expected d2 array, exists {X.ndim}"}
-        )
+    power = X.shape[0]
+    if power == 0:
+        return np.array([])
+
+    if len(X.shape) != 2:
+        message = f"Incorrect array form. Expected d2 array, exists {len(X.shape)}"
+        raise Not1DArrayException({"message": message})
 
     length = X.shape[1]
 
-    positions = np.empty(X.shape[0], dtype=object)
-    intervals = np.empty(X.shape[0], dtype=object)
+    mask = ma.getmaskarray(X)
+    data = ma.getdata(X)
 
-    for i in range(X.shape[0]):
+    if bind == binding.end:
+        mask = mask[:, ::-1]
+        data = data[:, ::-1]
 
-        unique = X[i][~X[i].mask]
-        unique = set(unique)
-        if len(unique) > 1:
-            # raise exception
-            raise InconsistentOrderException(
-                {"message": f"Elements {X[i]} have wrong appearance"}
-            )
+    result = np.tile(np.arange(0, length + 1), (power, 1))
+    result[:, :-1][mask] = 0
+    first_indexes = np.min(result[:, :-1], initial=length, axis=1, where=~mask).reshape(
+        power, 1
+    )
 
-        ar = X[i] if binding == 1 else X[i][::-1]
-        positions[i] = np.argwhere(ar != None).flatten()  # noqa: E711
-    for i, _ in enumerate(positions):
-        if len(_) == 0:
-            intervals[i] = np.array([], dtype=int)
-            continue
-        tail_intervals = positions[i][1:] - positions[i][:-1]
-        # ---------------------
-        # redunant
-        delta = 2 if mode == 4 else 1
-        intevals_length = tail_intervals.shape[0] + delta
+    inconsistent_first_indexes = np.where(
+        first_indexes == length, length - 1, first_indexes
+    )
+    alphabet = np.take_along_axis(data, inconsistent_first_indexes, 1)
+    inconsistent_indeces = np.argwhere(
+        ~np.all(np.where(mask, alphabet, data) == alphabet, axis=1)
+    ).ravel()
 
-        intervals[i] = np.empty(intevals_length, dtype=int)
+    if len(inconsistent_indeces) != 0:
+        i = X[inconsistent_indeces[0]]
+        raise InconsistentOrderException(
+            {"message": f"Elements {i} have wrong appearance"}
+        )
 
-        # ---------------------
-        # redunant
-        if mode == 4:
-            intervals[i][1:-1] = tail_intervals
-        else:
-            intervals[i][1:] = tail_intervals
-        # ---------------------
+    preserve_previous = np.frompyfunc(lambda x, y: x if y == 0 else y, 2, 1)
 
-        if mode == mode_constant.lossy:
-            intervals[i] = intervals[i][1:]
-        elif mode == mode_constant.normal:
-            intervals[i][:1] = positions[i][:1] + 1
-        elif mode == mode_constant.cycle:
-            intervals[i][:1] = positions[i][:1] + length - positions[i][-1:]
-        elif mode == mode_constant.redundant:
-            intervals[i][:1] = positions[i][:1] + 1
-            intervals[i][-1:] = length - positions[i][-1:]
+    result[:, 1:] = result[:, 1:] - preserve_previous.accumulate(result, axis=1)[:, :-1]
 
-    if binding == 2:
-        for i, _ in enumerate(intervals):
-            intervals[i] = intervals[i][::-1]
+    delta = result[:, -1:] if mod == mode.cycle else 1
 
-    return intervals
+    np.put_along_axis(
+        result,
+        first_indexes,
+        np.take_along_axis(result, first_indexes, 1) + delta,
+        1,
+    )
+    result[mask[:, 0], 0] = -1
+    result[np.all(mask, axis=1), -1:] = 0
+    result[result < 0] = 0
+
+    if mod == mode.lossy:
+        np.put_along_axis(result, first_indexes, 0, 1)
+        result = result[:, :-1]
+    elif mod == mode.normal:
+        result = result[:, :-1]
+    elif mod == mode.cycle:
+        result = result[:, :-1]
+    elif mod == mode.redundant:
+        result = result
+
+    if bind == binding.end:
+        # For binding to the end, we need to reverse the result
+        result = result[:, ::-1]
+
+    size = np.count_nonzero(result, axis=1)
+    result = result.ravel()
+    result = result[result != 0]
+
+    return np.array_split(result, np.cumsum(size)[:-1])

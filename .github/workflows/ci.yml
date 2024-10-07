@@ -87,6 +87,7 @@ jobs:
         run: pipx run coverage lcov -o coverage.lcov
       - name: Upload partial coverage report
         uses: coverallsapp/github-action@main
+        if: ${{ matrix.platform != 'macos-12' }}
         with:
           path-to-lcov: coverage.lcov
           github-token: ${{ secrets.GITHUB_TOKEN }}
