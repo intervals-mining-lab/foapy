@@ -160,27 +160,22 @@ def intervals(X, bind, mod):
     # ex.:
     # ar = ['a', 'c', 'c', 'e', 'd', 'a']
 
-    mask = ma.getmaskarray(X)
-    data = ma.getdata(X)
-
-    power = mask.shape[0]
+    power = X.shape[0]
     if power == 0:
         return np.array([])
 
-    if len(mask.shape) != 2:
-        message = f"Incorrect array form. Expected d2 array, exists {len(mask.shape)}"
+    if len(X.shape) != 2:
+        message = f"Incorrect array form. Expected d2 array, exists {len(X.shape)}"
         raise Not1DArrayException({"message": message})
 
-    length = mask.shape[1]
+    length = X.shape[1]
+
+    mask = ma.getmaskarray(X)
+    data = ma.getdata(X)
 
     if bind == binding.end:
         mask = mask[:, ::-1]
         data = data[:, ::-1]
-
-    def preserve_previous(x, y):
-        return x if y == 0 else y
-
-    preserve_previous_ufunc = np.frompyfunc(preserve_previous, 2, 1)
 
     result = np.tile(np.arange(0, length + 1), (power, 1))
     result[:, :-1][mask] = 0
@@ -188,17 +183,12 @@ def intervals(X, bind, mod):
         power, 1
     )
 
-    inconsistent_first_indexes = np.min(
-        result[:, :-1], initial=length - 1, axis=1, where=~mask
-    ).reshape(power, 1)
+    inconsistent_first_indexes = np.where(
+        first_indexes == length, length - 1, first_indexes
+    )
+    alphabet = np.take_along_axis(data, inconsistent_first_indexes, 1)
     inconsistent_indeces = np.argwhere(
-        ~np.all(
-            np.where(
-                mask, np.take_along_axis(data, inconsistent_first_indexes, 1), data
-            )
-            == np.take_along_axis(data, inconsistent_first_indexes, 1),
-            axis=1,
-        )
+        ~np.all(np.where(mask, alphabet, data) == alphabet, axis=1)
     ).ravel()
 
     if len(inconsistent_indeces) != 0:
@@ -207,9 +197,9 @@ def intervals(X, bind, mod):
             {"message": f"Elements {i} have wrong appearance"}
         )
 
-    result[:, 1:] = (
-        result[:, 1:] - preserve_previous_ufunc.accumulate(result, axis=1)[:, :-1]
-    )
+    preserve_previous = np.frompyfunc(lambda x, y: x if y == 0 else y, 2, 1)
+
+    result[:, 1:] = result[:, 1:] - preserve_previous.accumulate(result, axis=1)[:, :-1]
 
     delta = result[:, -1:] if mod == mode.cycle else 1
 
