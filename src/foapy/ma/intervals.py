@@ -210,32 +210,34 @@ def intervals(X, bind, mod):
     delta = indecies[last_indexes] if mod == mode.cycle else 1
     indecies[first_indexes] = positions[1][first_indexes] + delta
 
-    split_boarders = np.zeros(power * 3, dtype=int)
+    split_boarders = np.zeros(power * 2, dtype=int)
 
     if mod == mode.lossy:
-        split_boarders[positions[0][last_indexes] * 3] = first_indexes + 1
-        split_boarders[positions[0][last_indexes] * 3 + 1] = last_indexes
-        split_boarders[positions[0][last_indexes] * 3 + 2] = last_indexes + 1
+        split_boarders[positions[0][last_indexes[:1]] * 2] = first_indexes[:1] + 1
+        split_boarders[positions[0][last_indexes[1:]] * 2] = (
+            np.fmax(last_indexes[:-1], first_indexes[1:]) + 1
+        )
+        split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes
     elif mod == mode.normal:
-        split_boarders[positions[0][last_indexes] * 3] = 0
-        split_boarders[positions[0][last_indexes] * 3 + 1] = last_indexes
-        split_boarders[positions[0][last_indexes] * 3 + 2] = last_indexes + 1
+        split_boarders[positions[0][last_indexes[:1]] * 2] = 0
+        split_boarders[positions[0][last_indexes[1:]] * 2] = last_indexes[:-1] + 1
+        split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes
     elif mod == mode.cycle:
-        split_boarders[positions[0][last_indexes] * 3] = 0
-        split_boarders[positions[0][last_indexes] * 3 + 1] = last_indexes
-        split_boarders[positions[0][last_indexes] * 3 + 2] = last_indexes + 1
+        split_boarders[positions[0][last_indexes[:1]] * 2] = 0
+        split_boarders[positions[0][last_indexes[1:]] * 2] = last_indexes[:-1] + 1
+        split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes
     elif mod == mode.redundant:
-        split_boarders[positions[0][last_indexes] * 3] = 0
-        split_boarders[positions[0][last_indexes] * 3 + 1] = last_indexes + 1
-        split_boarders[positions[0][last_indexes] * 3 + 2] = 0
+        split_boarders[positions[0][last_indexes[:1]] * 2] = 0
+        split_boarders[positions[0][last_indexes[1:]] * 2] = 0
+        split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes + 1
 
     preserve_previous = np.frompyfunc(lambda x, y: x if y == 0 else y, 2, 1)
     split_boarders = preserve_previous.accumulate(split_boarders)
     if bind == binding.end:
-        split_boarders[1:] = np.diff(split_boarders)
-        split_boarders[:1] = 0
+        split_boarders[:-1] = np.diff(split_boarders)
+        split_boarders[-1:] = len(indecies) - split_boarders[-1]
         split_boarders = np.cumsum(split_boarders[::-1])
-        indecies = np.array_split(indecies[::-1], split_boarders[:-1])
-    else:
-        indecies = np.array_split(indecies, split_boarders[:-1])
-    return indecies[1:-1:3]
+        indecies = indecies[::-1]
+
+    indecies = np.array_split(indecies, split_boarders)
+    return indecies[1:-1:2]
