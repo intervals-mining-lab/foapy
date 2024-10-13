@@ -171,17 +171,15 @@ def intervals(X, bind, mod):
     length = X.shape[1]
 
     mask = ma.getmaskarray(X)
-    data = ma.getdata(X)
 
+    verify_data = X[~mask]
     verify_positions = np.transpose(np.argwhere(~mask))
-    verify_data = data[~mask]
-    verify_first_mask = np.empty(verify_data.shape[0], dtype=bool)
-    verify_first_mask[:1] = True
-    verify_first_mask[1:] = verify_positions[0, 1:] != verify_positions[0, :-1]
-    verify_unique_mask = np.empty(verify_data.shape[0], dtype=bool)
-    verify_unique_mask[:1] = True
-    verify_unique_mask[1:] = verify_data[1:] != verify_data[:-1]
-    verify = np.logical_xor(verify_first_mask, verify_unique_mask)
+    verify = np.empty(verify_data.shape[0], dtype=bool)
+    verify[:1] = False
+    verify[1:] = np.logical_xor(
+        verify_positions[0, 1:] != verify_positions[0, :-1],
+        verify_data[1:] != verify_data[:-1],
+    )
 
     if not np.all(~verify):
         failed_indexes = verify_positions[0, verify]
@@ -195,8 +193,7 @@ def intervals(X, bind, mod):
         extended_mask[:, :-1] = ~mask[::-1, ::-1]
     else:
         extended_mask[:, :-1] = ~mask
-    extended_mask[:, -1:] = True
-    extended_mask[np.all(~extended_mask[:, :-1], axis=1), -1:] = False
+    extended_mask[:, -1] = np.any(extended_mask[:, :-1], axis=1)
 
     positions = np.transpose(np.argwhere(extended_mask))
 
@@ -215,8 +212,6 @@ def intervals(X, bind, mod):
 
     split_boarders = np.zeros(power * 3, dtype=int)
 
-    result = indecies
-
     if mod == mode.lossy:
         split_boarders[positions[0][last_indexes] * 3] = first_indexes + 1
         split_boarders[positions[0][last_indexes] * 3 + 1] = last_indexes
@@ -233,19 +228,14 @@ def intervals(X, bind, mod):
         split_boarders[positions[0][last_indexes] * 3] = 0
         split_boarders[positions[0][last_indexes] * 3 + 1] = last_indexes + 1
         split_boarders[positions[0][last_indexes] * 3 + 2] = 0
-        result = result
 
     preserve_previous = np.frompyfunc(lambda x, y: x if y == 0 else y, 2, 1)
+    split_boarders = preserve_previous.accumulate(split_boarders)
     if bind == binding.end:
-        split_boarders = preserve_previous.accumulate(split_boarders)
-        diff = np.diff(split_boarders)
-        test = split_boarders
-        test[1:] = diff
-        test[:1] = 0
-        split_boarders = np.cumsum(test[::-1])
-        result = result[::-1]
-        result = np.array_split(result, split_boarders[:-1])
+        split_boarders[1:] = np.diff(split_boarders)
+        split_boarders[:1] = 0
+        split_boarders = np.cumsum(split_boarders[::-1])
+        indecies = np.array_split(indecies[::-1], split_boarders[:-1])
     else:
-        split_boarders = preserve_previous.accumulate(split_boarders)
-        result = np.array_split(result, split_boarders[:-1])
-    return result[1:-1:3]
+        indecies = np.array_split(indecies, split_boarders[:-1])
+    return indecies[1:-1:3]
