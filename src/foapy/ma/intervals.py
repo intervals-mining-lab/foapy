@@ -173,62 +173,79 @@ def intervals(X, bind, mod):
     mask = ma.getmaskarray(X)
     data = ma.getdata(X)
 
-    if bind == binding.end:
-        mask = mask[:, ::-1]
-        data = data[:, ::-1]
+    verify_positions = np.transpose(np.argwhere(~mask))
+    verify_data = data[~mask]
+    verify_first_mask = np.empty(verify_data.shape[0], dtype=bool)
+    verify_first_mask[:1] = True
+    verify_first_mask[1:] = verify_positions[0, 1:] != verify_positions[0, :-1]
+    verify_unique_mask = np.empty(verify_data.shape[0], dtype=bool)
+    verify_unique_mask[:1] = True
+    verify_unique_mask[1:] = verify_data[1:] != verify_data[:-1]
+    verify = np.logical_xor(verify_first_mask, verify_unique_mask)
 
-    result = np.tile(np.arange(0, length + 1), (power, 1))
-    result[:, :-1][mask] = 0
-    first_indexes = np.min(result[:, :-1], initial=length, axis=1, where=~mask).reshape(
-        power, 1
-    )
-
-    inconsistent_first_indexes = np.where(
-        first_indexes == length, length - 1, first_indexes
-    )
-    alphabet = np.take_along_axis(data, inconsistent_first_indexes, 1)
-    inconsistent_indeces = np.argwhere(
-        ~np.all(np.where(mask, alphabet, data) == alphabet, axis=1)
-    ).ravel()
-
-    if len(inconsistent_indeces) != 0:
-        i = X[inconsistent_indeces[0]]
+    if not np.all(~verify):
+        failed_indexes = verify_positions[0, verify]
+        i = X[failed_indexes[0]]
         raise InconsistentOrderException(
             {"message": f"Elements {i} have wrong appearance"}
         )
 
-    preserve_previous = np.frompyfunc(lambda x, y: x if y == 0 else y, 2, 1)
+    extended_mask = np.empty((power, length + 1), dtype=bool)
+    if bind == binding.end:
+        extended_mask[:, :-1] = ~mask[::-1, ::-1]
+    else:
+        extended_mask[:, :-1] = ~mask
+    extended_mask[:, -1:] = True
+    extended_mask[np.all(~extended_mask[:, :-1], axis=1), -1:] = False
 
-    result[:, 1:] = result[:, 1:] - preserve_previous.accumulate(result, axis=1)[:, :-1]
+    positions = np.transpose(np.argwhere(extended_mask))
 
-    delta = result[:, -1:] if mod == mode.cycle else 1
+    border_indexes = np.empty(positions.shape[1] + 1, dtype=bool)
+    border_indexes[:1] = True
+    border_indexes[1:-1] = positions[0, 1:] != positions[0, :-1]
+    border_indexes[-1:] = True
 
-    np.put_along_axis(
-        result,
-        first_indexes,
-        np.take_along_axis(result, first_indexes, 1) + delta,
-        1,
-    )
-    result[mask[:, 0], 0] = -1
-    result[np.all(mask, axis=1), -1:] = 0
-    result[result < 0] = 0
+    first_indexes = np.argwhere(border_indexes[:-1]).ravel()
+    last_indexes = np.argwhere(border_indexes[1:]).ravel()
+
+    indecies = np.zeros(positions.shape[1], dtype=int)
+    indecies[1:] = positions[1, 1:] - positions[1, :-1]
+    delta = indecies[last_indexes] if mod == mode.cycle else 1
+    indecies[first_indexes] = positions[1][first_indexes] + delta
+
+    split_boarders = np.zeros(power * 3, dtype=int)
+
+    result = indecies
 
     if mod == mode.lossy:
-        np.put_along_axis(result, first_indexes, 0, 1)
-        result = result[:, :-1]
+        split_boarders[positions[0][last_indexes] * 3] = first_indexes + 1
+        split_boarders[positions[0][last_indexes] * 3 + 1] = last_indexes
+        split_boarders[positions[0][last_indexes] * 3 + 2] = last_indexes + 1
     elif mod == mode.normal:
-        result = result[:, :-1]
+        split_boarders[positions[0][last_indexes] * 3] = 0
+        split_boarders[positions[0][last_indexes] * 3 + 1] = last_indexes
+        split_boarders[positions[0][last_indexes] * 3 + 2] = last_indexes + 1
     elif mod == mode.cycle:
-        result = result[:, :-1]
+        split_boarders[positions[0][last_indexes] * 3] = 0
+        split_boarders[positions[0][last_indexes] * 3 + 1] = last_indexes
+        split_boarders[positions[0][last_indexes] * 3 + 2] = last_indexes + 1
     elif mod == mode.redundant:
+        split_boarders[positions[0][last_indexes] * 3] = 0
+        split_boarders[positions[0][last_indexes] * 3 + 1] = last_indexes + 1
+        split_boarders[positions[0][last_indexes] * 3 + 2] = 0
         result = result
 
+    preserve_previous = np.frompyfunc(lambda x, y: x if y == 0 else y, 2, 1)
     if bind == binding.end:
-        # For binding to the end, we need to reverse the result
-        result = result[:, ::-1]
-
-    size = np.count_nonzero(result, axis=1)
-    result = result.ravel()
-    result = result[result != 0]
-
-    return np.array_split(result, np.cumsum(size)[:-1])
+        split_boarders = preserve_previous.accumulate(split_boarders)
+        diff = np.diff(split_boarders)
+        test = split_boarders
+        test[1:] = diff
+        test[:1] = 0
+        split_boarders = np.cumsum(test[::-1])
+        result = result[::-1]
+        result = np.array_split(result, split_boarders[:-1])
+    else:
+        split_boarders = preserve_previous.accumulate(split_boarders)
+        result = np.array_split(result, split_boarders[:-1])
+    return result[1:-1:3]
