@@ -250,7 +250,7 @@ class TestMaIntervals(TestCase):
             ],
         )
         expected = [np.array([5, 2]), np.array([1, 4, 1]), np.array([4]), np.array([2])]
-        exists = list(intervals(X, 2, 2))
+        exists = intervals(X, 2, 2)
         assert_equal(expected, exists)
 
     def test_empty_End_Normal_with_mask(self):
