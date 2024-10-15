@@ -1,13 +1,11 @@
 from unittest import TestCase
 
 import numpy as np
-from numpy.testing import assert_array_equal
 
 from foapy.characteristics.depth import depth
 from foapy.constants_intervals import binding, mode
 from foapy.intervals import intervals
 from foapy.order import order
-from foapy.characteristics.depth import depth
 
 
 class TestMaDepth(TestCase):
