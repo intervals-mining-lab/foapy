@@ -3,7 +3,7 @@ import numpy as np
 from foapy.characteristics.ma.volume import volume
 
 
-def depth(X, binding, mode):
+def depth(intervals):
     """
     Calculation depth of sequence.
     Depth is the log2 of the volume.
@@ -50,12 +50,4 @@ def depth(X, binding, mode):
     Examples
     --------
     """
-
-    return np.asanyarray(
-        [np.round(np.log2(line), 4) for line in volume(X, binding, mode)]
-    )
-
-
-test = np.array(["B", "A", "C", "D"])
-print(volume(test, 1, 1))
-print(depth(test, 1, 1))
+    return np.asanyarray([np.log2(line) for line in volume(intervals)])

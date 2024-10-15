@@ -1,11 +1,7 @@
 import numpy as np
-import numpy.ma as ma
-
-from foapy.ma.intervals import intervals
-from foapy.ma.order import order
 
 
-def volume(X, binding, mode):
+def volume(intervals):
     """
     Calculation volume of sequence.
     Volume is the product of the elements of the intervals of the sequence.
@@ -94,6 +90,5 @@ def volume(X, binding, mode):
     >>> b
     [1 1 1 1]
     """
-    order_seq = order(ma.masked_array(X))
-    intervals_seq = intervals(order_seq, binding, mode)
-    return np.asanyarray([np.prod(line) for line in intervals_seq])
+
+    return np.asanyarray([np.prod(line) for line in intervals])
