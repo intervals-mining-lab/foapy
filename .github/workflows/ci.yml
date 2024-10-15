@@ -19,7 +19,7 @@ on:
     - cron: '0 0 1,16 * *'
 
 permissions:
-  id: write
+  id-token: write
   contents: read
   pull-requests: write
 
