@@ -10,6 +10,7 @@ on:
     # relevant branches and tags. Other branches can be checked via PRs.
     branches: [main]
   release: 
+    types: [published]  
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
   workflow_dispatch:  # Allow manually triggering the workflow
