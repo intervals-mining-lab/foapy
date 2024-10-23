@@ -6,7 +6,7 @@ import pytest
 from numpy.ma.testutils import assert_equal
 
 from foapy.exceptions import InconsistentOrderException, Not1DArrayException
-from foapy.ma.intervals import intervals
+from foapy.ma import intervals
 
 
 class TestMaIntervals(TestCase):
