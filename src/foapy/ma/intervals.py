@@ -1,7 +1,7 @@
 import numpy as np
 from numpy import ma
 
-from foapy.constants_intervals import binding, mode
+from foapy import binding, mode
 from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 
 
