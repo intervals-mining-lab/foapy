@@ -72,7 +72,7 @@ class Test_average_remoteness(TestCase):
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
-    
+
     def test_calculate_start_normal_average_remoteness_1(self):
         X = ["2", "4", "2", "2", "4"]
         order_seq = order(X)
