@@ -83,3 +83,18 @@ class TestMaVolume(TestCase):
         expected = np.array([])
         exists = volume(intervals_seq)
         assert_equal(expected, exists)
+
+    # def test_calculate_start_redunant_values_with_mask(self):
+    #     X = ['B','B','B','A','A','B','B','A','B','B']
+    #     mask = [1, 1, 1, 0, 0, 1, 1, 0, 1, 1]
+    #     masked_X = ma.masked_array(X, mask)
+    #     order_seq = order(masked_X)
+    #     print(order_seq)
+    #     intervals_seq = intervals(
+    #         order_seq, binding_constant.start, mode_constant.redundant
+    #     )
+
+    #     expected = np.array([36]) # incorrect test res [6,  36]
+    #     exists = volume(intervals_seq)
+    #     print(exists)
+    #     assert_equal(expected, exists)
