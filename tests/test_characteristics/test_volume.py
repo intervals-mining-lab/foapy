@@ -69,3 +69,11 @@ class TestVolume(TestCase):
         expected = np.array([])
         exists = volume(intervals_seq)
         assert_array_equal(expected, exists)
+
+    def test_calculate_start_normal_volume_1(self):
+        X = ["2", "4", "2", "2", "4"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.start, mode.normal)
+        expected = np.array([12])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
