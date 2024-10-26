@@ -37,11 +37,10 @@ class TestMaOrder(TestCase):
         expected = ma.masked_array(
             [
                 [0, None, 0, None, None],
-                [None, 1, None, None, None],
                 [None, None, None, 2, None],
                 [None, None, None, None, 3],
             ],
-            mask=[[0, 1, 0, 1, 1], [1, 0, 1, 1, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0]],
+            mask=[[0, 1, 0, 1, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0]],
         )
         exists = order(X)
         assert_equal(expected, exists)
@@ -175,3 +174,37 @@ class TestMaOrder(TestCase):
                 "Element b have mask and unmasked appearance",
                 e_info.message,
             )
+
+    def test_int_values_with_mask(self):
+        X = ma.masked_array([1, 2, 1, 1, 4], mask=[0, 1, 0, 0, 0])
+        expected = ma.masked_array(
+            [
+                [0, None, 0, 0, None],
+                [None, None, None, None, 2],
+            ],
+            mask=[[0, 1, 0, 0, 1], [1, 1, 1, 1, 0]],
+        )
+        exists = order(X)
+        assert_equal(expected, exists)
+
+    def test_void_int_values_with_mask(self):
+        X = ma.masked_array([1], mask=[1])
+        expected = ma.masked_array(
+            [],
+            mask=[],
+        )
+        exists = order(X)
+        assert_equal(expected, exists)
+
+    def test_int_values_with_middle_mask(self):
+        X = ma.masked_array([1, 2, 3, 3, 4, 2], mask=[0, 0, 1, 1, 0, 0])
+        expected = ma.masked_array(
+            [
+                [0, None, None, None, None, None],
+                [None, 1, None, None, None, 1],
+                [None, None, None, None, 3, None],
+            ],
+            mask=[[0, 1, 1, 1, 1, 1], [1, 0, 1, 1, 1, 0], [1, 1, 1, 1, 0, 1]],
+        )
+        exists = order(X)
+        assert_equal(expected, exists)
