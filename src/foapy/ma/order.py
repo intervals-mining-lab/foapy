@@ -3,7 +3,7 @@ import numpy.ma as ma
 
 from foapy import order as general_order
 from foapy.exceptions import Not1DArrayException
-from foapy.ma import alphabet
+from . import alphabet
 
 
 def order(X, return_alphabet=False) -> np.ma.MaskedArray:
