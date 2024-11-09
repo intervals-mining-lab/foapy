@@ -3,6 +3,7 @@ import numpy.ma as ma
 
 from foapy import order as general_order
 from foapy.exceptions import Not1DArrayException
+
 from . import alphabet
 
 
