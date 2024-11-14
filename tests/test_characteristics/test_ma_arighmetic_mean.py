@@ -25,7 +25,6 @@ class TestMaArigthmeticMean(TestCase):
         exists = arigthmetic_mean(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
-        print(exists)
         self.assertTrue(np.all(diff < epsilon))
 
     def test_calculate_start_normal_arigthmetic_mean(self):
