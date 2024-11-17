@@ -49,7 +49,7 @@ else:
 
             return exceptions
         elif attr == "ma":
-            from . import ma
+            import foapy.ma as ma
 
             return ma
 
