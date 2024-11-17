@@ -49,7 +49,7 @@ else:
 
             return exceptions
         elif attr == "ma":
-            from .ma import ma
+            from . import ma
 
             return ma
 
