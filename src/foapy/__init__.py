@@ -35,17 +35,17 @@ else:
     # __getattr__. Note that `distutils` (deprecated) and `array_api`
     # (experimental label) are not added here, because `from numpy import *`
     # must not raise any warnings - that's too disruptive.
-    __foapy_submodules__ = {"ma"}
+    __foapy_submodules__ = {"ma", "exceptions"}
 
     __all__ = list(
         __foapy_submodules__
-        | {"order", "intervals", "exceptions", "alphabet", "binding", "mode"}
+        | {"order", "intervals", "alphabet", "binding", "mode"}
         | {"__version__", "__array_namespace_info__"}
     )
 
     def __getattr__(attr):
         if attr == "exceptions":
-            from . import exceptions
+            import foapy.exceptions as exceptions
 
             return exceptions
         elif attr == "ma":
@@ -60,7 +60,7 @@ else:
     def __dir__():
         public_symbols = globals().keys() | __foapy_submodules__
         public_symbols -= {
-            "ma",
+            "exceptions" "ma",
             "version",
         }
         return list(public_symbols)
