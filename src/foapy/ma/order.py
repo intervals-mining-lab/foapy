@@ -129,16 +129,16 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
 
     indecies_selector = ~np.all(np.logical_xor(result_mask, mask), axis=1)
 
-    if np.all(~indecies_selector):
+    if np.any(indecies_selector):
+        result_data = result_data[indecies_selector]
+        result_mask = result_mask[indecies_selector]
+    else:
         # If all items are masked we need define empty array explicity
         # otherwise, the result shape would be (0, length)
         # that affect compare arrays
         # (test tests/test_ma_order.py::TestMaOrder::test_void_int_values_with_mask)
         result_data = []
         result_mask = []
-    else:
-        result_data = result_data[indecies_selector]
-        result_mask = result_mask[indecies_selector]
 
     result = ma.masked_array(result_data, mask=result_mask)
 
