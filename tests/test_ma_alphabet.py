@@ -5,7 +5,7 @@ import pytest
 from numpy.ma.testutils import assert_equal
 
 from foapy.exceptions import InconsistentOrderException, Not1DArrayException
-from foapy.ma.alphabet import alphabet
+from foapy.ma import alphabet
 
 
 class TestMaAlphabet(TestCase):

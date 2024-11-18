@@ -5,7 +5,7 @@ import pytest
 from numpy.ma.testutils import assert_equal
 
 from foapy.exceptions import InconsistentOrderException, Not1DArrayException
-from foapy.ma.order import order
+from foapy.ma import order
 
 
 class TestMaOrder(TestCase):
