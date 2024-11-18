@@ -118,7 +118,6 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
 
     alphabet_values = alphabet(X)
     order = general_order(ma.getdata(X))
-    mask = ma.getmaskarray(X)
 
     power = len(alphabet_values)
     length = len(X)
@@ -127,7 +126,7 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
     alphabet_indecies = np.arange(power).reshape(power, 1)
     result_mask = result_data != alphabet_indecies
 
-    indecies_selector = np.any(~np.logical_or(result_mask, mask), axis=1)
+    indecies_selector = np.any(~np.logical_or(result_mask, ma.getmaskarray(X)), axis=1)
 
     if np.any(indecies_selector):
         result_data = result_data[indecies_selector]
