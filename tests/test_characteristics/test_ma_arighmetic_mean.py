@@ -60,9 +60,8 @@ class TestMaArigthmeticMean(TestCase):
         intervals_seq = intervals(
             order_seq, binding_constant.start, mode_constant.lossy
         )
-        expected = np.array([1.5, 2])  # incorrect test
+        expected = np.array([2])  # We have only value for "A", as "B" is masked
         exists = arigthmetic_mean(intervals_seq)
         epsilon = 0.01
-        print(exists)
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))

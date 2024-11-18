@@ -118,14 +118,30 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
 
     alphabet_values = alphabet(X)
     order = general_order(ma.getdata(X))
+    mask = ma.getmaskarray(X)
 
     power = len(alphabet_values)
     length = len(X)
 
-    result = np.tile(order, power).reshape(power, length)
+    result_data = np.tile(order, power).reshape(power, length)
     alphabet_indecies = np.arange(power).reshape(power, 1)
-    mask = result != alphabet_indecies
+    result_mask = result_data != alphabet_indecies
+
+    indecies_selector = ~np.all(np.logical_xor(result_mask, mask), axis=1)
+
+    if np.all(~indecies_selector):
+        # If all items are masked we need define empty array explicity
+        # otherwise, the result shape would be (0, length)
+        # that affect compare arrays
+        # (test tests/test_ma_order.py::TestMaOrder::test_void_int_values_with_mask)
+        result_data = []
+        result_mask = []
+    else:
+        result_data = result_data[indecies_selector]
+        result_mask = result_mask[indecies_selector]
+
+    result = ma.masked_array(result_data, mask=result_mask)
 
     if return_alphabet:  # Checking for get alphabet (optional)
-        return ma.masked_array(result, mask=mask), alphabet_values
-    return ma.masked_array(result, mask=mask)
+        return result, alphabet_values[indecies_selector]
+    return result
