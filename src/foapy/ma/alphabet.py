@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.ma as ma
 
-from foapy.exceptions import InconsistentOrderException, Not1DArrayException
+from foapy.exceptions import Not1DArrayException
 
 
 def alphabet(X) -> np.ma.MaskedArray:
@@ -28,7 +28,7 @@ def alphabet(X) -> np.ma.MaskedArray:
     >>> masked_a = ma.masked_array(a, mask)
     >>> b = ma_alphabet(masked_a)
     >>> b
-    ['a' 'c' -- 'd']
+    ['a' 'c' 'd']
 
     ----2----
     >>> a = ['a', 'c', 'c', 'e', 'd', 'a']
@@ -60,7 +60,7 @@ def alphabet(X) -> np.ma.MaskedArray:
     >>> masked_a = ma.masked_array(a, mask)
     >>> b = ma_alphabet(masked_a)
     >>> b
-    ['а' -- 'c']
+    ['а' 'c']
 
     ----6----
     >>> a = ['a', 'b', 'c', 'a', 'b', 'c', 'c', 'c', 'b', 'a', 'c', 'b', 'c']
@@ -68,7 +68,7 @@ def alphabet(X) -> np.ma.MaskedArray:
     >>> masked_a = ma.masked_array(a, mask)
     >>> b = ma_alphabet(masked_a)
     >>> b
-    ['а' -- --]
+    ['а']
 
     ----7----
     >>> a = ['a', 'b', 'c', 'a', 'b', 'c', 'c', 'c', 'b', 'a', 'c', 'b', 'c']
@@ -92,30 +92,15 @@ def alphabet(X) -> np.ma.MaskedArray:
             {"message": f"Incorrect array form. Expected d1 array, exists {X.ndim}"}
         )
 
-    data = ma.getdata(X)
-    perm = data.argsort(kind="mergesort")
+    mask = ma.getmask(X)
+    perm = X.argsort(kind="mergesort")
 
-    mask_shape = data.shape
+    mask_shape = X.shape
     unique_mask = np.empty(mask_shape, dtype=bool)
     unique_mask[:1] = True
-    unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
-
-    first_appears_indecies = np.argwhere(unique_mask).ravel()
-    count_true_in_mask_by_slice = np.add.reduceat(
-        ma.getmaskarray(X[perm]), first_appears_indecies
-    )
-    slice_length = np.diff(np.r_[first_appears_indecies, len(X)])
-    consistency_index = count_true_in_mask_by_slice / slice_length
-    consistency_errors = np.argwhere(
-        (consistency_index != 0) & (consistency_index != 1)
-    ).ravel()
-    if len(consistency_errors) > 0:
-        i = data[consistency_errors[0]]
-        raise InconsistentOrderException(
-            {"message": f"Element '{i}' have mask and unmasked appearance"}
-        )
+    unique_mask[1:] = X[perm[1:]] != X[perm[:-1]]
+    unique_mask = np.logical_and(unique_mask, ~mask[perm])
 
     result_mask = np.full_like(unique_mask, False)
-    result_mask[:1] = True
     result_mask[perm[unique_mask]] = True
     return X[result_mask]
