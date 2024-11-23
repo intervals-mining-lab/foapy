@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+import numpy as np
 import numpy.ma as ma
 import pytest
 from numpy.ma.testutils import assert_equal
@@ -45,7 +46,7 @@ class TestMaAlphabet(TestCase):
 
     def test_with_single_string_value_with_mask(self):
         X = ma.masked_array(["a"], mask=[1])
-        expected = []
+        expected = np.asanyarray([], dtype=X.dtype)
         exists = alphabet(X)
         assert_equal(expected, exists)
 
