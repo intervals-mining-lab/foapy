@@ -103,4 +103,4 @@ def alphabet(X) -> np.ma.MaskedArray:
 
     result_mask = np.full_like(unique_mask, False)
     result_mask[perm[unique_mask]] = True
-    return X[result_mask]
+    return ma.getdata(X[result_mask])
