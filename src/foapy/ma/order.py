@@ -4,8 +4,6 @@ import numpy.ma as ma
 from foapy import order as general_order
 from foapy.exceptions import Not1DArrayException
 
-from . import alphabet
-
 
 def order(X, return_alphabet=False) -> np.ma.MaskedArray:
     """
@@ -116,8 +114,7 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
             {"message": f"Incorrect array form. Expected d1 array, exists {X.ndim}"}
         )
 
-    alphabet_values = alphabet(X)
-    order = general_order(ma.getdata(X))
+    order, alphabet_values = general_order(ma.getdata(X), return_alphabet=True)
 
     power = len(alphabet_values)
     length = len(X)

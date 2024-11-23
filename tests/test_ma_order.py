@@ -4,7 +4,7 @@ import numpy.ma as ma
 import pytest
 from numpy.ma.testutils import assert_equal
 
-from foapy.exceptions import InconsistentOrderException, Not1DArrayException
+from foapy.exceptions import Not1DArrayException
 from foapy.ma import order
 
 
@@ -167,13 +167,20 @@ class TestMaOrder(TestCase):
         X = ma.masked_array(
             ["a", "b", "c", "a", "b", "c", "b", "a"], mask=[0, 1, 0, 0, 0, 0, 1, 0]
         )
-
-        with pytest.raises(InconsistentOrderException) as e_info:
-            order(X)
-            self.assertEqual(
-                "Element b have mask and unmasked appearance",
-                e_info.message,
-            )
+        expected = ma.masked_array(
+            [
+                [0, None, None, 0, None, None, None, 0],
+                [None, None, 1, None, None, 1, None, None],
+                [None, None, None, None, 2, None, None, None],
+            ],
+            mask=[
+                [0, 1, 1, 0, 1, 1, 1, 0],
+                [1, 1, 0, 1, 1, 0, 1, 1],
+                [1, 1, 1, 1, 0, 1, 1, 1],
+            ],
+        )
+        exists = order(X)
+        assert_equal(expected, exists)
 
     def test_int_values_with_mask(self):
         X = ma.masked_array([1, 2, 1, 1, 4], mask=[0, 1, 0, 0, 0])
