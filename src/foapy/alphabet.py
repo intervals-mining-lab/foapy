@@ -56,7 +56,9 @@ def alphabet(X) -> np.ndarray:
     # perm = [0, 5, 1, 2, 4, 3]
     perm = data.argsort(kind="mergesort")
 
-    # Create mask array to store True on positions where new value appears for the first time in the sorted array to distinguish where subarray of one element ends and another begins
+    # Create mask array to store True on positions where new value appears for the first 
+    # time in the sorted array to distinguish where subarray of one element ends and 
+    # another begins
     # ex.:
     #              a  a  c  c  d  e
     # perm      = [0, 5, 1, 2, 4, 3]
