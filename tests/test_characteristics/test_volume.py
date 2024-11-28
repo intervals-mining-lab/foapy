@@ -12,6 +12,17 @@ from foapy.order import order
 class TestVolume(TestCase):
     """
     Test list for volume calculate
+
+    The `volume` function calculates a characteristic volume based
+    on the intervals provided.
+
+    Test setup:
+    1. Input sequence X.
+    2. Transform sequence into order using `order` function.
+    3. Calculate intervals using `intervals` function with appropriate binding and mode.
+    4. Determine expected output.
+    5. Match actual output from `volume` with expected output.
+
     """
 
     def test_calculate_start_lossy_volume(self):
@@ -75,5 +86,109 @@ class TestVolume(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([12])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_start_lossy_volume_1(self):
+        X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
+        expected = np.array([96])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_start_normal_volume_2(self):
+        X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.start, mode.normal)
+        expected = np.array([10080])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_end_normal_volume_1(self):
+        X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.normal)
+        expected = np.array([3456])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_end_redundant_volume(self):
+        X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
+        expected = np.array([362880])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_end_cycle_volume(self):
+        X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
+        expected = np.array([34560])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_start_lossy_same_values_volume(self):
+        X = ["C", "C", "C", "C"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
+        expected = np.array([1])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_start_normal_same_values_volume(self):
+        X = ["C", "C", "C", "C"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.start, mode.normal)
+        expected = np.array([1])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_end_normal_same_values_volume(self):
+        X = ["C", "C", "C", "C"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.normal)
+        expected = np.array([1])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_end_redundant_same_values_volume(self):
+        X = ["C", "C", "C", "C"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
+        expected = np.array([1])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_end_cycle_same_values_volume(self):
+        X = ["C", "C", "C", "C"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
+        expected = np.array([1])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_end_lossy_different_values_volume(self):
+        X = ["C", "G"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
+        expected = np.array([1])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_end_lossy_different_values_volume_1(self):
+        X = ["A", "C", "G", "T"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
+        expected = np.array([1])
+        exists = volume(intervals_seq)
+        assert_array_equal(expected, exists)
+
+    def test_calculate_end_lossy_different_values_volume_2(self):
+        X = ["2", "1"]
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
+        expected = np.array([1])
         exists = volume(intervals_seq)
         assert_array_equal(expected, exists)

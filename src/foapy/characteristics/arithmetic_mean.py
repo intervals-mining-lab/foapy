@@ -1,8 +1,19 @@
 import numpy as np
 
 
-def arithmetic_mean(intervals_seq):
+def arithmetic_mean(intervals):
+    """
+    Calculation arithmetic mean of sequence.
 
-    n = len(intervals_seq)
+    The arithmetic mean is the sum of all intervals divided
+    by the number of intervals in the sequence.
 
-    return np.sum(intervals_seq) / n
+    Param name = "intervals" (sequence of intervals)
+
+    The variable n is the number of intervals in the sequence.
+
+    """
+
+    n = len(intervals)
+
+    return np.sum(intervals) / n
