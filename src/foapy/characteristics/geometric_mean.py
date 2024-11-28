@@ -8,7 +8,7 @@ def geometric_mean(intervals):
     The geometric mean is the root of the number of intervals in a sequence
     from the product of all intervals.
 
-    Param name = "intervals" (sequence of intervals)
+    Param name = "intervals" (sequence of intervals).
 
     The variable n is the number of intervals in the sequence.
 

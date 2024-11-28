@@ -8,7 +8,7 @@ def average_remoteness(intervals):
     Average remoteness is the Depth divide by number of intervals
     in the given congeneric sequence.
 
-    Param name = "intervals" (sequence of intervals)
+    Param name = "intervals" (sequence of intervals).
 
     The variable n is the number of intervals in the sequence.
 
