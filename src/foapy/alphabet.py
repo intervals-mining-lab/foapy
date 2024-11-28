@@ -56,7 +56,7 @@ def alphabet(X) -> np.ndarray:
     # perm = [0, 5, 1, 2, 4, 3]
     perm = data.argsort(kind="mergesort")
 
-    # Create tmp mask array to store True on positions where appears new value
+    # Create mask array to store True on positions where new value appears for the first time in the sorted array to distinguish where subarray of one element ends and another begins
     # ex.:
     #              a  a  c  c  d  e
     # perm      = [0, 5, 1, 2, 4, 3]
@@ -69,7 +69,7 @@ def alphabet(X) -> np.ndarray:
     # unique_mask                       = [True, False, True, False, True, True]
     #                                        a     a     c      c      d     e
     unique_mask = np.empty(data.shape, dtype=bool)
-    # First element is new
+    # First element is always new
     unique_mask[:1] = True
     # Set true on positions where value differs from previous
     unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
