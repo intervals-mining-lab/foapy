@@ -1,11 +1,11 @@
 import numpy as np
+from numpy import ma
 
-from foapy.constants_intervals import binding as binding_constant
-from foapy.constants_intervals import mode as mode_constant
+from foapy import binding, mode
 from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 
 
-def intervals(X, binding, mode):
+def intervals(X, bind, mod):
     """
     Finding array of array of intervals of the uniform
     sequences in the given input sequence
@@ -145,83 +145,99 @@ def intervals(X, binding, mode):
     >>> b
     Exception
     """
+
     # Validate binding
-    if binding not in {binding_constant.start, binding_constant.end, 1, 2}:
+    if bind not in {binding.start, binding.end}:
         raise ValueError(
             {"message": "Invalid binding value. Use binding.start or binding.end."}
         )
 
     # Validate mode
-    if mode not in {
-        mode_constant.lossy,
-        mode_constant.normal,
-        mode_constant.cycle,
-        mode_constant.redundant,
-        1,
-        2,
-        3,
-        4,
-    }:
+    if mod not in {mode.lossy, mode.normal, mode.cycle, mode.redundant}:
         raise ValueError(
             {"message": "Invalid mode value. Use mode.lossy,normal,cycle or redundant."}
         )
-    if X.shape == (0,):
-        return []
+    # ex.:
+    # ar = ['a', 'c', 'c', 'e', 'd', 'a']
 
-    if X.ndim != 2:  # Checking for d1 array
-        raise Not1DArrayException(
-            {"message": f"Incorrect array form. Expected d2 array, exists {X.ndim}"}
-        )
+    power = X.shape[0]
+    if power == 0:
+        return np.array([])
+
+    if len(X.shape) != 2:
+        message = f"Incorrect array form. Expected d2 array, exists {len(X.shape)}"
+        raise Not1DArrayException({"message": message})
 
     length = X.shape[1]
 
-    positions = np.empty(X.shape[0], dtype=object)
-    intervals = np.empty(X.shape[0], dtype=object)
+    mask = ma.getmaskarray(X)
 
-    for i in range(X.shape[0]):
+    verify_data = X[~mask]
+    verify_positions = np.transpose(np.argwhere(~mask))
+    verify = np.empty(verify_data.shape[0], dtype=bool)
+    verify[:1] = False
+    verify[1:] = np.logical_xor(
+        verify_positions[0, 1:] != verify_positions[0, :-1],
+        verify_data[1:] != verify_data[:-1],
+    )
 
-        unique = X[i][~X[i].mask]
-        unique = set(unique)
-        if len(unique) > 1:
-            # raise exception
-            raise InconsistentOrderException(
-                {"message": f"Elements {X[i]} have wrong appearance"}
-            )
+    if not np.all(~verify):
+        failed_indexes = verify_positions[0, verify]
+        i = X[failed_indexes[0]]
+        raise InconsistentOrderException(
+            {"message": f"Elements {i} have wrong appearance"}
+        )
 
-        ar = X[i] if binding == 1 else X[i][::-1]
-        positions[i] = np.argwhere(ar != None).flatten()  # noqa: E711
-    for i, _ in enumerate(positions):
-        if len(_) == 0:
-            intervals[i] = np.array([], dtype=int)
-            continue
-        tail_intervals = positions[i][1:] - positions[i][:-1]
-        # ---------------------
-        # redunant
-        delta = 2 if mode == 4 else 1
-        intevals_length = tail_intervals.shape[0] + delta
+    extended_mask = np.empty((power, length + 1), dtype=bool)
+    if bind == binding.end:
+        extended_mask[:, :-1] = ~mask[::-1, ::-1]
+    else:
+        extended_mask[:, :-1] = ~mask
+    extended_mask[:, -1] = np.any(extended_mask[:, :-1], axis=1)
 
-        intervals[i] = np.empty(intevals_length, dtype=int)
+    positions = np.transpose(np.argwhere(extended_mask))
 
-        # ---------------------
-        # redunant
-        if mode == 4:
-            intervals[i][1:-1] = tail_intervals
-        else:
-            intervals[i][1:] = tail_intervals
-        # ---------------------
+    border_indexes = np.empty(positions.shape[1] + 1, dtype=bool)
+    border_indexes[:1] = True
+    border_indexes[1:-1] = positions[0, 1:] != positions[0, :-1]
+    border_indexes[-1:] = True
 
-        if mode == mode_constant.lossy:
-            intervals[i] = intervals[i][1:]
-        elif mode == mode_constant.normal:
-            intervals[i][:1] = positions[i][:1] + 1
-        elif mode == mode_constant.cycle:
-            intervals[i][:1] = positions[i][:1] + length - positions[i][-1:]
-        elif mode == mode_constant.redundant:
-            intervals[i][:1] = positions[i][:1] + 1
-            intervals[i][-1:] = length - positions[i][-1:]
+    first_indexes = np.argwhere(border_indexes[:-1]).ravel()
+    last_indexes = np.argwhere(border_indexes[1:]).ravel()
 
-    if binding == 2:
-        for i, _ in enumerate(intervals):
-            intervals[i] = intervals[i][::-1]
+    indecies = np.zeros(positions.shape[1], dtype=int)
+    indecies[1:] = positions[1, 1:] - positions[1, :-1]
+    delta = indecies[last_indexes] if mod == mode.cycle else 1
+    indecies[first_indexes] = positions[1][first_indexes] + delta
 
-    return intervals
+    split_boarders = np.zeros(power * 2, dtype=int)
+
+    if mod == mode.lossy:
+        split_boarders[positions[0][last_indexes[:1]] * 2] = first_indexes[:1] + 1
+        split_boarders[positions[0][last_indexes[1:]] * 2] = (
+            np.fmax(last_indexes[:-1], first_indexes[1:]) + 1
+        )
+        split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes
+    elif mod == mode.normal:
+        split_boarders[positions[0][last_indexes[:1]] * 2] = 0
+        split_boarders[positions[0][last_indexes[1:]] * 2] = last_indexes[:-1] + 1
+        split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes
+    elif mod == mode.cycle:
+        split_boarders[positions[0][last_indexes[:1]] * 2] = 0
+        split_boarders[positions[0][last_indexes[1:]] * 2] = last_indexes[:-1] + 1
+        split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes
+    elif mod == mode.redundant:
+        split_boarders[positions[0][last_indexes[:1]] * 2] = 0
+        split_boarders[positions[0][last_indexes[1:]] * 2] = 0
+        split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes + 1
+
+    preserve_previous = np.frompyfunc(lambda x, y: x if y == 0 else y, 2, 1)
+    split_boarders = preserve_previous.accumulate(split_boarders)
+    if bind == binding.end:
+        split_boarders[:-1] = np.diff(split_boarders)
+        split_boarders[-1:] = len(indecies) - split_boarders[-1]
+        split_boarders = np.cumsum(split_boarders[::-1])
+        indecies = indecies[::-1]
+
+    indecies = np.array_split(indecies, split_boarders)
+    return indecies[1:-1:2]

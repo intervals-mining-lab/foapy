@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
+from foapy import order
 from foapy.exceptions import Not1DArrayException
-from foapy.order import order
 
 
 class TestOrder(TestCase):

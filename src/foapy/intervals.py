@@ -1,6 +1,6 @@
 import numpy as np
 
-from foapy.constants_intervals import binding, mode
+from foapy import binding, mode
 
 
 def intervals(X, bind, mod):
