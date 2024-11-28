@@ -19,7 +19,7 @@ class Test_arithmetic_mean(TestCase):
     Test setup:
     1. Input sequence X.
     2. Transform sequence into order using 'order' function.
-    3. Calculate intervals using `intervals` function with appropriate binding and mode.
+    3. Calculate intervals using 'intervals' function with appropriate binding and mode.
     4. Determine expected output.
     5. Match actual output from 'arithmetic_mean' with expected output.
 

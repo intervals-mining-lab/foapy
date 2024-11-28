@@ -7,7 +7,7 @@ def volume(intervals):
 
     Volume is the product of the elements of the intervals of the sequence.
 
-    param name = "intervals" (sequence of intervals).
+    param name = "intervals" (sequence of intervals) .
 
     """
     return np.prod(intervals)
