@@ -2,14 +2,20 @@ import numpy as np
 
 from foapy.characteristics.descriptive_information import descriptive_information
 from foapy.characteristics.geometric_mean import geometric_mean
-from foapy.intervals import intervals
-from foapy.order import order
 
 
-def regularity(X, binding, mode):
-    order_X = order(X)
-    intervals_X = intervals(order_X, binding, mode)
+def regularity(intervals):
+    """
+    Calculation regularity of sequence.
 
-    return np.array(
-        geometric_mean(intervals_X) / descriptive_information(X, binding, mode)
-    )
+    Regularity is the geometric mean divided by descriptive information.
+
+    param name = "intervals" (sequence of intervals) .
+
+    total_elements - сombine all intervals into one array.
+
+    """
+
+    total_elements = np.concatenate(intervals)
+
+    return np.array(geometric_mean(total_elements) / descriptive_information(intervals))
