@@ -8,7 +8,7 @@ def volume(intervals):
 
     Parameters
     ----------
-    X: two-dimensional array
+    X: two-dimensional intervals sequence array
         Source array sequence.
 
     Returns
@@ -19,46 +19,70 @@ def volume(intervals):
     --------
 
     ----1----
-    >>> a = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-    >>> b = volume(X, binding.start, mode.lossy)
+    >>> a = [
+            [0 0 -- -- -- 0 -- -- -- 0]
+            [-- -- 1 1 -- -- 1 -- -- --]
+            [-- -- -- -- 2 -- -- 2 2 --]
+            ]
+    >>> b = volume(a)
     >>> b
     [16  3  3]
 
     ----2----
-    >>> a = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-    >>> b = volume(X, binding.start, mode.normal)
+    >>> a = [
+        [1 1 4 4]
+        [3 1 3]
+        [5 3 1]
+    ]
+    >>> b = volume(a)
     >>> b
-    [16 12  6]
+    [16 9  15]
 
     ----3----
-    >>> a = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-    >>> b = volume(X, binding.end,  mode.normal)
+    >>> a = [
+        [1 4 4 1]
+        [1 3 4]
+        [3 1 2]
+    ]
+    >>> b = volume(a)
     >>> b
-    [16 36 30]
+    [16 12 6]
 
     ----4----
-    >>> a = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-    >>> b = volume(X, binding.start, mode.redundant)
+    >>> a = [
+        [-- -- -- 1 1 -- -- 1 -- --]
+        ]
+    >>> b = volume(a)
     >>> b
-    [16 36 30]
+    [6]
 
     ----5----
-    >>> a = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-    >>> b = volume(X, binding.start, mode.cycle)
+    >>> a = [--]
+    >>> b = volume(a)
     >>> b
-    [16 18 18]
+    []
 
     ----6----
-    >>> a = ["B", "A"]
-    >>> b = volume(X, binding.start, mode.lossy)
+    >>> a = ["B"]
+    >>> b = volume(a)
     >>> b
-    [1 1]
+    [1]
 
     ----7----
-    >>> a = ["B", "A", "C", "D"]
-    >>> b = volume(X, binding.start, mode.lossy)
+    >>> a = [
+        [1 1 1 1 1]
+    ]
+    >>> b = volume(a)
     >>> b
-    [1 1 1 1]
+    [1]
+
+    ----8----
+    >>> a = [
+        []
+        ]
+    >>> b = volume(a)
+    >>> b
+    []
     """
 
     return np.asanyarray([np.prod(line) for line in intervals])

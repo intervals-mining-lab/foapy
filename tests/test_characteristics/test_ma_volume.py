@@ -84,17 +84,48 @@ class TestMaVolume(TestCase):
         exists = volume(intervals_seq)
         assert_equal(expected, exists)
 
-    # def test_calculate_start_redunant_values_with_mask(self):
-    #     X = ['B','B','B','A','A','B','B','A','B','B']
-    #     mask = [1, 1, 1, 0, 0, 1, 1, 0, 1, 1]
-    #     masked_X = ma.masked_array(X, mask)
-    #     order_seq = order(masked_X)
-    #     print(order_seq)
-    #     intervals_seq = intervals(
-    #         order_seq, binding_constant.start, mode_constant.redundant
-    #     )
+    def test_calculate_start_redunant_values_with_mask(self):
+        X = ["B", "B", "B", "A", "A", "B", "B", "A", "B", "B"]
+        mask = [1, 1, 1, 0, 0, 1, 1, 0, 1, 1]
+        masked_X = ma.masked_array(X, mask)
+        order_seq = order(masked_X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.redundant
+        )
+        expected = np.array([36])
+        exists = volume(intervals_seq)
+        assert_equal(expected, exists)
 
-    #     expected = np.array([36]) # incorrect test res [6,  36]
-    #     exists = volume(intervals_seq)
-    #     print(exists)
-    #     assert_equal(expected, exists)
+    def test_calulate_normal_with_the_same_values(self):
+        X = ["A", "A", "A", "A", "A"]
+        masked_X = ma.masked_array(X)
+        order_seq = order(masked_X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.normal
+        )
+        expected = np.array([1])
+        exists = volume(intervals_seq)
+        assert_equal(expected, exists)
+
+    def test_calculate_start_cycle_with_masked_single_value(self):
+        X = ["A"]
+        mask = [1]
+        masked_X = ma.masked_array(X, mask)
+        order_seq = order(masked_X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.cycle
+        )
+        expected = np.array([])
+        exists = volume(intervals_seq)
+        assert_equal(expected, exists)
+
+    def test_calculate_start_cycle_with_single_value(self):
+        X = ["A"]
+        masked_X = ma.masked_array(X)
+        order_seq = order(masked_X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.cycle
+        )
+        expected = np.array([1])
+        exists = volume(intervals_seq)
+        assert_equal(expected, exists)
