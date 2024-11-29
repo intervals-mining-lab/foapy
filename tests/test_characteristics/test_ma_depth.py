@@ -134,7 +134,6 @@ class TestMaDepth(TestCase):
         )
         expected = np.array([])
         exists = depth(intervals_seq)
-        print(exists)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))

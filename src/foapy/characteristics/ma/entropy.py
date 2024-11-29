@@ -3,6 +3,8 @@ import numpy as np
 
 def entropy(intervals):
     """
+    Entropy is the log2 of the average value of the elements
+    of the intervals of the sequence .
 
     Parameters
     ----------
