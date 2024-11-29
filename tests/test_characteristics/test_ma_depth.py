@@ -85,18 +85,6 @@ class TestMaDepth(TestCase):
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
-    def test_calculate_start_lossy_empty_values_depth(self):
-        X = ma.masked_array([])
-        order_seq = order(X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.lossy
-        )
-        expected = np.array([])
-        exists = depth(intervals_seq)
-        epsilon = 0.01
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
     def test_calculate_start_lossy_empty_values(self):
         X = ma.masked_array([])
         order_seq = order(X)

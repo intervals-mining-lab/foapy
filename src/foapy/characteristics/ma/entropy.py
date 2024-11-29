@@ -19,4 +19,6 @@ def entropy(intervals):
 
     """
 
-    return np.asanyarray([np.log2(np.average(line)) for line in intervals])
+    return np.asanyarray(
+        [np.log2(np.average(line)) if len(line) != 0 else 0 for line in intervals]
+    )

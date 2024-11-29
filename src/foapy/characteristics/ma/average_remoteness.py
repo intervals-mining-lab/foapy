@@ -23,7 +23,8 @@ def average_remoteness(intervals):
 
 
     """
+    size = np.array([len(elem) for elem in intervals])
+    depth_seq = depth(intervals)
+    res = np.divide(depth_seq, size, out=np.zeros_like(depth_seq), where=size != 0)
 
-    size = np.asanyarray([len(elem) for elem in intervals])
-    res = depth(intervals) / size
     return res
