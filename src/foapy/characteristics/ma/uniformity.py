@@ -28,7 +28,7 @@ def uniformity(intervals):
             [1 3]
             [3 1]
             ]
-    >>> b = depth(X)
+    >>> b = uniformity(X)
     >>> b
     [0.2516 0.2075 0.2075]
 
@@ -38,7 +38,7 @@ def uniformity(intervals):
         [3 1 3]
         [5 3 1]
     ]
-    >>> b = depth(X)
+    >>> b = uniformity(X)
     >>> b
     [0.3219 0.1657 0.2826]
 
@@ -48,7 +48,7 @@ def uniformity(intervals):
         [1 3 4]
         [3 1 2]
     ]
-    >>> b = depth(X)
+    >>> b = uniformity(X)
     >>> b
     [0.3219 0.22005 0.13834]
 
@@ -56,19 +56,19 @@ def uniformity(intervals):
     >>> X = [
         [4 1 3 3]
         ]
-    >>> b = depth(X)
+    >>> b = uniformity(X)
     >>> b
     [0.16569]
 
     ----5----
     >>> X = [[]]
-    >>> b = depth(X)
+    >>> b = uniformity(X)
     >>> b
     [0]
 
     ----6----
     >>> X = [[1]]
-    >>> b = depth(X)
+    >>> b = uniformity(X)
     >>> b
     [0]
 
@@ -76,7 +76,7 @@ def uniformity(intervals):
     >>> X = [
         [1 1 1 1 1]
     ]
-    >>> b = depth(X)
+    >>> b = uniformity(X)
     >>> b
     [0]
 
