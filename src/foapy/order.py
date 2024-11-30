@@ -75,13 +75,15 @@ def order(X, return_alphabet=False):
             {"message": f"Incorrect array form. Expected d1 array, exists {data.ndim}"}
         )
 
-    # Sort data positions
+    # Array of indices that sort elements in ascending order
     # ex.:
     #         a  a  c  c  d  e
     # perm = [0, 5, 1, 2, 4, 3]
     perm = data.argsort(kind="mergesort")
 
-    # Create tmp mask array to store True on positions where appears new value
+    # Create mask array to store True on positions where new value appears for the first
+    # time in the sorted array to distinguish where subarray of one element ends and
+    # another begins
     # ex.:
     #              a  a  c  c  d  e
     # perm      = [0, 5, 1, 2, 4, 3]
@@ -94,12 +96,13 @@ def order(X, return_alphabet=False):
     # unique_mask                       = [True, False, True, False, True, True]
     #                                        a     a     c      c      d     e
     unique_mask = np.empty(data.shape, dtype=bool)
-    # First element is new
+    # First element is always new
     unique_mask[:1] = True
     # Set true on positions where value differs from previous
     unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
 
-    # Create tmp array that will store reverse sorted mask array
+    # Create mask array to store True on positions of the data array
+    # where new value appears for the first time
     # ex.:
     #                        a      a       c     c       d      e
     # unique_mask       = [True,  False,  True, False,  True,  True]
@@ -111,7 +114,7 @@ def order(X, return_alphabet=False):
     result_mask = np.zeros_like(unique_mask)
     result_mask[perm[unique_mask]] = True
 
-    # Count unique values
+    # Alphabet cardinality
     # ex.:
     #                  a      a     c     c     d     e
     # unique_mask = [True, False, True, False, True, True]
@@ -128,7 +131,9 @@ def order(X, return_alphabet=False):
     #                           a  c  c  e  d  a
     inverse_perm[perm] = np.arange(data.shape[0])
 
-    # Create result array that count unique values starting from 0.
+    # Fill tmp result array with cumulative sums of number of
+    # unique values (starting from 0) to represent
+    # each element as a number in resulting order.
     # Boolean cast is used to convert True to 1 and False to 0
     # ex.:
     #                                a      a     c      c     d     e

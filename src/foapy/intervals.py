@@ -73,17 +73,20 @@ def intervals(X, bind, mod):
         # ar = ['a', 'd', 'e', 'c', 'c', 'a']
         ar = ar[::-1]
 
-    # Sort data positions
+    # Array of indices that sort elements in ascending order
     # ex.:
     #         a  a  c  c  d  e
     # perm = [0, 5, 1, 2, 4, 3]
     perm = ar.argsort(kind="mergesort")
 
-    # Create tmp mask array to store True on positions where appears new value.
+    # Create mask array to store True on positions where new value appears for the first
+    # time in the sorted array to distinguish where subarray of one element ends and
+    # another begins.
+    #
     # Create shape length +1 of source,
-    # because we want to use the array for all binding modes.
-    # ex.:
-    # Create tmp mask array to store True on positions where appears new value
+    # to use it as both first occurrence marker and
+    # last occurrence marker depending on the shift of the data array
+    #
     # ex.:
     #              a  a  c  c  d  e
     # perm      = [0, 5, 1, 2, 4, 3]
@@ -93,7 +96,7 @@ def intervals(X, bind, mod):
     # data[perm[1:]]                    = [        'a',  'c',   'c',  'd',  'e'      ]
     # data[perm[:-1]]                   = [        'a',  'a',   'c',  'c',  'd'      ]
     # data[perm[1:]] != data[perm[:-1]] = [      False, True, False, True, True      ]
-    # unique_mask                       = [True, False, True, False, True, True, True]
+    # mask                              = [True, False, True, False, True, True, True]
     # First appears                          a     a     c      c      d     e
     # Last appears                                 a     a      c      c     d     e
 
@@ -103,10 +106,11 @@ def intervals(X, bind, mod):
     mask[1:-1] = ar[perm[1:]] != ar[perm[:-1]]
     mask[-1:] = True  # or  mask[-1] = True
 
-    # Save masks first and last appears of elements
+    # Create masks of first and last occurrences of elements by
+    # excluding first and last elements from unique_mask accordingly
     # ex.:
     #
-    # unique_mask = [True, False, True, False, True, True, True]
+    #        mask = [True, False, True, False, True, True, True]
     # first_mask  = [True, False, True, False, True, True      ]
     #                  a     a     c      c      d     e
     # last_mask   = [      False, True, False, True, True, True]

@@ -50,14 +50,14 @@ def alphabet(X) -> np.ndarray:
         raise Not1DArrayException(
             {"message": f"Incorrect array form. Expected d1 array, exists {data.ndim}"}
         )
-    # Sort data positions
+    # Array of indices that sort elements in ascending order
     # ex.:
     #         a  a  c  c  d  e
     # perm = [0, 5, 1, 2, 4, 3]
     perm = data.argsort(kind="mergesort")
 
-    # Create mask array to store True on positions where new value appears for the first 
-    # time in the sorted array to distinguish where subarray of one element ends and 
+    # Create mask array to store True on positions where new value appears for the first
+    # time in the sorted array to distinguish where subarray of one element ends and
     # another begins
     # ex.:
     #              a  a  c  c  d  e
@@ -76,7 +76,8 @@ def alphabet(X) -> np.ndarray:
     # Set true on positions where value differs from previous
     unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
 
-    # Create tmp array that will store reverse sorted mask array
+    # Create mask array to store True on positions of the data array
+    # where new value appears for the first time
     # ex.:
     #                        a     a     c      c      d     e
     # unique_mask       = [True, False, True, False, True, True]
@@ -87,7 +88,7 @@ def alphabet(X) -> np.ndarray:
     result_mask = np.full_like(unique_mask, False)
     result_mask[perm[unique_mask]] = True
 
-    # Return elements that are first appears of unique values
+    # Return array of first occurrences of elements in the data array
     # ex.:
     # data              = [ 'a',  'c',   'c',  'e',  'd',  'a' ]
     # result_mask       = [True, True, False, True, True, False]
