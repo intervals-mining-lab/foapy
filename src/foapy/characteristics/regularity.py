@@ -10,7 +10,7 @@ def regularity(intervals):
 
     Regularity is the geometric mean divided by descriptive information.
 
-    param name = "intervals" (sequence of intervals) .
+    param name = "intervals" (sequence of intervals).
 
     total_elements - сombine all intervals into one array.
 

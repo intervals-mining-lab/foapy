@@ -3,7 +3,7 @@ import numpy as np
 
 def identifying_information(intervals):
     """
-    Calculation identifying_information of sequence.
+    Calculation identifying_information of sequence .
 
     Identifying Information (Amount of Information / Entropy)
     characteristic for given intervals.

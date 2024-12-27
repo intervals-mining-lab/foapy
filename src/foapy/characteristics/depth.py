@@ -9,7 +9,7 @@ def depth(intervals):
 
     Depth is the log2 of the volume.
 
-    param name = "intervals" (sequence of intervals) .
+    param name = "intervals" (sequence of intervals).
 
     """
     return np.log2(volume(intervals))

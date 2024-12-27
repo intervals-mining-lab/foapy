@@ -10,7 +10,7 @@ def uniformity(intervals):
 
     Uniformity is the difference between identifying_information and average remoteness.
 
-    param name = "intervals" (sequence of intervals) .
+    param name = "intervals" (sequence of intervals).
 
     total_elements - сombine all intervals into one array.
 

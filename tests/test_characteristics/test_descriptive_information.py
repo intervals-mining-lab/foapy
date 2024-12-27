@@ -19,7 +19,7 @@ class Test_descriptive_information(TestCase):
     characteristic for a given sequence of intervals based on various configurations
     of `binding` and `mode`.
 
-    Test setup:
+    Test setup :
     1. Input sequence X.
     2. Transform sequence into order using 'order' function.
     3. Calculate intervals using 'intervals' function with appropriate binding and mode.
