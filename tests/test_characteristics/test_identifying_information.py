@@ -12,9 +12,9 @@ class Test_identifying_information(TestCase):
     """
     Test list for identifying_information calculate
 
-    The identifying_information function computes a identifying_information characteristic for
-    a given sequence of intervals based on various configurations
-    of `binding` and `mode`.
+    The identifying_information function computes a identifying_information
+    characteristic for a given sequence of intervals based on various
+    configurations of `binding` and `mode`.
 
     Test setup :
     1. Input sequence X.
