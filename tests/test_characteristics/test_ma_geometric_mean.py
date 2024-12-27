@@ -180,7 +180,7 @@ class TestGeometricMean(TestCase):
         intervals_seq = intervals(
             order_seq, binding_constant.start, mode_constant.lossy
         )
-        expected = np.array([1, 1, 1, 1])
+        expected = np.array([0, 0, 0, 0])
         exists = geometric_mean(intervals_seq)
         epsilon = 0.0001
         diff = np.absolute(expected - exists)
@@ -260,24 +260,23 @@ class TestGeometricMean(TestCase):
         delta_a = arigthmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
-    # def test_calculate_inequalities_start_lossy_2(self):
-    #     X = ma.masked_array([2, 2, 1, 2, 2])
-    #     order_seq = order(X)
-    #     intervals_seq = intervals(
-    #         order_seq, binding_constant.start, mode_constant.lossy
-    #     )
-    #     delta_g = geometric_mean(intervals_seq)
-    #     delta_a = arigthmetic_mean(intervals_seq)
-    #     self.assertTrue(np.all(delta_g <= delta_a))
+    def test_calculate_inequalities_start_lossy_2(self):
+        X = ma.masked_array([2, 2, 1, 2, 2])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.lossy
+        )
+        delta_g = geometric_mean(intervals_seq)
+        delta_a = arigthmetic_mean(intervals_seq)
+        self.assertTrue(np.all(delta_g <= delta_a))
 
-    # def test_calculate_inequalities_end_lossy_2(self):
-    #     X = ma.masked_array([2, 2, 1, 2, 2])
-    #     order_seq = order(X)
-    #     intervals_seq = intervals(order_seq, binding_constant.end,
-    #     mode_constant.lossy)
-    #     delta_g = geometric_mean(intervals_seq)
-    #     delta_a = arigthmetic_mean(intervals_seq)
-    #     self.assertTrue(np.all(delta_g <= delta_a))
+    def test_calculate_inequalities_end_lossy_2(self):
+        X = ma.masked_array([2, 2, 1, 2, 2])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
+        delta_g = geometric_mean(intervals_seq)
+        delta_a = arigthmetic_mean(intervals_seq)
+        self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_normal_2(self):
         X = ma.masked_array([2, 2, 1, 2, 2])
@@ -335,24 +334,23 @@ class TestGeometricMean(TestCase):
         delta_a = arigthmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
-    # def test_calculate_inequalities_start_lossy_3(self):
-    #     X = ma.masked_array([1])
-    #     order_seq = order(X)
-    #     intervals_seq = intervals(
-    #         order_seq, binding_constant.start, mode_constant.lossy
-    #     )
-    #     delta_g = geometric_mean(intervals_seq)
-    #     delta_a = arigthmetic_mean(intervals_seq)
-    #     self.assertTrue(np.all(delta_g <= delta_a))
+    def test_calculate_inequalities_start_lossy_3(self):
+        X = ma.masked_array([1])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.lossy
+        )
+        delta_g = geometric_mean(intervals_seq)
+        delta_a = arigthmetic_mean(intervals_seq)
+        self.assertTrue(np.all(delta_g <= delta_a))
 
-    # def test_calculate_inequalities_end_lossy_3(self):
-    #     X = ma.masked_array([1])
-    #     order_seq = order(X)
-    #     intervals_seq = intervals(order_seq, binding_constant.end,
-    #     mode_constant.lossy)
-    #     delta_g = geometric_mean(intervals_seq)
-    #     delta_a = arigthmetic_mean(intervals_seq)
-    #     self.assertTrue(np.all(delta_g <= delta_a))
+    def test_calculate_inequalities_end_lossy_3(self):
+        X = ma.masked_array([1])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
+        delta_g = geometric_mean(intervals_seq)
+        delta_a = arigthmetic_mean(intervals_seq)
+        self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_normal_3(self):
         X = ma.masked_array([1])

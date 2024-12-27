@@ -79,7 +79,7 @@ def geometric_mean(intervals):
     """
     return np.asanyarray(
         [
-            np.power(np.prod(line), 1 / len(line)) if len(line) != 0 else 1
+            np.power(np.prod(line), 1 / len(line)) if len(line) != 0 else 0
             for line in intervals
         ],
         dtype=float,
