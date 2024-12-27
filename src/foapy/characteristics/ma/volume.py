@@ -3,8 +3,9 @@ import numpy as np
 
 def volume(intervals):
     """
-    Calculation volume of sequence.
-    Volume is the product of the elements of the intervals of the sequence.
+    Calculation of the volume of a sequence:
+    Volume is calculated as the product
+     of the elements in the intervals of the sequence.
 
     Parameters
     ----------

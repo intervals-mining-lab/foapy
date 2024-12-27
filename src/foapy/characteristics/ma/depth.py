@@ -5,9 +5,10 @@ from foapy.characteristics.ma.volume import volume
 
 def depth(intervals):
     """
-    Calculation depth of sequence.
-    Depth is the log2 of the volume, where volume is the
-    product of the elements of the intervals of the sequence .
+    Calculation of the depth of a sequence:
+    Depth is calculated as the logarithm base 2 (log₂) of the volume,
+     where the volume is the product of the elements
+     of the intervals in the sequence.
 
     Parameters
     ----------

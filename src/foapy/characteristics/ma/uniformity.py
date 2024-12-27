@@ -6,9 +6,10 @@ from foapy.characteristics.ma.identifying_information import identifying_informa
 
 def uniformity(intervals):
     """
-    Calculation uniformity of sequence.
-    Uniformity is the substraction between identifying information and
-    average remoteness in the given congeneric sequence.
+    Calculation of the uniformity of a sequence:
+    Uniformity is calculated as the difference
+    between identifying information and average
+    remoteness in the given congeneric sequence.
 
     Parameters
     ----------

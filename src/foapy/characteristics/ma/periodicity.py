@@ -6,9 +6,10 @@ from foapy.characteristics.ma.geometric_mean import geometric_mean
 
 def periodicity(intervals):
     """
-    Calculation periodicity of sequence.
-    Periodicity is the substraction between entropy and average remoteness
-    in the given congeneric sequence.
+    Calculation of the periodicity of a sequence:
+    Periodicity is calculated as the difference
+    between the entropy and the average
+    remoteness in the given congeneric sequence.
 
     Parameters
     ----------

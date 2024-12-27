@@ -3,9 +3,9 @@ import numpy as np
 
 def arigthmetic_mean(intervals):
     """
-    Calculation arigthmetic mean of sequence.
-    Arigthmetic_mean is the addition of the elements of the intervals
-    divide by length of its intervals of the sequence.
+    Arithmetic mean is calculated as the sum of
+    the elements of the sequence divided
+    by the number of elements in the sequence.
 
     Parameters
     ----------

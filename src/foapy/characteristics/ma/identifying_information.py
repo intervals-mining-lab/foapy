@@ -3,8 +3,9 @@ import numpy as np
 
 def identifying_information(intervals):
     """
-    Entropy is the log2 of the average value of the elements
-    of the intervals of the sequence .
+    Identifying information is calculated
+    as the logarithm base 2 (log₂) of the average
+    value of the elements in the intervals of the sequence.
 
     Parameters
     ----------

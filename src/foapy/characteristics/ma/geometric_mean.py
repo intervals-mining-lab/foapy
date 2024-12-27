@@ -3,8 +3,10 @@ import numpy as np
 
 def geometric_mean(intervals):
     """
-    Calculation geometric mean of sequence.
-    Geometric mean is the square root of the product sequence.
+    Calculation of the geometric mean of a sequence:
+    The geometric mean is calculated as the nth root
+    of the product of the elements in the sequence,
+    where  n  is the number of elements in the sequence.
 
     Parameters
     ----------
@@ -66,15 +68,15 @@ def geometric_mean(intervals):
     >>> X = [[1]]
     >>> b = geometric_mean(X)
     >>> b
-    [1]
+    [0]
 
     ----7----
     >>> X = [
-        [1 1 1 1 1]
+        [0 0 0 0 0]
     ]
     >>> b = geometric_mean(X)
     >>> b
-    [1]
+    [0]
 
     """
     return np.asanyarray(
