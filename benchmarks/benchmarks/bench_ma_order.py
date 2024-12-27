@@ -8,6 +8,10 @@ from .ma_cases import best_case, dna_case, normal_case, worst_case
 
 length = [5, 50, 500, 5000, 50000, 500000, 5000000, 50000000]
 skip = [
+    (50000, "Worst"),
+    (50000, "DNA"),
+    (50000, "Best"),
+    (50000, "Normal"),
     (500000, "Worst"),
     (500000, "DNA"),
     (500000, "Best"),

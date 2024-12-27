@@ -4,8 +4,6 @@ import numpy.ma as ma
 from foapy import order as general_order
 from foapy.exceptions import Not1DArrayException
 
-from . import alphabet
-
 
 def order(X, return_alphabet=False) -> np.ma.MaskedArray:
     """
@@ -116,16 +114,30 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
             {"message": f"Incorrect array form. Expected d1 array, exists {X.ndim}"}
         )
 
-    alphabet_values = alphabet(X)
-    order = general_order(ma.getdata(X))
+    order, alphabet_values = general_order(ma.getdata(X), return_alphabet=True)
 
     power = len(alphabet_values)
     length = len(X)
 
-    result = np.tile(order, power).reshape(power, length)
+    result_data = np.tile(order, power).reshape(power, length)
     alphabet_indecies = np.arange(power).reshape(power, 1)
-    mask = result != alphabet_indecies
+    result_mask = result_data != alphabet_indecies
+
+    indecies_selector = np.any(~np.logical_or(result_mask, ma.getmaskarray(X)), axis=1)
+
+    if np.any(indecies_selector):
+        result_data = result_data[indecies_selector]
+        result_mask = result_mask[indecies_selector]
+    else:
+        # If all items are masked we need define empty array explicity
+        # otherwise, the result shape would be (0, length)
+        # that affect compare arrays
+        # (test tests/test_ma_order.py::TestMaOrder::test_void_int_values_with_mask)
+        result_data = []
+        result_mask = []
+
+    result = ma.masked_array(result_data, mask=result_mask)
 
     if return_alphabet:  # Checking for get alphabet (optional)
-        return ma.masked_array(result, mask=mask), alphabet_values
-    return ma.masked_array(result, mask=mask)
+        return result, alphabet_values[indecies_selector]
+    return result
