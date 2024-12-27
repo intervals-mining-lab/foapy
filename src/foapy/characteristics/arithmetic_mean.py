@@ -16,4 +16,8 @@ def arithmetic_mean(intervals):
 
     n = len(intervals)
 
+    # Check for an empty list or a list with zeros
+    if n == 0 or all(x == 0 for x in intervals):
+        return 0
+
     return np.sum(intervals) / n

@@ -31,7 +31,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([0.22649821459])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -41,7 +41,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([0.2632777])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -51,7 +51,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.normal)
         expected = np.array([0.2362824857])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -61,7 +61,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.redundant)
         expected = np.array([0.252818955])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -71,7 +71,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.cycle)
         expected = np.array([0.337])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -81,7 +81,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([0.06080123752225])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -91,7 +91,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([0.2362570097771987])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -101,7 +101,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.normal)
         expected = np.array([0.18300750037])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -111,7 +111,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.redundant)
         expected = np.array([0.2102399737463])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -121,7 +121,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.cycle)
         expected = np.array([0.25328248774368])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -131,7 +131,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([0])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -141,7 +141,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([0])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -151,7 +151,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.normal)
         expected = np.array([0])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -161,7 +161,7 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.redundant)
         expected = np.array([0])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -171,6 +171,46 @@ class Test_uniformity(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.cycle)
         expected = np.array([0])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
+        diff = np.absolute(expected - exists)
+        self.assertTrue(np.all(diff < epsilon))
+
+    def test_calculate_end_lossy_different_values_uniformity(self):
+        X = np.array(["C", "G"])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
+        expected = np.array([0])
+        exists = uniformity(intervals_seq)
+        epsilon = 0.0001
+        diff = np.absolute(expected - exists)
+        self.assertTrue(np.all(diff < epsilon))
+
+    def test_calculate_end_lossy_different_values_uniformity_1(self):
+        X = np.array(["A", "C", "G", "T"])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
+        expected = np.array([0])
+        exists = uniformity(intervals_seq)
+        epsilon = 0.0001
+        diff = np.absolute(expected - exists)
+        self.assertTrue(np.all(diff < epsilon))
+
+    def test_calculate_end_lossy_different_values_uniformity_2(self):
+        X = np.array(["2", "1"])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
+        expected = np.array([0])
+        exists = uniformity(intervals_seq)
+        epsilon = 0.0001
+        diff = np.absolute(expected - exists)
+        self.assertTrue(np.all(diff < epsilon))
+
+    def test_calculate_start_lossy_uniformity_3(self):
+        X = np.array(["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
+        expected = np.array([0.113283334415])
+        exists = uniformity(intervals_seq)
+        epsilon = 0.00001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))

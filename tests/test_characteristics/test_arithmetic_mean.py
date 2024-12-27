@@ -31,7 +31,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([2.4286])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -41,7 +41,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([2.6])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -51,7 +51,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.normal)
         expected = np.array([2.4])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -61,7 +61,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.redundant)
         expected = np.array([2.5385])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -71,7 +71,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.cycle)
         expected = np.array([3.0])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -81,7 +81,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -91,7 +91,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([1.8])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -101,7 +101,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([2.666666666666667])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -111,7 +111,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([3.2])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -121,7 +121,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.normal)
         expected = np.array([2.8])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -131,7 +131,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.redundant)
         expected = np.array([3.142857142857])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -141,7 +141,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.cycle)
         expected = np.array([4])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -151,7 +151,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([1])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -161,7 +161,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([1])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -171,7 +171,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.normal)
         expected = np.array([1])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -181,7 +181,7 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.redundant)
         expected = np.array([1])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -191,6 +191,36 @@ class Test_arithmetic_mean(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.cycle)
         expected = np.array([1])
         exists = arithmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
+        diff = np.absolute(expected - exists)
+        self.assertTrue(np.all(diff < epsilon))
+
+    def test_calculate_end_lossy_different_values_arithmetic_mean(self):
+        X = np.array(["C", "G"])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
+        expected = np.array([0])
+        exists = arithmetic_mean(intervals_seq)
+        epsilon = 0.0001
+        diff = np.absolute(expected - exists)
+        self.assertTrue(np.all(diff < epsilon))
+
+    def test_calculate_end_lossy_different_values_arithmetic_mean_1(self):
+        X = np.array(["A", "C", "G", "T"])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
+        expected = np.array([0])
+        exists = arithmetic_mean(intervals_seq)
+        epsilon = 0.0001
+        diff = np.absolute(expected - exists)
+        self.assertTrue(np.all(diff < epsilon))
+
+    def test_calculate_end_lossy_different_values_arithmetic_mean_2(self):
+        X = np.array(["2", "1"])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
+        expected = np.array([0])
+        exists = arithmetic_mean(intervals_seq)
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))

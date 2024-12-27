@@ -30,7 +30,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([7.1699])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -40,7 +40,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([11.0768])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -50,7 +50,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.normal)
         expected = np.array([10.1699])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -60,7 +60,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.redundant)
         expected = np.array([14.0768])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -70,7 +70,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.cycle)
         expected = np.array([12.3399])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -80,7 +80,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([0])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -90,7 +90,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -100,7 +100,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([3.5849625])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -110,7 +110,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([6.5849625])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -120,7 +120,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([13.299208])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -130,7 +130,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.normal)
         expected = np.array([11.7548875])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -140,7 +140,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.redundant)
         expected = np.array([18.469133])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -150,7 +150,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.cycle)
         expected = np.array([15.076815597])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -160,7 +160,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.lossy)
         expected = np.array([0])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -170,7 +170,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.start, mode.normal)
         expected = np.array([0])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -180,7 +180,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.normal)
         expected = np.array([0])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -190,7 +190,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.redundant)
         expected = np.array([0])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -200,7 +200,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.cycle)
         expected = np.array([0])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -210,7 +210,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.lossy)
         expected = np.array([0])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -220,7 +220,7 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.lossy)
         expected = np.array([0])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -230,6 +230,6 @@ class TestDepth(TestCase):
         intervals_seq = intervals(order_seq, binding.end, mode.lossy)
         expected = np.array([0])
         exists = depth(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))

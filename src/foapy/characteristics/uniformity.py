@@ -1,14 +1,14 @@
 import numpy as np
 
 from foapy.characteristics.average_remoteness import average_remoteness
-from foapy.characteristics.entropy import entropy
+from foapy.characteristics.identifying_information import identifying_information
 
 
 def uniformity(intervals):
     """
     Calculation uniformity of sequence.
 
-    Uniformity is the difference between entropy and average remoteness.
+    Uniformity is the difference between identifying_information and average remoteness.
 
     param name = "intervals" (sequence of intervals) .
 
@@ -17,4 +17,6 @@ def uniformity(intervals):
     """
     total_elements = np.concatenate(intervals)
 
-    return np.array(entropy(intervals) - average_remoteness(total_elements))
+    return np.array(
+        identifying_information(intervals) - average_remoteness(total_elements)
+    )
