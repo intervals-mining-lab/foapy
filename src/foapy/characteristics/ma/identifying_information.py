@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def entropy(intervals):
+def identifying_information(intervals):
     """
     Entropy is the log2 of the average value of the elements
     of the intervals of the sequence .
@@ -24,7 +24,7 @@ def entropy(intervals):
             [1 3]
             [3 1]
             ]
-    >>> b = entropy(X)
+    >>> b = identifying_information(X)
     >>> b
     [1.5849 1 1]
 
@@ -34,7 +34,7 @@ def entropy(intervals):
         [3 1 3]
         [5 3 1]
     ]
-    >>> b = entropy(X)
+    >>> b = identifying_information(X)
     >>> b
     [1.3219 1.22239 1.5849]
 
@@ -44,7 +44,7 @@ def entropy(intervals):
         [1 3 4]
         [3 1 2]
     ]
-    >>> b = entropy(X)
+    >>> b = identifying_information(X)
     >>> b
     [1.1375 1.45943 1.4594]
 
@@ -52,19 +52,19 @@ def entropy(intervals):
     >>> X = [
         [4 1 3 3]
         ]
-    >>> b = entropy(X)
+    >>> b = identifying_information(X)
     >>> b
     [1.4594]
 
     ----5----
     >>> X = [[]]
-    >>> b = entropy(X)
+    >>> b = identifying_information(X)
     >>> b
     [0]
 
     ----6----
     >>> X = [[1]]
-    >>> b = entropy(X)
+    >>> b = identifying_information(X)
     >>> b
     [0]
 
@@ -72,7 +72,7 @@ def entropy(intervals):
     >>> X = [
         [1 1 1 1 1]
     ]
-    >>> b = entropy(X)
+    >>> b = identifying_information(X)
     >>> b
     [0]
 

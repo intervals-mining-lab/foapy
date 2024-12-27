@@ -21,11 +21,10 @@ class TestMaPeriodicity(TestCase):
         intervals_seq = intervals(
             order_seq, binding_constant.start, mode_constant.normal
         )
-        expected = np.array([0.944925, 0.97996])
+        expected = np.array([0.94494079, 0.9797959])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
-
         self.assertTrue(np.all(diff < epsilon))
 
     def test_calculate_start_periodicity_2(self):
@@ -36,7 +35,7 @@ class TestMaPeriodicity(TestCase):
         )
         expected = np.array([1, 1, 1])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -46,7 +45,7 @@ class TestMaPeriodicity(TestCase):
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         expected = np.array([1, 1, 1])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -58,7 +57,7 @@ class TestMaPeriodicity(TestCase):
         )
         expected = np.array([])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -70,7 +69,7 @@ class TestMaPeriodicity(TestCase):
         )
         expected = np.array([0.83994, 0.86602, 0.86602])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -80,9 +79,9 @@ class TestMaPeriodicity(TestCase):
         intervals_seq = intervals(
             order_seq, binding_constant.start, mode_constant.normal
         )
-        expected = np.array([0.8, 0.89136, 0.82207])
+        expected = np.array([0.8, 0.8914645, 0.82207069])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -92,7 +91,7 @@ class TestMaPeriodicity(TestCase):
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         expected = np.array([0.8, 0.8585, 0.9085])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -104,7 +103,7 @@ class TestMaPeriodicity(TestCase):
         )
         expected = np.array([0.7914, 0.8907, 0.85103])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -116,7 +115,7 @@ class TestMaPeriodicity(TestCase):
         )
         expected = np.array([0.8, 0.78622, 0.78622242])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -130,7 +129,7 @@ class TestMaPeriodicity(TestCase):
         )
         expected = np.array([0.8907])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -143,7 +142,7 @@ class TestMaPeriodicity(TestCase):
         )
         expected = np.array([1])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -157,7 +156,7 @@ class TestMaPeriodicity(TestCase):
         )
         expected = np.array([1])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -170,7 +169,7 @@ class TestMaPeriodicity(TestCase):
         )
         expected = np.array([1])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -182,6 +181,6 @@ class TestMaPeriodicity(TestCase):
         )
         expected = np.array([0, 0, 0, 0])
         exists = periodicity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))

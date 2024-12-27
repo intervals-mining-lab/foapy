@@ -24,7 +24,7 @@ class TestMaUniformity(TestCase):
         expected = np.array([0.081704199, 0.029448094887])
         exists = uniformity(intervals_seq)
 
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -36,7 +36,7 @@ class TestMaUniformity(TestCase):
         )
         expected = np.array([0, 0, 0])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -46,7 +46,7 @@ class TestMaUniformity(TestCase):
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         expected = np.array([0, 0, 0])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -58,7 +58,7 @@ class TestMaUniformity(TestCase):
         )
         expected = np.array([0.2516, 0.2075, 0.2075])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -70,7 +70,7 @@ class TestMaUniformity(TestCase):
         )
         expected = np.array([0.3219, 0.1657, 0.2826])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -80,7 +80,7 @@ class TestMaUniformity(TestCase):
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         expected = np.array([0.3219, 0.22005, 0.13834])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -92,7 +92,7 @@ class TestMaUniformity(TestCase):
         )
         expected = np.array([0.3375, 0.16695, 0.2327])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -104,7 +104,7 @@ class TestMaUniformity(TestCase):
         )
         expected = np.array([0.32192, 0.34699, 0.34699])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -116,7 +116,7 @@ class TestMaUniformity(TestCase):
         )
         expected = np.array([])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -128,9 +128,9 @@ class TestMaUniformity(TestCase):
         intervals_seq = intervals(
             order_seq, binding_constant.start, mode_constant.redundant
         )
-        expected = np.array([0.16569])
+        expected = np.array([0.16695037])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -143,7 +143,7 @@ class TestMaUniformity(TestCase):
         )
         expected = np.array([0])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -157,7 +157,7 @@ class TestMaUniformity(TestCase):
         )
         expected = np.array([])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -170,7 +170,7 @@ class TestMaUniformity(TestCase):
         )
         expected = np.array([0])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -182,6 +182,6 @@ class TestMaUniformity(TestCase):
         )
         expected = np.array([0, 0, 0, 0])
         exists = uniformity(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))

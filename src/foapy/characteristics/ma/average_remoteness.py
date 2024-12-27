@@ -5,7 +5,7 @@ from foapy.characteristics.ma.depth import depth
 
 def average_remoteness(intervals):
     """
-    Calculation average_remoteness of sequence.
+    Calculation average remoteness of sequence.
     Average remoteness is the Depth divide by number of intervals
     in the given congeneric sequence.
 

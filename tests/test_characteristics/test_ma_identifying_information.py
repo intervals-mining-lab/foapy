@@ -3,26 +3,26 @@ from unittest import TestCase
 import numpy as np
 import numpy.ma as ma
 
-from foapy.characteristics.ma.entropy import entropy
+from foapy.characteristics.ma.identifying_information import identifying_information
 from foapy.constants_intervals import binding as binding_constant
 from foapy.constants_intervals import mode as mode_constant
 from foapy.ma.intervals import intervals
 from foapy.ma.order import order
 
 
-class TestMaEntropy(TestCase):
+class TestMaIdentifyingInformation(TestCase):
     """
-    Test list for entropy calculate
+    Test list for identifying information calculate
     """
 
-    def test_calculate_start_normalf_entropy(self):
+    def test_calculate_start_normal_entropy(self):
         X = ma.masked_array([2, 4, 2, 2, 4])
         order_seq = order(X)
         intervals_seq = intervals(
             order_seq, binding_constant.start, mode_constant.normal
         )
         expected = np.array([0.415037499, 1.321928094887])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -34,7 +34,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.normal
         )
         expected = np.array([0, 1, 1.5849625])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -44,7 +44,7 @@ class TestMaEntropy(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         expected = np.array([1.5849625, 1, 0])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -54,7 +54,7 @@ class TestMaEntropy(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         expected = np.array([0])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -64,7 +64,7 @@ class TestMaEntropy(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
         expected = np.array([])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -76,7 +76,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.lossy
         )
         expected = np.array([1.5849, 1, 1])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -88,7 +88,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.normal
         )
         expected = np.array([1.3219, 1.22239, 1.5849])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -98,7 +98,7 @@ class TestMaEntropy(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         expected = np.array([1.3210, 1.4150, 1])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -110,7 +110,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.redundant
         )
         expected = np.array([1.1375, 1.45943, 1.4594])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -122,7 +122,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.cycle
         )
         expected = np.array([1.3219, 1.7369, 1.73696])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -134,7 +134,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.lossy
         )
         expected = np.array([0])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -148,7 +148,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.redundant
         )
         expected = np.array([1.4594])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -161,7 +161,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.normal
         )
         expected = np.array([0])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -175,7 +175,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.cycle
         )
         expected = np.array([])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -188,7 +188,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.cycle
         )
         expected = np.array([0])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
@@ -200,7 +200,7 @@ class TestMaEntropy(TestCase):
             order_seq, binding_constant.start, mode_constant.lossy
         )
         expected = np.array([0, 0, 0, 0])
-        exists = entropy(intervals_seq)
+        exists = identifying_information(intervals_seq)
         epsilon = 0.01
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))

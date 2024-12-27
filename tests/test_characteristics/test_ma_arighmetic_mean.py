@@ -23,7 +23,7 @@ class TestMaArigthmeticMean(TestCase):
         )
         expected = np.array([1.3333, 2.5])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -36,7 +36,7 @@ class TestMaArigthmeticMean(TestCase):
         expected = np.array([1, 2, 3])
         exists = arigthmetic_mean(intervals_seq)
 
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -46,7 +46,7 @@ class TestMaArigthmeticMean(TestCase):
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         expected = np.array([3, 2, 1])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -60,7 +60,7 @@ class TestMaArigthmeticMean(TestCase):
         )
         expected = np.array([2])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -72,7 +72,7 @@ class TestMaArigthmeticMean(TestCase):
         )
         expected = np.array([3, 2, 2])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -82,9 +82,9 @@ class TestMaArigthmeticMean(TestCase):
         intervals_seq = intervals(
             order_seq, binding_constant.start, mode_constant.normal
         )
-        expected = np.array([2.5, 2.333, 3])
+        expected = np.array([2.5, 2.3333333, 3])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -92,9 +92,9 @@ class TestMaArigthmeticMean(TestCase):
         X = ma.masked_array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
-        expected = np.array([2.5, 2.66, 2])
+        expected = np.array([2.5, 2.66666667, 2])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -106,7 +106,7 @@ class TestMaArigthmeticMean(TestCase):
         )
         expected = np.array([2.2, 2.75, 2.75])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -116,9 +116,9 @@ class TestMaArigthmeticMean(TestCase):
         intervals_seq = intervals(
             order_seq, binding_constant.start, mode_constant.cycle
         )
-        expected = np.array([2.5, 3.33, 3.33])
+        expected = np.array([2.5, 3.333333, 3.3333333])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -132,7 +132,7 @@ class TestMaArigthmeticMean(TestCase):
         )
         expected = np.array([2.75])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -145,7 +145,7 @@ class TestMaArigthmeticMean(TestCase):
         )
         expected = np.array([1])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -159,7 +159,7 @@ class TestMaArigthmeticMean(TestCase):
         )
         expected = np.array([0])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -172,7 +172,7 @@ class TestMaArigthmeticMean(TestCase):
         )
         expected = np.array([1])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -184,6 +184,6 @@ class TestMaArigthmeticMean(TestCase):
         )
         expected = np.array([0, 0, 0, 0])
         exists = arigthmetic_mean(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))

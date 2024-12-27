@@ -3,7 +3,7 @@ import numpy as np
 
 def geometric_mean(intervals):
     """
-    Calculation geometric of sequence.
+    Calculation geometric mean of sequence.
     Geometric mean is the square root of the product sequence.
 
     Parameters

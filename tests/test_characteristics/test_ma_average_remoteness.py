@@ -4,6 +4,7 @@ import numpy as np
 import numpy.ma as ma
 
 from foapy.characteristics.ma.average_remoteness import average_remoteness
+from foapy.characteristics.ma.identifying_information import identifying_information
 from foapy.constants_intervals import binding as binding_constant
 from foapy.constants_intervals import mode as mode_constant
 from foapy.ma.intervals import intervals
@@ -24,7 +25,7 @@ class TestMaAverageRemoteness(TestCase):
         expected = np.array([0.3333333, 1.29248])
         exists = average_remoteness(intervals_seq)
 
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -36,7 +37,7 @@ class TestMaAverageRemoteness(TestCase):
         )
         expected = np.array([0, 1, 1.5849625])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -46,7 +47,7 @@ class TestMaAverageRemoteness(TestCase):
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         expected = np.array([1.5849625, 1, 0])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -58,7 +59,7 @@ class TestMaAverageRemoteness(TestCase):
         )
         expected = np.array([])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -70,7 +71,7 @@ class TestMaAverageRemoteness(TestCase):
         )
         expected = np.array([1.3333, 0.79248, 0.79248])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -82,7 +83,7 @@ class TestMaAverageRemoteness(TestCase):
         )
         expected = np.array([1, 1.05664, 1.30229])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -92,7 +93,7 @@ class TestMaAverageRemoteness(TestCase):
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         expected = np.array([1, 1.1949, 0.8616])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -104,7 +105,7 @@ class TestMaAverageRemoteness(TestCase):
         )
         expected = np.array([0.8, 1.2924, 1.2267])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -114,9 +115,9 @@ class TestMaAverageRemoteness(TestCase):
         intervals_seq = intervals(
             order_seq, binding_constant.start, mode_constant.cycle
         )
-        expected = np.array([1, 1.389, 1.389])
+        expected = np.array([1, 1.389975, 1.389975])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -130,7 +131,7 @@ class TestMaAverageRemoteness(TestCase):
         )
         expected = np.array([1.2925])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -143,7 +144,7 @@ class TestMaAverageRemoteness(TestCase):
         )
         expected = np.array([0])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -157,7 +158,7 @@ class TestMaAverageRemoteness(TestCase):
         )
         expected = np.array([0])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -170,7 +171,7 @@ class TestMaAverageRemoteness(TestCase):
         )
         expected = np.array([0])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
 
@@ -182,6 +183,376 @@ class TestMaAverageRemoteness(TestCase):
         )
         expected = np.array([0, 0, 0, 0])
         exists = average_remoteness(intervals_seq)
-        epsilon = 0.01
+        epsilon = 0.0001
         diff = np.absolute(expected - exists)
         self.assertTrue(np.all(diff < epsilon))
+
+    def test_calculate_inequalities_start_lossy(self):
+        X = ma.masked_array([38, 9, 38, 9, 38, 9])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.lossy
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_lossy(self):
+        X = ma.masked_array([38, 9, 38, 9, 38, 9])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_normal(self):
+        X = ma.masked_array([38, 9, 38, 9, 38, 9])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.normal
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_normal(self):
+        X = ma.masked_array([38, 9, 38, 9, 38, 9])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_cycle(self):
+        X = ma.masked_array([38, 9, 38, 9, 38, 9])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.cycle
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_cycle(self):
+        X = ma.masked_array([38, 9, 38, 9, 38, 9])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.cycle)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_redunant(self):
+        X = ma.masked_array([38, 9, 38, 9, 38, 9])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.redundant
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_redunant(self):
+        X = ma.masked_array([38, 9, 38, 9, 38, 9])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.end, mode_constant.redundant
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_lossy_2(self):
+        X = ma.masked_array([2, 2, 1, 2, 2])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.lossy
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_lossy_2(self):
+        X = ma.masked_array([2, 2, 1, 2, 2])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_normal_2(self):
+        X = ma.masked_array([2, 2, 1, 2, 2])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.normal
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_normal_2(self):
+        X = ma.masked_array([2, 2, 1, 2, 2])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_cycle_2(self):
+        X = ma.masked_array([2, 2, 1, 2, 2])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.cycle
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_cycle_2(self):
+        X = ma.masked_array([2, 2, 1, 2, 2])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.cycle)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_redunant_2(self):
+        X = ma.masked_array([2, 2, 1, 2, 2])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.redundant
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_redunant_2(self):
+        X = ma.masked_array([2, 2, 1, 2, 2])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.end, mode_constant.redundant
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_lossy_3(self):
+        X = ma.masked_array([1])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.lossy
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_lossy_3(self):
+        X = ma.masked_array([1])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_normal_3(self):
+        X = ma.masked_array([1])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.normal
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_normal_3(self):
+        X = ma.masked_array([1])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_cycle_3(self):
+        X = ma.masked_array([1])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.cycle
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_cycle_3(self):
+        X = ma.masked_array([1])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.cycle)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_redunant_3(self):
+        X = ma.masked_array([1])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.redundant
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_redunant_3(self):
+        X = ma.masked_array([1])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.end, mode_constant.redundant
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_lossy_4(self):
+        X = ma.masked_array(["G", "G", "G", "G"])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.lossy
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_lossy_4(self):
+        X = ma.masked_array(["G", "G", "G", "G"])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_normal_4(self):
+        X = ma.masked_array(["G", "G", "G", "G"])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.normal
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_normal_4(self):
+        X = ma.masked_array(["G", "G", "G", "G"])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_cycle_4(self):
+        X = ma.masked_array(["G", "G", "G", "G"])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.cycle
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_cycle_4(self):
+        X = ma.masked_array(["G", "G", "G", "G"])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.cycle)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_redunant_4(self):
+        X = ma.masked_array(["G", "G", "G", "G"])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.redundant
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_redunant_4(self):
+        X = ma.masked_array(["G", "G", "G", "G"])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.end, mode_constant.redundant
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_lossy_5(self):
+        X = ma.masked_array([58, 58, 100, 100])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.lossy
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_lossy_5(self):
+        X = ma.masked_array([58, 58, 100, 100])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_normal_5(self):
+        X = ma.masked_array([58, 58, 100, 100])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.normal
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_normal_5(self):
+        X = ma.masked_array([58, 58, 100, 100])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_cycle_5(self):
+        X = ma.masked_array([58, 58, 100, 100])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.cycle
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_cycle_5(self):
+        X = ma.masked_array([58, 58, 100, 100])
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.cycle)
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_start_redunant_5(self):
+        X = ma.masked_array([58, 58, 100, 100])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.start, mode_constant.redundant
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
+
+    def test_calculate_inequalities_end_redunant_5(self):
+        X = ma.masked_array([58, 58, 100, 100])
+        order_seq = order(X)
+        intervals_seq = intervals(
+            order_seq, binding_constant.end, mode_constant.redundant
+        )
+        g = average_remoteness(intervals_seq)
+        H = identifying_information(intervals_seq)
+        self.assertTrue(np.all(g <= H))
