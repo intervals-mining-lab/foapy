@@ -7,8 +7,8 @@ def depth(intervals):
     """
     Calculation of the depth of a sequence:
     Depth is calculated as the logarithm base 2 (log₂) of the volume,
-     where the volume is the product of the elements
-     of the intervals in the sequence.
+    where the volume is the product of the elements
+    of the intervals in the sequence.
 
     Parameters
     ----------

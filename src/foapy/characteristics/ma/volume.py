@@ -5,7 +5,7 @@ def volume(intervals):
     """
     Calculation of the volume of a sequence:
     Volume is calculated as the product
-     of the elements in the intervals of the sequence.
+    of the elements in the intervals of the sequence.
 
     Parameters
     ----------
