@@ -61,16 +61,44 @@ def intervals(X, bind, mod):
         raise ValueError(
             {"message": "Invalid mode value. Use mode.lossy,normal,cycle or redundant."}
         )
-
+    # ex.:
+    # ar = ['a', 'c', 'c', 'e', 'd', 'a']
     ar = np.asanyarray(X)
 
     if ar.shape == (0,):
         return []
 
     if bind == binding.end:
+        # For binding to the end, we need to reverse the array
+        # ar = ['a', 'd', 'e', 'c', 'c', 'a']
         ar = ar[::-1]
 
+    # Array of indices that sort elements in ascending order
+    # ex.:
+    #         a  a  c  c  d  e
+    # perm = [0, 5, 1, 2, 4, 3]
     perm = ar.argsort(kind="mergesort")
+
+    # Create mask array to store True on positions where new value appears for the first
+    # time in the sorted array to distinguish where subarray of one element ends and
+    # another begins.
+    #
+    # Create shape length +1 of source,
+    # to use it as both first occurrence marker and
+    # last occurrence marker depending on the shift of the data array
+    #
+    # ex.:
+    #              a  a  c  c  d  e
+    # perm      = [0, 5, 1, 2, 4, 3]
+    # perm[1:]  = [   5, 1, 2, 4, 3]
+    # perm[:-1] = [0, 5, 1, 2, 4   ]
+
+    # data[perm[1:]]                    = [        'a',  'c',   'c',  'd',  'e'      ]
+    # data[perm[:-1]]                   = [        'a',  'a',   'c',  'c',  'd'      ]
+    # data[perm[1:]] != data[perm[:-1]] = [      False, True, False, True, True      ]
+    # mask                              = [True, False, True, False, True, True, True]
+    # First appears                          a     a     c      c      d     e
+    # Last appears                                 a     a      c      c     d     e
 
     mask_shape = ar.shape
     mask = np.empty(mask_shape[0] + 1, dtype=bool)
@@ -78,35 +106,209 @@ def intervals(X, bind, mod):
     mask[1:-1] = ar[perm[1:]] != ar[perm[:-1]]
     mask[-1:] = True  # or  mask[-1] = True
 
+    # Create masks of first and last occurrences of elements by
+    # excluding first and last elements from unique_mask accordingly
+    # ex.:
+    #
+    #        mask = [True, False, True, False, True, True, True]
+    # first_mask  = [True, False, True, False, True, True      ]
+    #                  a     a     c      c      d     e
+    # last_mask   = [      False, True, False, True, True, True]
+    #                        a     a     c      c      d     e
     first_mask = mask[:-1]
     last_mask = mask[1:]
 
+    # Create tmp array to count intervals
     intervals = np.empty(ar.shape, dtype=np.intp)
+
+    # Count intervals between elements.
+    # Intervals of first elements appears would be wrong on that stage.
+    # We will fix that later.
+    # ex.:
+    #                         a  a   c  c  d   e
+    # perm                 = [0, 5,  1, 2, 4,  3]
+    # perm[1:]             = [   5,  1, 2, 4,  3]
+    # perm[:-1]            = [   0,  5, 1, 2,  4]
+    # perm[1:] - perm[:-1] = [   5, -4, 1, 2, -1]
+    # intervals            = [0, 5, -4, 1, 2, -1]
+    #                         ^      ^         ^ - wrong intervals
     intervals[1:] = perm[1:] - perm[:-1]
 
+    # Fix first and last intervals
+    # For any mode except cycle delta would be 1
+    # For cycle mode delta would be an array
+
+    # ex.:
+    # len(ar)                   = 6
+    #                                  a     a      c     c     d     e
+    # perm                      = [    0,    5,     1,    2,    4,    3]
+    # last_mask                 = [False, True, False, True, True, True]
+    # perm[last_mask]           = [          5,           2,    4,    3]
+    # len(ar) - perm[last_mask] = [          1,           4,    2,    3]
+    # delta                     = [          1,           4,    2,    3]
+    #                                        a            c     d     e
     delta = len(ar) - perm[last_mask] if mod == mode.cycle else 1
+
+    # ex.:
+    #                                  a     a      c     c     d     e
+    # perm                      = [    0,    5,     1,    2,    4,    3]
+    # first_mask                = [True, False, True, False, True, True]
+    # perm[first_mask]          = [    0,           1,           4,    3]
+    #                                  a            c            d     e
+    # For all modes except cycle
+    #                                 a      a     c      c     d     e
+    # intervals                 = [   0,     5,   -4,     1,    2,   -1]
+    # perm[first_mask] + delta  = [   1,           2,           5,    4]
+    # first_mask                = [True, False, True, False, True, True]
+    # intervals                 = [   1,     5,    2,     1,    5,    4]
+    #                                 a      a     c      c     d     e
+
+    # For cycle mode
+    #                                 a      a     c      c     d     e
+    # intervals                 = [   0,      5,  -4,     1,    2,   -1]
+    # first_mask                = [True, False, True, False, True, True]
+    # perm[first_mask]          = [   0,           1,           4,    3]
+    # delta                     = [   1,           4,           2,    3]
+    # perm[first_mask] + delta  = [   1,           5,           6,    6]
+    # intervals                 = [   1,     5,    5,     1,    6,    6]
+    #                                 a      a     c      c     d     e
     intervals[first_mask] = perm[first_mask] + delta
 
+    # Create inverse permutation array
     inverse_perm = np.empty(ar.shape, dtype=np.intp)
+    # ex.:
+    #                           a  a  c  c  d  e
+    # perm                   = [0, 5, 1, 2, 4, 3]
+    # np.arange(ar.shape[0]) = [0, 1, 2, 3, 4, 5]
+    # inverse_perm           = [0, 2, 3, 5, 4, 1]
+    #                           a  c  c  e  d  a
     inverse_perm[perm] = np.arange(ar.shape[0])
 
+    # Create result array depending on mode
     if mod == mode.lossy:
+        # For lossy mode we ignore intervals for a first appearance of the element
+        # ex.:
+        #                                 a      a     c      c     d     e
+        # intervals                 = [   1,     5,    5,     1,    6,    6]
+        # first_mask                = [True, False, True, False, True, True]
+        # intervals                 = [   0,     5,    0,     1,    0,    0]
+        #                                 a      a     c      c     d     e
         intervals[first_mask] = 0
+
+        # Permute intervals array to the original order
+        # ex.:
+        #                              a  a  c  c  d  e
+        # intervals                 = [0, 5, 0, 1, 0, 0]
+        # inverse_perm              = [0, 2, 3, 5, 4, 1]
+        # intervals                 = [0, 0, 1, 0, 0, 5]
+        #                              a  c  c  e  d  a
         intervals = intervals[inverse_perm]
+
+        # Remove zeros from the array
+        # ex.:
+        #                              a  c  c  e  d  a
+        # intervals                 = [0, 0, 1, 0, 0, 5]
+        # intervals[intervals != 0] = [      1,       5]
+        # result                    = [      1,       5]
+        #                                    c        a
         result = intervals[intervals != 0]
     elif mod == mode.normal:
+        # For normal mode we permute intervals array to the original order
+        # ex.:
+        #                            a  a  c  c  d  e
+        # intervals               = [1, 5, 2, 1, 5, 4]
+        # inverse_perm            = [0, 2, 3, 5, 4, 1]
+        # intervals[inverse_perm] = [1, 2, 1, 4, 5, 5]
+        #                            a  c  c  e  d  a
+        # result                  = [1, 2, 1, 4, 5, 5]
         result = intervals[inverse_perm]
     elif mod == mode.cycle:
+        # For cycle mode we permute intervals array to the original order
+        # ex.:
+        #                            a  a  c  c  d  e
+        # intervals               = [1, 5, 5, 1, 6, 6]
+        # inverse_perm            = [0, 2, 3, 5, 4, 1]
+        # intervals[inverse_perm] = [1, 2, 1, 4, 5, 5]
+        #                            a  c  c  e  d  a
+        # result                  = [1, 5, 1, 6, 5, 5]
         result = intervals[inverse_perm]
     elif mod == mode.redundant:
+        # For redundant mode we need to count intervals for the first and last
+        # appearance of an element
+
+        # ex.:
+        #                            a  a  c  c  d  e
+        # intervals               = [1, 5, 2, 1, 5, 4]
+        # inverse_perm            = [0, 2, 3, 5, 4, 1]
+        # intervals[inverse_perm] = [1, 2, 1, 4, 5, 5]
+        #                            a  c  c  e  d  a
+        # result                  = [1, 2, 1, 4, 5, 5]
+
+        # Create 2-dimensional array size of (2, len(ar))
+        # Zero row is for intervals the first appearance of the element and intervals
+        # for intermediate appearances
+        # First row will store intervals for the last appearance of the element
         result = np.zeros(shape=ar.shape + (2,), dtype=int)
+
+        # ex.:
+        #                a  a  c  c  d  e
+        # intervals =   [1, 5, 2, 1, 5, 4]
+        # result    = [
+        #               [1, 5, 2, 1, 5, 4]
+        #               [0, 0, 0, 0, 0, 0]
+        #             ]
         result[:, 0] = intervals
+
+        # Set intervals for the last appearance of the element to the first row
+
+        # ex.:
+        #                                  a     a      c     c     d     e
+        # perm                      = [    0,    5,     1,    2,    4,    3]
+        # last_mask                 = [False, True, False, True, True, True]
+        # perm[last_mask]           = [          5,           2,    4,    3]
+        # len(ar) - perm[last_mask] = [          1,           4,    2,    3]
+        # result                    = [
+        #                               [   1,    5,    2,    1,    5,    4]
+        #                               [   0,    1,    0,    4,    2,    3]
+        #                             ]
         result[last_mask, 1] = len(ar) - perm[last_mask]
+
+        # Permute intervals array to the original order
+        # ex.:
+        #                           a  a  c  c  d  e
+        # result               = [
+        #                          [1, 5, 2, 1, 5, 4]
+        #                          [0, 1, 0, 4, 2, 3]
+        #                        ]
+        # inverse_perm         =   [0, 2, 3, 5, 4, 1]
+        # result[inverse_perm] = [
+        #                          [1, 2, 1, 4, 5, 5]
+        #                          [0, 0, 4, 3, 2, 1]
+        #                        ]
+        #                           a  c  c  e  d  a
         result = result[inverse_perm]
+
+        # Flatten result array
+        # ex.:
+        #                           a  c  c  e  d  a
+        # result[inverse_perm] = [
+        #                          [1, 2, 1, 4, 5, 5]
+        #                          [0, 0, 4, 3, 2, 1]
+        #                        ]
+        # result.ravel()       = [ 1, 0, 2, 0, 1, 4, 4, 3, 5, 2, 5, 1]
+        #                        |  a  |  c  |  c  |  e  |  d  |  a  |
         result = result.ravel()
+
+        # Exclude zeros from the result
+        # result               = [ 1, 0, 2, 0, 1, 4, 4, 3, 5, 2, 5, 1]
+        #                        |  a  |  c  |  c  |  e  |  d  |  a  |
+
+        # result[result != 0] = [ 1, 2, 1, 4, 4, 3, 5, 2, 5, 1]
+        #                       |a |c |  c  |  e  |  d  |  a  |
         result = result[result != 0]
 
     if bind == binding.end:
+        # For binding to the end, we need to reverse the result
         result = result[::-1]
 
     return result
