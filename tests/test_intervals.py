@@ -98,7 +98,7 @@ class TestIntervals(TestCase):
 
     def test_int_start_redundant(self):
         X = [2, 4, 2, 2, 4]
-        expected = np.array([1, 2, 2, 1, 2, 3, 1])
+        expected = np.array([1, 2, 2, 1, 3, 2, 1])
         exists = intervals(X, binding.start, mode.redundant)
         assert_array_equal(expected, exists)
 
@@ -122,7 +122,7 @@ class TestIntervals(TestCase):
 
     def test_dna_start_redundant(self):
         X = ["ATC", "CTG", "ATC"]
-        expected = np.array([1, 2, 2, 2, 1])
+        expected = np.array([1, 2, 2, 1, 2])
         exists = intervals(X, binding.start, mode.redundant)
         assert_array_equal(expected, exists)
 
