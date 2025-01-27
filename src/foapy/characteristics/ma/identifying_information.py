@@ -20,60 +20,67 @@ def identifying_information(intervals):
     --------
 
     ----1----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-            [1 4 4]
-            [1 3]
-            [3 1]
-            ]
-    >>> b = identifying_information(X)
+    >>>       [1 4 4]
+    >>>       [1 3]
+    >>>       [3 1]
+    >>>     ]
+    >>> b = ma.identifying_information(X)
     >>> b
     [1.5849 1 1]
 
     ----2----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 1 4 4]
-        [3 1 3]
-        [5 3 1]
-    ]
-    >>> b = identifying_information(X)
+    >>>  [1 1 4 4]
+    >>>  [3 1 3]
+    >>>  [5 3 1]
+    >>> ]
+    >>> b = ma.identifying_information(X)
     >>> b
     [1.3219 1.22239 1.5849]
 
     ----3----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 4 4 1]
-        [1 3 4]
-        [3 1 2]
-    ]
-    >>> b = identifying_information(X)
+    >>>  [1 4 4 1]
+    >>>  [1 3 4]
+    >>>  [3 1 2]
+    >>> ]
+    >>> b = ma.identifying_information(X)
     >>> b
     [1.1375 1.45943 1.4594]
 
     ----4----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [4 1 3 3]
-        ]
-    >>> b = identifying_information(X)
+    >>>  [4 1 3 3]
+    >>>  ]
+    >>> b = ma.identifying_information(X)
     >>> b
     [1.4594]
 
     ----5----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [[]]
-    >>> b = identifying_information(X)
+    >>> b = ma.identifying_information(X)
     >>> b
     [0]
 
     ----6----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [[1]]
-    >>> b = identifying_information(X)
+    >>> b = ma.identifying_information(X)
     >>> b
     [0]
 
     ----7----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 1 1 1 1]
-    ]
-    >>> b = identifying_information(X)
+    >>>  [1 1 1 1 1]
+    >>> ]
+    >>> b = ma.identifying_information(X)
     >>> b
     [0]
 

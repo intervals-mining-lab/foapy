@@ -1,0 +1,66 @@
+site_name: FoaPy
+site_description: "FoaPy is a Python package for formal order analysis of sequences"
+site_url: https://foapy.foarlab.org
+nav:
+- "Home": index.md
+- "Fundamentals": fundamentals/index.md
+- "References":
+  - "foapy.alphabet": references/alphabet.md
+  - "foapy.order": references/order.md
+  - "foapy.binding": references/binding.md
+  - "foapy.mode": references/mode.md
+  - "foapy.intervals": references/intervals.md
+
+# ⚠️ WARNING ⚠️
+# =============
+# DO NOT EDIT ANY CONFIGURATION BELOW THIS LINE
+# The settings below are required for proper documentation generation
+# =============
+edit_uri: edit/main/docs/
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+repo_url: https://github.com/intervals-mining-lab/foapy
+repo_name: intervals-mining-lab/foapy
+extra:
+  consent:
+    title: Cookie consent
+    description: >-
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+    button:
+      text: Accept
+      icon: mdi:cookie
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - tables
+  - pymdownx.tabbed:
+      alternate_style: true
+plugins:
+- autorefs
+- mkdocstrings:
+    default_handler: python
+    enable_inventory: true
+    handlers:
+      python:
+        options:
+          parameter_headings: false
+          show_root_toc_entry: false
+          docstring_style: numpy

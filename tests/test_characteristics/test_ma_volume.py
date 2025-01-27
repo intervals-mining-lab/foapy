@@ -5,8 +5,8 @@ import numpy.ma as ma
 from numpy.ma.testutils import assert_equal
 
 from foapy.characteristics.ma.volume import volume
-from foapy.constants_intervals import binding as binding_constant
-from foapy.constants_intervals import mode as mode_constant
+from foapy.intervals_constants import binding as binding_constant
+from foapy.intervals_constants import mode as mode_constant
 from foapy.ma.intervals import intervals
 from foapy.ma.order import order
 

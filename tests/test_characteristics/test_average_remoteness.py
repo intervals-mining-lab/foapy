@@ -4,8 +4,8 @@ import numpy as np
 
 from foapy.characteristics.average_remoteness import average_remoteness
 from foapy.characteristics.identifying_information import identifying_information
-from foapy.constants_intervals import binding, mode
 from foapy.intervals import intervals
+from foapy.intervals_constants import binding, mode
 from foapy.ma.intervals import intervals as intervals_ma
 from foapy.ma.order import order as order_ma
 from foapy.order import order

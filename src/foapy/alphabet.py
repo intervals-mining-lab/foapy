@@ -5,44 +5,67 @@ from foapy.exceptions import Not1DArrayException
 
 def alphabet(X) -> np.ndarray:
     """
-    Implementation of ordered set - alphabet of elements.
-    Alphabet is list of all unique elements in particular sequence.
-    Parametres
-    —--------
-    X: array
-    Array to get unique values.
+    Get an alphabet - a list of unique values from an array in order of their first appearance.
+
+    The alphabet is constructed by scanning the input array from left to right and adding each new
+    unique value encountered. This preserves the order of first appearance of each element, which
+    can be important for maintaining relationships between elements in the original sequence.
+
+    | Input array X | Alphabet  | Note                                   |
+    |---------------|-----------|----------------------------------------|
+    | [ b a b c ]   | [ b a c ] | 'b' appears before 'a'                 |
+    | [ a b c b ]   | [ a b c ] | Same values but 'a' appears before 'b' |
+    | [ 2 1 3 2 1 ] | [ 2 1 3 ] | 2 appears first, then 1, then 3        |
+    | [ ]           | [ ]       | Empty alphabet                         |
+
+    Parameters
+    ----------
+    X : array_like
+        Array to extract an alphabet from. Must be a 1-dimensional array.
 
     Returns
-    —-----
-    result: np.array or Exception
-    Exception if not d1 array, np.array otherwise.
+    -------
+    : ndarray
+        Alphabet of X - array of unique values in order of first appearance
+
+    Raises
+    -------
+    Not1DArrayException
+        When X parameter is not a 1-dimensional array
 
     Examples
-    —------
-    ----1----
-    >>> a = ['a', 'c', 'c', 'e', 'd', 'a']
-    >>> result = alphabet(a)
-    >>> result
-    ['a', 'c', 'e', 'd']
+    --------
+    Get an alphabet from a sequence of characters.
+    Note that the alphabet contains unique values in order of first appearance:
 
-    ----2----
-    >>> a = [0, 1, 2, 3, 4]
-    >>> result = alphabet(a)
-    >>> result
-    [0, 1, 2, 3, 4]
+    ``` py linenums="1"
+    import foapy
+    source = ['a', 'c', 'c', 'e', 'd', 'a']
+    alphabet = foapy.alphabet(source)
+    print(alphabet)
+    # ['a', 'c', 'e', 'd']
+    ```
 
-    ---3----
-    >>> a = []
-    >>> result = alphabet(a)
-    >>> result
-    []
+    An alphabet of an empty sequence is an empty array:
 
-    ---4----
-    >>> a = [[2, 2, 2], [2, 2, 2]]
-    >>> result = alphabet(a)
-    >>> result
-    Exception
-    """
+    ``` py linenums="1"
+    import foapy
+    source = []
+    alphabet = foapy.alphabet(source)
+    print(alphabet)
+    # []
+    ```
+
+    Getting an alphabet from an array with more than 1 dimension is not allowed:
+
+    ``` py linenums="1"
+    import foapy
+    source = [[[1], [3]], [[6], [9]], [[6], [3]]]
+    alphabet = foapy.alphabet(source)
+    # Not1DArrayException: {'message': 'Incorrect array form. Expected d1 array, exists 3'}
+    ```
+    """  # noqa: E501
+
     data = np.asanyarray(X)
     if data.ndim > 1:  # Checking for d1 array
         raise Not1DArrayException(

@@ -1,39 +1,17 @@
-# foapy
+# Welcome to MkDocs
 
-Formal order analysis library
+For full documentation visit [mkdocs.org](https://www.mkdocs.org).
 
+## Commands
 
-## Note
+* `mkdocs new [dir-name]` - Create a new project.
+* `mkdocs serve` - Start the live-reloading docs server.
+* `mkdocs build` - Build the documentation site.
+* `mkdocs -h` - Print help message and exit.
 
-> This is the main page of your project's [Sphinx] documentation. It is
-> formatted in [Markdown]. Add additional pages by creating md-files in
-> `docs` or rst-files (formatted in [reStructuredText]) and adding links to
-> them in the `Contents` section below.
->
-> Please check [Sphinx] and [MyST] for more information
-> about how to document your project and how to configure your preferences.
+## Project layout
 
-
-## Contents
-
-```{toctree}
-:maxdepth: 2
-
-Overview <readme>
-Contributions & Help <contributing>
-License <license>
-Authors <authors>
-Changelog <changelog>
-Module Reference <api/modules>
-```
-
-## Indices and tables
-
-* {ref}`genindex`
-* {ref}`modindex`
-* {ref}`search`
-
-[Sphinx]: http://www.sphinx-doc.org/
-[Markdown]: https://daringfireball.net/projects/markdown/
-[reStructuredText]: http://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
-[MyST]: https://myst-parser.readthedocs.io/en/latest/
+    mkdocs.yml    # The configuration file.
+    docs/
+        index.md  # The documentation homepage.
+        ...       # Other markdown pages, images and other files.

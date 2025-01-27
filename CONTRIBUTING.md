@@ -64,7 +64,7 @@ you help us to identify the root cause of the issue.
 You can help improve `foapy` docs by making them more readable and coherent, or
 by adding missing information and correcting mistakes.
 
-`foapy` documentation uses [Sphinx] as its main documentation compiler.
+`foapy` documentation uses [Mkdocs] as its main documentation compiler.
 This means that the docs are kept in the same repository as the project code, and
 that any documentation update is done in the same way was a code contribution.
 

@@ -21,60 +21,67 @@ def geometric_mean(intervals):
     --------
 
     ----1----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-            [1 4 4]
-            [1 3]
-            [3 1]
-            ]
-    >>> b = geometric_mean(X)
+    >>>      [1 4 4]
+    >>>      [1 3]
+    >>>      [3 1]
+    >>>      ]
+    >>> b = ma.geometric_mean(X)
     >>> b
     [2.5198  1.73205 1.73205]
 
     ----2----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 1 4 4]
-        [3 1 3]
-        [5 3 1]
-    ]
-    >>> b = geometric_mean(X)
+    >>>  [1 1 4 4]
+    >>>  [3 1 3]
+    >>>  [5 3 1]
+    >>> ]
+    >>> b = ma.geometric_mean(X)
     >>> b
     [2 2.08 2.466]
 
     ----3----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 4 4 1]
-        [1 3 4]
-        [3 1 2]
-    ]
-    >>> b = geometric_mean(X)
+    >>>  [1 4 4 1]
+    >>>  [1 3 4]
+    >>>  [3 1 2]
+    >>> ]
+    >>> b = ma.geometric_mean(X)
     >>> b
     [2 2.28942 1.8171]
 
     ----4----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [4 1 3 3]
-        ]
-    >>> b = geometric_mean(X)
+    >>>  [4 1 3 3]
+    >>>  ]
+    >>> b = ma.geometric_mean(X)
     >>> b
     [2.449489]
 
     ----5----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [[]]
-    >>> b = geometric_mean(X)
+    >>> b = ma.geometric_mean(X)
     >>> b
     [0]
 
     ----6----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [[1]]
-    >>> b = geometric_mean(X)
+    >>> b = ma.geometric_mean(X)
     >>> b
     [0]
 
     ----7----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [0 0 0 0 0]
-    ]
-    >>> b = geometric_mean(X)
+    >>>  [0 0 0 0 0]
+    >>> ]
+    >>> b = ma.geometric_mean(X)
     >>> b
     [0]
 

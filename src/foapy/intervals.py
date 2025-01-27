@@ -1,16 +1,31 @@
 import numpy as np
 
-import foapy.constants_intervals as constants
+import foapy.intervals_constants as constants
 
 
 def intervals(X, binding, mode):
     """
-
     Function to extract intervals from a sequence.
 
     An interval is defined as the distance between consecutive occurrences
     of elements in the sequence, with boundary intervals counted as positions
     from sequence edges to first/last occurrence. The intervals are extracted
+    based on the specified binding direction (start or end) and mode (lossy, normal,
+    cycle, or redundant).
+
+    The intervals can be extracted from left to right (binding.start)
+    or right to left (binding.end).
+
+    Example how intervals are extracted when
+
+    === "binding.start"
+
+        |         |  b |  a |  b |  c | b |
+        |:-------:|:--:|:--:|:--:|:--:|:-:|
+        | b       |  1 | -> |  2 | -> | 2 |
+        | a       | -> |  2 |    |    |   |
+        | c       | -> | -> | -> |  4 |   |
+        | result  |  1 |  2 |  2 |  4 | 2 |
 
     === "binding.end"
 
@@ -65,10 +80,92 @@ def intervals(X, binding, mode):
         | a      | -> |  2 | -> | -> | -> | 4     |
         | c      | -> | -> | -> |  4 | -> | 2     |
         | result |  1 |  2 |  2 |  4 |  2 | 1 4 2 |
+
+
+    Parameters
+    ----------
+    X: array_like
+        Array to exctact an intervals from. Must be a 1-dimensional array.
+    binding: int
+        start = 1 - Intervals are extracted from left to right.
+        end = 2 – Intervals are extracted from right to left.
+    mode: int
+        Mode handling the intervals at the sequence boundaries:
+
+        lossy = 1 - Both interval from the start of the sequence
+        to the first element occurrence and interval from the
+        last element occurrence to the end of the sequence
+        are not taken into account.
+
+        normal = 2 - Interval from the start of the sequence to
+        the first occurrence of the element
+        (in case of binding to the beginning)
+        or interval from the last occurrence of the element to
+        the end of the sequence
+        (in case of binding to the end) is taken into account.
+
+        cycle = 3 - Interval from the start of the sequence to
+        the first element occurrence
+        and interval from the last element occurrence to the
+        end of the sequence are summed
+        into one interval (as if sequence was cyclic).
+        Interval is placed either in the beginning of
+        intervals array (in case of binding to the beginning)
+        or in the end (in case of binding to the end).
+
+        redundant = 4 - Both interval from start of the sequence
+        to the first element occurrence and the interval from
+        the last element occurrence to the end of the
+        sequence are taken into account. Their placement in results
+        array is determined
+        by the binding.
+
+    Returns
+    -------
+    order : ndarray
+        Intervals extracted from the sequence
+
+    Raises
+    -------
+    Not1DArrayException
+        When X parameter is not a 1-dimensional array
+
+    ValueError
+        When binding or mode is not valid
+
+    Examples
+    --------
+
+    Get intervals from a sequence binding to start and mode.normal.
+
+    ``` py linenums="1"
+    import foapy
+
+    source = ['a', 'b', 'a', 'c', 'a', 'd']
+    intervals = foapy.intervals(source, foapy.binding.start, foapy.mode.normal)
+    print(intervals)
+    # [1 2 2 3 2 5]
+    ```
+
+    Get intervals from a emprty sequence.
+    ``` py linenums="1"
+    import foapy
+
+    source = []
+    intervals = foapy.intervals(source, foapy.binding.start, foapy.mode.normal)
+    print(intervals)
+    # []
+    ```
+
+    Getting an intervals of an array with more than 1 dimension is not allowed.
+    ``` py linenums="1"
+    import foapy
+    source = [[1, 2], [3, 4]]
+    intervals = foapy.intervals(source, foapy.binding.start, foapy.mode.normal)
     # Not1DArrayException:
     # {'message': 'Incorrect array form. Expected d1 array, exists 2'}
     ```
-    """
+    """  # noqa: E501
 
     # Validate binding
     if binding not in {constants.binding.start, constants.binding.end}:

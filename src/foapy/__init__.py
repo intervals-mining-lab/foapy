@@ -27,8 +27,8 @@ if __FOAPY_SETUP__:
     sys.stderr.write("Running from numpy source directory.\n")
 else:
     from .alphabet import alphabet  # noqa: F401
-    from .constants_intervals import binding, mode  # noqa: F401
     from .intervals import intervals  # noqa: F401
+    from .intervals_constants import binding, mode  # noqa: F401
     from .order import order  # noqa: F401
 
     # public submodules are imported lazily, therefore are accessible from

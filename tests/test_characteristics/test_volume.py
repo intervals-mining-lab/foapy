@@ -4,8 +4,8 @@ import numpy as np
 from numpy.testing import assert_array_equal
 
 from foapy.characteristics.volume import volume
-from foapy.constants_intervals import binding, mode
 from foapy.intervals import intervals
+from foapy.intervals_constants import binding, mode
 from foapy.order import order
 
 

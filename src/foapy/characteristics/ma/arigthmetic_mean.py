@@ -20,60 +20,67 @@ def arigthmetic_mean(intervals):
     --------
 
     ----1----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-            [1 4 4]
-            [1 3]
-            [3 1]
-            ]
-    >>> b = arigthmetic_mean(X)
+    >>>      [1 4 4]
+    >>>     [1 3]
+    >>>     [3 1]
+    >>>     ]
+    >>> b = ma.arigthmetic_mean(X)
     >>> b
     [3 2 2]
 
     ----2----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 1 4 4]
-        [3 1 3]
-        [5 3 1]
-    ]
-    >>> b = arigthmetic_mean(X)
+    >>>  [1 1 4 4]
+    >>>  [3 1 3]
+    >>>  [5 3 1]
+    >>> ]
+    >>> b = ma.arigthmetic_mean(X)
     >>> b
     [2.5 2.333 3]
 
     ----3----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 4 4 1]
-        [1 3 4]
-        [3 1 2]
-    ]
-    >>> b = arigthmetic_mean(X)
+    >>>  [1 4 4 1]
+    >>>  [1 3 4]
+    >>>  [3 1 2]
+    >>> ]
+    >>> b = ma.arigthmetic_mean(X)
     >>> b
     [2.5 2.66 2]
 
     ----4----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [4 1 3 3]
-        ]
-    >>> b = arigthmetic_mean(X)
+    >>>  [4 1 3 3]
+    >>>  ]
+    >>> b = ma.arigthmetic_mean(X)
     >>> b
     [2.75]
 
     ----5----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [[]]
-    >>> b = arigthmetic_mean(X)
+    >>> b = ma.arigthmetic_mean(X)
     >>> b
     [0]
 
     ----6----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [[1]]
-    >>> b = arigthmetic_mean(X)
+    >>> b = ma.arigthmetic_mean(X)
     >>> b
     [1]
 
     ----7----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 1 1 1 1]
-    ]
-    >>> b = arigthmetic_mean(X)
+    >>>  [1 1 1 1 1]
+    >>> ]
+    >>> b = ma.arigthmetic_mean(X)
     >>> b
     [1]
 

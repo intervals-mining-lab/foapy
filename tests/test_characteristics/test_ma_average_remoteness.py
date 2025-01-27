@@ -5,8 +5,8 @@ import numpy.ma as ma
 
 from foapy.characteristics.ma.average_remoteness import average_remoteness
 from foapy.characteristics.ma.identifying_information import identifying_information
-from foapy.constants_intervals import binding as binding_constant
-from foapy.constants_intervals import mode as mode_constant
+from foapy.intervals_constants import binding as binding_constant
+from foapy.intervals_constants import mode as mode_constant
 from foapy.ma.intervals import intervals
 from foapy.ma.order import order
 

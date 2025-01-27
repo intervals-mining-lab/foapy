@@ -5,68 +5,86 @@ from foapy.exceptions import Not1DArrayException
 
 def order(X, return_alphabet=False):
     """
-    Find array sequence  in order of their appearance
+
+    Decompose an array into an order and an alphabet.
+
+    The alphabet is a list of all unique values from the input array in order of their first appearance.
+    The order is an array of indices that maps each element in the input array to its position
+    in the alphabet.
+
+    | Input array X | Order       | Alphabet  | Note                                              |
+    |---------------|-------------|-----------|---------------------------------------------------|
+    | [ x y x z ]   | [ 0 1 0 2 ] | [ x y z ] | Example decomposition to an order and an alphabet |
+    | [ y x y z ]   | [ 0 1 0 2 ] | [ y x z ] | Same order as above, different alphabet           |
+    | [ y y x z ]   | [ 0 0 1 2 ] | [ y x z ] | Same alphabet as above, different order           |
+    | [ ]           | [ ]         | [ ]       | Empty array                                       |
 
     Parameters
     ----------
-    X: np.array
-        Array to get unique values.
+    X : array_like
+        Array to decompose into an order and an alphabet. Must be a 1-dimensional array.
 
-    return_alphabet: bool, optional
+    return_alphabet : bool, optional
         If True also return array's alphabet
 
     Returns
     -------
-    result: np.array or Exception.
-        Exception if not d1 array, np.array otherwise.
+    order : ndarray
+        Order of X
+
+    alphabet : ndarray
+        Alphabet of X. Only provided if `return_alphabet` is True.
+
+    Raises
+    -------
+    Not1DArrayException
+        When X parameter is not d1 array
 
     Examples
     --------
 
-    ----1----
-    >>> a = ['a', 'b', 'a', 'c', 'd']
-    >>> b = order(a)
-    >>> b
-    [0, 1, 0, 2, 3]
+    Get an order of a chars sequence.
 
-    ----2----
-    >>> a = ['a', 'c', 'c', 'e', 'd', 'a']
-    >>> b, c = order(a, True)
-    >>> b
-    [0, 1, 1, 2, 3, 0]
-    >>> c
-    [a, c, e, d, a]
+    ``` py linenums="1"
+    import foapy
+    source = ['a', 'b', 'a', 'c', 'd']
+    order = foapy.order(source)
+    print(order)
+    # [0, 1, 0, 2, 3]
+    ```
 
-     ----3----
-    >>> a = []
-    >>> b = order(a)
-    >>> b
-    []
+    Reconstruct original sequence from the order and the alphabet.
 
-     ----4----
-    >>> a = ["E"]
-    >>> b = order(a)
-    >>> b
-    [0]
+    ``` py linenums="1"
+    import foapy
+    source = ['a', 'c', 'c', 'e', 'd', 'a']
+    order, alphabet = foapy.order(source, True)
+    print(order, alphabet)
+    # [0, 1, 1, 2, 3, 0] ['a', 'c', 'e', 'd']
+    restored = alphabet[order]
+    print(restored)
+    # ['a', 'c', 'c', 'e', 'd', 'a']
+    ```
 
-     ----5----
-    >>> a = [1, 2, 2, 3, 4, 1]
-    >>> b = order(a)
-    >>> b
-    [0, 1, 1, 2, 3, 0]
+    An order of an empty sequence is empty array.
 
-     ----6----
-    >>> a = [[2, 2, 2], [2, 2, 2]]
-    >>> b = order(a)
-    >>> b
-    Exception
+    ``` py linenums="1"
+    import foapy
+    source = []
+    order = foapy.order(source)
+    print(order)
+    # []
+    ```
 
-     ----7----
-    >>> a = [[[1], [3]], [[6], [9]], [[6], [3]]]
-    >>> b = order(a)
-    >>> b
-    Exception
-    """
+    Getting an order of an array with more than 1 dimension is not allowed
+
+    ``` py linenums="1"
+    import foapy
+    source = [[[1], [3]], [[6], [9]], [[6], [3]]]
+    order = foapy.order(source)
+    # Not1DArrayException: {'message': 'Incorrect array form. Expected d1 array, exists 3'}
+    ```
+    """  # noqa: E501
 
     data = np.asanyarray(X)
     if data.ndim > 1:  # Checking for d1 array
