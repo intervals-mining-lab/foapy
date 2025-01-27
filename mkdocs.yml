@@ -43,6 +43,8 @@ extra:
       text: Accept
       icon: mdi:cookie
 markdown_extensions:
+  # - toc:
+  #     toc_depth : "1-1"
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
