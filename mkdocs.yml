@@ -7,9 +7,10 @@ nav:
 - "References":
   - "foapy.alphabet": references/alphabet.md
   - "foapy.order": references/order.md
+  - "foapy.intervals": references/intervals.md
   - "foapy.binding": references/binding.md
   - "foapy.mode": references/mode.md
-  - "foapy.intervals": references/intervals.md
+  - "foapy.characteristics": references/characteristics.md
 
 # ⚠️ WARNING ⚠️
 # =============
@@ -63,6 +64,16 @@ plugins:
     handlers:
       python:
         options:
-          parameter_headings: false
+          parameter_headings: true
           show_root_toc_entry: false
           docstring_style: numpy
+          show_submodules: true
+          show_symbol_type_heading: true
+          show_symbol_type_toc: true
+          show_root_heading: true
+          show_signature_annotations: false
+          separate_signature: false
+          unwrap_annotated: true
+          show_if_no_docstring: false
+          show_labels: false
+          show_root_full_path: false

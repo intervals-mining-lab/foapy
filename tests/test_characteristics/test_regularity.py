@@ -2,8 +2,8 @@ from unittest import TestCase
 
 import numpy as np
 
-from foapy.characteristics.regularity import regularity
-from foapy.intervals_constants import binding, mode
+from foapy import binding, mode
+from foapy.characteristics import regularity
 from foapy.ma.intervals import intervals
 from foapy.ma.order import order
 

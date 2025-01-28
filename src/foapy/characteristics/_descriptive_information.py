@@ -1,7 +1,5 @@
 import numpy as np
 
-from foapy.characteristics.identifying_information import identifying_information
-
 
 def descriptive_information(intervals):
     """
@@ -12,4 +10,6 @@ def descriptive_information(intervals):
     param name = "intervals" (sequence of intervals).
 
     """
+    from foapy.characteristics import identifying_information
+
     return np.power(2, identifying_information(intervals))

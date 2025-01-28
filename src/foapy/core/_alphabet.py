@@ -1,9 +1,10 @@
 import numpy as np
+from numpy import ndarray
 
 from foapy.exceptions import Not1DArrayException
 
 
-def alphabet(X) -> np.ndarray:
+def alphabet(X) -> ndarray:
     """
     Get an alphabet - a list of unique values from an array in order of their first appearance.
 

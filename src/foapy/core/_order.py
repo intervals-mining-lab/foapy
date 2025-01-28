@@ -1,9 +1,10 @@
 import numpy as np
+from numpy import ndarray
 
 from foapy.exceptions import Not1DArrayException
 
 
-def order(X, return_alphabet=False):
+def order(X, return_alphabet: bool = False) -> ndarray:
     """
 
     Decompose an array into an order and an alphabet.
@@ -21,7 +22,7 @@ def order(X, return_alphabet=False):
 
     Parameters
     ----------
-    X : array_like
+    X : np.array_like
         Array to decompose into an order and an alphabet. Must be a 1-dimensional array.
 
     return_alphabet : bool, optional

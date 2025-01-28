@@ -1,6 +1,3 @@
-from foapy.characteristics.depth import depth
-
-
 def average_remoteness(intervals):
     """
     Calculation average remoteness of sequence.
@@ -13,6 +10,8 @@ def average_remoteness(intervals):
     The variable n is the number of intervals in the sequence.
 
     """
+    from foapy.characteristics import depth
+
     n = len(intervals)
 
     # Check for an empty list or a list with zeros

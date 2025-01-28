@@ -1,7 +1,5 @@
 import numpy as np
 
-from foapy.characteristics.volume import volume
-
 
 def depth(intervals):
     """
@@ -12,4 +10,6 @@ def depth(intervals):
     param name = "intervals" (sequence of intervals).
 
     """
+    from foapy.characteristics import volume
+
     return np.log2(volume(intervals))

@@ -3,9 +3,9 @@ from unittest import TestCase
 import numpy as np
 import numpy.ma as ma
 
+from foapy import binding as binding_constant
+from foapy import mode as mode_constant
 from foapy.characteristics.ma.depth import depth
-from foapy.intervals_constants import binding as binding_constant
-from foapy.intervals_constants import mode as mode_constant
 from foapy.ma.intervals import intervals
 from foapy.ma.order import order
 

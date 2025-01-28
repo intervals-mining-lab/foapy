@@ -2,10 +2,8 @@ from unittest import TestCase
 
 import numpy as np
 
-from foapy.characteristics.depth import depth
-from foapy.intervals import intervals
-from foapy.intervals_constants import binding, mode
-from foapy.order import order
+from foapy import binding, intervals, mode, order
+from foapy.characteristics import depth
 
 
 class TestDepth(TestCase):

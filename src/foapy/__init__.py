@@ -24,18 +24,19 @@ except NameError:
     __FOAPY_SETUP__ = False
 
 if __FOAPY_SETUP__:
-    sys.stderr.write("Running from numpy source directory.\n")
+    sys.stderr.write("Running from foapy source directory.\n")
 else:
-    from .alphabet import alphabet  # noqa: F401
-    from .intervals import intervals  # noqa: F401
-    from .intervals_constants import binding, mode  # noqa: F401
-    from .order import order  # noqa: F401
+    from foapy.core import alphabet  # noqa: F401
+    from foapy.core import binding  # noqa: F401
+    from foapy.core import intervals  # noqa: F401
+    from foapy.core import mode  # noqa: F401
+    from foapy.core import order  # noqa: F401
 
     # public submodules are imported lazily, therefore are accessible from
     # __getattr__. Note that `distutils` (deprecated) and `array_api`
-    # (experimental label) are not added here, because `from numpy import *`
+    # (experimental label) are not added here, because `from foapy import *`
     # must not raise any warnings - that's too disruptive.
-    __foapy_submodules__ = {"ma", "exceptions"}
+    __foapy_submodules__ = {"ma", "exceptions", "core", "characteristics"}
 
     __all__ = list(
         __foapy_submodules__
@@ -44,11 +45,21 @@ else:
     )
 
     def __getattr__(attr):
+        if attr == "core":
+            import foapy.core as core
+
+            return core
+
+        if attr == "characteristics":
+            import foapy.characteristics as characteristics
+
+            return characteristics
+
         if attr == "exceptions":
             import foapy.exceptions as exceptions
 
             return exceptions
-        elif attr == "ma":
+        if attr == "ma":
             import foapy.ma as ma
 
             return ma
@@ -59,8 +70,13 @@ else:
 
     def __dir__():
         public_symbols = globals().keys() | __foapy_submodules__
-        public_symbols -= {
+        public_symbols += {
             "exceptions" "ma",
+            "order",
+            "intervals",
+            "alphabet",
+            "binding",
+            "mode",
             "version",
         }
         return list(public_symbols)

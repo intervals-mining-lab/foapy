@@ -2,10 +2,8 @@ from unittest import TestCase
 
 import numpy as np
 
-from foapy.characteristics.arithmetic_mean import arithmetic_mean
-from foapy.intervals import intervals
-from foapy.intervals_constants import binding, mode
-from foapy.order import order
+from foapy import binding, intervals, mode, order
+from foapy.characteristics import arithmetic_mean
 
 
 class Test_arithmetic_mean(TestCase):
