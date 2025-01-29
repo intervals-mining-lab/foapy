@@ -10,7 +10,7 @@ def intervals(X, binding: int, mode: int) -> ndarray:
     Function to extract intervals from a sequence.
 
     An interval is defined as the distance between consecutive occurrences
-    of elements in the sequence, with boundary intervals counted as positions
+    of the similar elements in the sequence, with boundary intervals counted as positions
     from sequence edges to first/last occurrence. The intervals are extracted
     based on the specified binding direction ([start][foapy.binding.start] or [end][foapy.binding.end])
     and mode ([normal][foapy.mode.normal], [lossy][foapy.mode.lossy], [cycle][foapy.mode.cycle], or [redundant][foapy.mode.redundant]).
@@ -60,8 +60,8 @@ def intervals(X, binding: int, mode: int) -> ndarray:
         to the first element occurrence and the interval from
         the last element occurrence to the end of the
         sequence are taken into account. Their placement in results
-        array is determined
-        by the binding.
+        array is determined by the binding.
+        
 
     Returns
     -------

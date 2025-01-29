@@ -9,13 +9,13 @@ def order(X, return_alphabet: bool = False) -> ndarray:
 
     Decompose an array into an order and an alphabet.
 
-    The alphabet is a list of all unique values from the input array in order of their first appearance.
-    The order is an array of indices that maps each element in the input array to its position
+    Alphabet is a list of all unique values from the input array in order of their first appearance.
+    Order is an array of indices that maps each element in the input array to its position
     in the alphabet.
 
     | Input array X | Order       | Alphabet  | Note                                              |
     |---------------|-------------|-----------|---------------------------------------------------|
-    | [ x y x z ]   | [ 0 1 0 2 ] | [ x y z ] | Example decomposition to an order and an alphabet |
+    | [ x y x z ]   | [ 0 1 0 2 ] | [ x y z ] | Example decomposition into order and alphabet     |
     | [ y x y z ]   | [ 0 1 0 2 ] | [ y x z ] | Same order as above, different alphabet           |
     | [ y y x z ]   | [ 0 0 1 2 ] | [ y x z ] | Same alphabet as above, different order           |
     | [ ]           | [ ]         | [ ]       | Empty array                                       |
@@ -44,7 +44,7 @@ def order(X, return_alphabet: bool = False) -> ndarray:
     Examples
     --------
 
-    Get an order of a chars sequence.
+    Get an order of a characters sequence.
 
     ``` py linenums="1"
     import foapy

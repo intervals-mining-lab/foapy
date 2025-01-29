@@ -9,7 +9,7 @@ def alphabet(X) -> ndarray:
     Get an alphabet - a list of unique values from an array in order of their first appearance.
 
     The alphabet is constructed by scanning the input array from left to right and adding each new
-    unique value encountered. This preserves the order of first appearance of each element, which
+    unique value encountered. This preserves the order of the first appearance of each element, which
     can be important for maintaining relationships between elements in the original sequence.
 
     | Input array X | Alphabet  | Note                                   |
@@ -27,7 +27,7 @@ def alphabet(X) -> ndarray:
     Returns
     -------
     : ndarray
-        Alphabet of X - array of unique values in order of first appearance
+        Alphabet of X - array of unique values in order of their first appearance
 
     Raises
     -------
