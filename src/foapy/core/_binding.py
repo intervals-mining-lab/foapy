@@ -35,5 +35,5 @@ class binding:
 
     end: int = 2
     """
-    To  sequence end (right-to-left direction)
+    To  sequence end (right-to-left direction).
     """
