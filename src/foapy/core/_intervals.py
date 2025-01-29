@@ -61,7 +61,6 @@ def intervals(X, binding: int, mode: int) -> ndarray:
         the last element occurrence to the end of the
         sequence are taken into account. Their placement in results
         array is determined by the binding.
-        
 
     Returns
     -------
