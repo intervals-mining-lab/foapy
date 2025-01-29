@@ -3,16 +3,23 @@ import numpy as np
 
 def arithmetic_mean(intervals):
     """
-    Calculation arithmetic mean of sequence.
+    Calculate the arithmetic mean of the intervals.
 
-    The arithmetic mean is the sum of all intervals divided
-    by the number of intervals in the sequence.
+    \[ \Delta_a = \sum_{i=1}^{n} \\frac{\Delta_{i}}{n} \]
 
-    Param name = "intervals" (sequence of intervals).
+    where \( \Delta_{i} \) represents each interval and \( n \)
+    is the total number of intervals.
 
-    The variable n is the number of intervals in the sequence.
+    Parameters
+    ----------
+    intervals : array_like
+        An array of intervals (any number type array allowed).
 
-    """
+    Returns
+    -------
+    : float
+        The arithmetic mean of the input array of intervals.
+    """  # noqa: W605
 
     n = len(intervals)
 

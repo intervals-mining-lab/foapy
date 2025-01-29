@@ -44,8 +44,6 @@ extra:
       text: Accept
       icon: mdi:cookie
 markdown_extensions:
-  # - toc:
-  #     toc_depth : "1-1"
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -56,6 +54,9 @@ markdown_extensions:
   - tables
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+
 plugins:
 - autorefs
 - mkdocstrings:
@@ -77,3 +78,6 @@ plugins:
           show_if_no_docstring: false
           show_labels: false
           show_root_full_path: false
+extra_javascript:
+  - assets/js/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
