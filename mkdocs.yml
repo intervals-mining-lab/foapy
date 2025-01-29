@@ -1,6 +1,5 @@
 site_name: FoaPy
 site_description: "FoaPy is a Python package for formal order analysis of sequences"
-site_url: https://foapy.foarlab.org
 nav:
 - "Home": index.md
 - "Fundamentals": fundamentals/index.md
