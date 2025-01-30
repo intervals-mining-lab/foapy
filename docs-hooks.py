@@ -15,7 +15,6 @@ def copy_benchmarks_report(config):
         config["site_dir"], "development", "benchmarks", "report"
     )
     if os.path.exists("benchmarks/html"):
-        shutil.rmtree(destination) if os.path.exists(destination) else None
         shutil.copytree("benchmarks/html", destination)
     else:
         print("No benchmarks/html directory found")
