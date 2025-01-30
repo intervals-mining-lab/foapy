@@ -84,6 +84,9 @@ plugins:
           show_if_no_docstring: false
           show_labels: false
           show_root_full_path: false
+hooks:
+  - docs-hooks.py
+
 extra_javascript:
   - assets/js/mathjax.js
   - assets/js/iframe.js
