@@ -40,6 +40,7 @@ coverage.xml
 coverage.lcov
 htmlcov
 
+
 # Build and docs folder/files
 build/*
 dist/*
@@ -50,7 +51,7 @@ docs/_build/*
 cover/*
 MANIFEST
 _build/*
-
+site/*
 # Per-project virtualenvs
 .venv*/
 .conda*/

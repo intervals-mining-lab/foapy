@@ -46,6 +46,8 @@ extra:
     button:
       text: Accept
       icon: mdi:cookie
+  version:
+    provider: mike
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
@@ -84,6 +86,15 @@ plugins:
           show_if_no_docstring: false
           show_labels: false
           show_root_full_path: false
+- mike:
+    # These fields are all optional; the defaults are as below...
+    alias_type: symlink
+    redirect_template: null
+    deploy_prefix: ''
+    canonical_version: null
+    version_selector: true
+    css_dir: assets/css
+    javascript_dir: assets/js
 hooks:
   - docs-hooks.py
 

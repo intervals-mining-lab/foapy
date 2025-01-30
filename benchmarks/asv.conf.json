@@ -1,7 +1,7 @@
 {
     "version": 1,
     "project": "foapy",
-    "project_url": "https://github.com/foarlab/foapy",
+    "project_url": "https://github.com/intervals-mining-lab/foapy",
     "repo": "..",
     "branches": ["HEAD"],
     "build_command": [
@@ -9,7 +9,7 @@
     ],
     "dvcs": "git",
     "environment_type": "virtualenv",
-    "show_commit_url": "https://github.com/foarlab/foapy/commit/",
+    "show_commit_url": "https://github.com/intervals-mining-lab/foapy/commits",
     "matrix": {
         "Cython": [],
         "build": [],
