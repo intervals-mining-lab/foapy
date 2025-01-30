@@ -10,6 +10,10 @@ nav:
   - "foapy.binding": references/binding.md
   - "foapy.mode": references/mode.md
   - "foapy.characteristics": references/characteristics.md
+- Development:
+  - "Development": development/development.md
+  - "Benchmarks": development/benchmarks.md
+  - "Code coverage": development/coverage.md
 
 # ⚠️ WARNING ⚠️
 # =============
@@ -58,6 +62,9 @@ markdown_extensions:
 
 plugins:
 - autorefs
+- coverage:
+    page_path: development/coverage  # default
+    html_report_dir: htmlcov  # default
 - mkdocstrings:
     default_handler: python
     enable_inventory: true
@@ -79,4 +86,5 @@ plugins:
           show_root_full_path: false
 extra_javascript:
   - assets/js/mathjax.js
+  - assets/js/iframe.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

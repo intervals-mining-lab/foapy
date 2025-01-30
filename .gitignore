@@ -38,6 +38,7 @@ junit*.xml
 coverage.xml
 .pytest_cache/
 coverage.lcov
+htmlcov
 
 # Build and docs folder/files
 build/*

@@ -26,45 +26,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  docs-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}  # deep clone for setuptools-scm
-      - uses: actions/setup-python@v5
-        id: setup-python
-        with: {python-version: "3.11"}
-      - name: Build package distribution files
-        run: >-
-          pipx run --python '${{ steps.setup-python.outputs.python-path }}'
-          tox -e docs
-      - name: Store the distribution files for use in other stages
-        # `tests` and `publish` will use the same pre-built distributions,
-        # so we make sure to release the exact same package that was tested
-        uses: actions/upload-pages-artifact@v3
-        with:
-          name: docs
-          path: _build
-          retention-days: 1
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: docs-build
-    if: ${{ github.event_name == 'pull_request' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: docs
-          preview: ${{ github.event_name == 'pull_request' }}
 
   prepare:
     runs-on: ubuntu-latest
@@ -119,7 +80,7 @@ jobs:
         run: >-
           pipx run --python '${{ steps.setup-python.outputs.python-path }}'
           tox --installpkg '${{ needs.prepare.outputs.wheel-distribution }}'
-          -- -rFEx --durations 10 --color yes --cov-report=lcov # pytest args
+          -- -rFEx --durations 10 --color yes # pytest args
       - name: Generate coverage report
         run: pipx run coverage lcov -o coverage.lcov
       - name: Upload partial coverage report
@@ -130,6 +91,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: ${{ matrix.platform }} - py${{ matrix.python }}
           parallel: true
+      - name: Retrieve pre-built distribution files
+        if: ${{ matrix.platform == 'ubuntu-latest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: htmlcov
 
   finalize:
     needs: test
@@ -171,12 +138,55 @@ jobs:
           echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
           echo "${REPORT}" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
+          ls -l
 
       - uses: mshick/add-pr-comment@v2
         if: ${{ env.REPORT_RESULT != '' }}
         with:
           message: |-
             ${{ env.REPORT_RESULT }}
+
+  docs-build:
+    needs: benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}  # deep clone for setuptools-scm
+      - uses: actions/setup-python@v5
+        id: setup-python
+        with: {python-version: "3.11"}
+      - name: Build package distribution files
+        run: >-
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}'
+          tox -e docs
+      - name: Store the distribution files for use in other stages
+        # `tests` and `publish` will use the same pre-built distributions,
+        # so we make sure to release the exact same package that was tested
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: docs
+          path: _build
+          retention-days: 1
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: docs-build
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: docs
+          preview: ${{ github.event_name == 'pull_request' }}
+
 
   publish:
     needs: finalize
