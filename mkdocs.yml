@@ -48,6 +48,7 @@ extra:
       icon: mdi:cookie
   version:
     provider: mike
+    alias: true
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
