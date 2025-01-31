@@ -132,7 +132,7 @@ jobs:
           asv machine --yes || true
           asv setup -v || true
           asv continuous ${{ github.event.pull_request.base.sha }} HEAD || true
-          REPORT=$(asv compare ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
+          # REPORT=$(asv compare ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
           echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
           REPORT="${REPORT}"
           echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
