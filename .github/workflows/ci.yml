@@ -155,6 +155,9 @@ jobs:
   docs:
     needs: benchmark
     runs-on: ubuntu-latest
+    env:
+      GIT_COMMITTER_NAME: ci-bot
+      GIT_COMMITTER_EMAIL: ci-bot@example.com
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 0}  # deep clone for setuptools-scm
