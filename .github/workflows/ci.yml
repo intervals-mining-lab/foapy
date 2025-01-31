@@ -130,14 +130,14 @@ jobs:
           cd ./benchmarks
           asv machine --yes || true
           asv setup -v || true
-          # asv continuous ${{ github.event.pull_request.base.sha }} HEAD || true
-          # REPORT=$(asv compare ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
+          asv continuous ${{ github.event.pull_request.base.sha }} HEAD || true
+          REPORT=$(asv compare ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
           echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
           REPORT="${REPORT}"
           echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
           echo "${REPORT}" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
-          # asv publish
+          asv publish
 
       - uses: mshick/add-pr-comment@v2
         if: ${{ env.REPORT_RESULT != '' }}
