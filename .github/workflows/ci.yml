@@ -169,11 +169,11 @@ jobs:
           name: coverage
           path: htmlcov
 
-      - name: Retrieve benchmark report
-        uses: actions/download-artifact@v4
-        with:
-          name: benchmark
-          path: benchmarks/html
+      # - name: Retrieve benchmark report
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: benchmark
+      #     path: benchmarks/html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
