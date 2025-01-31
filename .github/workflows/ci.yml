@@ -15,8 +15,7 @@ on:
 
 permissions:
   id-token: write
-  pages: write
-  contents: read
+  contents: write
   pull-requests: write
 
 concurrency:
