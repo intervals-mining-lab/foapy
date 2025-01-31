@@ -180,9 +180,8 @@ jobs:
 
       - name: Build package distribution files
         run: |
-          pipx run --python '${{ steps.setup-python.outputs.python-path }}'
-          tox -e docs
-          tox -e docs-deploy
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-deploy
 
   publish:
     needs: finalize
