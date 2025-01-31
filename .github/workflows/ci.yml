@@ -181,7 +181,7 @@ jobs:
       - name: Build package distribution files
         run: |
           pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs
-          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-deploy
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-deploy -- ${{ github.event.pull_request.head.ref }}
 
   publish:
     needs: finalize
