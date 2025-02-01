@@ -159,6 +159,11 @@ jobs:
           echo "${REPORT}" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           asv publish
+          cd benchmarks/results
+          git config user.email "ci-bot@example.com"
+          git config user.name "ci-bot"
+          git add .
+          git commit -m "Update benchmark results"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
