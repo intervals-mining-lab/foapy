@@ -120,20 +120,22 @@ jobs:
           owner: ${{ github.repository_owner }}
           repositories: |
             foapy-asv-results
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - uses: actions/checkout@v4
         with:
           repository: intervals-mining-lab/foapy-asv-results
           path: benchmarks/results
           ref: main
-          fetch-depth: 0
           token: ${{ steps.github-app.outputs.token }}
 
       - uses: actions/setup-python@v5
         id: setup-python
         with: {python-version: "3.11"}
+
       - name: Install ASV
         run: |-
           pipx install --python '${{ steps.setup-python.outputs.python-path }}' asv virtualenv build
@@ -143,16 +145,17 @@ jobs:
           cd ./benchmarks/results
           git pull
           git checkout -b ${{ github.event.pull_request.head.ref }} --track origin/${{ github.event.pull_request.base.ref }} || true
+
       - name: Run benchmark
         id: benchmark
         env:
           QUICK_BENCHMARK: ${{ ! contains( github.event.pull_request.labels.*.name, 'benchmark') }}
         run: |-
           cd ./benchmarks
-          asv machine --yes || true
+          asv machine --machine gh-runner --yes || true
           asv setup -v || true
-          asv continuous ${{ github.event.pull_request.base.sha }} HEAD || true
-          REPORT=$(asv compare ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
+          asv continuous --append-samples --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD || true
+          REPORT=$(asv compare --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
           echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
           REPORT="${REPORT}"
           echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
@@ -160,6 +163,7 @@ jobs:
           echo 'EOF' >> $GITHUB_ENV
           asv publish
           cd ./results
+          git pull
           git config user.email "ci-bot@example.com"
           git config user.name "ci-bot"
           git add .
