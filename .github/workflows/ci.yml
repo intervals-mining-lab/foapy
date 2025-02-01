@@ -159,7 +159,7 @@ jobs:
           echo "${REPORT}" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           asv publish
-          cd benchmarks/results
+          cd ./results
           git config user.email "ci-bot@example.com"
           git config user.name "ci-bot"
           git add .
