@@ -119,7 +119,7 @@ jobs:
         with:
           repository: intervals-mining-lab/foapy-asv-results
           path: benchmarks/results
-          ref: ${{ github.ref }}  # Use current branch
+          ref: ${{ github.event.pull_request.head.ref }}  # Use current branch
       - uses: actions/setup-python@v5
         id: setup-python
         with: {python-version: "3.11"}
