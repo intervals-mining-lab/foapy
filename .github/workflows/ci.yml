@@ -112,6 +112,12 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name != 'push' && ! contains(github.ref, 'refs/tags/') }}
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: github-app
+        with:
+          app-id: ${{ secrets.BOT_GITHUB_APP_ID }}
+          private-key: ${{ secrets.BOT_GITHUB_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -121,6 +127,8 @@ jobs:
           path: benchmarks/results
           ref: main
           fetch-depth: 0
+          token: ${{ steps.github-app.outputs.token }}
+
       - uses: actions/setup-python@v5
         id: setup-python
         with: {python-version: "3.11"}
@@ -150,7 +158,10 @@ jobs:
           echo "${REPORT}" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           asv publish
-          ls -l ./results
+          cd results
+          git add .
+          git commit -m "Update benchmark results"
+          git push
 
       - uses: mshick/add-pr-comment@v2
         if: ${{ env.REPORT_RESULT != '' }}
