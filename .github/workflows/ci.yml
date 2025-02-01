@@ -117,7 +117,9 @@ jobs:
         with:
           app-id: ${{ secrets.BOT_GITHUB_APP_ID }}
           private-key: ${{ secrets.BOT_GITHUB_APP_PRIVATE_KEY }}
-
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            foapy-asv-results
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
