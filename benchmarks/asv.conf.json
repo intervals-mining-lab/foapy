@@ -9,7 +9,7 @@
     ],
     "dvcs": "git",
     "environment_type": "virtualenv",
-    "show_commit_url": "https://github.com/intervals-mining-lab/foapy/commits",
+    "show_commit_url": "https://github.com/intervals-mining-lab/foapy/commit/",
     "matrix": {
         "Cython": [],
         "build": [],
