@@ -158,12 +158,14 @@ jobs:
           echo "${REPORT}" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           asv publish
-          cd results
-          git config user.email "ci-bot@example.com"
-          git config user.name "ci-bot"
-          git add .
-          git commit -m "Update benchmark results"
-          git push origin ${{ github.event.pull_request.head.ref }}
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ steps.github-app.outputs.token }}
+          repository: intervals-mining-lab/foapy-asv-results
+          branch: ${{ github.event.pull_request.head.ref }}
+          directory: benchmarks/results
 
       - uses: mshick/add-pr-comment@v2
         if: ${{ env.REPORT_RESULT != '' }}
