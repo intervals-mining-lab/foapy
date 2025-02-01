@@ -132,7 +132,7 @@ jobs:
         run: |-
           cd ./benchmarks/results
           git pull
-          git checkout -b ${{ github.event.pull_request.base.ref }} --track origin/${{ github.event.pull_request.base.ref }}
+          git checkout -b ${{ github.event.pull_request.head.ref }} --track origin/${{ github.event.pull_request.base.ref }} || true
 
       - name: Run benchmark
         id: benchmark
