@@ -141,7 +141,6 @@ jobs:
           cd ./benchmarks/results
           git pull
           git checkout -b ${{ github.event.pull_request.head.ref }} --track origin/${{ github.event.pull_request.base.ref }} || true
-
       - name: Run benchmark
         id: benchmark
         env:
@@ -160,7 +159,7 @@ jobs:
           asv publish
 
       - name: Push changes
-        uses: ad-m/github-push-action@v0.6.0
+        uses: ad-m/github-push-action@master
         with:
           github_token: ${{ steps.github-app.outputs.token }}
           repository: intervals-mining-lab/foapy-asv-results
