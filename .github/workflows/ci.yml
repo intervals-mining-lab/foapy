@@ -158,12 +158,16 @@ jobs:
           echo 'EOF' >> $GITHUB_ENV
           asv publish
 
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+      - name: push
+        uses: actions-x/commit@v6
         with:
-          github_token: ${{ steps.github-app.outputs.token }}
-          repository: intervals-mining-lab/foapy-asv-results
+          email: ci-bot@example.com
+          name: ci-bot
           branch: ${{ github.event.pull_request.head.ref }}
+          files: .
+          repository: https://github.com/intervals-mining-lab/foapy-asv-results
+          token: ${{ steps.github-app.outputs.token }}
+          force: true
           directory: benchmarks/results
 
       - uses: mshick/add-pr-comment@v2
