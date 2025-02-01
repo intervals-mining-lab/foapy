@@ -128,6 +128,12 @@ jobs:
         run: |-
           pipx install --python '${{ steps.setup-python.outputs.python-path }}' asv virtualenv build
 
+      - name: Checkout benchmark results
+        run: |-
+          cd ./benchmarks/results
+          git pull
+          git checkout -b ${{ github.event.pull_request.base.ref }} --track origin/${{ github.event.pull_request.base.ref }}
+
       - name: Run benchmark
         id: benchmark
         env:
@@ -144,7 +150,7 @@ jobs:
           echo "${REPORT}" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           asv publish
-          ls -l benchmarks/results
+          ls -l ./results
 
       - uses: mshick/add-pr-comment@v2
         if: ${{ env.REPORT_RESULT != '' }}
