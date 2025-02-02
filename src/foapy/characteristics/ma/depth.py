@@ -24,60 +24,67 @@ def depth(intervals):
     --------
 
     ----1----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-            [1 4 4]
-            [1 3]
-            [3 1]
-            ]
-    >>> b = depth(X)
+    >>>      [1 4 4]
+    >>>      [1 3]
+    >>>      [3 1]
+    >>>      ]
+    >>> b = ma.depth(X)
     >>> b
     [4 1.585 1.585]
 
     ----2----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 1 4 4]
-        [3 1 3]
-        [5 3 1]
-    ]
-    >>> b = depth(X)
+    >>>  [1 1 4 4]
+    >>>  [3 1 3]
+    >>>  [5 3 1]
+    >>> ]
+    >>> b = ma.depth(X)
     >>> b
     [4 3.1699 3.9069]
 
     ----3----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 4 4 1]
-        [1 3 4]
-        [3 1 2]
-    ]
-    >>> b = depth(X)
+    >>>  [1 4 4 1]
+    >>>  [1 3 4]
+    >>>  [3 1 2]
+    >>> ]
+    >>> b = ma.depth(X)
     >>> b
     [4 3.585 2.585]
 
     ----4----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [4 1 3 3]
-        ]
-    >>> b = depth(X)
+    >>>  [4 1 3 3]
+    >>>  ]
+    >>> b = ma.depth(X)
     >>> b
     [5.1699]
 
     ----5----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [[]]
-    >>> b = depth(X)
+    >>> b = ma.depth(X)
     >>> b
     []
 
     ----6----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [[1]]
-    >>> b = depth(X)
+    >>> b = ma.depth(X)
     >>> b
     [0]
 
     ----7----
+    >>> import foapy.characteristics.ma as ma
     >>> X = [
-        [1 1 1 1 1]
-    ]
-    >>> b = depth(X)
+    >>>  [1 1 1 1 1]
+    >>> ]
+    >>> b = ma.depth(X)
     >>> b
     [0]
 

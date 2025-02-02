@@ -1,8 +1,5 @@
 import numpy as np
 
-from foapy.characteristics.descriptive_information import descriptive_information
-from foapy.characteristics.geometric_mean import geometric_mean
-
 
 def regularity(intervals):
     """
@@ -15,6 +12,7 @@ def regularity(intervals):
     total_elements - сombine all intervals into one array.
 
     """
+    from foapy.characteristics import descriptive_information, geometric_mean
 
     total_elements = np.concatenate(intervals)
 

@@ -8,7 +8,7 @@ except NameError:
     __FOAPY_SETUP__ = False
 
 if __FOAPY_SETUP__:
-    sys.stderr.write("Running from numpy source directory.\n")
+    sys.stderr.write("Running from foapy.exceptions source directory.\n")
 else:
     from .inconsistent_order import InconsistentOrderException  # noqa: F401
     from .not_1d_array import Not1DArrayException  # noqa: F401

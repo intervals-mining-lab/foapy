@@ -1,0 +1,10 @@
+
+::: foapy.characteristics.arithmetic_mean
+::: foapy.characteristics.average_remoteness
+::: foapy.characteristics.depth
+::: foapy.characteristics.descriptive_information
+::: foapy.characteristics.geometric_mean
+::: foapy.characteristics.identifying_information
+::: foapy.characteristics.regularity
+::: foapy.characteristics.uniformity
+::: foapy.characteristics.volume

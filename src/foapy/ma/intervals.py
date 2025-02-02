@@ -54,8 +54,9 @@ def intervals(X, bind, mod):
     --------
 
     ----1----
+    >>> import foapy.ma as ma
     >>> a = [2, 4, 2, 2, 4]
-    >>> b = intervals(X, binding.start, mode.lossy)
+    >>> b = ma.intervals(X, binding.start, mode.lossy)
     >>> b
     [
         [5],
@@ -64,9 +65,10 @@ def intervals(X, bind, mod):
         []
     ]
 
-     ----2----
+    ----2----
+    >>> import foapy.ma as ma
     >>> a = [2, 4, 2, 2, 4]
-    >>> b = intervals(X, binding.end, mode.lossy)
+    >>> b = ma.intervals(X, binding.end, mode.lossy)
     >>> b
     [
         [5],
@@ -75,18 +77,20 @@ def intervals(X, bind, mod):
         []
     ]
 
-     ----3----
+    ----3----
+    >>> import foapy.ma as ma
     >>> a = [2, 4, 2, 2, 4]
-    >>> b = intervals(X, binding.start, mode.normal)
+    >>> b = ma.intervals(X, binding.start, mode.normal)
     >>> b
     [
         [1, 2, 1],
         [2, 3]
     ]
 
-      ----4----
+    ----4----
+    >>> import foapy.ma as ma
     >>> a = [2, 4, 2, 2, 4]
-    >>> b = intervals(X, binding.end, mode.normal)
+    >>> b = ma.intervals(X, binding.end, mode.normal)
     >>> b
     [
         [2, 1, 2],
@@ -94,8 +98,9 @@ def intervals(X, bind, mod):
     ]
 
     ----5----
+    >>> import foapy.ma as ma
     >>> a = [2, 4, 2, 2, 4]
-    >>> b = intervals(X, binding.start, mode.cycle)
+    >>> b = ma.intervals(X, binding.start, mode.cycle)
     >>> b
     [
         [2, 2, 1],
@@ -103,8 +108,9 @@ def intervals(X, bind, mod):
     ]
 
     ----6----
+    >>> import foapy.ma as ma
     >>> a = [2, 4, 2, 2, 4]
-    >>> b = intervals(X, binding.end, mode.cycle)
+    >>> b = ma.intervals(X, binding.end, mode.cycle)
     >>> b
     [
         [2, 1, 2],
@@ -112,8 +118,9 @@ def intervals(X, bind, mod):
     ]
 
     ----7----
+    >>> import foapy.ma as ma
     >>> a = [2, 4, 2, 2, 4]
-    >>> b = intervals(X, binding.start, mode.redunant)
+    >>> b = ma.intervals(X, binding.start, mode.redunant)
     >>> b
     [
         [1, 2, 1, 2],
@@ -121,8 +128,9 @@ def intervals(X, bind, mod):
     ]
 
     ----8----
+    >>> import foapy.ma as ma
     >>> a = [2, 4, 2, 2, 4]
-    >>> b = intervals(X, binding.end, mode.redunant)
+    >>> b = ma.intervals(X, binding.end, mode.redunant)
     >>> b
     [
         [1, 2, 1, 2],
@@ -130,6 +138,7 @@ def intervals(X, bind, mod):
     ]
 
     ----9----
+    >>> import foapy.ma as ma
     >>> a = ['a', 'b', 'c', 'a', 'b', 'c', 'c', 'c', 'b', 'a', 'c', 'b', 'c']
     >>> mask = [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0]
     >>> masked_a = ma.masked_array(a, mask)
@@ -138,10 +147,11 @@ def intervals(X, bind, mod):
     Exception
 
     ----10----
+    >>> import foapy.ma as ma
     >>> a = [[2, 2, 2], [2, 2, 2]]
     >>> mask = [[0, 0, 0], [0, 0, 0]]
     >>> masked_a = ma.masked_array(a, mask)
-    >>> b = intervals(X, binding.end, mode.redunant)
+    >>> b = ma.intervals(X, binding.end, mode.redunant)
     >>> b
     Exception
     """

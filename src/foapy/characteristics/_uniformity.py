@@ -1,8 +1,5 @@
 import numpy as np
 
-from foapy.characteristics.average_remoteness import average_remoteness
-from foapy.characteristics.identifying_information import identifying_information
-
 
 def uniformity(intervals):
     """
@@ -15,6 +12,8 @@ def uniformity(intervals):
     total_elements - сombine all intervals into one array.
 
     """
+    from foapy.characteristics import average_remoteness, identifying_information
+
     total_elements = np.concatenate(intervals)
 
     return np.array(

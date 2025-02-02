@@ -23,66 +23,74 @@ def alphabet(X) -> np.ma.MaskedArray:
     --------
 
     ----1----
+    >>> import foapy.ma as ma
     >>> a = ['a', 'c', 'c', 'e', 'd', 'a']
     >>> mask = [0, 0, 0, 1, 0, 0]
     >>> masked_a = ma.masked_array(a, mask)
-    >>> b = ma_alphabet(masked_a)
+    >>> b = ma.alphabet(masked_a)
     >>> b
     ['a' 'c' 'd']
 
     ----2----
+    >>> import foapy.ma as ma
     >>> a = ['a', 'c', 'c', 'e', 'd', 'a']
     >>> mask = [0, 0, 0, 0, 0, 0]
     >>> masked_a = ma.masked_array(a, mask)
-    >>> b = ma_alphabet(masked_a)
+    >>> b = ma.alphabet(masked_a)
     >>> b
     ['a' 'c' 'e' 'd']
 
     ----3----
+    >>> import foapy.ma as ma
     >>> a = [1, 2, 2, 3, 4, 1]
     >>> mask = [0, 0, 0, 0, 0, 0]
     >>> masked_a = ma.masked_array(a, mask)
-    >>> b = ma_alphabet(masked_a)
+    >>> b = ma.alphabet(masked_a)
     >>> b
     [1 2 3 4]
 
     ----4----
+    >>> import foapy.ma as ma
     >>> a = []
     >>> mask = []
     >>> masked_a = ma.masked_array(a, mask)
-    >>> b = ma_alphabet(masked_a)
+    >>> b = ma.alphabet(masked_a)
     >>> b
     []
 
     ----5----
+    >>> import foapy.ma as ma
     >>> a = ['a', 'b', 'c', 'a', 'b', 'c', 'c', 'c', 'b', 'a', 'c', 'b', 'c']
     >>> mask = [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0]
     >>> masked_a = ma.masked_array(a, mask)
-    >>> b = ma_alphabet(masked_a)
+    >>> b = ma.alphabet(masked_a)
     >>> b
     ['а' 'c']
 
     ----6----
+    >>> import foapy.ma as ma
     >>> a = ['a', 'b', 'c', 'a', 'b', 'c', 'c', 'c', 'b', 'a', 'c', 'b', 'c']
     >>> mask = [0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1]
     >>> masked_a = ma.masked_array(a, mask)
-    >>> b = ma_alphabet(masked_a)
+    >>> b = ma.alphabet(masked_a)
     >>> b
     ['а']
 
     ----7----
+    >>> import foapy.ma as ma
     >>> a = ['a', 'b', 'c', 'a', 'b', 'c', 'c', 'c', 'b', 'a', 'c', 'b', 'c']
     >>> mask = [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0]
     >>> masked_a = ma.masked_array(a, mask)
-    >>> b = ma_alphabet(masked_a)
+    >>> b = ma.alphabet(masked_a)
     >>> b
     Exception
 
-     ----8----
+    ----8----
+    >>> import foapy.ma as ma
     >>> a = [[2, 2, 2], [2, 2, 2]]
     >>> mask = [[0, 0, 0], [0, 0, 0]]
     >>> masked_a = ma.masked_array(a, mask)
-    >>> b = ma_alphabet(masked_a)
+    >>> b = ma.alphabet(masked_a)
     >>> b
     Exception
     """
