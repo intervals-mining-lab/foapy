@@ -9,7 +9,21 @@ nav:
   - "foapy.intervals": references/intervals.md
   - "foapy.binding": references/binding.md
   - "foapy.mode": references/mode.md
-  - "foapy.characteristics": references/characteristics.md
+  - "foapy.characteristics":
+    - references/characteristics/index.md
+    - "arithmetic_mean": references/characteristics/arithmetic_mean.md
+    - "average_remoteness": references/characteristics/average_remoteness.md
+    - "depth": references/characteristics/depth.md
+    - "descriptive_information": references/characteristics/descriptive_information.md
+    - "geometric_mean": references/characteristics/geometric_mean.md
+    - "identifying_information": references/characteristics/identifying_information.md
+    - "regularity": references/characteristics/regularity.md
+    - "uniformity": references/characteristics/uniformity.md
+    - "volume": references/characteristics/volume.md
+  - "foapy.exceptions":
+    - references/exceptions/index.md
+    - "InconsistentOrderException": references/exceptions/inconsistent_order.md
+    - "Not1DArrayException": references/exceptions/not_1d_array.md
 - Development:
   - "Development": development/development.md
   - "Benchmarks": development/benchmarks.md
@@ -30,6 +44,12 @@ theme:
   name: material
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.path
+    - navigation.indexes
+    - navigation.tracking
+    # - toc.follow
+    # - toc.integrate
     - content.code.copy
     - content.code.annotate
     - content.tabs.link

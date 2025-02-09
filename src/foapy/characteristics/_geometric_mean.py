@@ -3,17 +3,37 @@ import numpy as np
 
 def geometric_mean(intervals):
     """
-    Calculation geometric mean of sequence.
+    Calculation geometric mean of intervals.
 
-    The geometric mean is the root of the number of intervals in a sequence
-    from the product of all intervals.
+    $$ \\Delta_g=\\sqrt[n]{\\prod_{i=1}^{n} \\Delta_{i}}$$
 
-    Param name = "intervals" (sequence of intervals).
+    where \\( \\Delta_{i} \\) represents each interval and \\( n \\)
+    is the total number of intervals.
 
-    The variable n is the number of intervals in the sequence.
+    Parameters
+    ----------
+    intervals : array_like
+        An array of intervals
 
-    The variable volume is the product of all intervals in the sequence.
+    Returns
+    -------
+    : float
+        The geometric mean of the input array of intervals.
 
+    Examples
+    --------
+
+    Calculate the geometric mean of intervals of a sequence.
+
+    ``` py linenums="1"
+    import foapy
+
+    source = ['a', 'b', 'a', 'c', 'a', 'd']
+    intervals = foapy.intervals(source, foapy.binding.start, foapy.mode.normal)
+    result = foapy.characteristics.geometric_mean(intervals)
+    print(result)
+    # 2.4018739103520055
+    ```
     """
     n = len(intervals)
 
