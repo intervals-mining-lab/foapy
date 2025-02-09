@@ -9,6 +9,11 @@ nav:
   - "foapy.intervals": references/intervals.md
   - "foapy.binding": references/binding.md
   - "foapy.mode": references/mode.md
+  - "foapy.ma":
+    - references/ma/index.md
+    - "alphabet": references/ma/alphabet.md
+    - "order": references/ma/order.md
+    - "intervals": references/ma/intervals.md
   - "foapy.characteristics":
     - references/characteristics/index.md
     - "arithmetic_mean": references/characteristics/arithmetic_mean.md

@@ -7,8 +7,7 @@ from foapy import binding as binding_constant
 from foapy import mode as mode_constant
 from foapy.characteristics.ma.arigthmetic_mean import arigthmetic_mean
 from foapy.characteristics.ma.geometric_mean import geometric_mean
-from foapy.ma.intervals import intervals
-from foapy.ma.order import order
+from foapy.ma import intervals, order
 
 
 class TestGeometricMean(TestCase):

@@ -4,8 +4,8 @@ import numpy as np
 
 from foapy import binding, intervals, mode, order
 from foapy.characteristics import descriptive_information, geometric_mean
-from foapy.ma.intervals import intervals as intervals_ma
-from foapy.ma.order import order as order_ma
+from foapy.ma import intervals as intervals_ma
+from foapy.ma import order as order_ma
 
 
 class Test_descriptive_information(TestCase):

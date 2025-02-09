@@ -7,8 +7,7 @@ from foapy import binding as binding_constant
 from foapy import mode as mode_constant
 from foapy.characteristics.ma.average_remoteness import average_remoteness
 from foapy.characteristics.ma.identifying_information import identifying_information
-from foapy.ma.intervals import intervals
-from foapy.ma.order import order
+from foapy.ma import intervals, order
 
 
 class TestMaAverageRemoteness(TestCase):

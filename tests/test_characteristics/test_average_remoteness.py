@@ -4,8 +4,8 @@ import numpy as np
 
 from foapy import binding, intervals, mode, order
 from foapy.characteristics import average_remoteness, identifying_information
-from foapy.ma.intervals import intervals as intervals_ma
-from foapy.ma.order import order as order_ma
+from foapy.ma import intervals as intervals_ma
+from foapy.ma import order as order_ma
 
 
 class Test_average_remoteness(TestCase):

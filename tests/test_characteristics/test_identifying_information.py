@@ -4,8 +4,7 @@ import numpy as np
 
 from foapy import binding, mode
 from foapy.characteristics import identifying_information
-from foapy.ma.intervals import intervals
-from foapy.ma.order import order
+from foapy.ma import intervals, order
 
 
 class Test_identifying_information(TestCase):
