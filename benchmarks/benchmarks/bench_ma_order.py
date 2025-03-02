@@ -2,7 +2,7 @@ import os
 
 from asv_runner.benchmarks.mark import skip_params_if
 
-from foapy.ma.order import order
+from foapy.ma import order
 
 from .ma_cases import best_case, dna_case, normal_case, worst_case
 
