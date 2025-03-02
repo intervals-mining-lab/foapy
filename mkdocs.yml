@@ -25,6 +25,16 @@ nav:
     - "regularity": references/characteristics/regularity.md
     - "uniformity": references/characteristics/uniformity.md
     - "volume": references/characteristics/volume.md
+    - "ma":
+      - references/characteristics/ma/index.md
+      - "arithmetic_mean": references/characteristics/ma/arithmetic_mean.md
+      - "average_remoteness": references/characteristics/ma/average_remoteness.md
+      - "depth": references/characteristics/ma/depth.md
+      - "geometric_mean": references/characteristics/ma/geometric_mean.md
+      - "identifying_information": references/characteristics/ma/identifying_information.md
+      - "periodicity": references/characteristics/ma/periodicity.md
+      - "uniformity": references/characteristics/ma/uniformity.md
+      - "volume": references/characteristics/ma/volume.md
   - "foapy.exceptions":
     - references/exceptions/index.md
     - "InconsistentOrderException": references/exceptions/inconsistent_order.md

@@ -5,7 +5,7 @@ def volume(intervals):
     """
     Calculation geometric mean of intervals.
 
-    $$ G=\\prod_{i=1}^{n} \\Delta_{i}$$
+    $$ V=\\prod_{i=1}^{n} \\Delta_{i}$$
 
     where \\( \\Delta_{i} \\) represents each interval and \\( n \\)
     is the total number of intervals.

@@ -5,7 +5,7 @@ import numpy.ma as ma
 
 from foapy import binding as binding_constant
 from foapy import mode as mode_constant
-from foapy.characteristics.ma.periodicity import periodicity
+from foapy.characteristics.ma import periodicity
 from foapy.ma import intervals, order
 
 

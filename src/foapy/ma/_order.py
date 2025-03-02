@@ -9,8 +9,6 @@ def order(X, return_alphabet=False) -> np.ma.MaskedArray:
     """
     Find array sequence  in order of their appearance
 
-    :no-index:
-
     Parameters
     ----------
     X: masked_array

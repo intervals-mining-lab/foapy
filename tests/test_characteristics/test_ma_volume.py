@@ -6,7 +6,7 @@ from numpy.ma.testutils import assert_equal
 
 from foapy import binding as binding_constant
 from foapy import mode as mode_constant
-from foapy.characteristics.ma.volume import volume
+from foapy.characteristics.ma import volume
 from foapy.ma import intervals, order
 
 
