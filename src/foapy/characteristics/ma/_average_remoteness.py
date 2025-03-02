@@ -1,7 +1,5 @@
 import numpy as np
 
-from foapy.characteristics.ma import depth
-
 
 def average_remoteness(intervals):
     """
@@ -61,6 +59,8 @@ def average_remoteness(intervals):
     # [1.         1.05664167 1.30229687]
     ```
     """  # noqa: W605
+
+    from foapy.characteristics.ma import depth
 
     size = np.array([len(elem) for elem in intervals])
     depth_seq = depth(intervals)

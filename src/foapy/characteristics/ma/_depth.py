@@ -1,7 +1,5 @@
 import numpy as np
 
-from foapy.characteristics.ma import volume
-
 
 def depth(intervals):
     """
@@ -59,5 +57,7 @@ def depth(intervals):
     # [4.        3.169925  3.9068906]
     ```
     """  # noqa: W605
+
+    from foapy.characteristics.ma import volume
 
     return np.asanyarray([np.log2(line) for line in volume(intervals)])

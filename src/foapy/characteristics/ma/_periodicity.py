@@ -1,7 +1,5 @@
 import numpy as np
 
-from foapy.characteristics import ma
-
 
 def periodicity(intervals):
     """
@@ -63,8 +61,10 @@ def periodicity(intervals):
     ```
     """  # noqa: W605
 
-    geometric_mean_seq = ma.geometric_mean(intervals)
-    arithmetic_mean_seq = ma.arithmetic_mean(intervals)
+    from foapy.characteristics.ma import arithmetic_mean, geometric_mean
+
+    geometric_mean_seq = geometric_mean(intervals)
+    arithmetic_mean_seq = arithmetic_mean(intervals)
     return np.divide(
         geometric_mean_seq,
         arithmetic_mean_seq,

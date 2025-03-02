@@ -1,7 +1,5 @@
 import numpy as np
 
-from foapy.characteristics.ma import average_remoteness, identifying_information
-
 
 def uniformity(intervals):
     """
@@ -62,6 +60,8 @@ def uniformity(intervals):
     # [0.32192809 0.16575075 0.28266564]
     ```
     """  # noqa: W605
+
+    from foapy.characteristics.ma import average_remoteness, identifying_information
 
     return np.subtract(
         identifying_information(intervals), average_remoteness(intervals)
