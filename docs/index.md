@@ -15,5 +15,8 @@ This approach defines an Order as a special sequence property and provides vario
 import foapy
 import numpy as np
 
-print("Hello, World!")
+source = ['a', 'b', 'a', 'c', 'a', 'd']
+order = foapy.order(source)
+intervals = foapy.intervals(order, foapy.binding.start, foapy.mode.normal)
+print(intervals)
 ```
