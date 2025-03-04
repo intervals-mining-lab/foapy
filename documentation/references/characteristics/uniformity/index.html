@@ -1503,7 +1503,7 @@
 
     <div class="doc doc-contents first">
 
-        <p>Calculation uniformity of intervals grouped by element.</p>
+        <p>Calculates uniformity of intervals grouped by element of the alphabet.</p>
 <div class="arithmatex">\[ u = \frac {1} {n} * \sum_{j=1}^{m}{\log_2 \frac{ (\sum_{i=1}^{n_j} \frac{\Delta_{ij}}{n_j})^{n_j} } { \prod_{i=1}^{n_j} \Delta_{ij}}}\]</div>
 <p>where <span class="arithmatex">\( m \)</span> is count of groups (alphabet power), <span class="arithmatex">\( n_j \)</span> is count of intervals in group <span class="arithmatex">\( j \)</span>,
 <span class="arithmatex">\( \Delta_{ij} \)</span> represents an interval at index <span class="arithmatex">\( i \)</span> in group <span class="arithmatex">\( j \)</span> and <span class="arithmatex">\( n \)</span> is total count of intervals across all groups.</p>
@@ -1699,7 +1699,7 @@
 <span class="normal"><a href="#__codelineno-0-69">69</a></span>
 <span class="normal"><a href="#__codelineno-0-70">70</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">uniformity</span><span class="p">(</span><span class="n">intervals</span><span class="p">):</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="sd">    Calculation uniformity of intervals grouped by element.</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="sd">    Calculates uniformity of intervals grouped by element of the alphabet.</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="sd">    $$ u = \\frac {1} {n} * \\sum_{j=1}^{m}{\\log_2 \\frac{ (\\sum_{i=1}^{n_j} \\frac{\\Delta_{ij}}{n_j})^{n_j} } { \\prod_{i=1}^{n_j} \\Delta_{ij}}}$$</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a>
