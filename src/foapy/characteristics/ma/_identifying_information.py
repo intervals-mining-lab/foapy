@@ -3,7 +3,8 @@ import numpy as np
 
 def identifying_information(intervals):
     """
-    Calculates identifying informations (amount of information) of the intervals grouped by congeneric sequence.
+    Calculates identifying informations (amount of information) of the intervals
+    grouped by congeneric sequence.
 
     $$
     \\left[ H_j \\right]_{1 \\le j \\le m} =
