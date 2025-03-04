@@ -3,7 +3,7 @@ import numpy as np
 
 def depth(intervals):
     """
-    Calculation depth of intervals.
+    Calculates depth of intervals.
 
     $$ G=\\sum_{i=1}^{n} \\log_2 \\Delta_{i} $$
 

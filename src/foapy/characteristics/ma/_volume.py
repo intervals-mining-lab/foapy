@@ -3,7 +3,7 @@ import numpy as np
 
 def volume(intervals):
     """
-    Calculate the volumes of the congeneric intervals.
+    Calculates volumes of the intervals grouped by congeneric sequence.
 
     $$
     \\left[ V_j \\right]_{1 \\le j \\le m} =

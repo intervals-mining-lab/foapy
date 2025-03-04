@@ -3,7 +3,7 @@ import numpy as np
 
 def average_remoteness(intervals):
     """
-    Calculate the average remoteness of the congeneric intervals.
+    Calculates average remoteness of the intervals grouped by congeneric sequence.
 
     $$
     \\left[ g_j \\right]_{1 \\le j \\le m} =

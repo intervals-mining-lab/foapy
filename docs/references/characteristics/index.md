@@ -5,7 +5,7 @@ hide:
 # foapy.characteristics
 
 
-The package provides a comprehensive set of characteristics for measuring the properties of an order.
+The package provides a comprehensive set of characteristics for measuring the properties of given order.
 
 The table below summarizes the available characteristics that depend only on intervals:
 
@@ -16,7 +16,7 @@ The table below summarizes the available characteristics that depend only on int
 | [Volume](/references/characteristics/volume/) | $V=\prod_{i=1}^{n} \Delta_{i}$ || $G=\sum_{i=1}^{n} \log_2 \Delta_{i}$ | [Depth](/references/characteristics/depth/) |
 
 
-The table below summarizes the available characteristics that depend on cogeneric intervals ( grouped by element):
+The table below summarizes the available characteristics that depend on cogeneric intervals ( grouped by element of the alphabet):
 
 | Characteristics   |                                                                                      |
 |-------------------------------|---------------------------------------------------------------------------------------------------------|

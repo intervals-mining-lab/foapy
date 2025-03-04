@@ -3,7 +3,7 @@ import numpy as np
 
 def arithmetic_mean(intervals):
     """
-    Calculate the arithmetic mean of the intervals.
+    Calculates average arithmetic value of intervals lengths.
 
     $$ \\Delta_a = \\frac{1}{n} * \\sum_{i=1}^{n} \\Delta_{i} $$
 

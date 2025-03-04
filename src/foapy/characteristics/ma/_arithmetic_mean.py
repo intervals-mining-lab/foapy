@@ -3,7 +3,7 @@ import numpy as np
 
 def arithmetic_mean(intervals):
     """
-    Calculate the arithmetic means of the congeneric intervals.
+    Calculates average arithmetic value of intervals lengths grouped by congeneric sequence.
 
     $$
     \\left[ \\Delta_{a_j} \\right]_{1 \\le j \\le m} =

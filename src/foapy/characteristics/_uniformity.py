@@ -3,7 +3,7 @@ import numpy as np
 
 def uniformity(intervals):
     """
-    Calculation uniformity of intervals grouped by element.
+    Calculates uniformity of intervals grouped by element of the alphabet.
 
     $$ u = \\frac {1} {n} * \\sum_{j=1}^{m}{\\log_2 \\frac{ (\\sum_{i=1}^{n_j} \\frac{\\Delta_{ij}}{n_j})^{n_j} } { \\prod_{i=1}^{n_j} \\Delta_{ij}}}$$
 

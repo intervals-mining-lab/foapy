@@ -3,7 +3,7 @@ import numpy as np
 
 def descriptive_information(intervals_grouped):
     """
-    Calculation descriptive information of intervals grouped by element.
+    Calculates descriptive information of intervals (grouped by element of the alphabet).
 
     $$D=\\prod_{j=1}^{m}{\\left(\\sum_{i=1}^{n_j}{\\frac{\\Delta_{ij}}{n_j}}\\right)^{\\frac{n_j}{n}}}$$
 

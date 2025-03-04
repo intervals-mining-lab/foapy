@@ -3,7 +3,7 @@ import numpy as np
 
 def volume(intervals):
     """
-    Calculation geometric mean of intervals.
+    Calculates average geometric value of intervals lengths.
 
     $$ V=\\prod_{i=1}^{n} \\Delta_{i}$$
 

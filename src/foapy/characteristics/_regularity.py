@@ -3,7 +3,7 @@ import numpy as np
 
 def regularity(intervals):
     """
-    Calculation regularity of intervals grouped by element.
+    Calculates regularity of intervals grouped by element of the alphabet.
 
     $$r= \\sqrt[n]{\\prod_{j=1}^{m} \\frac{
         \\prod_{j=1}^{n_j} \\Delta_{ij}}

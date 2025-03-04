@@ -3,7 +3,7 @@ import numpy as np
 
 def uniformity(intervals):
     """
-    Calculate the uniformity of the congeneric intervals.
+    Calculates uniformity of the intervals grouped by congeneric sequence.
 
     $$
     \\left[ u_j \\right]_{1 \\le j \\le m} =

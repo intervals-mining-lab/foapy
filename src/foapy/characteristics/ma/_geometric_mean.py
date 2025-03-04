@@ -3,7 +3,7 @@ import numpy as np
 
 def geometric_mean(intervals):
     """
-    Calculate the geometric means of the congeneric intervals.
+    Calculates average geometric values of the intervals grouped by congeneric sequence.
 
     $$
     \\left[ \\Delta_{g_j} \\right]_{1 \\le j \\le m} =

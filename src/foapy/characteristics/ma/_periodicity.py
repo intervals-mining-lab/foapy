@@ -3,7 +3,7 @@ import numpy as np
 
 def periodicity(intervals):
     """
-    Calculate the periodicity of the congeneric intervals.
+    Calculates periodicity of the intervals grouped by congeneric sequence.
 
     $$
     \\left[ \\tau_j \\right]_{1 \\le j \\le m} =

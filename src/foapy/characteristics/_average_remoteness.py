@@ -1,6 +1,6 @@
 def average_remoteness(intervals):
     """
-    Calculation average remoteness of intervals.
+    Calculates average remoteness of intervals.
 
     $$ g = \\frac{1}{n} * \\sum_{i=1}^{n} \\log_2 \\Delta_{i} $$
 

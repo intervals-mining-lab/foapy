@@ -3,8 +3,8 @@ import numpy as np
 
 def identifying_information(intervals_grouped):
     """
-    Calculation identifying information (Amount of Information / Entropy)
-     of intervals grouped by element.
+    Calculates amount of identifying informations (Amount of Information / Entropy)
+     of intervals grouped by elementof the alphabet.
 
     $$H=\\frac {1} {n} * \\sum_{j=1}^{m}{(n_j * \\log_2 \\sum_{i=1}^{n_j} \\frac{\\Delta_{ij}}{n_j})}$$
 

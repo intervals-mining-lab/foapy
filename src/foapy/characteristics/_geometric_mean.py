@@ -3,7 +3,7 @@ import numpy as np
 
 def geometric_mean(intervals):
     """
-    Calculation geometric mean of intervals.
+    Calculates average geometric value of intervals lengths.
 
     $$ \\Delta_g=\\sqrt[n]{\\prod_{i=1}^{n} \\Delta_{i}}$$
 
