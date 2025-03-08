@@ -1,10 +1,5 @@
 [
   {
-    "version": "documentation",
-    "title": "documentation",
-    "aliases": []
-  },
-  {
     "version": "docs-on-tags",
     "title": "docs-on-tags",
     "aliases": []
