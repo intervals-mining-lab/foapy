@@ -2,13 +2,10 @@ from unittest import TestCase
 
 import numpy as np
 
-from foapy.characteristics.average_remoteness import average_remoteness
-from foapy.characteristics.identifying_information import identifying_information
-from foapy.constants_intervals import binding, mode
-from foapy.intervals import intervals
-from foapy.ma.intervals import intervals as intervals_ma
-from foapy.ma.order import order as order_ma
-from foapy.order import order
+from foapy import binding, intervals, mode, order
+from foapy.characteristics import average_remoteness, identifying_information
+from foapy.ma import intervals as intervals_ma
+from foapy.ma import order as order_ma
 
 
 class Test_average_remoteness(TestCase):

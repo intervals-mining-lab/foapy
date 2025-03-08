@@ -3,11 +3,10 @@ from unittest import TestCase
 import numpy as np
 import numpy.ma as ma
 
-from foapy.characteristics.ma.identifying_information import identifying_information
-from foapy.constants_intervals import binding as binding_constant
-from foapy.constants_intervals import mode as mode_constant
-from foapy.ma.intervals import intervals
-from foapy.ma.order import order
+from foapy import binding as binding_constant
+from foapy import mode as mode_constant
+from foapy.characteristics.ma import identifying_information
+from foapy.ma import intervals, order
 
 
 class TestMaIdentifyingInformation(TestCase):

@@ -2,13 +2,10 @@ from unittest import TestCase
 
 import numpy as np
 
-from foapy.characteristics.descriptive_information import descriptive_information
-from foapy.characteristics.geometric_mean import geometric_mean
-from foapy.constants_intervals import binding, mode
-from foapy.intervals import intervals
-from foapy.ma.intervals import intervals as intervals_ma
-from foapy.ma.order import order as order_ma
-from foapy.order import order
+from foapy import binding, intervals, mode, order
+from foapy.characteristics import descriptive_information, geometric_mean
+from foapy.ma import intervals as intervals_ma
+from foapy.ma import order as order_ma
 
 
 class Test_descriptive_information(TestCase):

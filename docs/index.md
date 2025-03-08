@@ -1,39 +1,22 @@
-# foapy
+---
+hide:
+  - toc
+  - navigation
+---
 
-Formal order analysis library
+# FoaPy
 
+FoaPy is a Python library for Formal Order Analysis of sequences.
 
-## Note
-
-> This is the main page of your project's [Sphinx] documentation. It is
-> formatted in [Markdown]. Add additional pages by creating md-files in
-> `docs` or rst-files (formatted in [reStructuredText]) and adding links to
-> them in the `Contents` section below.
->
-> Please check [Sphinx] and [MyST] for more information
-> about how to document your project and how to configure your preferences.
+This approach defines an Order as a special sequence property and provides various characteristics that can be used to describe and analyze different aspects of it.
 
 
-## Contents
+```pyodide install="foapy,numpy"
+import foapy
+import numpy as np
 
-```{toctree}
-:maxdepth: 2
-
-Overview <readme>
-Contributions & Help <contributing>
-License <license>
-Authors <authors>
-Changelog <changelog>
-Module Reference <api/modules>
+source = ['a', 'b', 'a', 'c', 'a', 'd']
+order = foapy.order(source)
+intervals = foapy.intervals(order, foapy.binding.start, foapy.mode.normal)
+print(intervals)
 ```
-
-## Indices and tables
-
-* {ref}`genindex`
-* {ref}`modindex`
-* {ref}`search`
-
-[Sphinx]: http://www.sphinx-doc.org/
-[Markdown]: https://daringfireball.net/projects/markdown/
-[reStructuredText]: http://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
-[MyST]: https://myst-parser.readthedocs.io/en/latest/

@@ -2,7 +2,7 @@ import os
 
 from asv_runner.benchmarks.mark import skip_params_if
 
-from foapy.intervals import intervals
+from foapy import intervals
 
 from .cases import best_case, dna_case, normal_case, worst_case
 

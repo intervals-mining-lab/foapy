@@ -3,12 +3,10 @@ from unittest import TestCase
 import numpy as np
 import numpy.ma as ma
 
-from foapy.characteristics.ma.arigthmetic_mean import arigthmetic_mean
-from foapy.characteristics.ma.geometric_mean import geometric_mean
-from foapy.constants_intervals import binding as binding_constant
-from foapy.constants_intervals import mode as mode_constant
-from foapy.ma.intervals import intervals
-from foapy.ma.order import order
+from foapy import binding as binding_constant
+from foapy import mode as mode_constant
+from foapy.characteristics.ma import arithmetic_mean, geometric_mean
+from foapy.ma import intervals, order
 
 
 class TestGeometricMean(TestCase):
@@ -193,7 +191,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.lossy
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_lossy(self):
@@ -201,7 +199,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_normal(self):
@@ -211,7 +209,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.normal
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_normal(self):
@@ -219,7 +217,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_cycle(self):
@@ -229,7 +227,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.cycle
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_cycle(self):
@@ -237,7 +235,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.cycle)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_redunant(self):
@@ -247,7 +245,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.redundant
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_redunant(self):
@@ -257,7 +255,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.end, mode_constant.redundant
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_lossy_2(self):
@@ -267,7 +265,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.lossy
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_lossy_2(self):
@@ -275,7 +273,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_normal_2(self):
@@ -285,7 +283,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.normal
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_normal_2(self):
@@ -293,7 +291,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_cycle_2(self):
@@ -303,7 +301,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.cycle
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_cycle_2(self):
@@ -311,7 +309,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.cycle)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_redunant_2(self):
@@ -321,7 +319,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.redundant
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_redunant_2(self):
@@ -331,7 +329,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.end, mode_constant.redundant
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_lossy_3(self):
@@ -341,7 +339,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.lossy
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_lossy_3(self):
@@ -349,7 +347,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_normal_3(self):
@@ -359,7 +357,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.normal
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_normal_3(self):
@@ -367,7 +365,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_cycle_3(self):
@@ -377,7 +375,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.cycle
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_cycle_3(self):
@@ -385,7 +383,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.cycle)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_redunant_3(self):
@@ -395,7 +393,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.redundant
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_redunant_3(self):
@@ -405,7 +403,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.end, mode_constant.redundant
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_lossy_4(self):
@@ -415,7 +413,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.lossy
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_lossy_4(self):
@@ -423,7 +421,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_normal_4(self):
@@ -433,7 +431,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.normal
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_normal_4(self):
@@ -441,7 +439,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_cycle_4(self):
@@ -451,7 +449,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.cycle
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_cycle_4(self):
@@ -459,7 +457,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.cycle)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_redunant_4(self):
@@ -469,7 +467,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.redundant
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_redunant_4(self):
@@ -479,7 +477,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.end, mode_constant.redundant
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_lossy_5(self):
@@ -489,7 +487,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.lossy
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_lossy_5(self):
@@ -497,7 +495,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.lossy)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_normal_5(self):
@@ -507,7 +505,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.normal
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_normal_5(self):
@@ -515,7 +513,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_cycle_5(self):
@@ -525,7 +523,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.cycle
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_cycle_5(self):
@@ -533,7 +531,7 @@ class TestGeometricMean(TestCase):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.cycle)
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_start_redunant_5(self):
@@ -543,7 +541,7 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.start, mode_constant.redundant
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))
 
     def test_calculate_inequalities_end_redunant_5(self):
@@ -553,5 +551,5 @@ class TestGeometricMean(TestCase):
             order_seq, binding_constant.end, mode_constant.redundant
         )
         delta_g = geometric_mean(intervals_seq)
-        delta_a = arigthmetic_mean(intervals_seq)
+        delta_a = arithmetic_mean(intervals_seq)
         self.assertTrue(np.all(delta_g <= delta_a))

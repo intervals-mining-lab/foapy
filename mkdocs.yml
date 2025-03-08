@@ -1,0 +1,140 @@
+site_name: FoaPy
+site_description: "FoaPy is a Python package for formal order analysis of sequences"
+nav:
+- "Home": index.md
+- "Fundamentals": fundamentals/index.md
+- "References":
+  - "foapy.alphabet": references/alphabet.md
+  - "foapy.order": references/order.md
+  - "foapy.intervals": references/intervals.md
+  - "foapy.binding": references/binding.md
+  - "foapy.mode": references/mode.md
+  - "foapy.ma":
+    - references/ma/index.md
+    - "alphabet": references/ma/alphabet.md
+    - "order": references/ma/order.md
+    - "intervals": references/ma/intervals.md
+  - "foapy.characteristics":
+    - references/characteristics/index.md
+    - "arithmetic_mean": references/characteristics/arithmetic_mean.md
+    - "average_remoteness": references/characteristics/average_remoteness.md
+    - "depth": references/characteristics/depth.md
+    - "descriptive_information": references/characteristics/descriptive_information.md
+    - "geometric_mean": references/characteristics/geometric_mean.md
+    - "identifying_information": references/characteristics/identifying_information.md
+    - "regularity": references/characteristics/regularity.md
+    - "uniformity": references/characteristics/uniformity.md
+    - "volume": references/characteristics/volume.md
+    - "ma":
+      - references/characteristics/ma/index.md
+      - "arithmetic_mean": references/characteristics/ma/arithmetic_mean.md
+      - "average_remoteness": references/characteristics/ma/average_remoteness.md
+      - "depth": references/characteristics/ma/depth.md
+      - "geometric_mean": references/characteristics/ma/geometric_mean.md
+      - "identifying_information": references/characteristics/ma/identifying_information.md
+      - "periodicity": references/characteristics/ma/periodicity.md
+      - "uniformity": references/characteristics/ma/uniformity.md
+      - "volume": references/characteristics/ma/volume.md
+  - "foapy.exceptions":
+    - references/exceptions/index.md
+    - "InconsistentOrderException": references/exceptions/inconsistent_order.md
+    - "Not1DArrayException": references/exceptions/not_1d_array.md
+- Development:
+  - "Development": development/development.md
+  - "Benchmarks": development/benchmarks.md
+  - "Code coverage": development/coverage.md
+
+# ⚠️ WARNING ⚠️
+# =============
+# DO NOT EDIT ANY CONFIGURATION BELOW THIS LINE
+# The settings below are required for proper documentation generation
+# =============
+edit_uri: edit/main/docs/
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.path
+    - navigation.indexes
+    - navigation.tracking
+    # - toc.follow
+    # - toc.integrate
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+repo_url: https://github.com/intervals-mining-lab/foapy
+repo_name: intervals-mining-lab/foapy
+extra:
+  consent:
+    title: Cookie consent
+    description: >-
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+    button:
+      text: Accept
+      icon: mdi:cookie
+  version:
+    provider: mike
+    alias: true
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - tables
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+
+plugins:
+- autorefs
+- markdown-exec
+- coverage:
+    page_path: development/coverage  # default
+    html_report_dir: htmlcov  # default
+- mkdocstrings:
+    default_handler: python
+    enable_inventory: true
+    handlers:
+      python:
+        options:
+          parameter_headings: true
+          show_root_toc_entry: false
+          docstring_style: numpy
+          show_submodules: true
+          show_symbol_type_heading: true
+          show_symbol_type_toc: true
+          show_root_heading: true
+          show_signature_annotations: false
+          separate_signature: false
+          unwrap_annotated: true
+          show_if_no_docstring: false
+          show_labels: false
+          show_root_full_path: false
+- mike:
+    # These fields are all optional; the defaults are as below...
+    alias_type: symlink
+    redirect_template: null
+    deploy_prefix: ''
+    canonical_version: null
+    version_selector: true
+    css_dir: assets/css
+    javascript_dir: assets/js
+hooks:
+  - docs-hooks.py
+
+extra_javascript:
+  - assets/js/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

@@ -38,6 +38,8 @@ junit*.xml
 coverage.xml
 .pytest_cache/
 coverage.lcov
+htmlcov
+
 
 # Build and docs folder/files
 build/*
@@ -48,7 +50,8 @@ docs/_rst/*
 docs/_build/*
 cover/*
 MANIFEST
-
+_build/*
+site/*
 # Per-project virtualenvs
 .venv*/
 .conda*/

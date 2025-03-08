@@ -2,11 +2,8 @@ from unittest import TestCase
 
 import numpy as np
 
-from foapy.characteristics.arithmetic_mean import arithmetic_mean
-from foapy.characteristics.geometric_mean import geometric_mean
-from foapy.constants_intervals import binding, mode
-from foapy.intervals import intervals
-from foapy.order import order
+from foapy import binding, intervals, mode, order
+from foapy.characteristics import arithmetic_mean, geometric_mean
 
 
 class Test_geometric_mean(TestCase):
