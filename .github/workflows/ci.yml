@@ -172,15 +172,15 @@ jobs:
           cd ./benchmarks
           asv machine --machine gh-runner --yes || true
           asv setup -v || true
-          asv run ALL --skip-existing --append-samples --machine gh-runner || true
-          asv publish
+          # asv run ALL --skip-existing --append-samples --machine gh-runner || true
+          # asv publish
 
-          REPORT=$(asv compare --machine gh-runner ${{ steps.context.outputs.base }} HEAD --split --only-changed)
-          echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
-          REPORT="${REPORT}"
-          echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
-          echo "${REPORT}" >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+          # REPORT=$(asv compare --machine gh-runner ${{ steps.context.outputs.base }} HEAD --split --only-changed)
+          # echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
+          # REPORT="${REPORT}"
+          # echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
+          # echo "${REPORT}" >> $GITHUB_ENV
+          # echo 'EOF' >> $GITHUB_ENV
 
           cd ./results
           git pull
