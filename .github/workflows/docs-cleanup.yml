@@ -1,0 +1,40 @@
+# GitHub Actions configuration **EXAMPLE**,
+# MODIFY IT ACCORDING TO YOUR NEEDS!
+# Reference: https://docs.github.com/en/actions
+name: Docs Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{ github.ref_type }}-
+    ${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  docs-cleanup:
+    runs-on: ubuntu-latest
+    env:
+      GIT_COMMITTER_NAME: ci-bot
+      GIT_COMMITTER_EMAIL: ci-bot@example.com
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}  # deep clone for setuptools-scm
+
+      - uses: actions/setup-python@v5
+        id: setup-python
+        with: {python-version: "3.11"}
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build package distribution files
+        run: |
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-destroy -- ${{ github.event.pull_request.head.ref }}
