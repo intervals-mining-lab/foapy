@@ -140,12 +140,29 @@ jobs:
         run: |-
           pipx install --python '${{ steps.setup-python.outputs.python-path }}' asv virtualenv build
 
+      - name: Context
+        id: context
+        uses: cloudposse/github-action-yaml-config-query@v1
+        with:
+          query: ."${{ github.event_name }}"
+          config: |-
+            push:
+              benchmark: ${{ github.ref_type == 'branch' }}
+              branch: ${{ github.ref_name }}
+              head: ${{ github.sha }}
+              base: HEAD~1
+            pull_request:
+              benchmark: true
+              branch: ${{ github.event.pull_request.head.ref }}
+              head: ${{ github.event.pull_request.head.sha }}
+              base: ${{ github.event.pull_request.base.sha }}
+
       - name: Checkout benchmark results
         run: |-
           cd ./benchmarks/results
           git pull
-          git checkout ${{ github.event.pull_request.head.ref }} || true
-          git checkout -b ${{ github.event.pull_request.head.ref }} --track origin/${{ github.event.pull_request.head.ref }} || true
+          git checkout ${{ steps.context.outputs.branch }} || true
+          git checkout -b ${{ steps.context.outputs.branch }} --track origin/${{ steps.context.outputs.branch }} || true
 
       - name: Run benchmark
         id: benchmark
@@ -155,14 +172,7 @@ jobs:
           cd ./benchmarks
           asv machine --machine gh-runner --yes || true
           asv setup -v || true
-          # asv continuous --append-samples --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD || true
           asv run ALL --skip-existing --append-samples --machine gh-runner || true
-          REPORT=$(asv compare --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
-          echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
-          REPORT="${REPORT}"
-          echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
-          echo "${REPORT}" >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
           asv publish
           cd ./results
           git pull
@@ -171,12 +181,19 @@ jobs:
           git add .
           git commit -m "Update benchmark results"
 
+          REPORT=$(asv compare --machine gh-runner ${{ steps.context.outputs.base }} HEAD --split --only-changed)
+          echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
+          REPORT="${REPORT}"
+          echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
+          echo "${REPORT}" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ steps.github-app.outputs.token }}
           repository: intervals-mining-lab/foapy-asv-results
-          branch: ${{ github.event.pull_request.head.ref }}
+          branch: ${{ steps.context.outputs.branch }}
           directory: benchmarks/results
 
       - uses: mshick/add-pr-comment@v2
@@ -223,11 +240,11 @@ jobs:
       - name: Build package distribution files
         run: |
           pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs
-          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-deploy -- ${{ github.event.pull_request.head.ref }}
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-deploy -- ${{ steps.context.outputs.branch }}
 
   publish:
     needs: finalize
-    if: ${{ github.event_name == 'push' && contains(github.ref, 'refs/tags/') }}
+    if: ${{ github.event_name == 'push' && github.ref_type == 'tag'  }}
     runs-on: ubuntu-latest
     environment: release
     permissions:
