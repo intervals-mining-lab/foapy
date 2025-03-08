@@ -22,55 +22,38 @@ class Test_geometric_mean(TestCase):
 
     """
 
+    epsilon = np.float_power(10, -100)
+
+    def _test(self, X, binding, mode, expected):
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding, mode)
+        exists = geometric_mean(intervals_seq)
+        diff = 0
+        if expected < exists:
+            diff = exists - expected
+        else:
+            diff = expected - exists
+        self.assertTrue(diff < self.epsilon)
+
     def test_calculate_start_lossy_geometric_mean(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([2.0339])
-        exists = geometric_mean(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, np.power(144, 1 / 7))
 
     def test_calculate_start_normal_geometric_mean(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([2.155])
-        exists = geometric_mean(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, np.power(2160, 1 / 10))
 
     def test_calculate_end_normal_geometric_mean(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([2.0237])
-        exists = geometric_mean(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, np.power(1152, 1 / 10))
 
     def test_calculate_start_redunant_geometric_mean(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.redundant)
-        expected = np.array([2.1182])
-        exists = geometric_mean(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.redundant, np.power(17280, 1 / 13))
 
     def test_calculate_start_cycle_geometric_mean(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.cycle)
-        expected = np.array([2.3522])
-        exists = geometric_mean(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.cycle, np.power(5184, 1 / 10))
 
     def test_calculate_start_normal_geometric_mean_1(self):
         X = ["2", "4", "2", "2", "4"]

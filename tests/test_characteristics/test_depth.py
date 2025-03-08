@@ -22,212 +22,99 @@ class TestDepth(TestCase):
 
     """
 
+    epsilon = np.float_power(10, -100)
+
+    def _test(self, X, binding, mode, expected):
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding, mode)
+        exists = depth(intervals_seq)
+        diff = 0
+        if expected < exists:
+            diff = exists - expected
+        else:
+            diff = expected - exists
+        self.assertTrue(diff < self.epsilon)
+
     def test_calculate_start_lossy_depth(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([7.1699])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, np.log2(144))
 
     def test_calculate_start_normal_depth(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([11.0768])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, np.log2(2160))
 
     def test_calculate_end_normal_depth(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([10.1699])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, np.log2(1152))
 
     def test_calculate_start_redunant_depth(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.redundant)
-        expected = np.array([14.0768])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.redundant, np.log2(17280))
 
     def test_calculate_start_cycle_depth(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.cycle)
-        expected = np.array([12.3399])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.cycle, np.log2(5184))
 
     def test_calculate_start_lossy_different_values_depth(self):
         X = ["B", "A", "C", "D"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([0])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, 0)
 
     def test_calculate_start_lossy_empty_values_depth(self):
         X = []
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, 0)
 
     def test_calculate_start_normal_depth_1(self):
         X = ["2", "4", "2", "2", "4"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([3.5849625])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, np.log2(12))
 
     def test_calculate_start_lossy_depth_1(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([6.5849625])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, np.log2(96))
 
     def test_calculate_start_normal_depth_2(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([13.299208])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, np.log2(10080))
 
     def test_calculate_end_normal_depth_1(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([11.7548875])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, np.log2(3456))
 
     def test_calculate_end_redundant_depth(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        expected = np.array([18.469133])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.redundant, np.log2(362880))
 
     def test_calculate_end_cycle_depth(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        expected = np.array([15.076815597])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.cycle, np.log2(34560))
 
     def test_calculate_start_lossy_same_values_depth(self):
         X = ["C", "C", "C", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([0])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, 0)
 
     def test_calculate_start_normal_same_values_depth(self):
         X = ["C", "C", "C", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([0])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, 0)
 
     def test_calculate_end_normal_same_values_depth(self):
         X = ["C", "C", "C", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([0])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, 0)
 
     def test_calculate_end_redundant_same_values_depth(self):
         X = ["C", "C", "C", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        expected = np.array([0])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.redundant, 0)
 
     def test_calculate_end_cycle_same_values_depth(self):
         X = ["C", "C", "C", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        expected = np.array([0])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.cycle, 0)
 
     def test_calculate_end_lossy_different_values_depth(self):
         X = ["C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        expected = np.array([0])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.lossy, 0)
 
     def test_calculate_end_lossy_different_values_depth_1(self):
         X = ["A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        expected = np.array([0])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.lossy, 0)
 
     def test_calculate_end_lossy_different_values_depth_2(self):
         X = ["2", "1"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        expected = np.array([0])
-        exists = depth(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.lossy, 0)

@@ -25,385 +25,170 @@ class Test_average_remoteness(TestCase):
 
     """
 
+    epsilon = np.float_power(10, -100)
+
+    def _test(self, X, binding, mode, expected):
+        order_seq = order(X)
+        intervals_seq = intervals(order_seq, binding, mode)
+        exists = average_remoteness(intervals_seq)
+        diff = 0
+        if expected < exists:
+            diff = exists - expected
+        else:
+            diff = expected - exists
+        self.assertTrue(diff < self.epsilon)
+
     def test_calculate_start_lossy_average_remoteness(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([1.0242])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, np.log2(144) / 7)
 
     def test_calculate_start_normal_average_remoteness(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([1.1077])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, np.log2(2160) / 10)
 
     def test_calculate_end_normal_average_remoteness(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([1.017])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, np.log2(1152) / 10)
 
     def test_calculate_start_redunant_average_remoteness(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.redundant)
-        expected = np.array([1.0828])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.redundant, np.log2(17280) / 13)
 
     def test_calculate_start_cycle_average_remoteness(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.cycle)
-        expected = np.array([1.234])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.cycle, np.log2(5184) / 10)
 
     def test_calculate_start_lossy_empty_values_average_remoteness(self):
         X = []
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, 0)
 
     def test_calculate_start_normal_average_remoteness_1(self):
         X = ["2", "4", "2", "2", "4"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([0.7169925])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, np.log2(12) / 5)
 
     def test_calculate_start_lossy_same_values_average_remoteness(self):
         X = ["C", "C", "C", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([0])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, 0)
 
     def test_calculate_start_normal_same_values_average_remoteness(self):
         X = ["C", "C", "C", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([0])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, 0)
 
     def test_calculate_end_normal_same_values_average_remoteness(self):
         X = ["C", "C", "C", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([0])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, 0)
 
     def test_calculate_end_redundant_same_values_average_remoteness(self):
         X = ["C", "C", "C", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        expected = np.array([0])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.redundant, 0)
 
     def test_calculate_end_cycle_same_values_average_remoteness(self):
         X = ["C", "C", "C", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        expected = np.array([0])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.cycle, 0)
 
     def test_calculate_start_normal_average_remoteness_4(self):
         X = ["A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([1.1462406252])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, np.log2(24) / 4)
 
     def test_calculate_end_normal_average_remoteness_2(self):
         X = ["A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([1.1462406252])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, np.log2(24) / 4)
 
     def test_calculate_end_redundant_average_remoteness_2(self):
         X = ["A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        expected = np.array([1.1462406252])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.redundant, np.log2(576) / 8)
 
     def test_calculate_end_cycle_average_remoteness_2(self):
         X = ["A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        expected = np.array([2])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.cycle, 2)
 
     def test_calculate_end_cycle_average_remoteness_3(self):
         X = ["C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        expected = np.array([1])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.cycle, 1)
 
     def test_calculate_end_redundant_average_remoteness_3(self):
         X = ["C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        expected = np.array([0.5])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.redundant, 0.5)
 
     def test_calculate_end_normal_average_remoteness_3(self):
         X = ["C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([0.5])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, 0.5)
 
     def test_calculate_end_normal_average_remoteness_5(self):
         X = ["C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([0.5])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, 0.5)
 
     def test_calculate_start_lossy_average_remoteness_6(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([1.09749375])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, np.log2(96) / 6)
 
     def test_calculate_start_normal_average_remoteness_6(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([1.3299208])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, np.log2(10080) / 10)
 
     def test_calculate_end_normal_average_remoteness_6(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([1.17548874963])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, np.log2(3456) / 10)
 
     def test_calculate_end_redundant_average_remoteness_6(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        expected = np.array([1.31922378713])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.redundant, np.log2(362880) / 14)
 
     def test_calculate_end_cycle_average_remoteness_6(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        expected = np.array([1.5076815597])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.cycle, np.log2(34560) / 10)
 
     def test_calculate_start_lossy_average_remoteness_7(self):
         X = ["A", "C", "T", "T", "G", "A", "T", "A", "C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([1.6726956021])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, np.log2(1050) / 6)
 
     def test_calculate_start_normal_average_remoteness_7(self):
         X = ["A", "C", "T", "T", "G", "A", "T", "A", "C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([1.4943064208])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, np.log2(31500) / 10)
 
     def test_calculate_end_normal_average_remoteness_7(self):
         X = ["A", "C", "T", "T", "G", "A", "T", "A", "C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([1.4621136113])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, np.log2(25200) / 10)
 
     def test_calculate_end_redundant_average_remoteness_7(self):
         X = ["A", "C", "T", "T", "G", "A", "T", "A", "C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        expected = np.array([1.3948590506])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.redundant, np.log2(756000) / 14)
 
     def test_calculate_end_cycle_average_remoteness_7(self):
         X = ["A", "C", "T", "T", "G", "A", "T", "A", "C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        expected = np.array([1.8112989210])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.cycle, np.log2(283500) / 10)
 
     def test_calculate_start_lossy_average_remoteness_8(self):
         X = ["A", "A", "A", "A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([0])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.lossy, 0)
 
     def test_calculate_start_normal_average_remoteness_8(self):
         X = ["A", "A", "A", "A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([1.102035074])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.start, mode.normal, np.log2(210) / 7)
 
     def test_calculate_end_normal_average_remoteness_8(self):
         X = ["A", "A", "A", "A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([0.654994643])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.normal, np.log2(24) / 7)
 
     def test_calculate_end_redundant_average_remoteness_8(self):
         X = ["A", "A", "A", "A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        expected = np.array([1.1181098199])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.redundant, np.log2(5040) / 11)
 
     def test_calculate_end_cycle_average_remoteness_8(self):
         X = ["A", "A", "A", "A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        expected = np.array([1.4888663952])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.cycle, np.log2(1372) / 7)
 
     def test_calculate_end_lossy_different_values_average_remoteness(self):
         X = ["C", "G"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        expected = np.array([0])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.lossy, 0)
 
     def test_calculate_end_lossy_different_values_average_remoteness_1(self):
         X = ["A", "C", "G", "T"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        expected = np.array([0])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.lossy, 0)
 
     def test_calculate_end_lossy_different_values_average_remoteness_2(self):
         X = ["2", "1"]
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        expected = np.array([0])
-        exists = average_remoteness(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        self._test(X, binding.end, mode.lossy, 0)
 
     def test_average_remoteness_less_than_identifying_information_start_lossy(self):
         X = np.array(["10", "87", "10", "87", "10", "87"])
