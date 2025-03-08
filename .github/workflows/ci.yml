@@ -110,7 +110,7 @@ jobs:
   benchmark:
     needs: finalize
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'push' && ! contains(github.ref, 'refs/tags/') }}
+    if: ${{ ! contains(github.ref, 'refs/tags/') }}
     steps:
       - uses: actions/create-github-app-token@v1
         id: github-app
@@ -157,8 +157,6 @@ jobs:
           asv setup -v || true
           # asv continuous --append-samples --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD || true
           asv run ALL --skip-existing --append-samples --machine gh-runner || true
-          echo "========================================================================"
-          asv compare --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed
           REPORT=$(asv compare --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
           echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
           REPORT="${REPORT}"
