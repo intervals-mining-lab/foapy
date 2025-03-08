@@ -157,8 +157,8 @@ jobs:
           asv setup -v || true
           # asv continuous --append-samples --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD || true
           asv run NEW --steps 5 --skip-existing --append-samples --machine gh-runner || true
-          asv compare --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed
           echo "========================================================================"
+          asv compare --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed
           REPORT=$(asv compare --machine gh-runner ${{ github.event.pull_request.base.sha }} HEAD --split --only-changed)
           echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
           REPORT="${REPORT}"
