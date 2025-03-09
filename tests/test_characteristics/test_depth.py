@@ -41,8 +41,8 @@ class TestDepth(TestCase):
 
     def test_calculate_start_normal_depth(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        expected = np.log2(2160, dtype=np.float128)
-        self._test(X, binding.start, mode.normal, expected, dtype=np.float128)
+        expected = np.log2(2160, dtype=np.longdouble)
+        self._test(X, binding.start, mode.normal, expected, dtype=np.longdouble)
 
     def test_calculate_end_normal_depth(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
@@ -50,8 +50,8 @@ class TestDepth(TestCase):
 
     def test_calculate_start_redunant_depth(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        expected = np.log2(17280, dtype=np.float128)
-        self._test(X, binding.start, mode.redundant, expected, dtype=np.float128)
+        expected = np.log2(17280, dtype=np.longdouble)
+        self._test(X, binding.start, mode.redundant, expected, dtype=np.longdouble)
 
     def test_calculate_start_cycle_depth(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
@@ -75,8 +75,8 @@ class TestDepth(TestCase):
 
     def test_calculate_start_normal_depth_2(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        expected = np.log2(10080, dtype=np.float128)
-        self._test(X, binding.start, mode.normal, expected, dtype=np.float128)
+        expected = np.log2(10080, dtype=np.longdouble)
+        self._test(X, binding.start, mode.normal, expected, dtype=np.longdouble)
 
     def test_calculate_end_normal_depth_1(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
@@ -88,8 +88,8 @@ class TestDepth(TestCase):
 
     def test_calculate_end_cycle_depth(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        expected = np.log2(34560, dtype=np.float128)
-        self._test(X, binding.end, mode.cycle, expected, dtype=np.float128)
+        expected = np.log2(34560, dtype=np.longdouble)
+        self._test(X, binding.end, mode.cycle, expected, dtype=np.longdouble)
 
     def test_calculate_start_lossy_same_values_depth(self):
         X = ["C", "C", "C", "C"]
@@ -138,18 +138,18 @@ class TestDepth(TestCase):
         result = depth(intervals_seq)
         self.assertNotEqual(result, 0)
 
-    def test_overflow_float128_depth(self):
+    def test_overflow_longdouble_depth(self):
         length = 10000
         alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
         X = np.random.choice(alphabet, length)
         intervals_seq = intervals(X, binding.start, mode.normal)
-        result = depth(intervals_seq, dtype=np.float128)
+        result = depth(intervals_seq, dtype=np.longdouble)
         self.assertNotEqual(result, 0)
 
         length = 100000
         alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
         X = np.random.choice(alphabet, length)
         intervals_seq = intervals(X, binding.start, mode.normal)
-        result = depth(intervals_seq, dtype=np.float128)
+        result = depth(intervals_seq, dtype=np.longdouble)
         self.assertNotEqual(result, np.longdouble("-inf"))
         self.assertNotEqual(result, np.longdouble("inf"))
