@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+import numpy as np
 from numpy.testing import assert_array_equal
 
 from foapy import binding, intervals, mode, order
@@ -111,3 +112,11 @@ class TestVolume(TestCase):
     def test_calculate_end_lossy_different_values_volume_2(self):
         X = ["2", "1"]
         self._test(X, binding.end, mode.lossy, 1)
+
+    def test_overflow_volume(self):
+        length = 100
+        alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
+        X = np.random.choice(alphabet, length)
+        intervals_seq = intervals(X, binding.start, mode.normal)
+        result = volume(intervals_seq)
+        self.assertEqual(result, 0)
