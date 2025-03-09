@@ -110,7 +110,6 @@ jobs:
   benchmark:
     needs: finalize
     runs-on: ubuntu-latest
-    if: ${{ ! contains(github.ref, 'refs/tags/') }}
     steps:
       - uses: actions/create-github-app-token@v1
         id: github-app-checkout
@@ -148,12 +147,10 @@ jobs:
           query: ."${{ github.event_name }}"
           config: |-
             push:
-              benchmark: ${{ github.ref_type == 'branch' }}
               branch: ${{ github.ref_name }}
               head: ${{ github.sha }}
               base: HEAD~1
             pull_request:
-              benchmark: true
               branch: ${{ github.event.pull_request.head.ref }}
               head: ${{ github.event.pull_request.head.sha }}
               base: ${{ github.event.pull_request.base.sha }}
