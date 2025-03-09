@@ -25,18 +25,18 @@ class Test_average_remoteness(TestCase):
 
     """
 
-    epsilon = np.float_power(10, -100)
+    epsilon = np.float_power(10, -18)
 
-    def _test(self, X, binding, mode, expected):
+    def _test(self, X, binding, mode, expected, dtype=None):
         order_seq = order(X)
         intervals_seq = intervals(order_seq, binding, mode)
-        exists = average_remoteness(intervals_seq)
+        exists = average_remoteness(intervals_seq, dtype=dtype)
         diff = 0
         if expected < exists:
             diff = exists - expected
         else:
             diff = expected - exists
-        self.assertTrue(diff < self.epsilon)
+        self.assertTrue(diff < self.epsilon, f"Difference: {diff} > {self.epsilon}")
 
     def test_calculate_start_lossy_average_remoteness(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
@@ -136,15 +136,18 @@ class Test_average_remoteness(TestCase):
 
     def test_calculate_end_cycle_average_remoteness_6(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        self._test(X, binding.end, mode.cycle, np.log2(34560) / 10)
+        expected = np.log2(34560, dtype=np.float128) / 10
+        self._test(X, binding.end, mode.cycle, expected, dtype=np.float128)
 
     def test_calculate_start_lossy_average_remoteness_7(self):
         X = ["A", "C", "T", "T", "G", "A", "T", "A", "C", "G"]
-        self._test(X, binding.start, mode.lossy, np.log2(1050) / 6)
+        expected = np.log2(1050, dtype=np.float128) / 6
+        self._test(X, binding.start, mode.lossy, expected, dtype=np.float128)
 
     def test_calculate_start_normal_average_remoteness_7(self):
         X = ["A", "C", "T", "T", "G", "A", "T", "A", "C", "G"]
-        self._test(X, binding.start, mode.normal, np.log2(31500) / 10)
+        expected = np.log2(31500, dtype=np.float128) / 10
+        self._test(X, binding.start, mode.normal, expected, dtype=np.float128)
 
     def test_calculate_end_normal_average_remoteness_7(self):
         X = ["A", "C", "T", "T", "G", "A", "T", "A", "C", "G"]
@@ -164,7 +167,8 @@ class Test_average_remoteness(TestCase):
 
     def test_calculate_start_normal_average_remoteness_8(self):
         X = ["A", "A", "A", "A", "C", "G", "T"]
-        self._test(X, binding.start, mode.normal, np.log2(210) / 7)
+        expected = np.log2(210, dtype=np.float128) / 7
+        self._test(X, binding.start, mode.normal, expected, dtype=np.float128)
 
     def test_calculate_end_normal_average_remoteness_8(self):
         X = ["A", "A", "A", "A", "C", "G", "T"]
@@ -176,7 +180,8 @@ class Test_average_remoteness(TestCase):
 
     def test_calculate_end_cycle_average_remoteness_8(self):
         X = ["A", "A", "A", "A", "C", "G", "T"]
-        self._test(X, binding.end, mode.cycle, np.log2(1372) / 7)
+        expected = np.log2(1372, dtype=np.float128) / 7
+        self._test(X, binding.end, mode.cycle, expected, dtype=np.float128)
 
     def test_calculate_end_lossy_different_values_average_remoteness(self):
         X = ["C", "G"]

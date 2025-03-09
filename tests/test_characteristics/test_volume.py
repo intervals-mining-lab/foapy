@@ -129,7 +129,7 @@ class TestVolume(TestCase):
         self.assertEqual(result, 0)
 
     def test_overflow_float128_volume(self):
-        length = 100
+        length = 1000
         alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
         X = np.random.choice(alphabet, length)
         intervals_seq = intervals(X, binding.start, mode.normal)

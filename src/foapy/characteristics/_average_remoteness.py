@@ -1,4 +1,4 @@
-def average_remoteness(intervals):
+def average_remoteness(intervals, dtype=None):
     """
     Calculates average remoteness of intervals.
 
@@ -12,6 +12,8 @@ def average_remoteness(intervals):
     ----------
     intervals : array_like
         An array of intervals
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -32,6 +34,18 @@ def average_remoteness(intervals):
     print(result)
     # 1.2641604167868594
     ```
+
+    Improve precision by specifying a dtype.
+
+    ``` py linenums="1"
+    import foapy
+    import numpy as np
+
+    source = ['a', 'b', 'a', 'c', 'a', 'd']
+    intervals = foapy.intervals(source, foapy.binding.start, foapy.mode.normal)
+    result = foapy.characteristics.average_remoteness(intervals)
+    print(result)
+    # 1.2641604167868593636
     """  # noqa: W605
 
     from foapy.characteristics import depth
@@ -42,4 +56,4 @@ def average_remoteness(intervals):
     if n == 0 or all(x == 0 for x in intervals):
         return 0
 
-    return depth(intervals) / n
+    return depth(intervals, dtype=dtype) / n
