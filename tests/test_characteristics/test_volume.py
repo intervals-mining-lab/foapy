@@ -126,7 +126,8 @@ class TestVolume(TestCase):
         X = np.random.choice(alphabet, length)
         intervals_seq = intervals(X, binding.start, mode.normal)
         result = volume(intervals_seq)
-        self.assertEqual(result, 0)
+        # 0 or negative values are symptom of overflow
+        self.assertTrue(result <= 0)
 
     def test_overflow_longdouble_volume(self):
         length = 1000
