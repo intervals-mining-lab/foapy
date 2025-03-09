@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def volume(intervals):
+def volume(intervals, dtype=None):
     """
     Calculates average geometric value of intervals lengths.
 
@@ -36,4 +36,4 @@ def volume(intervals):
     ```
     """  # noqa: W605
 
-    return np.prod(intervals)
+    return np.prod(intervals, dtype=dtype)
