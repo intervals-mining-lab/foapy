@@ -8,7 +8,8 @@ on:
     # Avoid using all the resources/limits available by checking only
     # relevant branches and tags. Other branches can be checked via PRs.
     branches: [main]
-    tags: ['v[0-9]*', '[0-9]+.[0-9]+*']  # Match tags that resemble a version
+  release:
+    types: [published]
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
   workflow_dispatch:  # Allow manually triggering the workflow
@@ -146,6 +147,10 @@ jobs:
         with:
           query: ."${{ github.event_name }}"
           config: |-
+            release:
+              branch: ${{ github.ref_name }}
+              head: ${{ github.sha }}
+              base: HEAD~1
             push:
               branch: ${{ github.ref_name }}
               head: ${{ github.sha }}
@@ -229,6 +234,8 @@ jobs:
         with:
           query: ."${{ github.event_name }}"
           config: |-
+            release:
+              branch: ${{ github.ref_name }}
             push:
               branch: ${{ github.ref_name }}
             pull_request:
@@ -261,9 +268,14 @@ jobs:
           pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs
           pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-deploy -- ${{ steps.context.outputs.branch }}
 
+      - name: Set default documentation branch
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-default -- ${{ steps.context.outputs.branch }}
+
   publish:
     needs: finalize
-    if: ${{ github.event_name == 'push' && github.ref_type == 'tag'  }}
+    if: ${{ github.event_name == 'release' }}
     runs-on: ubuntu-latest
     environment: release
     permissions:
