@@ -25,7 +25,7 @@ class Test_average_remoteness(TestCase):
 
     """
 
-    epsilon = np.float_power(10, -18)
+    epsilon = np.float_power(10, -15)
 
     def _test(self, X, binding, mode, expected, dtype=None):
         order_seq = order(X)

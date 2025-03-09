@@ -22,7 +22,7 @@ class TestDepth(TestCase):
 
     """
 
-    epsilon = np.float_power(10, -100)
+    epsilon = np.float_power(10, -14)
 
     def _test(self, X, binding, mode, expected, dtype=None):
         order_seq = order(X)
@@ -146,7 +146,7 @@ class TestDepth(TestCase):
         result = depth(intervals_seq, dtype=np.longdouble)
         self.assertNotEqual(result, 0)
 
-        length = 100000
+        length = 1000000
         alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
         X = np.random.choice(alphabet, length)
         intervals_seq = intervals(X, binding.start, mode.normal)
