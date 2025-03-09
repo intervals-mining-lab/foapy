@@ -113,7 +113,7 @@ jobs:
     if: ${{ ! contains(github.ref, 'refs/tags/') }}
     steps:
       - uses: actions/create-github-app-token@v1
-        id: github-app
+        id: github-app-checkout
         with:
           app-id: ${{ secrets.BOT_GITHUB_APP_ID }}
           private-key: ${{ secrets.BOT_GITHUB_APP_PRIVATE_KEY }}
@@ -130,7 +130,7 @@ jobs:
           repository: intervals-mining-lab/foapy-asv-results
           path: benchmarks/results
           ref: main
-          token: ${{ steps.github-app.outputs.token }}
+          token: ${{ steps.github-app-checkout.outputs.token }}
           persist-credentials: false
 
       - uses: actions/setup-python@v5
@@ -190,10 +190,19 @@ jobs:
           git add .
           git commit -m "Update benchmark results" || true
 
+      - uses: actions/create-github-app-token@v1
+        id: github-app-push
+        with:
+          app-id: ${{ secrets.BOT_GITHUB_APP_ID }}
+          private-key: ${{ secrets.BOT_GITHUB_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            foapy-asv-results
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ steps.github-app.outputs.token }}
+          github_token: ${{ steps.github-app-push.outputs.token }}
           repository: intervals-mining-lab/foapy-asv-results
           branch: ${{ steps.context.outputs.branch }}
           directory: benchmarks/results
