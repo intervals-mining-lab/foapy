@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def depth(intervals):
+def depth(intervals, dtype=None):
     """
     Calculates depth of intervals.
 
@@ -14,6 +14,8 @@ def depth(intervals):
     ----------
     intervals : array_like
         An array of intervals
+    dtype : dtype, optional
+        The dtype of the output.
 
     Returns
     -------
@@ -35,7 +37,18 @@ def depth(intervals):
     # 7.584962500721156
     ```
 
-    """
-    from foapy.characteristics import volume
+    Improve precision by specifying a dtype.
 
-    return np.log2(volume(intervals))
+    ``` py linenums="1"
+    import foapy
+    import numpy as np
+
+    source = ['a', 'b', 'a', 'c', 'a', 'd']
+    intervals = foapy.intervals(source, foapy.binding.start, foapy.mode.normal)
+    result = foapy.characteristics.depth(intervals, dtype=np.float128)
+    print(result)
+    # 7.5849625007211561815
+    ```
+
+    """
+    return np.sum(np.log2(intervals, dtype=dtype), dtype=dtype)
