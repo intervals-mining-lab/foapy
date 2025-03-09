@@ -226,6 +226,17 @@ jobs:
       GIT_COMMITTER_NAME: ci-bot
       GIT_COMMITTER_EMAIL: ci-bot@example.com
     steps:
+      - name: Context
+        id: context
+        uses: cloudposse/github-action-yaml-config-query@v1
+        with:
+          query: ."${{ github.event_name }}"
+          config: |-
+            push:
+              branch: ${{ github.ref_name }}
+            pull_request:
+              branch: ${{ github.event.pull_request.head.ref }}
+
       - uses: actions/checkout@v4
         with: {fetch-depth: 0}  # deep clone for setuptools-scm
 
