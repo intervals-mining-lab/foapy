@@ -113,10 +113,32 @@ class TestVolume(TestCase):
         X = ["2", "1"]
         self._test(X, binding.end, mode.lossy, 1)
 
-    def test_overflow_volume(self):
+    def test_overflow_int64_volume(self):
+        length = 10
+        alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
+        X = np.random.choice(alphabet, length)
+        intervals_seq = intervals(X, binding.start, mode.normal)
+        result = volume(intervals_seq)
+        self.assertNotEqual(result, 0)
+
         length = 100
         alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
         X = np.random.choice(alphabet, length)
         intervals_seq = intervals(X, binding.start, mode.normal)
         result = volume(intervals_seq)
         self.assertEqual(result, 0)
+
+    def test_overflow_float128_volume(self):
+        length = 100
+        alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
+        X = np.random.choice(alphabet, length)
+        intervals_seq = intervals(X, binding.start, mode.normal)
+        result = volume(intervals_seq, dtype=np.float128)
+        self.assertNotEqual(result, 0)
+
+        length = 10000
+        alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
+        X = np.random.choice(alphabet, length)
+        intervals_seq = intervals(X, binding.start, mode.normal)
+        result = volume(intervals_seq, dtype=np.float128)
+        self.assertEqual(result, np.longdouble("inf"))
