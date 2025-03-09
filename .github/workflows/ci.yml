@@ -110,10 +110,9 @@ jobs:
   benchmark:
     needs: finalize
     runs-on: ubuntu-latest
-    if: ${{ ! contains(github.ref, 'refs/tags/') }}
     steps:
       - uses: actions/create-github-app-token@v1
-        id: github-app
+        id: github-app-checkout
         with:
           app-id: ${{ secrets.BOT_GITHUB_APP_ID }}
           private-key: ${{ secrets.BOT_GITHUB_APP_PRIVATE_KEY }}
@@ -130,7 +129,8 @@ jobs:
           repository: intervals-mining-lab/foapy-asv-results
           path: benchmarks/results
           ref: main
-          token: ${{ steps.github-app.outputs.token }}
+          token: ${{ steps.github-app-checkout.outputs.token }}
+          persist-credentials: false
 
       - uses: actions/setup-python@v5
         id: setup-python
@@ -147,12 +147,10 @@ jobs:
           query: ."${{ github.event_name }}"
           config: |-
             push:
-              benchmark: ${{ github.ref_type == 'branch' }}
               branch: ${{ github.ref_name }}
               head: ${{ github.sha }}
               base: HEAD~1
             pull_request:
-              benchmark: true
               branch: ${{ github.event.pull_request.head.ref }}
               head: ${{ github.event.pull_request.head.sha }}
               base: ${{ github.event.pull_request.base.sha }}
@@ -174,12 +172,6 @@ jobs:
           asv setup -v || true
           asv run ALL --skip-existing --append-samples --machine gh-runner || true
           asv publish
-          cd ./results
-          git pull
-          git config user.email "ci-bot@example.com"
-          git config user.name "ci-bot"
-          git add .
-          git commit -m "Update benchmark results"
 
           REPORT=$(asv compare --machine gh-runner ${{ steps.context.outputs.base }} HEAD --split --only-changed)
           echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
@@ -188,10 +180,26 @@ jobs:
           echo "${REPORT}" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
+          cd ./results
+          git pull
+          git config user.email "ci-bot@example.com"
+          git config user.name "ci-bot"
+          git add .
+          git commit -m "Update benchmark results" || true
+
+      - uses: actions/create-github-app-token@v1
+        id: github-app-push
+        with:
+          app-id: ${{ secrets.BOT_GITHUB_APP_ID }}
+          private-key: ${{ secrets.BOT_GITHUB_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            foapy-asv-results
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ steps.github-app.outputs.token }}
+          github_token: ${{ steps.github-app-push.outputs.token }}
           repository: intervals-mining-lab/foapy-asv-results
           branch: ${{ steps.context.outputs.branch }}
           directory: benchmarks/results
@@ -215,6 +223,17 @@ jobs:
       GIT_COMMITTER_NAME: ci-bot
       GIT_COMMITTER_EMAIL: ci-bot@example.com
     steps:
+      - name: Context
+        id: context
+        uses: cloudposse/github-action-yaml-config-query@v1
+        with:
+          query: ."${{ github.event_name }}"
+          config: |-
+            push:
+              branch: ${{ github.ref_name }}
+            pull_request:
+              branch: ${{ github.event.pull_request.head.ref }}
+
       - uses: actions/checkout@v4
         with: {fetch-depth: 0}  # deep clone for setuptools-scm
 
@@ -242,9 +261,15 @@ jobs:
           pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs
           pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-deploy -- ${{ steps.context.outputs.branch }}
 
+      - name: Set default documentation branch
+        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+        run: |
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-default -- ${{ steps.context.outputs.branch }}
+
+
   publish:
     needs: finalize
-    if: ${{ github.event_name == 'push' && github.ref_type == 'tag'  }}
+    if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
     runs-on: ubuntu-latest
     environment: release
     permissions:
