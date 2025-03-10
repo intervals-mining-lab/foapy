@@ -46,6 +46,7 @@ def average_remoteness(intervals, dtype=None):
     result = foapy.characteristics.average_remoteness(intervals)
     print(result)
     # 1.2641604167868593636
+    ```
     """  # noqa: W605
 
     from foapy.characteristics import depth
