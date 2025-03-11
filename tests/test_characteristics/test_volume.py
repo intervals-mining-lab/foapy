@@ -121,7 +121,7 @@ class TestVolume(TestCase):
         result = volume(intervals_seq)
         self.assertNotEqual(result, 0)
 
-        length = 100
+        length = 1000
         alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
         X = np.random.choice(alphabet, length)
         intervals_seq = intervals(X, binding.start, mode.normal)
