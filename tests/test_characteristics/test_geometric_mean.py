@@ -28,10 +28,13 @@ class Test_geometric_mean(CharacteristicsTest):
 
     def test_dataset_1(self):
         X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
-        dtype = np.longdouble
+        dtype = None
         expected = {
             binding.start: {
-                mode.lossy: np.power(144, 1 / 7),
+                mode.lossy: np.power(
+                    144,
+                    1 / 7,
+                ),
                 mode.normal: np.power(2160, 1 / 10),
                 mode.redundant: np.power(17280, 1 / 13),
                 mode.cycle: np.power(5184, 1 / 10),
@@ -47,7 +50,7 @@ class Test_geometric_mean(CharacteristicsTest):
 
     def test_dataset_2(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        dtype = np.longdouble
+        dtype = None
         expected = {
             binding.start: {
                 mode.lossy: np.power(96, 1 / 6),
