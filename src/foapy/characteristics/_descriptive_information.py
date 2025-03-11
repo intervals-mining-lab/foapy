@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def descriptive_information(intervals_grouped):
+def descriptive_information(intervals_grouped, dtype=None):
     """
     Calculates descriptive information of intervals (grouped by element of the alphabet).
 
@@ -63,4 +63,4 @@ def descriptive_information(intervals_grouped):
     """  # noqa: E501
     from foapy.characteristics import identifying_information
 
-    return np.power(2, identifying_information(intervals_grouped))
+    return np.power(2, identifying_information(intervals_grouped, dtype=dtype))

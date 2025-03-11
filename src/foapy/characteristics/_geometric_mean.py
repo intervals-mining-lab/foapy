@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def geometric_mean(intervals):
+def geometric_mean(intervals, dtype=None):
     """
     Calculates average geometric value of intervals lengths.
 
@@ -41,6 +41,6 @@ def geometric_mean(intervals):
     if n == 0 or all(x == 0 for x in intervals):
         return 0
 
-    volume = np.prod(intervals)
+    volume = np.prod(intervals, dtype=dtype)
 
-    return np.power(volume, 1 / n)
+    return np.power(volume, 1 / n, dtype=dtype)

@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def identifying_information(intervals_grouped):
+def identifying_information(intervals_grouped, dtype=None):
     """
     Calculates amount of identifying informations (Amount of Information / Entropy)
      of intervals grouped by elementof the alphabet.
@@ -74,10 +74,10 @@ def identifying_information(intervals_grouped):
         if n_j == 0:  # Check for empty interval
             partial_identifying_information = 0
         else:
-            average_value = np.sum(interval) / n_j
-            log_average = np.log2(average_value)
+            average_value = np.sum(interval, dtype=dtype) / n_j
+            log_average = np.log2(average_value, dtype=dtype)
             partial_identifying_information = n_j / n * log_average
 
         identifying_information_values.append(partial_identifying_information)
 
-    return np.sum(identifying_information_values)
+    return np.sum(identifying_information_values, dtype=dtype)
