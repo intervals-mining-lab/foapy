@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def uniformity(intervals):
+def uniformity(intervals, dtype=None):
     """
     Calculates uniformity of intervals grouped by element of the alphabet.
 
@@ -65,6 +65,7 @@ def uniformity(intervals):
 
     total_elements = np.concatenate(intervals)
 
-    return np.array(
-        identifying_information(intervals) - average_remoteness(total_elements)
-    )
+    H = identifying_information(intervals, dtype=dtype)
+    delta_a = average_remoteness(total_elements, dtype=dtype)
+
+    return np.array(H - delta_a)
