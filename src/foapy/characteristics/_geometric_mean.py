@@ -14,6 +14,8 @@ def geometric_mean(intervals, dtype=None):
     ----------
     intervals : array_like
         An array of intervals
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -27,12 +29,18 @@ def geometric_mean(intervals, dtype=None):
 
     ``` py linenums="1"
     import foapy
+    import numpy as np
 
     source = ['a', 'b', 'a', 'c', 'a', 'd']
     intervals = foapy.intervals(source, foapy.binding.start, foapy.mode.normal)
     result = foapy.characteristics.geometric_mean(intervals)
     print(result)
     # 2.4018739103520055
+
+    # Improve precision by specifying a dtype.
+    result = foapy.characteristics.geometric_mean(intervals, dtype=np.longdouble)
+    print(result)
+    # 2.4018739103520053365
     ```
     """
     n = len(intervals)

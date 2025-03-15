@@ -33,17 +33,9 @@ def average_remoteness(intervals, dtype=None):
     result = foapy.characteristics.average_remoteness(intervals)
     print(result)
     # 1.2641604167868594
-    ```
 
-    Improve precision by specifying a dtype.
-
-    ``` py linenums="1"
-    import foapy
-    import numpy as np
-
-    source = ['a', 'b', 'a', 'c', 'a', 'd']
-    intervals = foapy.intervals(source, foapy.binding.start, foapy.mode.normal)
-    result = foapy.characteristics.average_remoteness(intervals)
+    # Improve precision by specifying a dtype.
+    result = foapy.characteristics.average_remoteness(intervals, dtype=np.longdouble)
     print(result)
     # 1.2641604167868593636
     ```

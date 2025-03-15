@@ -24,7 +24,7 @@ class Test_descriptive_information(CharacteristicsInfromationalTest):
 
     """
 
-    epsilon = np.float_power(10, -4)
+    epsilon = np.float_power(10, -15)
 
     def target(self, X, dtype=None):
         return descriptive_information(X, dtype)
@@ -34,16 +34,72 @@ class Test_descriptive_information(CharacteristicsInfromationalTest):
         dtype = np.longdouble
         expected = {
             binding.start: {
-                mode.lossy: 2.37956557896877,
-                mode.normal: 2.58645791024,
-                mode.redundant: 2.52382717296366,
-                mode.cycle: 2.971,
+                # mode.lossy: 2.37956557896877,
+                mode.lossy: np.prod(
+                    [
+                        np.float_power(np.sum([1, 4, 4]) / 3, 3 / 7),
+                        np.float_power(np.sum([1, 3]) / 2, 2 / 7),
+                        np.float_power(np.sum([3, 1]) / 2, 2 / 7),
+                    ]
+                ),
+                # mode.normal: 2.58645791024,
+                mode.normal: np.prod(
+                    [
+                        np.float_power(np.sum([1, 1, 4, 4]) / 4, 4 / 10),
+                        np.float_power(np.sum([3, 1, 3]) / 3, 3 / 10),
+                        np.float_power(np.sum([5, 3, 1]) / 3, 3 / 10),
+                    ]
+                ),
+                # mode.redundant: 2.52382717296366,
+                mode.redundant: np.prod(
+                    [
+                        np.float_power(np.sum([1, 1, 4, 4, 1]) / 5, 5 / 13),
+                        np.float_power(np.sum([3, 1, 3, 4]) / 4, 4 / 13),
+                        np.float_power(np.sum([5, 3, 1, 2]) / 4, 4 / 13),
+                    ]
+                ),
+                # mode.cycle: 2.971,
+                mode.cycle: np.prod(
+                    [
+                        np.float_power(np.sum([1, 1, 4, 4]) / 4, 4 / 10),
+                        np.float_power(np.sum([6, 1, 3]) / 3, 3 / 10),
+                        np.float_power(np.sum([6, 3, 1]) / 3, 3 / 10),
+                    ]
+                ),
             },
             binding.end: {
-                mode.lossy: 2.37956557896877,
-                mode.normal: 2.383831871,
-                mode.redundant: 2.52382717296366,
-                mode.cycle: 2.971,
+                # mode.lossy: 2.37956557896877,
+                mode.lossy: np.prod(
+                    [
+                        np.float_power(np.sum([1, 4, 4]) / 3, 3 / 7),
+                        np.float_power(np.sum([1, 3]) / 2, 2 / 7),
+                        np.float_power(np.sum([3, 1]) / 2, 2 / 7),
+                    ]
+                ),
+                # mode.normal: 2.383831871,
+                mode.normal: np.prod(
+                    [
+                        np.float_power(np.sum([1, 4, 4, 1]) / 4, 4 / 10),
+                        np.float_power(np.sum([1, 3, 4]) / 3, 3 / 10),
+                        np.float_power(np.sum([3, 1, 2]) / 3, 3 / 10),
+                    ]
+                ),
+                # mode.redundant: 2.52382717296366,
+                mode.redundant: np.prod(
+                    [
+                        np.float_power(np.sum([1, 1, 4, 4, 1]) / 5, 5 / 13),
+                        np.float_power(np.sum([3, 1, 3, 4]) / 4, 4 / 13),
+                        np.float_power(np.sum([5, 3, 1, 2]) / 4, 4 / 13),
+                    ]
+                ),
+                # mode.cycle: 2.971,
+                mode.cycle: np.prod(
+                    [
+                        np.float_power(np.sum([1, 4, 4, 1]) / 4, 4 / 10),
+                        np.float_power(np.sum([1, 3, 6]) / 3, 3 / 10),
+                        np.float_power(np.sum([3, 1, 6]) / 3, 3 / 10),
+                    ]
+                ),
             },
         }
         self.AssertBatch(X, expected, dtype=dtype)
@@ -53,16 +109,78 @@ class Test_descriptive_information(CharacteristicsInfromationalTest):
         dtype = np.longdouble
         expected = {
             binding.start: {
-                mode.lossy: 2.314622766,
-                mode.normal: 2.9611915354687,
-                mode.redundant: 2.8867851948,
-                mode.cycle: 3.389245277,
+                # mode.lossy: 2.314622766,
+                mode.lossy: np.prod(
+                    [
+                        np.float_power(np.sum([1, 2, 2, 4]) / 4, 4 / 6),
+                        np.float_power(np.sum([6]) / 1, 1 / 6),
+                        np.float_power(np.sum([1]) / 1, 1 / 6),
+                    ]
+                ),
+                # mode.normal: 2.9611915354687,
+                mode.normal: np.prod(
+                    [
+                        np.float_power(np.sum([1, 1, 2, 2, 4]) / 5, 5 / 10),
+                        np.float_power(np.sum([3, 6]) / 2, 2 / 10),
+                        np.float_power(np.sum([5]) / 1, 1 / 10),
+                        np.float_power(np.sum([7, 1]) / 2, 2 / 10),
+                    ]
+                ),
+                # mode.redundant: 2.8867851948,
+                mode.redundant: np.prod(
+                    [
+                        np.float_power(np.sum([1, 1, 2, 2, 4, 1]) / 6, 6 / 14),
+                        np.float_power(np.sum([3, 6, 2]) / 3, 3 / 14),
+                        np.float_power(np.sum([5, 6]) / 2, 2 / 14),
+                        np.float_power(np.sum([7, 1, 3]) / 3, 3 / 14),
+                    ]
+                ),
+                # mode.cycle: 3.389245277,
+                mode.cycle: np.prod(
+                    [
+                        np.float_power(np.sum([1, 1, 2, 2, 4]) / 5, 5 / 10),
+                        np.float_power(np.sum([4, 6]) / 2, 2 / 10),
+                        np.float_power(np.sum([10]) / 1, 1 / 10),
+                        np.float_power(np.sum([9, 1]) / 2, 2 / 10),
+                    ]
+                ),
             },
             binding.end: {
-                mode.lossy: 2.314622766,
-                mode.normal: 2.56417770797363,
-                mode.redundant: 2.8867851948,
-                mode.cycle: 3.389245277,
+                # mode.lossy: 2.314622766,
+                mode.lossy: np.prod(
+                    [
+                        np.float_power(np.sum([1, 2, 2, 4]) / 4, 4 / 6),
+                        np.float_power(np.sum([6]) / 1, 1 / 6),
+                        np.float_power(np.sum([1]) / 1, 1 / 6),
+                    ]
+                ),
+                # mode.normal: 2.56417770797363,
+                mode.normal: np.prod(
+                    [
+                        np.float_power(np.sum([1, 2, 2, 4, 1]) / 5, 5 / 10),
+                        np.float_power(np.sum([6, 2]) / 2, 2 / 10),
+                        np.float_power(np.sum([6]) / 1, 1 / 10),
+                        np.float_power(np.sum([1, 3]) / 2, 2 / 10),
+                    ]
+                ),
+                # mode.redundant: 2.8867851948,
+                mode.redundant: np.prod(
+                    [
+                        np.float_power(np.sum([1, 1, 2, 2, 4, 1]) / 6, 6 / 14),
+                        np.float_power(np.sum([3, 6, 2]) / 3, 3 / 14),
+                        np.float_power(np.sum([5, 6]) / 2, 2 / 14),
+                        np.float_power(np.sum([7, 1, 3]) / 3, 3 / 14),
+                    ]
+                ),
+                # mode.cycle: 3.389245277,
+                mode.cycle: np.prod(
+                    [
+                        np.float_power(np.sum([1, 2, 2, 4, 1]) / 5, 5 / 10),
+                        np.float_power(np.sum([6, 4]) / 2, 2 / 10),
+                        np.float_power(np.sum([10]) / 1, 1 / 10),
+                        np.float_power(np.sum([1, 9]) / 2, 2 / 10),
+                    ]
+                ),
             },
         }
         self.AssertBatch(X, expected, dtype=dtype)

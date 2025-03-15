@@ -17,6 +17,8 @@ def identifying_information(intervals_grouped, dtype=None):
     ----------
     intervals_grouped : array_like
         An array of intervals grouped by element
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -30,6 +32,7 @@ def identifying_information(intervals_grouped, dtype=None):
 
     ``` py linenums="1"
     import foapy
+    import numpy as np
 
     source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
     order = foapy.ma.order(source)
@@ -60,6 +63,11 @@ def identifying_information(intervals_grouped, dtype=None):
     result = foapy.characteristics.identifying_information(intervals_grouped)
     print(result)
     # 1.299309880536629
+
+    # Improve precision by specifying a dtype.
+    result = foapy.characteristics.identifying_information(intervals_grouped, dtype=np.longdouble)
+    print(result)
+    # 1.2993098805366290618
     ```
     """  # noqa: E501
 

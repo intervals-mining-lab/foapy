@@ -16,6 +16,8 @@ def uniformity(intervals, dtype=None):
     ----------
     intervals_grouped : array_like
         An array of intervals grouped by element
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------

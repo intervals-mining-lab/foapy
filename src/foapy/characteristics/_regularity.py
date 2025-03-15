@@ -20,6 +20,8 @@ def regularity(intervals, dtype=None):
     ----------
     intervals_grouped : array_like
         An array of intervals grouped by element
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -63,6 +65,11 @@ def regularity(intervals, dtype=None):
     result = foapy.characteristics.regularity(intervals_grouped)
     print(result)
     # 0.9759306487558016
+
+    # Improve precision by specifying a dtype.
+    result = foapy.characteristics.regularity(intervals_grouped, dtype=np.longdouble)
+    print(result)
+    # 0.97593064875580153104
     ```
     """  # noqa: E501
     from foapy.characteristics import descriptive_information, geometric_mean
@@ -70,4 +77,4 @@ def regularity(intervals, dtype=None):
     total_elements = np.concatenate(intervals)
     g = geometric_mean(total_elements, dtype=dtype)
     D = descriptive_information(intervals, dtype=dtype)
-    return np.array(g / D)
+    return g / D

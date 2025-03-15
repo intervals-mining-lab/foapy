@@ -23,7 +23,7 @@ class Test_regularity(CharacteristicsInfromationalTest):
 
     """
 
-    epsilon = np.float_power(10, -3)
+    epsilon = np.float_power(10, -15)
 
     def target(self, X, dtype=None):
         return regularity(X, dtype)
@@ -33,16 +33,110 @@ class Test_regularity(CharacteristicsInfromationalTest):
         dtype = None
         expected = {
             binding.start: {
-                mode.lossy: 0.8547,
-                mode.normal: 0.8332,
-                mode.redundant: 0.8393,
-                mode.cycle: 0.7917,
+                # mode.lossy: 0.8547,
+                mode.lossy: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 4, 4]) / np.power(np.sum([1, 4, 4]) / 3, 3),
+                            np.prod([1, 3]) / np.power(np.sum([1, 3]) / 2, 2),
+                            np.prod([3, 1]) / np.power(np.sum([3, 1]) / 2, 2),
+                        ]
+                    ),
+                    1 / 7,
+                ),
+                # mode.normal: 0.8332,
+                mode.normal: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 4, 4])
+                            / np.power(np.sum([1, 1, 4, 4]) / 4, 4),
+                            np.prod([3, 1, 3]) / np.power(np.sum([3, 1, 3]) / 3, 3),
+                            np.prod([5, 3, 1]) / np.power(np.sum([5, 3, 1]) / 3, 3),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+                # mode.redundant: 0.8393,
+                mode.redundant: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 4, 4, 1])
+                            / np.power(
+                                np.sum([1, 1, 4, 4, 1]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([3, 1, 3, 4])
+                            / np.power(np.sum([3, 1, 3, 4]) / 4, 4),
+                            np.prod([5, 3, 1, 2])
+                            / np.power(np.sum([5, 3, 1, 2]) / 4, 4),
+                        ]
+                    ),
+                    1 / 13,
+                ),
+                # mode.cycle: 0.7917,
+                mode.cycle: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 4, 4])
+                            / np.power(np.sum([1, 1, 4, 4]) / 4, 4),  # noqa: E261 E501
+                            np.prod([6, 1, 3]) / np.power(np.sum([6, 1, 3]) / 3, 3),
+                            np.prod([6, 3, 1]) / np.power(np.sum([6, 3, 1]) / 3, 3),
+                        ]
+                    ),
+                    1 / 10,
+                ),
             },
             binding.end: {
-                mode.lossy: 0.8547,
-                mode.normal: 0.8489,
-                mode.redundant: 0.8393,
-                mode.cycle: 0.7917,
+                # mode.lossy: 0.8547,
+                mode.lossy: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 4, 4]) / np.power(np.sum([1, 4, 4]) / 3, 3),
+                            np.prod([1, 3]) / np.power(np.sum([1, 3]) / 2, 2),
+                            np.prod([3, 1]) / np.power(np.sum([3, 1]) / 2, 2),
+                        ]
+                    ),
+                    1 / 7,
+                ),
+                # mode.normal: 0.8489,
+                mode.normal: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 4, 4, 1])
+                            / np.power(np.sum([1, 4, 4, 1]) / 4, 4),
+                            np.prod([1, 3, 4]) / np.power(np.sum([1, 3, 4]) / 3, 3),
+                            np.prod([3, 1, 2]) / np.power(np.sum([3, 1, 2]) / 3, 3),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+                # mode.redundant: 0.8393,
+                mode.redundant: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 4, 4, 1])
+                            / np.power(
+                                np.sum([1, 1, 4, 4, 1]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([3, 1, 3, 4])
+                            / np.power(np.sum([3, 1, 3, 4]) / 4, 4),
+                            np.prod([5, 3, 1, 2])
+                            / np.power(np.sum([5, 3, 1, 2]) / 4, 4),
+                        ]
+                    ),
+                    1 / 13,
+                ),
+                # mode.cycle: 0.7917,
+                mode.cycle: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 4, 4])
+                            / np.power(np.sum([1, 1, 4, 4]) / 4, 4),  # noqa: E261 E501
+                            np.prod([1, 3, 6]) / np.power(np.sum([1, 3, 6]) / 3, 3),
+                            np.prod([3, 1, 6]) / np.power(np.sum([3, 1, 6]) / 3, 3),
+                        ]
+                    ),
+                    1 / 10,
+                ),
             },
         }
         self.AssertBatch(X, expected, dtype=dtype)
@@ -52,16 +146,122 @@ class Test_regularity(CharacteristicsInfromationalTest):
         dtype = None
         expected = {
             binding.start: {
-                mode.lossy: 0.924481699264,
-                mode.normal: 0.848944998,
-                mode.redundant: 0.86439343863,
-                mode.cycle: 0.838985343,
+                # mode.lossy: 0.924481699264,
+                mode.lossy: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 2, 2, 4])
+                            / np.power(np.sum([1, 2, 2, 4]) / 4, 4),
+                            np.prod([6]) / np.power(np.sum([6]) / 1, 1),
+                            np.prod([1]) / np.power(np.sum([1]) / 1, 1),
+                        ]
+                    ),
+                    1 / 6,
+                ),
+                # mode.normal: 0.848944998,
+                mode.normal: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 2, 2, 4])
+                            / np.power(
+                                np.sum([1, 1, 2, 2, 4]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([3, 6]) / np.power(np.sum([3, 6]) / 2, 2),
+                            np.prod([5]) / np.power(np.sum([5]) / 1, 1),
+                            np.prod([7, 1]) / np.power(np.sum([7, 1]) / 2, 2),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+                # mode.redundant: 0.86439343863,
+                mode.redundant: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 2, 2, 4, 1])
+                            / np.power(
+                                np.sum([1, 1, 2, 2, 4, 1]) / 6, 6
+                            ),  # noqa: E261 E501
+                            np.prod([3, 6, 2]) / np.power(np.sum([3, 6, 2]) / 3, 3),
+                            np.prod([5, 6]) / np.power(np.sum([5, 6]) / 2, 2),
+                            np.prod([7, 1, 3]) / np.power(np.sum([7, 1, 3]) / 3, 3),
+                        ]
+                    ),
+                    1 / 14,
+                ),
+                # mode.cycle: 0.838985343,
+                mode.cycle: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 2, 2, 4])
+                            / np.power(
+                                np.sum([1, 1, 2, 2, 4]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([4, 6]) / np.power(np.sum([4, 6]) / 2, 2),
+                            np.prod([10]) / np.power(np.sum([10]) / 1, 1),
+                            np.prod([9, 1]) / np.power(np.sum([9, 1]) / 2, 2),
+                        ]
+                    ),
+                    1 / 10,
+                ),
             },
             binding.end: {
-                mode.lossy: 0.924481699264,
-                mode.normal: 0.88086479457968535,
-                mode.redundant: 0.86439343863,
-                mode.cycle: 0.838985343,
+                # mode.lossy: 0.924481699264,
+                mode.lossy: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 2, 2, 4])
+                            / np.power(np.sum([1, 2, 2, 4]) / 4, 4),
+                            np.prod([6]) / np.power(np.sum([6]) / 1, 1),
+                            np.prod([1]) / np.power(np.sum([1]) / 1, 1),
+                        ]
+                    ),
+                    1 / 6,
+                ),
+                # mode.normal: 0.88086479457968535,
+                mode.normal: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 2, 2, 4, 1])
+                            / np.power(
+                                np.sum([1, 2, 2, 4, 1]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([6, 2]) / np.power(np.sum([6, 2]) / 2, 2),
+                            np.prod([6]) / np.power(np.sum([6]) / 1, 1),
+                            np.prod([1, 3]) / np.power(np.sum([1, 3]) / 2, 2),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+                # mode.redundant: 0.86439343863,
+                mode.redundant: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 2, 2, 4, 1])
+                            / np.power(
+                                np.sum([1, 1, 2, 2, 4, 1]) / 6, 6
+                            ),  # noqa: E261 E501
+                            np.prod([3, 6, 2]) / np.power(np.sum([3, 6, 2]) / 3, 3),
+                            np.prod([5, 6]) / np.power(np.sum([5, 6]) / 2, 2),
+                            np.prod([7, 1, 3]) / np.power(np.sum([7, 1, 3]) / 3, 3),
+                        ]
+                    ),
+                    1 / 14,
+                ),
+                # mode.cycle: 0.838985343,
+                mode.cycle: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 2, 2, 4, 1])
+                            / np.power(
+                                np.sum([1, 2, 2, 4, 1]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([6, 4]) / np.power(np.sum([6, 4]) / 2, 2),
+                            np.prod([10]) / np.power(np.sum([10]) / 1, 1),
+                            np.prod([1, 9]) / np.power(np.sum([1, 9]) / 2, 2),
+                        ]
+                    ),
+                    1 / 10,
+                ),
             },
         }
         self.AssertBatch(X, expected, dtype=dtype)
@@ -99,7 +299,17 @@ class Test_regularity(CharacteristicsInfromationalTest):
 
     def test_calculate_start_normal_regularity_1(self):
         X = ["2", "4", "2", "2", "4"]
-        self.AssertCase(X, binding.start, mode.normal, 0.9587)
+        # 0.9587
+        expected = np.float_power(
+            np.prod(
+                [
+                    np.prod([1, 2, 1]) / np.power(np.sum([1, 2, 1]) / 3, 3),
+                    np.prod([2, 3]) / np.power(np.sum([2, 3]) / 2, 2),
+                ]
+            ),
+            1 / 5,
+        )
+        self.AssertCase(X, binding.start, mode.normal, expected)
 
     def AssertInEquality(self, X):
         X = np.asanyarray(X)
