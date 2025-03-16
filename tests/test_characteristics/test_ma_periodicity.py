@@ -12,7 +12,7 @@ class TestMaPeriodicity(MACharacteristicsTest):
     Test list for uniformity calculate
     """
 
-    epsilon = np.float_power(10, -100)
+    epsilon = np.float_power(10, -15)
 
     def target(self, X, dtype=None):
         return periodicity(X)

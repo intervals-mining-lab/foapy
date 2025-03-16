@@ -61,11 +61,14 @@ def geometric_mean(intervals, dtype=None):
     # [2.         2.08008382 2.46621207]
     ```
     """  # noqa: W605
-
     return np.asanyarray(
         [
             (
-                np.float_power(np.prod(line, dtype=dtype), 1 / len(line), dtype=dtype)
+                np.power(
+                    2,
+                    np.sum(np.log2(line, dtype=dtype), dtype=dtype) / len(line),
+                    dtype=dtype,
+                )  # noqa: E501 E261
                 if len(line) != 0
                 else 0
             )

@@ -13,7 +13,7 @@ class TestGeometricMean(MACharacteristicsTest):
     Test list for geometric_mean calculate
     """
 
-    epsilon = np.float_power(10, -100)
+    epsilon = np.float_power(10, -15)
 
     def target(self, X, dtype=None):
         return geometric_mean(X)
