@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def geometric_mean(intervals):
+def geometric_mean(intervals, dtype=None):
     """
     Calculates average geometric values of the intervals grouped by congeneric sequence.
 
@@ -21,6 +21,8 @@ def geometric_mean(intervals):
     ----------
     intervals : array_like
         An array of congeneric intervals array
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -62,8 +64,11 @@ def geometric_mean(intervals):
 
     return np.asanyarray(
         [
-            np.power(np.prod(line), 1 / len(line)) if len(line) != 0 else 0
+            (
+                np.float_power(np.prod(line, dtype=dtype), 1 / len(line), dtype=dtype)
+                if len(line) != 0
+                else 0
+            )
             for line in intervals
-        ],
-        dtype=float,
+        ]
     )

@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def average_remoteness(intervals):
+def average_remoteness(intervals, dtype=None):
     """
     Calculates average remoteness of the intervals grouped by congeneric sequence.
 
@@ -21,6 +21,8 @@ def average_remoteness(intervals):
     ----------
     intervals : array_like
         An array of congeneric intervals array
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -63,6 +65,12 @@ def average_remoteness(intervals):
     from foapy.characteristics.ma import depth
 
     size = np.array([len(elem) for elem in intervals])
-    depth_seq = depth(intervals)
-    res = np.divide(depth_seq, size, out=np.zeros_like(depth_seq), where=size != 0)
+    depth_seq = depth(intervals, dtype=dtype)
+    res = np.divide(
+        depth_seq,
+        size,
+        out=np.zeros_like(depth_seq),
+        where=size != 0,
+        dtype=dtype,
+    )
     return res

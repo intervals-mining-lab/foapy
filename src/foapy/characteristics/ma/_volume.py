@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def volume(intervals):
+def volume(intervals, dtype=None):
     """
     Calculates volumes of the intervals grouped by congeneric sequence.
 
@@ -21,6 +21,8 @@ def volume(intervals):
     ----------
     intervals : array_like
         An array of congeneric intervals array
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -60,4 +62,4 @@ def volume(intervals):
     ```
     """  # noqa: W605
 
-    return np.asanyarray([np.prod(line) for line in intervals])
+    return np.asanyarray([np.prod(line, dtype=dtype) for line in intervals])

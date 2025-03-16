@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def periodicity(intervals):
+def periodicity(intervals, dtype=None):
     """
     Calculates periodicity of the intervals grouped by congeneric sequence.
 
@@ -22,6 +22,8 @@ def periodicity(intervals):
     ----------
     intervals : array_like
         An array of congeneric intervals array
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -63,11 +65,11 @@ def periodicity(intervals):
 
     from foapy.characteristics.ma import arithmetic_mean, geometric_mean
 
-    geometric_mean_seq = geometric_mean(intervals)
-    arithmetic_mean_seq = arithmetic_mean(intervals)
+    geometric_mean_seq = geometric_mean(intervals, dtype=dtype)
+    arithmetic_mean_seq = arithmetic_mean(intervals, dtype=dtype)
     return np.divide(
         geometric_mean_seq,
         arithmetic_mean_seq,
-        out=np.zeros_like(geometric_mean_seq),
-        where=arithmetic_mean_seq != 0,
+        where=arithmetic_mean_seq != 0.0,
+        dtype=dtype,
     )

@@ -7,19 +7,19 @@ from foapy import mode as mode_constant
 from foapy.characteristics.ma import arithmetic_mean
 
 
-class TestMaArigthmeticMean(MACharacteristicsTest):
+class TestMaArithmeticMean(MACharacteristicsTest):
     """
     Test list for volume calculate
     """
 
-    epsilon = np.float_power(10, -4)
+    epsilon = np.float_power(10, -100)
 
     def target(self, X, dtype=None):
         return arithmetic_mean(X)
 
-    def test_calculate_start_lossy_arigthmetic_mean(self):
+    def test_calculate_start_lossy_arithmetic_mean(self):
         X = ma.masked_array([2, 4, 2, 2, 4])
-        expected = [1.3333, 2.5]
+        expected = [np.mean([1, 2, 1]), np.mean([2, 3])]
         self.AssertCase(X, binding_constant.start, mode_constant.normal, expected)
 
     def test_dataset_1(self):
@@ -57,13 +57,33 @@ class TestMaArigthmeticMean(MACharacteristicsTest):
         dtype = np.longdouble
         expected = {
             binding_constant.start: {
-                mode_constant.lossy: [3, 2, 2],
-                mode_constant.normal: [2.5, 2.3333333, 3],
-                mode_constant.redundant: [2.2, 2.75, 2.75],
-                mode_constant.cycle: [2.5, 3.333333, 3.3333333],
+                mode_constant.lossy: [
+                    np.mean([1, 4, 4]),
+                    np.mean([1, 3]),
+                    np.mean([3, 1]),
+                ],
+                mode_constant.normal: [
+                    np.mean([1, 1, 4, 4]),
+                    np.mean([3, 1, 3]),
+                    np.mean([5, 3, 1]),
+                ],
+                mode_constant.redundant: [
+                    np.mean([1, 1, 4, 4, 1]),
+                    np.mean([3, 1, 3, 4]),
+                    np.mean([5, 3, 1, 2]),
+                ],
+                mode_constant.cycle: [
+                    np.mean([1, 1, 4, 4]),
+                    np.mean([6, 1, 3]),
+                    np.mean([6, 3, 1]),
+                ],
             },
             binding_constant.end: {
-                mode_constant.normal: [2.5, 2.66666667, 2],
+                mode_constant.normal: [
+                    np.mean([1, 4, 4, 1]),
+                    np.mean([1, 3, 4]),
+                    np.mean([3, 1, 2]),
+                ],
             },
         }
         self.AssertBatch(masked_X, expected, dtype=dtype)

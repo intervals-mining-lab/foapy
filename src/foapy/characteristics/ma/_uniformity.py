@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def uniformity(intervals):
+def uniformity(intervals, dtype=None):
     """
     Calculates uniformity of the intervals grouped by congeneric sequence.
 
@@ -22,6 +22,8 @@ def uniformity(intervals):
     ----------
     intervals : array_like
         An array of congeneric intervals array
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -64,5 +66,7 @@ def uniformity(intervals):
     from foapy.characteristics.ma import average_remoteness, identifying_information
 
     return np.subtract(
-        identifying_information(intervals), average_remoteness(intervals)
+        identifying_information(intervals, dtype=dtype),
+        average_remoteness(intervals, dtype=dtype),
+        dtype=dtype,
     )
