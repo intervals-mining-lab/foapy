@@ -35,6 +35,7 @@ def regularity(intervals, dtype=None):
 
     ``` py linenums="1"
     import foapy
+    import numpy as np
 
     source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
     order = foapy.ma.order(source)

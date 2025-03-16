@@ -31,6 +31,7 @@ def uniformity(intervals, dtype=None):
 
     ``` py linenums="1"
     import foapy
+    import numpy as np
 
     source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
     order = foapy.ma.order(source)
@@ -61,6 +62,11 @@ def uniformity(intervals, dtype=None):
     result = foapy.characteristics.uniformity(intervals_grouped)
     print(result)
     # 0.03514946374976957
+
+    # Improve precision by specifying a dtype.
+    result = foapy.characteristics.uniformity(intervals_grouped, dtype=np.longdouble)
+    print(result)
+    # 0.03514946374976969819
     ```
     """  # noqa: E501
     from foapy.characteristics import average_remoteness, identifying_information
@@ -68,6 +74,6 @@ def uniformity(intervals, dtype=None):
     total_elements = np.concatenate(intervals)
 
     H = identifying_information(intervals, dtype=dtype)
-    delta_a = average_remoteness(total_elements, dtype=dtype)
+    g = average_remoteness(total_elements, dtype=dtype)
 
-    return np.array(H - delta_a)
+    return H - g
