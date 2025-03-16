@@ -21,7 +21,7 @@ class Test_geometric_mean(CharacteristicsTest):
 
     """
 
-    epsilon = np.float_power(10, -100)
+    epsilon = np.float_power(10, -15)
 
     def target(self, X, dtype=None):
         return geometric_mean(X, dtype)
@@ -31,10 +31,7 @@ class Test_geometric_mean(CharacteristicsTest):
         dtype = None
         expected = {
             binding.start: {
-                mode.lossy: np.power(
-                    144,
-                    1 / 7,
-                ),
+                mode.lossy: np.power(144, 1 / 7),
                 mode.normal: np.power(2160, 1 / 10),
                 mode.redundant: np.power(17280, 1 / 13),
                 mode.cycle: np.power(5184, 1 / 10),
@@ -135,3 +132,34 @@ class Test_geometric_mean(CharacteristicsTest):
     def test_inequality_5(self):
         X = ["B"]
         self.AssertInEquality(X)
+
+    def test_overflow_int64_delta_g(self):
+        length = 10
+        alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
+        X = np.random.choice(alphabet, length)
+        intervals_seq = intervals(X, binding.start, mode.normal)
+        result = geometric_mean(intervals_seq)
+        self.assertNotEqual(result, 0)
+
+        length = 100000
+        alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
+        X = np.random.choice(alphabet, length)
+        intervals_seq = intervals(X, binding.start, mode.normal)
+        result = geometric_mean(intervals_seq)
+        # 0 or negative values are symptom of overflow
+        self.assertTrue(result > 0)
+
+    def test_overflow_longdouble_delta_g(self):
+        length = 1000
+        alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
+        X = np.random.choice(alphabet, length)
+        intervals_seq = intervals(X, binding.start, mode.normal)
+        result = geometric_mean(intervals_seq, dtype=np.longdouble)
+        self.assertNotEqual(result, 0)
+
+        length = 100000
+        alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
+        X = np.random.choice(alphabet, length)
+        intervals_seq = intervals(X, binding.start, mode.normal)
+        result = geometric_mean(intervals_seq, dtype=np.longdouble)
+        self.assertNotEqual(result, np.longdouble("inf"))

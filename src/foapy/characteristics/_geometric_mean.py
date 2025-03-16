@@ -49,6 +49,6 @@ def geometric_mean(intervals, dtype=None):
     if n == 0 or all(x == 0 for x in intervals):
         return 0
 
-    volume = np.prod(intervals, dtype=dtype)
+    from foapy.characteristics import depth
 
-    return np.power(volume, 1 / n, dtype=dtype)
+    return np.power(2, depth(intervals, dtype=dtype) / n, dtype=dtype)
