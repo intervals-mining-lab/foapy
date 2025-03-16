@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def depth(intervals):
+def depth(intervals, dtype=None):
     """
     Calculates depth of the intervals grouped by congeneric sequence.
 
@@ -19,6 +19,8 @@ def depth(intervals):
     ----------
     intervals : array_like
         An array of congeneric intervals array
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -57,7 +59,6 @@ def depth(intervals):
     # [4.        3.169925  3.9068906]
     ```
     """  # noqa: W605
-
-    from foapy.characteristics.ma import volume
-
-    return np.asanyarray([np.log2(line) for line in volume(intervals)])
+    return np.asanyarray(
+        [np.sum(np.log2(line, dtype=dtype), dtype=dtype) for line in intervals]
+    )

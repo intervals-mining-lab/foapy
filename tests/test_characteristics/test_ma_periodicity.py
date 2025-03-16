@@ -1,185 +1,125 @@
-from unittest import TestCase
-
 import numpy as np
 import numpy.ma as ma
+from test_characteristics.characterisitcs_test import MACharacteristicsTest
 
 from foapy import binding as binding_constant
 from foapy import mode as mode_constant
 from foapy.characteristics.ma import periodicity
-from foapy.ma import intervals, order
 
 
-class TestMaPeriodicity(TestCase):
+class TestMaPeriodicity(MACharacteristicsTest):
     """
     Test list for uniformity calculate
     """
 
+    epsilon = np.float_power(10, -15)
+
+    def target(self, X, dtype=None):
+        return periodicity(X)
+
     def test_calculate_start_normal_periodicity(self):
         X = ma.masked_array([2, 4, 2, 2, 4])
-        order_seq = order(X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.normal
-        )
-        expected = np.array([0.94494079, 0.9797959])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        expected = [
+            np.float_power(np.prod([1, 2, 1]), 1 / 3) / np.mean([1, 2, 1]),
+            np.float_power(np.prod([2, 3]), 1 / 2) / np.mean([2, 3]),
+        ]
+        self.AssertCase(X, binding_constant.start, mode_constant.normal, expected)
 
-    def test_calculate_start_periodicity_2(self):
-        X = ma.masked_array([1, 2, 3])
-        order_seq = order(X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.normal
-        )
-        expected = np.array([1, 1, 1])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_end_normal_periodicity(self):
-        X = ma.masked_array([1, 2, 3])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
-        expected = np.array([1, 1, 1])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+    def test_dataset_1(self):
+        X = [1, 2, 3]
+        masked_X = ma.masked_array(X)
+        dtype = np.longdouble
+        expected = {
+            binding_constant.start: {
+                mode_constant.normal: [1, 1, 1],
+            },
+            binding_constant.end: {
+                mode_constant.normal: [1, 1, 1],
+            },
+        }
+        self.AssertBatch(masked_X, expected, dtype=dtype)
 
     def test_calculate_start_lossy_empty_values_periodicity(self):
         X = ma.masked_array([])
-        order_seq = order(X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.lossy
-        )
-        expected = np.array([])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        expected = []
+        self.AssertCase(X, binding_constant.start, mode_constant.lossy, expected)
 
-    def test_calculate_start_lossy(self):
-        X = ma.masked_array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.lossy
-        )
-        expected = np.array([0.83994, 0.86602, 0.86602])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_start_normal(self):
-        X = ma.masked_array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.normal
-        )
-        expected = np.array([0.8, 0.8914645, 0.82207069])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_end_normal(self):
-        X = ma.masked_array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding_constant.end, mode_constant.normal)
-        expected = np.array([0.8, 0.8585, 0.9085])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_start_redunant(self):
-        X = ma.masked_array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.redundant
-        )
-        expected = np.array([0.7914, 0.8907, 0.85103])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_start_cycle(self):
-        X = ma.masked_array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.cycle
-        )
-        expected = np.array([0.8, 0.78622, 0.78622242])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+    def test_dataset_2(self):
+        X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
+        masked_X = ma.masked_array(X)
+        dtype = np.longdouble
+        expected = {
+            binding_constant.start: {
+                mode_constant.lossy: [
+                    np.float_power(np.prod([1, 4, 4]), 1 / 3) / np.mean([1, 4, 4]),
+                    np.float_power(np.prod([1, 3]), 1 / 2) / np.mean([1, 3]),
+                    np.float_power(np.prod([3, 1]), 1 / 2) / np.mean([3, 1]),
+                ],
+                mode_constant.normal: [
+                    np.float_power(np.prod([1, 1, 4, 4]), 1 / 4)
+                    / np.mean([1, 1, 4, 4]),
+                    np.float_power(np.prod([3, 1, 3]), 1 / 3) / np.mean([3, 1, 3]),
+                    np.float_power(np.prod([5, 3, 1]), 1 / 3) / np.mean([5, 3, 1]),
+                ],
+                mode_constant.redundant: [
+                    np.float_power(np.prod([1, 1, 4, 4, 1]), 1 / 5)
+                    / np.mean([1, 1, 4, 4, 1]),  # noqa: E501 E261
+                    np.float_power(np.prod([3, 1, 3, 4]), 1 / 4)
+                    / np.mean([3, 1, 3, 4]),
+                    np.float_power(np.prod([5, 3, 1, 2]), 1 / 4)
+                    / np.mean([5, 3, 1, 2]),
+                ],
+                mode_constant.cycle: [
+                    np.float_power(np.prod([1, 1, 4, 4]), 1 / 4)
+                    / np.mean([1, 1, 4, 4]),
+                    np.float_power(np.prod([6, 1, 3]), 1 / 3) / np.mean([6, 1, 3]),
+                    np.float_power(np.prod([6, 3, 1]), 1 / 3) / np.mean([6, 3, 1]),
+                ],
+            },
+            binding_constant.end: {
+                mode_constant.normal: [
+                    np.float_power(np.prod([1, 4, 4, 1]), 1 / 4)
+                    / np.mean([1, 4, 4, 1]),
+                    np.float_power(np.prod([1, 3, 4]), 1 / 3) / np.mean([1, 3, 4]),
+                    np.float_power(np.prod([3, 1, 2]), 1 / 3) / np.mean([3, 1, 2]),
+                ],
+            },
+        }
+        self.AssertBatch(masked_X, expected, dtype=dtype)
 
     def test_calculate_start_redunant_values_with_mask(self):
         X = ["B", "B", "B", "A", "A", "B", "B", "A", "B", "B"]
         mask = [1, 1, 1, 0, 0, 1, 1, 0, 1, 1]
         masked_X = ma.masked_array(X, mask)
-        order_seq = order(masked_X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.redundant
+        expected = [
+            np.float_power(np.prod([4, 1, 3, 3]), 1 / 4) / np.mean([4, 1, 3, 3]),
+        ]
+        self.AssertCase(
+            masked_X, binding_constant.start, mode_constant.redundant, expected
         )
-        expected = np.array([0.8907])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
 
     def test_calulate_normal_with_the_same_values(self):
         X = ["A", "A", "A", "A", "A"]
         masked_X = ma.masked_array(X)
-        order_seq = order(masked_X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.normal
+        expected = [1]
+        self.AssertCase(
+            masked_X, binding_constant.start, mode_constant.normal, expected
         )
-        expected = np.array([1])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
 
     def test_calculate_start_cycle_with_masked_single_value(self):
         X = ["A"]
         mask = [1]
         masked_X = ma.masked_array(X, mask)
-        order_seq = order(masked_X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.cycle
-        )
-        expected = np.array([1])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        expected = []
+        self.AssertCase(masked_X, binding_constant.start, mode_constant.cycle, expected)
 
     def test_calculate_start_cycle_with_single_value(self):
         X = ["A"]
         masked_X = ma.masked_array(X)
-        order_seq = order(masked_X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.cycle
-        )
-        expected = np.array([1])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        expected = [1]
+        self.AssertCase(masked_X, binding_constant.start, mode_constant.cycle, expected)
 
     def test_calculate_start_lossy_different_values(self):
         X = ma.masked_array(["B", "A", "C", "D"])
-        order_seq = order(X)
-        intervals_seq = intervals(
-            order_seq, binding_constant.start, mode_constant.lossy
-        )
-        expected = np.array([0, 0, 0, 0])
-        exists = periodicity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        expected = [0, 0, 0, 0]
+        self.AssertCase(X, binding_constant.start, mode_constant.lossy, expected)

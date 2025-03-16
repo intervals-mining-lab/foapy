@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def descriptive_information(intervals_grouped):
+def descriptive_information(intervals_grouped, dtype=None):
     """
     Calculates descriptive information of intervals (grouped by element of the alphabet).
 
@@ -16,6 +16,8 @@ def descriptive_information(intervals_grouped):
     ----------
     intervals_grouped : array_like
         An array of intervals grouped by element
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -29,6 +31,7 @@ def descriptive_information(intervals_grouped):
 
     ``` py linenums="1"
     import foapy
+    import numpy as np
 
     source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
     order = foapy.ma.order(source)
@@ -59,8 +62,15 @@ def descriptive_information(intervals_grouped):
     result = foapy.characteristics.descriptive_information(intervals_grouped)
     print(result)
     # 2.4611112617624173
+
+    # Improve precision by specifying a dtype.
+    result = foapy.characteristics.descriptive_information(intervals_grouped, dtype=np.longdouble)
+    print(result)
+    # 2.4611112617624174427
     ```
     """  # noqa: E501
     from foapy.characteristics import identifying_information
 
-    return np.power(2, identifying_information(intervals_grouped))
+    return np.power(
+        2, identifying_information(intervals_grouped, dtype=dtype), dtype=dtype
+    )

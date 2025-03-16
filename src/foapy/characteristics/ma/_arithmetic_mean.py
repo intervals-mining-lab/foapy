@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def arithmetic_mean(intervals):
+def arithmetic_mean(intervals, dtype=None):
     """
     Calculates average arithmetic value of intervals lengths
     grouped by congeneric sequence.
@@ -20,6 +20,8 @@ def arithmetic_mean(intervals):
     ----------
     intervals : array_like
         An array of congeneric intervals array
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -60,6 +62,8 @@ def arithmetic_mean(intervals):
     """  # noqa: W605
 
     return np.asanyarray(
-        [np.sum(line) / len(line) if len(line) != 0 else 0 for line in intervals],
-        dtype=float,
+        [
+            np.sum(line, dtype=dtype) / len(line) if len(line) != 0 else 0
+            for line in intervals
+        ]
     )

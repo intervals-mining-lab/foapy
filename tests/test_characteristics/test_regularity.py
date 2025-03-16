@@ -1,13 +1,12 @@
-from unittest import TestCase
-
 import numpy as np
+from test_characteristics.characterisitcs_test import CharacteristicsInfromationalTest
 
 from foapy import binding, mode
 from foapy.characteristics import regularity
 from foapy.ma import intervals, order
 
 
-class Test_regularity(TestCase):
+class Test_regularity(CharacteristicsInfromationalTest):
     """
     Test list for regularity calculate
 
@@ -24,472 +23,321 @@ class Test_regularity(TestCase):
 
     """
 
-    def test_calculate_start_lossy_regularity(self):
-        X = np.array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([0.8547])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+    epsilon = np.float_power(10, -15)
 
-    def test_calculate_start_normal_regularity(self):
-        X = np.array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([0.8332])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+    def target(self, X, dtype=None):
+        return regularity(X, dtype)
 
-    def test_calculate_end_normal_regularity(self):
-        X = np.array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([0.8489])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+    def test_dataset_1(self):
+        X = ["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"]
+        dtype = None
+        expected = {
+            binding.start: {
+                # mode.lossy: 0.8547,
+                mode.lossy: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 4, 4]) / np.power(np.sum([1, 4, 4]) / 3, 3),
+                            np.prod([1, 3]) / np.power(np.sum([1, 3]) / 2, 2),
+                            np.prod([3, 1]) / np.power(np.sum([3, 1]) / 2, 2),
+                        ]
+                    ),
+                    1 / 7,
+                ),
+                # mode.normal: 0.8332,
+                mode.normal: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 4, 4])
+                            / np.power(np.sum([1, 1, 4, 4]) / 4, 4),
+                            np.prod([3, 1, 3]) / np.power(np.sum([3, 1, 3]) / 3, 3),
+                            np.prod([5, 3, 1]) / np.power(np.sum([5, 3, 1]) / 3, 3),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+                # mode.redundant: 0.8393,
+                mode.redundant: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 4, 4, 1])
+                            / np.power(
+                                np.sum([1, 1, 4, 4, 1]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([3, 1, 3, 4])
+                            / np.power(np.sum([3, 1, 3, 4]) / 4, 4),
+                            np.prod([5, 3, 1, 2])
+                            / np.power(np.sum([5, 3, 1, 2]) / 4, 4),
+                        ]
+                    ),
+                    1 / 13,
+                ),
+                # mode.cycle: 0.7917,
+                mode.cycle: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 4, 4])
+                            / np.power(np.sum([1, 1, 4, 4]) / 4, 4),  # noqa: E261 E501
+                            np.prod([6, 1, 3]) / np.power(np.sum([6, 1, 3]) / 3, 3),
+                            np.prod([6, 3, 1]) / np.power(np.sum([6, 3, 1]) / 3, 3),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+            },
+            binding.end: {
+                # mode.lossy: 0.8547,
+                mode.lossy: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 4, 4]) / np.power(np.sum([1, 4, 4]) / 3, 3),
+                            np.prod([1, 3]) / np.power(np.sum([1, 3]) / 2, 2),
+                            np.prod([3, 1]) / np.power(np.sum([3, 1]) / 2, 2),
+                        ]
+                    ),
+                    1 / 7,
+                ),
+                # mode.normal: 0.8489,
+                mode.normal: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 4, 4, 1])
+                            / np.power(np.sum([1, 4, 4, 1]) / 4, 4),
+                            np.prod([1, 3, 4]) / np.power(np.sum([1, 3, 4]) / 3, 3),
+                            np.prod([3, 1, 2]) / np.power(np.sum([3, 1, 2]) / 3, 3),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+                # mode.redundant: 0.8393,
+                mode.redundant: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 4, 4, 1])
+                            / np.power(
+                                np.sum([1, 1, 4, 4, 1]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([3, 1, 3, 4])
+                            / np.power(np.sum([3, 1, 3, 4]) / 4, 4),
+                            np.prod([5, 3, 1, 2])
+                            / np.power(np.sum([5, 3, 1, 2]) / 4, 4),
+                        ]
+                    ),
+                    1 / 13,
+                ),
+                # mode.cycle: 0.7917,
+                mode.cycle: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 4, 4])
+                            / np.power(np.sum([1, 1, 4, 4]) / 4, 4),  # noqa: E261 E501
+                            np.prod([1, 3, 6]) / np.power(np.sum([1, 3, 6]) / 3, 3),
+                            np.prod([3, 1, 6]) / np.power(np.sum([3, 1, 6]) / 3, 3),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+            },
+        }
+        self.AssertBatch(X, expected, dtype=dtype)
 
-    def test_calculate_start_redunant_regularity(self):
-        X = np.array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.redundant)
-        expected = np.array([0.8393])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+    def test_dataset_2(self):
+        X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
+        dtype = None
+        expected = {
+            binding.start: {
+                # mode.lossy: 0.924481699264,
+                mode.lossy: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 2, 2, 4])
+                            / np.power(np.sum([1, 2, 2, 4]) / 4, 4),
+                            np.prod([6]) / np.power(np.sum([6]) / 1, 1),
+                            np.prod([1]) / np.power(np.sum([1]) / 1, 1),
+                        ]
+                    ),
+                    1 / 6,
+                ),
+                # mode.normal: 0.848944998,
+                mode.normal: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 2, 2, 4])
+                            / np.power(
+                                np.sum([1, 1, 2, 2, 4]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([3, 6]) / np.power(np.sum([3, 6]) / 2, 2),
+                            np.prod([5]) / np.power(np.sum([5]) / 1, 1),
+                            np.prod([7, 1]) / np.power(np.sum([7, 1]) / 2, 2),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+                # mode.redundant: 0.86439343863,
+                mode.redundant: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 2, 2, 4, 1])
+                            / np.power(
+                                np.sum([1, 1, 2, 2, 4, 1]) / 6, 6
+                            ),  # noqa: E261 E501
+                            np.prod([3, 6, 2]) / np.power(np.sum([3, 6, 2]) / 3, 3),
+                            np.prod([5, 6]) / np.power(np.sum([5, 6]) / 2, 2),
+                            np.prod([7, 1, 3]) / np.power(np.sum([7, 1, 3]) / 3, 3),
+                        ]
+                    ),
+                    1 / 14,
+                ),
+                # mode.cycle: 0.838985343,
+                mode.cycle: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 2, 2, 4])
+                            / np.power(
+                                np.sum([1, 1, 2, 2, 4]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([4, 6]) / np.power(np.sum([4, 6]) / 2, 2),
+                            np.prod([10]) / np.power(np.sum([10]) / 1, 1),
+                            np.prod([9, 1]) / np.power(np.sum([9, 1]) / 2, 2),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+            },
+            binding.end: {
+                # mode.lossy: 0.924481699264,
+                mode.lossy: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 2, 2, 4])
+                            / np.power(np.sum([1, 2, 2, 4]) / 4, 4),
+                            np.prod([6]) / np.power(np.sum([6]) / 1, 1),
+                            np.prod([1]) / np.power(np.sum([1]) / 1, 1),
+                        ]
+                    ),
+                    1 / 6,
+                ),
+                # mode.normal: 0.88086479457968535,
+                mode.normal: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 2, 2, 4, 1])
+                            / np.power(
+                                np.sum([1, 2, 2, 4, 1]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([6, 2]) / np.power(np.sum([6, 2]) / 2, 2),
+                            np.prod([6]) / np.power(np.sum([6]) / 1, 1),
+                            np.prod([1, 3]) / np.power(np.sum([1, 3]) / 2, 2),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+                # mode.redundant: 0.86439343863,
+                mode.redundant: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 1, 2, 2, 4, 1])
+                            / np.power(
+                                np.sum([1, 1, 2, 2, 4, 1]) / 6, 6
+                            ),  # noqa: E261 E501
+                            np.prod([3, 6, 2]) / np.power(np.sum([3, 6, 2]) / 3, 3),
+                            np.prod([5, 6]) / np.power(np.sum([5, 6]) / 2, 2),
+                            np.prod([7, 1, 3]) / np.power(np.sum([7, 1, 3]) / 3, 3),
+                        ]
+                    ),
+                    1 / 14,
+                ),
+                # mode.cycle: 0.838985343,
+                mode.cycle: np.float_power(
+                    np.prod(
+                        [
+                            np.prod([1, 2, 2, 4, 1])
+                            / np.power(
+                                np.sum([1, 2, 2, 4, 1]) / 5, 5
+                            ),  # noqa: E261 E501
+                            np.prod([6, 4]) / np.power(np.sum([6, 4]) / 2, 2),
+                            np.prod([10]) / np.power(np.sum([10]) / 1, 1),
+                            np.prod([1, 9]) / np.power(np.sum([1, 9]) / 2, 2),
+                        ]
+                    ),
+                    1 / 10,
+                ),
+            },
+        }
+        self.AssertBatch(X, expected, dtype=dtype)
 
-    def test_calculate_start_cycle_regularity(self):
-        X = np.array(["B", "B", "A", "A", "C", "B", "A", "C", "C", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.cycle)
-        expected = np.array([0.7917])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_start_normal_regularity_1(self):
-        X = np.array(["2", "4", "2", "2", "4"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([0.9587])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_start_normal_regularity_2(self):
-        X = np.array(["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([0.848944998])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_end_normal_regularity_2(self):
-        X = np.array(["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([0.88086479457968535])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_end_redundant_regularity_2(self):
-        X = np.array(["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        expected = np.array([0.86439343863])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_end_cycle_regularity_2(self):
-        X = np.array(["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        expected = np.array([0.838985343])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_start_lossy_same_values_regularity(self):
-        X = np.array(["C", "C", "C", "C"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([1])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_start_normal_same_values_regularity(self):
-        X = np.array(["C", "C", "C", "C"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        expected = np.array([1])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_end_normal_same_values_regularity(self):
-        X = np.array(["C", "C", "C", "C"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        expected = np.array([1])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_end_redundant_same_values_regularity(self):
-        X = np.array(["C", "C", "C", "C"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        expected = np.array([1])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
-
-    def test_calculate_end_cycle_same_values_regularity(self):
-        X = np.array(["C", "C", "C", "C"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        expected = np.array([1])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+    def test_dataset_3(self):
+        X = ["C", "C", "C", "C"]
+        dtype = None
+        expected = {
+            binding.start: {
+                mode.lossy: 1,
+                mode.normal: 1,
+                mode.redundant: 1,
+                mode.cycle: 1,
+            },
+            binding.end: {
+                mode.lossy: 1,
+                mode.normal: 1,
+                mode.redundant: 1,
+                mode.cycle: 1,
+            },
+        }
+        self.AssertBatch(X, expected, dtype=dtype)
 
     def test_calculate_end_lossy_different_values_descriptive_information(self):
-        X = np.array(["C", "G"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        expected = np.array([0])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        X = ["C", "G"]
+        self.AssertCase(X, binding.end, mode.lossy, 0)
 
     def test_calculate_end_lossy_different_values_descriptive_information_1(self):
-        X = np.array(["A", "C", "G", "T"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        expected = np.array([0])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        X = ["A", "C", "G", "T"]
+        self.AssertCase(X, binding.end, mode.lossy, 0)
 
     def test_calculate_end_lossy_different_values_descriptive_information_2(self):
-        X = np.array(["2", "1"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        expected = np.array([0])
-        exists = regularity(intervals_seq)
-        epsilon = 0.0001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+        X = ["2", "1"]
+        self.AssertCase(X, binding.end, mode.lossy, 0)
 
-    def test_calculate_start_lossy_descriptive_information_3(self):
-        X = np.array(["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        expected = np.array([0.924481699264])
-        exists = regularity(intervals_seq)
-        epsilon = 0.00001
-        diff = np.absolute(expected - exists)
-        self.assertTrue(np.all(diff < epsilon))
+    def test_calculate_start_normal_regularity_1(self):
+        X = ["2", "4", "2", "2", "4"]
+        # 0.9587
+        expected = np.float_power(
+            np.prod(
+                [
+                    np.prod([1, 2, 1]) / np.power(np.sum([1, 2, 1]) / 3, 3),
+                    np.prod([2, 3]) / np.power(np.sum([2, 3]) / 2, 2),
+                ]
+            ),
+            1 / 5,
+        )
+        self.AssertCase(X, binding.start, mode.normal, expected)
 
-    def test_regularity_start_lossy_returns_value_between_0_and_1(self):
-        X = np.array(["10", "87", "10", "87", "10", "87"])
+    def AssertInEquality(self, X):
+        X = np.asanyarray(X)
         order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
 
-    def test_regularity_end_lossy_returns_value_between_0_and_1(self):
-        X = np.array(["10", "87", "10", "87", "10", "87"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
+        for b in [binding.start, binding.end]:
+            for m in [mode.lossy, mode.normal, mode.redundant, mode.cycle]:
+                intervals_seq = intervals(order_seq, b, m)
+                r = regularity(intervals_seq)
+                err_msg = f"0 <= r <= 1 | Binding {b}, mode {m}: " f"r={r}"
+                self.assertTrue(0 <= r <= 1, err_msg)
 
-    def test_regularity_start_normal_returns_value_between_0_and_1(self):
-        X = np.array(["10", "87", "10", "87", "10", "87"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
+    def test_inequality_1(self):
+        X = ["10", "87", "10", "87", "10", "87"]
+        self.AssertInEquality(X)
 
-    def test_regularity_end_normal_returns_value_between_0_and_1(self):
-        X = np.array(["10", "87", "10", "87", "10", "87"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
+    def test_inequality_2(self):
+        X = ["1", "1", "3", "1", "1"]
+        self.AssertInEquality(X)
 
-    def test_regularity_start_redundant_returns_value_between_0_and_1(self):
-        X = np.array(["10", "87", "10", "87", "10", "87"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.redundant)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
+    def test_inequality_3(self):
+        X = ["13", "13", "13", "13"]
+        self.AssertInEquality(X)
 
-    def test_regularity_end_redundant_returns_value_between_0_and_1(self):
-        X = np.array(["10", "87", "10", "87", "10", "87"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
+    def test_inequality_4(self):
+        X = ["A", "B", "A", "B"]
+        self.AssertInEquality(X)
 
-    def test_regularity_start_cycle_returns_value_between_0_and_1(self):
-        X = np.array(["10", "87", "10", "87", "10", "87"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.cycle)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_end_cycle_returns_value_between_0_and_1(self):
-        X = np.array(["10", "87", "10", "87", "10", "87"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_2_start_lossy_returns_value_between_0_and_1(self):
-        X = np.array(["1", "1", "3", "1", "1"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_2_end_lossy_returns_value_between_0_and_1(self):
-        X = np.array(["1", "1", "3", "1", "1"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_2_start_normal_returns_value_between_0_and_1(self):
-        X = np.array(["1", "1", "3", "1", "1"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_2_end_normal_returns_value_between_0_and_1(self):
-        X = np.array(["1", "1", "3", "1", "1"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_2_start_redundant_returns_value_between_0_and_1(self):
-        X = np.array(["1", "1", "3", "1", "1"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.redundant)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_2_end_redundant_returns_value_between_0_and_1(self):
-        X = np.array(["1", "1", "3", "1", "1"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_2_start_cycle_returns_value_between_0_and_1(self):
-        X = np.array(["1", "1", "3", "1", "1"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.cycle)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_2_end_cycle_returns_value_between_0_and_1(self):
-        X = np.array(["1", "1", "3", "1", "1"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_3_start_lossy_returns_value_between_0_and_1(self):
-        X = np.array(["13", "13", "13", "13"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_3_end_lossy_returns_value_between_0_and_1(self):
-        X = np.array(["13", "13", "13", "13"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_3_start_normal_returns_value_between_0_and_1(self):
-        X = np.array(["13", "13", "13", "13"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_3_end_normal_returns_value_between_0_and_1(self):
-        X = np.array(["13", "13", "13", "13"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_3_start_redundant_returns_value_between_0_and_1(self):
-        X = np.array(["13", "13", "13", "13"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.redundant)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_3_end_redundant_returns_value_between_0_and_1(self):
-        X = np.array(["13", "13", "13", "13"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_3_start_cycle_returns_value_between_0_and_1(self):
-        X = np.array(["13", "13", "13", "13"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.cycle)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_3_end_cycle_returns_value_between_0_and_1(self):
-        X = np.array(["13", "13", "13", "13"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_4_start_lossy_returns_value_between_0_and_1(self):
-        X = np.array(["A", "B", "A", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_4_end_lossy_returns_value_between_0_and_1(self):
-        X = np.array(["A", "B", "A", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_4_start_normal_returns_value_between_0_and_1(self):
-        X = np.array(["A", "B", "A", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_4_end_normal_returns_value_between_0_and_1(self):
-        X = np.array(["A", "B", "A", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_4_start_redundant_returns_value_between_0_and_1(self):
-        X = np.array(["A", "B", "A", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.redundant)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_4_end_redundant_returns_value_between_0_and_1(self):
-        X = np.array(["A", "B", "A", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_4_start_cycle_returns_value_between_0_and_1(self):
-        X = np.array(["A", "B", "A", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.cycle)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_4_end_cycle_returns_value_between_0_and_1(self):
-        X = np.array(["A", "B", "A", "B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_5_start_lossy_returns_value_between_0_and_1(self):
-        X = np.array(["B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.lossy)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_5_end_lossy_returns_value_between_0_and_1(self):
-        X = np.array(["B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.lossy)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_5_start_normal_returns_value_between_0_and_1(self):
-        X = np.array(["B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.normal)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_5_end_normal_returns_value_between_0_and_1(self):
-        X = np.array(["B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.normal)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_5_start_redundant_returns_value_between_0_and_1(self):
-        X = np.array(["B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.redundant)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_5_end_redundant_returns_value_between_0_and_1(self):
-        X = np.array(["B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.redundant)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_5_start_cycle_returns_value_between_0_and_1(self):
-        X = np.array(["B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.start, mode.cycle)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
-
-    def test_regularity_5_end_cycle_returns_value_between_0_and_1(self):
-        X = np.array(["B"])
-        order_seq = order(X)
-        intervals_seq = intervals(order_seq, binding.end, mode.cycle)
-        r = regularity(intervals_seq)
-        self.assertTrue(0 <= r <= 1)
+    def test_inequality_5(self):
+        X = ["B"]
+        self.AssertInEquality(X)

@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def uniformity(intervals):
+def uniformity(intervals, dtype=None):
     """
     Calculates uniformity of intervals grouped by element of the alphabet.
 
@@ -16,6 +16,8 @@ def uniformity(intervals):
     ----------
     intervals_grouped : array_like
         An array of intervals grouped by element
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -29,6 +31,7 @@ def uniformity(intervals):
 
     ``` py linenums="1"
     import foapy
+    import numpy as np
 
     source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
     order = foapy.ma.order(source)
@@ -59,12 +62,18 @@ def uniformity(intervals):
     result = foapy.characteristics.uniformity(intervals_grouped)
     print(result)
     # 0.03514946374976957
+
+    # Improve precision by specifying a dtype.
+    result = foapy.characteristics.uniformity(intervals_grouped, dtype=np.longdouble)
+    print(result)
+    # 0.03514946374976969819
     ```
     """  # noqa: E501
     from foapy.characteristics import average_remoteness, identifying_information
 
     total_elements = np.concatenate(intervals)
 
-    return np.array(
-        identifying_information(intervals) - average_remoteness(total_elements)
-    )
+    H = identifying_information(intervals, dtype=dtype)
+    g = average_remoteness(total_elements, dtype=dtype)
+
+    return H - g

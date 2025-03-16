@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def identifying_information(intervals):
+def identifying_information(intervals, dtype=None):
     """
     Calculates identifying informations (amount of information) of the intervals
     grouped by congeneric sequence.
@@ -22,6 +22,8 @@ def identifying_information(intervals):
     ----------
     intervals : array_like
         An array of congeneric intervals array
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -62,5 +64,9 @@ def identifying_information(intervals):
     """  # noqa: W605
 
     return np.asanyarray(
-        [np.log2(np.average(line)) if len(line) != 0 else 0 for line in intervals]
+        [
+            np.log2(np.mean(line, dtype=dtype), dtype=dtype) if len(line) != 0 else 0
+            for line in intervals
+        ],
+        dtype=dtype,
     )

@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def regularity(intervals):
+def regularity(intervals, dtype=None):
     """
     Calculates regularity of intervals grouped by element of the alphabet.
 
@@ -20,6 +20,8 @@ def regularity(intervals):
     ----------
     intervals_grouped : array_like
         An array of intervals grouped by element
+    dtype : dtype, optional
+        The dtype of the output
 
     Returns
     -------
@@ -33,6 +35,7 @@ def regularity(intervals):
 
     ``` py linenums="1"
     import foapy
+    import numpy as np
 
     source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
     order = foapy.ma.order(source)
@@ -63,10 +66,16 @@ def regularity(intervals):
     result = foapy.characteristics.regularity(intervals_grouped)
     print(result)
     # 0.9759306487558016
+
+    # Improve precision by specifying a dtype.
+    result = foapy.characteristics.regularity(intervals_grouped, dtype=np.longdouble)
+    print(result)
+    # 0.97593064875580153104
     ```
     """  # noqa: E501
     from foapy.characteristics import descriptive_information, geometric_mean
 
     total_elements = np.concatenate(intervals)
-
-    return np.array(geometric_mean(total_elements) / descriptive_information(intervals))
+    g = geometric_mean(total_elements, dtype=dtype)
+    D = descriptive_information(intervals, dtype=dtype)
+    return g / D
