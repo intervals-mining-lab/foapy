@@ -12,14 +12,17 @@ class TestMaUniformity(MACharacteristicsTest):
     Test list for uniformity calculate
     """
 
-    epsilon = np.float_power(10, -4)
+    epsilon = np.float_power(10, -15)
 
     def target(self, X, dtype=None):
         return uniformity(X)
 
     def test_calculate_start_normal_uniformity(self):
         X = ma.masked_array([2, 4, 2, 2, 4])
-        expected = [0.081704199, 0.029448094887]
+        expected = [
+            np.log2(np.mean([1, 2, 1])) - np.mean(np.log2([1, 2, 1])),
+            np.log2(np.mean([2, 3])) - np.mean(np.log2([2, 3])),
+        ]
         self.AssertCase(X, binding_constant.start, mode_constant.normal, expected)
 
     def test_dataset_1(self):
@@ -42,13 +45,34 @@ class TestMaUniformity(MACharacteristicsTest):
         dtype = np.longdouble
         expected = {
             binding_constant.start: {
-                mode_constant.lossy: [0.2516, 0.2075, 0.2075],
-                mode_constant.normal: [0.3219, 0.1657, 0.2826],
-                mode_constant.redundant: [0.3375, 0.16695, 0.2327],
-                mode_constant.cycle: [0.32192, 0.34699, 0.34699],
+                mode_constant.lossy: [
+                    np.log2(np.mean([1, 4, 4])) - np.mean(np.log2([1, 4, 4])),
+                    np.log2(np.mean([1, 3])) - np.mean(np.log2([1, 3])),
+                    np.log2(np.mean([3, 1])) - np.mean(np.log2([3, 1])),
+                ],
+                mode_constant.normal: [
+                    np.log2(np.mean([1, 1, 4, 4])) - np.mean(np.log2([1, 1, 4, 4])),
+                    np.log2(np.mean([3, 1, 3])) - np.mean(np.log2([3, 1, 3])),
+                    np.log2(np.mean([5, 3, 1])) - np.mean(np.log2([5, 3, 1])),
+                ],
+                mode_constant.redundant: [
+                    np.log2(np.mean([1, 1, 4, 4, 1]))
+                    - np.mean(np.log2([1, 1, 4, 4, 1])),
+                    np.log2(np.mean([3, 1, 3, 4])) - np.mean(np.log2([3, 1, 3, 4])),
+                    np.log2(np.mean([5, 3, 1, 2])) - np.mean(np.log2([5, 3, 1, 2])),
+                ],
+                mode_constant.cycle: [
+                    np.log2(np.mean([1, 1, 4, 4])) - np.mean(np.log2([1, 1, 4, 4])),
+                    np.log2(np.mean([6, 1, 3])) - np.mean(np.log2([6, 1, 3])),
+                    np.log2(np.mean([6, 3, 1])) - np.mean(np.log2([6, 3, 1])),
+                ],
             },
             binding_constant.end: {
-                mode_constant.normal: [0.3219, 0.22005, 0.13834],
+                mode_constant.normal: [
+                    np.log2(np.mean([1, 4, 4, 1])) - np.mean(np.log2([1, 4, 4, 1])),
+                    np.log2(np.mean([1, 3, 4])) - np.mean(np.log2([1, 3, 4])),
+                    np.log2(np.mean([3, 1, 2])) - np.mean(np.log2([3, 1, 2])),
+                ],
             },
         }
         self.AssertBatch(masked_X, expected, dtype=dtype)
@@ -62,7 +86,7 @@ class TestMaUniformity(MACharacteristicsTest):
         X = ["B", "B", "B", "A", "A", "B", "B", "A", "B", "B"]
         mask = [1, 1, 1, 0, 0, 1, 1, 0, 1, 1]
         masked_X = ma.masked_array(X, mask)
-        expected = [0.16695037]
+        expected = [np.log2(np.mean([4, 1, 3, 3])) - np.mean(np.log2([4, 1, 3, 3]))]
         self.AssertCase(
             masked_X, binding_constant.start, mode_constant.redundant, expected
         )

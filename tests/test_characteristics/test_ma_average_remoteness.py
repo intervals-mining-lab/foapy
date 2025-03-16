@@ -13,14 +13,17 @@ class TestMaAverageRemoteness(MACharacteristicsTest):
     Test list for average remoteness calculate
     """
 
-    epsilon = np.float_power(10, -4)
+    epsilon = np.float_power(10, -15)
 
     def target(self, X, dtype=None):
         return average_remoteness(X)
 
-    def test_calculate_start_lossy_arigthmetic_mean(self):
+    def test_calculate_start_lossy_average_remoteness(self):
         X = ma.masked_array([2, 4, 2, 2, 4])
-        expected = [0.3333333, 1.29248]
+        expected = [
+            np.mean(np.log2([1, 2, 1])),
+            np.mean(np.log2([2, 3])),
+        ]
         self.AssertCase(X, binding_constant.start, mode_constant.normal, expected)
 
     def test_dataset_1(self):
@@ -29,10 +32,18 @@ class TestMaAverageRemoteness(MACharacteristicsTest):
         dtype = np.longdouble
         expected = {
             binding_constant.start: {
-                mode_constant.normal: [0, 1, 1.5849625],
+                mode_constant.normal: [
+                    np.mean(np.log2([1])),
+                    np.mean(np.log2([2])),
+                    np.mean(np.log2([3])),
+                ],
             },
             binding_constant.end: {
-                mode_constant.normal: [1.5849625, 1, 0],
+                mode_constant.normal: [
+                    np.mean(np.log2([3])),
+                    np.mean(np.log2([2])),
+                    np.mean(np.log2([1])),
+                ],
             },
         }
         self.AssertBatch(masked_X, expected, dtype=dtype)
@@ -48,13 +59,33 @@ class TestMaAverageRemoteness(MACharacteristicsTest):
         dtype = np.longdouble
         expected = {
             binding_constant.start: {
-                mode_constant.lossy: [1.3333, 0.79248, 0.79248],
-                mode_constant.normal: [1, 1.05664, 1.30229],
-                mode_constant.redundant: [0.8, 1.2924, 1.2267],
-                mode_constant.cycle: [1, 1.389975, 1.389975],
+                mode_constant.lossy: [
+                    np.mean(np.log2([1, 4, 4])),
+                    np.mean(np.log2([1, 3])),
+                    np.mean(np.log2([3, 1])),
+                ],
+                mode_constant.normal: [
+                    np.mean(np.log2([1, 1, 4, 4])),
+                    np.mean(np.log2([3, 1, 3])),
+                    np.mean(np.log2([5, 3, 1])),
+                ],
+                mode_constant.redundant: [
+                    np.mean(np.log2([1, 1, 4, 4, 1])),
+                    np.mean(np.log2([3, 1, 3, 4])),
+                    np.mean(np.log2([5, 3, 1, 2])),
+                ],
+                mode_constant.cycle: [
+                    np.mean(np.log2([1, 1, 4, 4])),
+                    np.mean(np.log2([6, 1, 3])),
+                    np.mean(np.log2([6, 3, 1])),
+                ],
             },
             binding_constant.end: {
-                mode_constant.normal: [1, 1.1949, 0.8616],
+                mode_constant.normal: [
+                    np.mean(np.log2([1, 4, 4, 1])),
+                    np.mean(np.log2([1, 3, 4])),
+                    np.mean(np.log2([3, 1, 2])),
+                ],
             },
         }
         self.AssertBatch(masked_X, expected, dtype=dtype)
@@ -63,7 +94,7 @@ class TestMaAverageRemoteness(MACharacteristicsTest):
         X = ["B", "B", "B", "A", "A", "B", "B", "A", "B", "B"]
         mask = [1, 1, 1, 0, 0, 1, 1, 0, 1, 1]
         masked_X = ma.masked_array(X, mask)
-        expected = [1.2925]
+        expected = [np.mean(np.log2([4, 1, 3, 3]))]
         self.AssertCase(
             masked_X, binding_constant.start, mode_constant.redundant, expected
         )

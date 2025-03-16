@@ -12,14 +12,17 @@ class TestMaIdentifyingInformation(MACharacteristicsTest):
     Test list for identifying information calculate
     """
 
-    epsilon = np.float_power(10, -2)
+    epsilon = np.float_power(10, -100)
 
     def target(self, X, dtype=None):
         return identifying_information(X)
 
     def test_calculate_start_normal_entropy(self):
         X = ma.masked_array([2, 4, 2, 2, 4])
-        expected = [0.415037499, 1.321928094887]
+        expected = [
+            np.log2(np.mean([1, 2, 1])),
+            np.log2(np.mean([2, 3])),
+        ]
         self.AssertCase(X, binding_constant.start, mode_constant.normal, expected)
 
     def test_dataset_1(self):
@@ -28,10 +31,18 @@ class TestMaIdentifyingInformation(MACharacteristicsTest):
         dtype = np.longdouble
         expected = {
             binding_constant.start: {
-                mode_constant.normal: [0, 1, 1.5849625],
+                mode_constant.normal: [
+                    np.log2(np.mean([1])),
+                    np.log2(np.mean([2])),
+                    np.log2(np.mean([3])),
+                ],
             },
             binding_constant.end: {
-                mode_constant.normal: [1.5849625, 1, 0],
+                mode_constant.normal: [
+                    np.log2(np.mean([3])),
+                    np.log2(np.mean([2])),
+                    np.log2(np.mean([1])),
+                ],
             },
         }
         self.AssertBatch(masked_X, expected, dtype=dtype)
@@ -52,13 +63,33 @@ class TestMaIdentifyingInformation(MACharacteristicsTest):
         dtype = np.longdouble
         expected = {
             binding_constant.start: {
-                mode_constant.lossy: [1.5849, 1, 1],
-                mode_constant.normal: [1.3219, 1.22239, 1.5849],
-                mode_constant.redundant: [1.1375, 1.45943, 1.4594],
-                mode_constant.cycle: [1.3219, 1.7369, 1.73696],
+                mode_constant.lossy: [
+                    np.log2(np.mean([1, 4, 4])),
+                    np.log2(np.mean([1, 3])),
+                    np.log2(np.mean([3, 1])),
+                ],
+                mode_constant.normal: [
+                    np.log2(np.mean([1, 1, 4, 4])),
+                    np.log2(np.mean([3, 1, 3])),
+                    np.log2(np.mean([5, 3, 1])),
+                ],
+                mode_constant.redundant: [
+                    np.log2(np.mean([1, 1, 4, 4, 1])),
+                    np.log2(np.mean([3, 1, 3, 4])),
+                    np.log2(np.mean([5, 3, 1, 2])),
+                ],
+                mode_constant.cycle: [
+                    np.log2(np.mean([1, 1, 4, 4])),
+                    np.log2(np.mean([6, 1, 3])),
+                    np.log2(np.mean([6, 3, 1])),
+                ],
             },
             binding_constant.end: {
-                mode_constant.normal: [1.3210, 1.4150, 1],
+                mode_constant.normal: [
+                    np.log2(np.mean([1, 4, 4, 1])),
+                    np.log2(np.mean([1, 3, 4])),
+                    np.log2(np.mean([3, 1, 2])),
+                ],
             },
         }
         self.AssertBatch(masked_X, expected, dtype=dtype)
@@ -72,7 +103,7 @@ class TestMaIdentifyingInformation(MACharacteristicsTest):
         X = ["B", "B", "B", "A", "A", "B", "B", "A", "B", "B"]
         mask = [1, 1, 1, 0, 0, 1, 1, 0, 1, 1]
         masked_X = ma.masked_array(X, mask)
-        expected = [1.4594]
+        expected = [np.log2(np.mean([4, 1, 3, 3]))]
         self.AssertCase(
             masked_X, binding_constant.start, mode_constant.redundant, expected
         )

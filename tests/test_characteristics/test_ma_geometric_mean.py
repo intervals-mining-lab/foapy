@@ -13,14 +13,17 @@ class TestGeometricMean(MACharacteristicsTest):
     Test list for geometric_mean calculate
     """
 
-    epsilon = np.float_power(10, -4)
+    epsilon = np.float_power(10, -100)
 
     def target(self, X, dtype=None):
         return geometric_mean(X)
 
     def test_calculate_start_normal_geometric_mean(self):
         X = ma.masked_array([2, 4, 2, 2, 4])
-        expected = [1.259921, 2.44948974]
+        expected = [
+            np.float_power(np.prod([1, 2, 1]), 1 / 3),
+            np.float_power(np.prod([2, 3]), 1 / 2),
+        ]
         self.AssertCase(X, binding_constant.start, mode_constant.normal, expected)
 
     def test_dataset_1(self):
@@ -48,13 +51,33 @@ class TestGeometricMean(MACharacteristicsTest):
         dtype = np.longdouble
         expected = {
             binding_constant.start: {
-                mode_constant.lossy: [2.5198, 1.73205, 1.73205],
-                mode_constant.normal: [2, 2.08008382, 2.46621207],
-                mode_constant.redundant: [1.74110, 2.44948, 2.34034],
-                mode_constant.cycle: [2, 2.6207, 2.6207],
+                mode_constant.lossy: [
+                    np.float_power(np.prod([1, 4, 4]), 1 / 3),
+                    np.float_power(np.prod([1, 3]), 1 / 2),
+                    np.float_power(np.prod([3, 1]), 1 / 2),
+                ],
+                mode_constant.normal: [
+                    np.float_power(np.prod([1, 1, 4, 4]), 1 / 4),
+                    np.float_power(np.prod([3, 1, 3]), 1 / 3),
+                    np.float_power(np.prod([5, 3, 1]), 1 / 3),
+                ],
+                mode_constant.redundant: [
+                    np.float_power(np.prod([1, 1, 4, 4, 1]), 1 / 5),
+                    np.float_power(np.prod([3, 1, 3, 4]), 1 / 4),
+                    np.float_power(np.prod([5, 3, 1, 2]), 1 / 4),
+                ],
+                mode_constant.cycle: [
+                    np.float_power(np.prod([1, 1, 4, 4]), 1 / 4),
+                    np.float_power(np.prod([6, 1, 3]), 1 / 3),
+                    np.float_power(np.prod([6, 3, 1]), 1 / 3),
+                ],
             },
             binding_constant.end: {
-                mode_constant.normal: [2, 2.28942, 1.8171],
+                mode_constant.normal: [
+                    np.float_power(np.prod([1, 4, 4, 1]), 1 / 4),
+                    np.float_power(np.prod([1, 3, 4]), 1 / 3),
+                    np.float_power(np.prod([3, 1, 2]), 1 / 3),
+                ],
             },
         }
         self.AssertBatch(masked_X, expected, dtype=dtype)
@@ -63,7 +86,7 @@ class TestGeometricMean(MACharacteristicsTest):
         X = ["B", "B", "B", "A", "A", "B", "B", "A", "B", "B"]
         mask = [1, 1, 1, 0, 0, 1, 1, 0, 1, 1]
         masked_X = ma.masked_array(X, mask)
-        expected = [2.449489]
+        expected = [np.float_power(np.prod([4, 1, 3, 3]), 1 / 4)]
         self.AssertCase(
             masked_X, binding_constant.start, mode_constant.redundant, expected
         )

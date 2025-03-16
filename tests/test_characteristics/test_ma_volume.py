@@ -12,7 +12,7 @@ class TestMaVolume(MACharacteristicsTest):
     Test list for volume calculate
     """
 
-    epsilon = np.float_power(10, -4)
+    epsilon = np.float_power(10, -100)
 
     def target(self, X, dtype=None):
         return volume(X)

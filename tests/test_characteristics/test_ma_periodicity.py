@@ -12,14 +12,17 @@ class TestMaPeriodicity(MACharacteristicsTest):
     Test list for uniformity calculate
     """
 
-    epsilon = np.float_power(10, -4)
+    epsilon = np.float_power(10, -100)
 
     def target(self, X, dtype=None):
         return periodicity(X)
 
     def test_calculate_start_normal_periodicity(self):
         X = ma.masked_array([2, 4, 2, 2, 4])
-        expected = [0.94494079, 0.9797959]
+        expected = [
+            np.float_power(np.prod([1, 2, 1]), 1 / 3) / np.mean([1, 2, 1]),
+            np.float_power(np.prod([2, 3]), 1 / 2) / np.mean([2, 3]),
+        ]
         self.AssertCase(X, binding_constant.start, mode_constant.normal, expected)
 
     def test_dataset_1(self):
@@ -47,13 +50,39 @@ class TestMaPeriodicity(MACharacteristicsTest):
         dtype = np.longdouble
         expected = {
             binding_constant.start: {
-                mode_constant.lossy: [0.83994, 0.86602, 0.86602],
-                mode_constant.normal: [0.8, 0.8914645, 0.82207069],
-                mode_constant.redundant: [0.7914, 0.8907, 0.85103],
-                mode_constant.cycle: [0.8, 0.78622, 0.78622242],
+                mode_constant.lossy: [
+                    np.float_power(np.prod([1, 4, 4]), 1 / 3) / np.mean([1, 4, 4]),
+                    np.float_power(np.prod([1, 3]), 1 / 2) / np.mean([1, 3]),
+                    np.float_power(np.prod([3, 1]), 1 / 2) / np.mean([3, 1]),
+                ],
+                mode_constant.normal: [
+                    np.float_power(np.prod([1, 1, 4, 4]), 1 / 4)
+                    / np.mean([1, 1, 4, 4]),
+                    np.float_power(np.prod([3, 1, 3]), 1 / 3) / np.mean([3, 1, 3]),
+                    np.float_power(np.prod([5, 3, 1]), 1 / 3) / np.mean([5, 3, 1]),
+                ],
+                mode_constant.redundant: [
+                    np.float_power(np.prod([1, 1, 4, 4, 1]), 1 / 5)
+                    / np.mean([1, 1, 4, 4, 1]),  # noqa: E501 E261
+                    np.float_power(np.prod([3, 1, 3, 4]), 1 / 4)
+                    / np.mean([3, 1, 3, 4]),
+                    np.float_power(np.prod([5, 3, 1, 2]), 1 / 4)
+                    / np.mean([5, 3, 1, 2]),
+                ],
+                mode_constant.cycle: [
+                    np.float_power(np.prod([1, 1, 4, 4]), 1 / 4)
+                    / np.mean([1, 1, 4, 4]),
+                    np.float_power(np.prod([6, 1, 3]), 1 / 3) / np.mean([6, 1, 3]),
+                    np.float_power(np.prod([6, 3, 1]), 1 / 3) / np.mean([6, 3, 1]),
+                ],
             },
             binding_constant.end: {
-                mode_constant.normal: [0.8, 0.8585, 0.9085],
+                mode_constant.normal: [
+                    np.float_power(np.prod([1, 4, 4, 1]), 1 / 4)
+                    / np.mean([1, 4, 4, 1]),
+                    np.float_power(np.prod([1, 3, 4]), 1 / 3) / np.mean([1, 3, 4]),
+                    np.float_power(np.prod([3, 1, 2]), 1 / 3) / np.mean([3, 1, 2]),
+                ],
             },
         }
         self.AssertBatch(masked_X, expected, dtype=dtype)
@@ -62,7 +91,9 @@ class TestMaPeriodicity(MACharacteristicsTest):
         X = ["B", "B", "B", "A", "A", "B", "B", "A", "B", "B"]
         mask = [1, 1, 1, 0, 0, 1, 1, 0, 1, 1]
         masked_X = ma.masked_array(X, mask)
-        expected = [0.8907]
+        expected = [
+            np.float_power(np.prod([4, 1, 3, 3]), 1 / 4) / np.mean([4, 1, 3, 3]),
+        ]
         self.AssertCase(
             masked_X, binding_constant.start, mode_constant.redundant, expected
         )
