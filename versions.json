@@ -1,5 +1,10 @@
 [
   {
+    "version": "streamlit-frontpage",
+    "title": "streamlit-frontpage",
+    "aliases": []
+  },
+  {
     "version": "main",
     "title": "main",
     "aliases": []
