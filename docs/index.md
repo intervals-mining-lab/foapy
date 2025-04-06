@@ -11,7 +11,7 @@ FoaPy is a Python library for Formal Order Analysis of sequences.
 This approach defines an Order as a special sequence property and provides various characteristics that can be used to describe and analyze different aspects of it.
 <div id="playground-root"></div>
 <script type="module">
-  import { mount } from './assets/js/index.es.js';
+  import { mount } from './assets/js/playground.js';
   const code=`style = """
 .sortable-item{margin-bottom:5px;margin-top:5px;margin-left:0;margin-right:0;border-radius:0;border:1px solid#000;}
 .sortable-item:hover{margin-bottom:5px;margin-top:5px;margin-left:0;margin-right:0;border-radius:0;border:1px solid#000;}
