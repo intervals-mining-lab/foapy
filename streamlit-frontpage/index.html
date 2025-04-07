@@ -1403,79 +1403,77 @@
 <h1 id="foapy">FoaPy</h1>
 <p>FoaPy is a Python library for Formal Order Analysis of sequences.</p>
 <p>This approach defines an Order as a special sequence property and provides various characteristics that can be used to describe and analyze different aspects of it.</p>
-<div id="test"></div>
+<div id="playground-root"></div>
 <script type="module">
-  import { mount } from "https://cdn.jsdelivr.net/npm/@stlite/browser@0.80.4/build/stlite.js";
-  mount(
-    {
-      streamlitConfig: {
-        "theme.base": "dark",
-        "theme.primaryColor": "#00b4d8",
-        "theme.backgroundColor": "#03045e",
-        "theme.secondaryBackgroundColor": "#0077b6",
-        "theme.textColor": "#caf0f8",
-        "client.toolbarMode": "viewer",
-        "client.showErrorDetails": false,
-        "layout.width": "800px",
-        "layout.maxWidth": "800px"
-      },
-      // requirements: ["http://localhost:8000/assets/streamlit_sortables-0.3.1-py3-none-any.whl", "foapy"],
-      requirements: ["https://intervals-mining-lab.github.io/foapy/streamlit-frontpage/assets/streamlit_sortables-0.3.1-py3-none-any.whl", "foapy"],
-      entrypoint: "streamlit_app.py",
-      files: {
-        "streamlit_sortables-0.3.1-py3-none-any.whl": {
-          url: "./assets/streamlit_sortables-0.3.1-py3-none-any.whl",
-        },
-        "streamlit_app.py": `
+  import { mount } from './assets/js/playground.js';
+  const code=`style = """
+.sortable-item{margin-bottom:5px;margin-top:5px;margin-left:0;margin-right:0;border-radius:0;border:1px solid#000;}
+.sortable-item:hover{margin-bottom:5px;margin-top:5px;margin-left:0;margin-right:0;border-radius:0;border:1px solid#000;}
+"""
+
 import streamlit as st
 import foapy
+import pandas as pd
 from streamlit_sortables import sort_items
 
-style = """
-.sortable-item {
-    margin-bottom: 5px;
-    margin-top: 5px;
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 0;
-    border: 1px solid #000;
-}
-
-.sortable-item:hover {
-    margin-bottom: 5px;
-    margin-top: 5px;
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 0;
-    border: 1px solid #000;
-}
-"""
-
 toungle_twister = """
-Peter Piper picked a peck of pickled peppers
-A peck of pickled peppers Peter Piper picked
-If Peter Piper picked a peck of pickled peppers
-Where's the peck of pickled peppers Peter Piper picked
+Peter Piper picked a peck of pickled peppers \n
+A peck of pickled peppers Peter Piper picked \n
+If Peter Piper picked a peck of pickled peppers \n
+Where's the peck of pickled peppers Peter Piper picked \n
 """
 
-for i in toungle_twister.splitlines():
-  st.write(i)
+def sortSeq():
+  st.session_state['seq'] = sorted(st.session_state['seq'])
 
-source = toungle_twister.lower().split()
+def resetSeq():
+  st.session_state['seq'] = toungle_twister.lower().split()
+
+def saveToDataFrame(value):
+  st.session_state['gList'].append(value)
+
+if 'seq' not in st.session_state:
+  resetSeq()
+
+if 'gList' not in st.session_state:
+  st.session_state['gList'] = []
+
+source = st.session_state['seq']
+
+st.container(border=True).write(toungle_twister)
+
+left, right = st.columns(2, gap="small")
+left.button('Sort', on_click=sortSeq)
+right.button('Reset', on_click=resetSeq)
+
 sorted_source = sort_items(source, custom_style=style)
-
-intervals = foapy.intervals(sorted_source, foapy.binding.start, foapy.mode.cycle)
+intervals = foapy.intervals(
+  sorted_source, foapy.binding.start, foapy.mode.cycle
+)
 g = foapy.characteristics.average_remoteness(intervals)
-st.write(f'g: {g}')
-`,
+
+col1, col2, col3 = st.columns(3)
+col1.metric("Average remoteness (g)", g, border=True)
+
+st.button('Add to chart',
+  on_click=saveToDataFrame, args=(g, )
+)
+
+chart_data = pd.DataFrame(
+  st.session_state['gList'], columns=["g"]
+)
+
+st.scatter_chart(chart_data)
+
+`
+
+      // The library is available as ReactStlitePlayground
+      mount({
+        initialCode: code,
+        requirements: ["https://intervals-mining-lab.github.io/foapy/streamlit-frontpage/assets/streamlit_sortables-0.3.1-py3-none-any.whl", "foapy", "pandas"],
       },
-      streamlitConfig: {
-        // Streamlit configuration
-        "client.toolbarMode": "minimal",
-      },
-    },
-    document.getElementById("test"),
-  );
+      document.getElementById("playground-root")
+      );
 </script>
 
 
