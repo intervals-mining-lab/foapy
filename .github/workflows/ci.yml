@@ -101,11 +101,13 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: Finalize coverage report
-        uses: coverallsapp/github-action@main
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          parallel-finished: true
+      - run: |-
+          echo "Mock"
+      # - name: Finalize coverage report
+      #   uses: coverallsapp/github-action@main
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     parallel-finished: true
 
   benchmark:
     needs: finalize
