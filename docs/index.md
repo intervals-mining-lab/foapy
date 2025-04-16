@@ -12,21 +12,22 @@ This approach defines an Order as a special sequence property and provides vario
 <div id="playground-root"></div>
 <script type="module">
   import { mount } from './assets/js/playground.js';
-  const code=`style = """
-.sortable-item{margin-bottom:5px;margin-top:5px;margin-left:0;margin-right:0;border-radius:0;border:1px solid#000;}
-.sortable-item:hover{margin-bottom:5px;margin-top:5px;margin-left:0;margin-right:0;border-radius:0;border:1px solid#000;}
-"""
-
-import streamlit as st
+  const code=`import streamlit as st
 import foapy
 import pandas as pd
 from streamlit_sortables import sort_items
 
+st.subheader('Formal Order Analysis decomposes a sequence')
+
 toungle_twister = """
-Peter Piper picked a peck of pickled peppers \n
-A peck of pickled peppers Peter Piper picked \n
-If Peter Piper picked a peck of pickled peppers \n
-Where's the peck of pickled peppers Peter Piper picked \n
+Peter Piper picked a peck of pickled peppers
+
+A peck of pickled peppers Peter Piper picked
+
+If Peter Piper picked a peck of pickled peppers
+
+Where's the peck of pickled peppers Peter Piper picked
+
 """
 
 def sortSeq():
@@ -46,17 +47,27 @@ if 'gList' not in st.session_state:
 
 source = st.session_state['seq']
 
-st.container(border=True).write(toungle_twister)
+sequence = sort_items(source)
+order, alphabet = foapy.order(
+  sequence, return_alphabet=True
+)
+
+st.subheader('into')
+st.subheader('alphabet')
+sort_items(list(alphabet))
+st.subheader('and')
+st.subheader('order')
+sort_items([str(i) for i in order])
+
+intervals = foapy.intervals(
+  order, foapy.binding.start, foapy.mode.cycle
+)
+g = foapy.characteristics.average_remoteness(intervals)
+
 
 left, right = st.columns(2, gap="small")
 left.button('Sort', on_click=sortSeq)
 right.button('Reset', on_click=resetSeq)
-
-sorted_source = sort_items(source, custom_style=style)
-intervals = foapy.intervals(
-  sorted_source, foapy.binding.start, foapy.mode.cycle
-)
-g = foapy.characteristics.average_remoteness(intervals)
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Average remoteness (g)", g, border=True)
@@ -76,7 +87,7 @@ st.scatter_chart(chart_data)
       // The library is available as ReactStlitePlayground
       mount({
         initialCode: code,
-        requirements: ["https://intervals-mining-lab.github.io/foapy/streamlit-frontpage/assets/streamlit_sortables-0.3.1-py3-none-any.whl", "foapy", "pandas"],
+        requirements: ["https://intervals-mining-lab.github.io/foapy/streamlit-frontpage/assets/streamlit_sortables-0.3.1-py3-none-any.whl", "foapy", "pandas", "st-annotated-text"],
       },
       document.getElementById("playground-root")
       );
