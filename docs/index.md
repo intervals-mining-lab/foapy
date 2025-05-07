@@ -32,10 +32,11 @@ def set_theme():
 
 def source_widget(text):
     set_theme()
-    source = st.text_area("", text,
-      key="source")
-    source = source.replace("\\n", " ").lower()
-    separator = st.text_input("Split by", " ").lower()
+    with st.popover("__a sequence__", use_container_width=True):
+      source = st.text_area("", text,
+        key="source")
+      source = source.replace("\\n", " ").lower()
+      separator = st.text_input("Split by", " ").lower()
 
     source = source.split(separator) if separator else list(source)
 
@@ -61,10 +62,13 @@ def sort_modes_widget():
     with st.popover(":material/stat_3: Drag and drop to change the order or use this modes", use_container_width=True):
       st.segmented_control("", options=["alphabetically", "random"], key="sort_mode", format_func=capitalize, on_change=saveRandomOrderSeed)
 
-def ordered(value):
+def sort_widget(value):
   sequence = sort_items(value)
   sort_modes_widget()
   return sequence
+
+def sequence_widget(value):
+  return sort_widget(source_widget(value))
 
 def palette(seq):
   import numpy as np
@@ -76,7 +80,7 @@ def palette(seq):
     sns.color_palette(palette, power).as_hex()
   )
 
-def display(seq, colors):
+def show(seq, colors):
   from streamlit_extras.tags import tagger_component
   set_theme()
 
@@ -265,22 +269,19 @@ def draw_chart(item):
   const code=`import streamlit as st
 import foapy
 import numpy as np
-from helpers import array2image, palette, display
-from helpers import draw_chart, ordered, source_widget
+from helpers import array2image, palette, show
+from helpers import draw_chart, sequence_widget
 
 '''
 ### Formal Order Analysis decomposes
 '''
 
-with st.popover("__a sequence__", use_container_width=True):
-    source = source_widget(
+sequence = sequence_widget(
 """Peter Piper picked a peck of pickled peppers
 A peck of pickled peppers Peter Piper picked
 If Peter Piper picked a peck of pickled peppers
 Where's the peck of pickled peppers Peter Piper picked"""
 )
-
-sequence = ordered(source)
 
 'into'
 
@@ -292,10 +293,10 @@ orderCongeneric = foapy.ma.order(np.asarray(sequence))
 colors = palette(alphabet)
 
 '''### alphabet'''
-display(alphabet, colors)
+show(alphabet, colors)
 'and'
 '''### order'''
-display(order, colors)
+show(order, colors)
 
 '''
 ### and provides various order-sensitive measures
@@ -321,6 +322,9 @@ current = {
 }
 
 draw_chart(current)
+
+
+
 
 
 
