@@ -308,7 +308,7 @@ intervalsCongeneric = foapy.ma.intervals(
   orderCongeneric, foapy.binding.start, foapy.mode.cycle
 )
 
-current = {
+measures = {
   "img": array2image(order, colors),
   "order": np.array2string(order),
   "arithmetic mean": foapy.characteristics.arithmetic_mean(intervals),
@@ -321,7 +321,7 @@ current = {
   "uniformity": foapy.characteristics.uniformity(intervalsCongeneric),
 }
 
-draw_chart(current)
+draw_chart(measures)
 
 
 
