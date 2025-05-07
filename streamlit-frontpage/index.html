@@ -1416,6 +1416,12 @@ import foapy
 import numpy as np
 from streamlit_sortables import sort_items
 
+if 'characteristics' not in st.session_state:
+  st.session_state['characteristics'] = []
+
+if 'sort_mode' not in st.session_state:
+  st.session_state['sort_mode'] = None
+
 def add_theme():
   st.markdown('<link rel="stylesheet" href="assets/css/streamlit.css">', unsafe_allow_html=True)
 
@@ -1424,9 +1430,35 @@ def source_widget(text):
       key="source")
     source = source.replace("\\n", " ").lower()
     separator = st.text_input("Split by", " ").lower()
-    if separator:
-      return source.split(separator)
-    return list(source)
+
+    source = source.split(separator) if separator else list(source)
+
+    if st.session_state.sort_mode == "alphabetically":
+      source = sorted(source)
+    elif st.session_state.sort_mode == "random":
+      rng = np.random.default_rng(st.session_state['random_seed'])
+      source = list(rng.permutation(source))
+
+    return source
+
+def capitalize(value):
+  return value.title()
+
+def saveRandomOrderSeed():
+  if st.session_state.sort_mode == "random":
+    rng = np.random.default_rng()
+    seeds = rng.integers(2^32, size=1)
+    st.session_state['random_seed'] = seeds[0]
+
+def sort_modes_widget():
+  if len(st.session_state['characteristics']):
+    with st.popover(":material/stat_3: Drag and drop to change the order or use this modes", use_container_width=True):
+      st.segmented_control("", options=["alphabetically", "random"], key="sort_mode", format_func=capitalize, on_change=saveRandomOrderSeed)
+
+def sort(value):
+  sequence = sort_items(value)
+  sort_modes_widget()
+  return sequence
 
 def palette(seq):
   import numpy as np
@@ -1515,14 +1547,15 @@ column_config = {
 
 def store_data(item):
   import pandas as pd
-  if 'characteristics' not in st.session_state:
-      st.session_state['characteristics'] = []
 
   def form_callback(data):
+    first_time = len(st.session_state['characteristics']) == 0
     for item in st.session_state['characteristics']:
       if item["img"] == data["img"]:
         return
     st.session_state['characteristics'].append(data)
+    if first_time:
+      st.balloons()
 
   df = pd.DataFrame([item])
 
@@ -1540,10 +1573,15 @@ def store_data(item):
     type="secondary",
     use_container_width=True
   )
+  if len(st.session_state['characteristics']):
+    st.info("Now change the order and see the difference",  icon=":material/stat_3:")
 
 def display_data(current):
   import altair as alt
   import pandas as pd
+
+  if not st.session_state.characteristics:
+    return
 
   data = st.session_state.characteristics if st.session_state.characteristics else [current]
 
@@ -1620,9 +1658,9 @@ def form(item):
   const code=`import streamlit as st
 import foapy
 import numpy as np
-from streamlit_sortables import sort_items
-from helpers import form, palette, display
-from helpers import array2image, add_theme, source_widget
+from helpers import array2image, palette, add_theme
+from helpers import form, sort, display, source_widget
+
 
 add_theme()
 
@@ -1638,7 +1676,7 @@ If Peter Piper picked a peck of pickled peppers
 Where's the peck of pickled peppers Peter Piper picked"""
 )
 
-sequence = sort_items(source)
+sequence = sort(source)
 
 'into'
 
