@@ -82,14 +82,14 @@ jobs:
           -- -rFEx --durations 10 --color yes # pytest args
       - name: Generate coverage report
         run: pipx run coverage lcov -o coverage.lcov
-      - name: Upload partial coverage report
-        uses: coverallsapp/github-action@main
-        if: ${{ matrix.platform != 'macos-12' }}
-        with:
-          path-to-lcov: coverage.lcov
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: ${{ matrix.platform }} - py${{ matrix.python }}
-          parallel: true
+      # - name: Upload partial coverage report
+      #   uses: coverallsapp/github-action@main
+      #   if: ${{ matrix.platform != 'macos-12' }}
+      #   with:
+      #     path-to-lcov: coverage.lcov
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     flag-name: ${{ matrix.platform }} - py${{ matrix.python }}
+      #     parallel: true
       - name: Save coverage report
         if: ${{ matrix.platform == 'ubuntu-latest' && matrix.python == '3.11' }}
         uses: actions/upload-artifact@v4
@@ -101,11 +101,13 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: Finalize coverage report
-        uses: coverallsapp/github-action@main
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          parallel-finished: true
+      - run: |-
+          echo "Mock"
+      # - name: Finalize coverage report
+      #   uses: coverallsapp/github-action@main
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     parallel-finished: true
 
   benchmark:
     needs: finalize
