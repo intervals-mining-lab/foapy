@@ -10,6 +10,7 @@ h1 {
 </style>
 # FoaPy
 FoaPy is a library for conducting Formal Order Analysis on symbol sequences.
+
 It treats the concept of 'order' as a fundamental property of sequences and provides order-sensitive metrics to analyze, differentiate, and compare their structural patterns.
 
 <div id="playground-root"></div>
