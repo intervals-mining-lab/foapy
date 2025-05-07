@@ -1631,10 +1631,10 @@ def display_data(current):
 
     if x == "order":
       x_encode = alt.X(x, type="ordinal")
-      x_order_encode = alt.X(x, type="ordinal", axis=alt.Axis(labelExpr=""))
+      x_order_encode = alt.X(x, type="ordinal", axis=alt.Axis(labels=False))
     else:
       x_encode = x
-      x_order_encode = alt.X(x, type="ordinal", axis=alt.Axis(labelExpr=""))
+      x_order_encode = alt.X(x, type="ordinal", axis=alt.Axis(labels=False))
     c = (
        alt.Chart(df_chart)
        .mark_line(point = True)
@@ -1648,11 +1648,11 @@ def display_data(current):
        .transform_calculate(y, "-.4")
        .encode(
          x=x_order_encode,
-         y=alt.Y(y, type="quantitative", scale=alt.Scale(domain=[0, 10])),
+         y=alt.Y(y, type="quantitative", scale=alt.Scale(domain=[0, 10]), axis=alt.Axis(labels=False, title="")),
          url=alt.Url("img", type="nominal"),
          tooltip=alt.Tooltip("order"),
        )
-    )
+    ).resolve_scale(y='independent')
 
     st.altair_chart(c, use_container_width=True)
 
