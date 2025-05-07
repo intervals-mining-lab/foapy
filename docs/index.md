@@ -321,6 +321,10 @@ current = {
 }
 
 draw_chart(current)
+
+
+
+
 `
 
       // The library is available as ReactStlitePlayground
