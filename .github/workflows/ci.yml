@@ -111,7 +111,6 @@ jobs:
 
   benchmark:
     needs: finalize
-    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/create-github-app-token@v1
@@ -167,6 +166,7 @@ jobs:
 
       - name: Run benchmark
         id: benchmark
+        if: false
         env:
           QUICK_BENCHMARK: ${{ ! contains( github.event.pull_request.labels.*.name, 'benchmark') }}
         run: |-
@@ -220,7 +220,7 @@ jobs:
           path: benchmarks/html
 
   docs:
-    # needs: benchmark
+    needs: benchmark
     runs-on: ubuntu-latest
     env:
       GIT_COMMITTER_NAME: ci-bot
