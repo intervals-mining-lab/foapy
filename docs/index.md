@@ -181,7 +181,7 @@ def store_data(item):
     use_container_width=True
   )
   if len(st.session_state['characteristics']):
-    st.info("Now change the order and see the difference",  icon=":material/stat_3:")
+    st.info("Now change the order to see the difference",  icon=":material/stat_3:")
 
 def display_data(current):
   import altair as alt
