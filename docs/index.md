@@ -60,7 +60,7 @@ def sort_modes_widget():
     with st.popover(":material/stat_3: Drag and drop to change the order or use this modes", use_container_width=True):
       st.segmented_control("", options=["alphabetically", "random"], key="sort_mode", format_func=capitalize, on_change=saveRandomOrderSeed)
 
-def sort(value):
+def ordered(value):
   sequence = sort_items(value)
   sort_modes_widget()
   return sequence
@@ -264,7 +264,7 @@ def form(item):
 import foapy
 import numpy as np
 from helpers import array2image, palette, add_theme
-from helpers import form, sort, display, source_widget
+from helpers import form, ordered, display, source_widget
 
 
 add_theme()
@@ -281,7 +281,7 @@ If Peter Piper picked a peck of pickled peppers
 Where's the peck of pickled peppers Peter Piper picked"""
 )
 
-sequence = sort(source)
+sequence = ordered(source)
 
 'into'
 
