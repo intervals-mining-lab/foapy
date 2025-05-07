@@ -27,10 +27,11 @@ if 'characteristics' not in st.session_state:
 if 'sort_mode' not in st.session_state:
   st.session_state['sort_mode'] = None
 
-def add_theme():
+def set_theme():
   st.markdown('<link rel="stylesheet" href="assets/css/streamlit.css">', unsafe_allow_html=True)
 
 def source_widget(text):
+    set_theme()
     source = st.text_area("", text,
       key="source")
     source = source.replace("\\n", " ").lower()
@@ -77,6 +78,7 @@ def palette(seq):
 
 def display(seq, colors):
   from streamlit_extras.tags import tagger_component
+  set_theme()
 
   if len(seq) != len(colors):
     tagger_component("", seq, list(colors[seq]))
@@ -255,7 +257,7 @@ def display_data(current):
 
     st.altair_chart(c, use_container_width=True)
 
-def form(item):
+def draw_chart(item):
   store_data(item)
   display_data(item)
 `;
@@ -263,11 +265,8 @@ def form(item):
   const code=`import streamlit as st
 import foapy
 import numpy as np
-from helpers import array2image, palette, add_theme
-from helpers import form, ordered, display, source_widget
-
-
-add_theme()
+from helpers import array2image, palette, display
+from helpers import draw_chart, ordered, source_widget
 
 '''
 ### Formal Order Analysis decomposes
@@ -321,7 +320,7 @@ current = {
   "uniformity": foapy.characteristics.uniformity(intervalsCongeneric),
 }
 
-form(current)
+draw_chart(current)
 `
 
       // The library is available as ReactStlitePlayground
