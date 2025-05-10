@@ -18,7 +18,7 @@ where:
 
 ## Examples
 
-### Example 1: Binary Sequence
+### Binary Sequence
 A binary sequence `0110100110`
 
 represented as
@@ -27,7 +27,7 @@ $X = \{0,1\}$
 
 $S = <0,1,1,0,1,0,0,1,1,0>$
 
-### Example 2: Musical Chorus Sequence
+### Musical Chorus Sequence
 A musical chorus for `Jingle bell rock`
 
 ```
@@ -44,61 +44,20 @@ Now the jingle-hop has begun.
 $X = \{D, D6, D\#dim, A7, A9, Dmaj7, Em\}$
 $S = <D,Dmaj7,D6,D,D\#dim,Em,A7,Em,A7,Em,A7,Em,A9,A7>$
 
-### Example 3: DNA Sequence
+### DNA Sequence
 A DNA sequence `ATGCTAGCATGCTAGCATGCTAGC`
 
 $X = \{A,C,T,G\}$
 $S = <A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C>$
 
-### Example 4: English Text Sequence as char sequence
+### English Text Sequence as char sequence
 An English text sentence `the quick brown fox jumps over the lazy dog`
 
 $X = \{\ ,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z\}$
 $S = <t,h,e,\ ,q,u,i,c,k,\ ,b,r,o,w,n,\ ,f,o,x,\ ,j,u,m,p,s,\ ,o,v,e,r,\ ,t,h,e,\ ,l,a,z,y,\ ,d,o,g>$
 
-### Example 5: English Text Sequence as word sequence
+### English Text Sequence as word sequence
 An English text sentence `the quick brown fox jumps over the lazy dog`
 
 $X = \{\ ,quick, fox, brown, the, over, dog, fox, lazy\}$
 $S = <the,\ ,quick,\ ,brown,\ ,fox,\ ,jumps,\ ,over,\ ,the,\ ,lazy,\ ,dog>$
-
-
-# Alphabet
-
-An alphabet is an ordered set of unique elements of a sequence.
-The order of elements in the alphabet is defined by the order of their appearance in the original sequence.
-
-## Mathematical Definition
-
-The alphabet $A$ is defined as:
-$$A = \{a_1, a_2, ..., a_m\}$$
-
-Where:
-- $m$ is called a power of the alphabet
-- $a_i \neq a_j$ for all $i \neq j$ where $i,j \in [1..n]$
-- $a_i \in X$ for all $i \in \{1,2,...,m\}$
-- $X$ is an unordered set
-- $=$ is the equivalence relation defined on $X$
-
-
-## Examples
-
-### Example 1: Binary Sequence
-For sequence $S = <0,1,1,0,1,0,0,1,1,0>$
-The alphabet is $X = \{0,1\}$
-
-### Example 2: Musical Chorus
-For sequence $S = <D,Dmaj7,D6,D,D\#dim,Em,A7,Em,A7,Em,A7,Em,A9,A7>$
-The alphabet is $X = \{D,Dmaj7,D6,D\#dim,Em,A7,A9\}$
-
-### Example 3: DNA Sequence
-For sequence $S = <A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C>$
-The alphabet is $X = \{A,T,G,C\}$
-
-### Example 4: Character Sequence
-For sequence $S = <t,h,e,\ ,q,u,i,c,k,\ ,b,r,o,w,n,\ ,f,o,x,\ ,j,u,m,p,s,\ ,o,v,e,r,\ ,t,h,e,\ ,l,a,z,y,\ ,d,o,g>$
-The alphabet is $X = \{\ ,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z\}$
-
-### Example 5: Word Sequence
-For sequence $S = <the,\ ,quick,\ ,brown,\ ,fox,\ ,jumps,\ ,over,\ ,the,\ ,lazy,\ ,dog>$
-The alphabet is $X = \{\ ,quick, fox, brown, the, over, dog, fox, lazy\}$
