@@ -6,7 +6,7 @@ nav:
   - fundamentals/index.md
   - "Ideas":
     - fundamentals/ideas/index.md
-    - "Sequence as a whole object": fundamentals/ideas/sequence_as_an_system_object.md
+    - "Sequence as a whole object": fundamentals/ideas/sequence_as_a_whole_object.md
     - "Order as a sequence property": fundamentals/ideas/order_as_a_sequence_property.md
     - "Congeneric decomposition": fundamentals/ideas/congeneric_decomposition.md
     - "Interval as a basic information unit": fundamentals/ideas/interval_as_a_basic_information_unit.md
