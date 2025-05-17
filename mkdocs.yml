@@ -5,30 +5,30 @@ nav:
 - "Fundamentals":
   - fundamentals/index.md
   - "Ideas":
-    - fundamentals/ideas.md
+    - fundamentals/ideas/index.md
     - "Sequence as a whole object": fundamentals/ideas/sequence_as_an_system_object.md
     - "Order as a sequence property": fundamentals/ideas/order_as_a_sequence_property.md
     - "Congeneric decomposition": fundamentals/ideas/congeneric_decomposition.md
     - "Interval as a basic information unit": fundamentals/ideas/interval_as_a_basic_information_unit.md
     - "Geomteric mean as alternative to probability": fundamentals/ideas/geometric_mean_based_characteristics.md
   - "Objects":
-    - fundamentals/objects.md
-    - "Sequence": fundamentals/sequence.md
-    - "Alphabet": fundamentals/alphabet.md
-    - "Order": fundamentals/order.md
-    - "Interval": fundamentals/interval.md
-    - "Intervals Order": fundamentals/intervals_order.md
-    - "Intervals Tuple": fundamentals/intervals_tuple.md
-    - "Intervals Distribution": fundamentals/intervals_distribution.md
+    - fundamentals/objects/index.md
+    - "Sequence": fundamentals/objects/sequence.md
+    - "Alphabet": fundamentals/objects/alphabet.md
+    - "Order": fundamentals/objects/order.md
+    - "Interval": fundamentals/objects/interval.md
+    - "Intervals Order": fundamentals/objects/intervals_order.md
+    - "Intervals Tuple": fundamentals/objects/intervals_tuple.md
+    - "Intervals Distribution": fundamentals/objects/intervals_distribution.md
   - "Congeneric decomposition":
-    - fundamentals/congeneric_decomposition.md
-    - "Congeneric sequences": fundamentals/congeneric_sequences.md
-    - "Congeneric orders": fundamentals/congeneric_orders.md
-    - "Congeneric intervals order": fundamentals/congeneric_intervals_order.md
-    - "Congeneric intervals tuple": fundamentals/congeneric_intervals_tuple.md
-    - "Congeneric intervals distribution": fundamentals/congeneric_intervals_distribution.md
+    - fundamentals/congeneric_decomposition/index.md
+    - "Congeneric sequences": fundamentals/congeneric_decomposition/congeneric_sequences.md
+    - "Congeneric orders": fundamentals/congeneric_decomposition/congeneric_orders.md
+    - "Congeneric intervals order": fundamentals/congeneric_decomposition/congeneric_intervals_order.md
+    - "Congeneric intervals tuple": fundamentals/congeneric_decomposition/congeneric_intervals_tuple.md
+    - "Congeneric intervals distribution": fundamentals/congeneric_decomposition/congeneric_intervals_distribution.md
   - "Characteristics":
-    - fundamentals/characteristics.md
+    - fundamentals/characteristics/index.md
     - "Arithmetic mean": fundamentals/characteristics/arithmetic_mean.md
     - "Average remoteness": fundamentals/characteristics/average_remoteness.md
     - "Depth": fundamentals/characteristics/depth.md
@@ -39,13 +39,13 @@ nav:
     - "Uniformity": fundamentals/characteristics/uniformity.md
     - "Volume": fundamentals/characteristics/volume.md
   - "Connections to other mathfields":
-    - fundamentals/connections_to_other_mathfields.md
+    - fundamentals/connections_to_other_mathfields/index.md
     - "Information theory": fundamentals/connections_to_other_mathfields/information_theory.md
     - "Probability theory": fundamentals/connections_to_other_mathfields/probability_theory.md
     - "Statistics": fundamentals/connections_to_other_mathfields/statistics.md
     - "Combinatorics": fundamentals/connections_to_other_mathfields/combinatorics.md
   - "Applications":
-    - fundamentals/applications.md
+    - fundamentals/applications/index.md
     - "Text mining": fundamentals/applications/text_mining.md
     - "Bioinformatics": fundamentals/applications/bioinformatics.md
     - "Music analysis": fundamentals/applications/music_analysis.md
