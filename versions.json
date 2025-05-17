@@ -1,5 +1,10 @@
 [
   {
+    "version": "seq-as-whole-obj",
+    "title": "seq-as-whole-obj",
+    "aliases": []
+  },
+  {
     "version": "main",
     "title": "main",
     "aliases": []
