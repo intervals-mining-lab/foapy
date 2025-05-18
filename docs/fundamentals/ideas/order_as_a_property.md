@@ -27,8 +27,7 @@ Enumirate first apperance elements
 }
 
 .md-typeset td, .md-typeset th {
-    padding-left: 0.4em !important;
-    padding-right: 0.4em !important;
+    padding: 0.1em 0.4 !important;
     text-align: center !important;
 }
 </style>
