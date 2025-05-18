@@ -20,5 +20,5 @@ to the study and description of symbolic sequences originate from the set-theore
 
 Formal order analysis is based on the belief that a symbolic sequence can be considered as a holistic object
 with emergent properties, which corresponds to systems thinking. This method studies, in addition to the set
-of elements, the internal structure (composition, pattern) of the sequence, which determines its uniqueness
+of elements, the internal structure (pattern) of the sequence, which determines its uniqueness
 among others, including those consisting of the same set of elements.
