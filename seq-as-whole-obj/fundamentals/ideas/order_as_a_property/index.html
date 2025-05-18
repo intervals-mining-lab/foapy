@@ -2625,24 +2625,111 @@ The order is a sequence of natural numbers obtained from the original symbolic s
 of its elements with a natural number corresponding to the index of this element in the alphabet
 sorted by the appearance of the elements in the original sequence.</p>
 <p>The concept of an Order can be conveniently demonstrated using an example:</p>
-<p>Let's assume there is a symbolic sequence "INTELLIGENCE IS THE ABILITY TO ADAPT TO CHANGE"</p>
-<p>Highlight the first appearance of new elements "<strong>I</strong><strong>N</strong><strong>T</strong><strong>E</strong><strong>L</strong>LI<strong>G</strong>EN<strong>C</strong>E<strong>_</strong>I<strong>S</strong> T<strong>H</strong>E <strong>A</strong><strong>B</strong>ILIT<strong>Y</strong> T<strong>O</strong> A<strong>D</strong>A<strong>P</strong>T TO CHANGE"</p>
-<p>Enumirate first apperance elements</p>
-<style>
-.md-typeset table:not([class]) th {
-    min-width: 0 !important;
-}
-
-.md-typeset td:not([class]):not(:last-child), .md-typeset th:not([class]):not(:last-child) {
-    border-right: .05rem solid var(--md-typeset-table-color);
-}
-
-.md-typeset td, .md-typeset th {
-    padding: 0.1em 0.4 !important;
-    text-align: center !important;
-}
-</style>
-
+<p>Let's assume there is a symbolic sequence <code>INTELLIGENCE IS THE ABILITY TO ADAPT TO CHANGE</code></p>
+<p>Find and enumirate the first appearance of each element</p>
+<table>
+<thead>
+<tr>
+<th>I</th>
+<th>N</th>
+<th>T</th>
+<th>E</th>
+<th>L</th>
+<th>L</th>
+<th>I</th>
+<th>G</th>
+<th>E</th>
+<th>N</th>
+<th>C</th>
+<th>E</th>
+<th>&nbsp;&nbsp;</th>
+<th>I</th>
+<th>S</th>
+<th>&nbsp;&nbsp;</th>
+<th>T</th>
+<th>H</th>
+<th>E</th>
+<th>&nbsp;&nbsp;</th>
+<th>A</th>
+<th>B</th>
+<th>I</th>
+<th>L</th>
+<th>I</th>
+<th>T</th>
+<th>Y</th>
+<th>&nbsp;&nbsp;</th>
+<th>T</th>
+<th>O</th>
+<th>&nbsp;&nbsp;</th>
+<th>A</th>
+<th>D</th>
+<th>A</th>
+<th>P</th>
+<th>T</th>
+<th>&nbsp;&nbsp;</th>
+<th>T</th>
+<th>O</th>
+<th>&nbsp;&nbsp;</th>
+<th>C</th>
+<th>H</th>
+<th>A</th>
+<th>N</th>
+<th>G</th>
+<th>E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td></td>
+<td></td>
+<td>6</td>
+<td></td>
+<td></td>
+<td>7</td>
+<td></td>
+<td>8</td>
+<td></td>
+<td>9</td>
+<td></td>
+<td></td>
+<td>10</td>
+<td></td>
+<td></td>
+<td>11</td>
+<td>12</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>13</td>
+<td></td>
+<td></td>
+<td>14</td>
+<td></td>
+<td></td>
+<td>15</td>
+<td></td>
+<td>16</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The alphabet for the sequence would be sequence of unique elements:</p>
 <table>
 <thead>
 <tr>
@@ -2685,7 +2772,7 @@ sorted by the appearance of the elements in the original sequence.</p>
 </tr>
 </tbody>
 </table>
-<p>Determine the order of the sequence by replacing each element of the sequence with its corresponding index</p>
+<p>Determine the order of the sequence by replacing each element of the sequence with its corresponding alphabet index</p>
 <table>
 <thead>
 <tr>
@@ -2788,8 +2875,110 @@ sorted by the appearance of the elements in the original sequence.</p>
 </tr>
 </tbody>
 </table>
-<p>Despite the triviality of the concept Order, it allows to separate
-the elements and composition of a sequence, to determine the compositional equivalence of different sequences.</p>
+<p>The order of symbolic sequence <code>INTELLIGENCE IS THE ABILITY TO ADAPT TO CHANGE</code> is</p>
+<table>
+<thead>
+<tr>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>5</th>
+<th>1</th>
+<th>6</th>
+<th>4</th>
+<th>2</th>
+<th>7</th>
+<th>4</th>
+<th>8</th>
+<th>1</th>
+<th>9</th>
+<th>8</th>
+<th>3</th>
+<th>10</th>
+<th>4</th>
+<th>8</th>
+<th>11</th>
+<th>12</th>
+<th>1</th>
+<th>5</th>
+<th>1</th>
+<th>3</th>
+<th>13</th>
+<th>8</th>
+<th>3</th>
+<th>14</th>
+<th>8</th>
+<th>11</th>
+<th>15</th>
+<th>11</th>
+<th>16</th>
+<th>3</th>
+<th>8</th>
+<th>3</th>
+<th>14</th>
+<th>8</th>
+<th>7</th>
+<th>10</th>
+<th>11</th>
+<th>2</th>
+<th>6</th>
+<th>4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Despite the triviality of the concept Order, it allows us to separate the elements and composition of a sequence and to define the compositional equivalence of different sequences.</p>
 <p>Example of sequences with equals orders:</p>
 <p>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.16.0/ace.js"></script>
@@ -2823,6 +3012,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 </script>
 </p>
+<style>
+.md-typeset table:not([class]) th {
+    min-width: 0 !important;
+}
+
+.md-typeset td:not([class]):not(:last-child), .md-typeset th:not([class]):not(:last-child) {
+    border-right: .05rem solid var(--md-typeset-table-color);
+}
+
+.md-typeset td, .md-typeset th {
+    padding-left: 0.4em !important;
+    padding-right: 0.4em !important;
+    padding-top: 0.1em !important;
+    padding-bottom: 0.1em !important;
+    text-align: center !important;
+}
+</style>
 
 
 
