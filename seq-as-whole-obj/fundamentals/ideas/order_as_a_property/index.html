@@ -11,6 +11,10 @@
       
       
       
+        <link rel="prev" href="../sequence_as_a_whole_object/">
+      
+      
+        <link rel="next" href="../congeneric_decomposition/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>Order as a Property - FoaPy</title>
+        <title>Order as a property - FoaPy</title>
       
     
     
@@ -108,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Order as a Property
+              Order as a property
             
           </span>
         </div>
@@ -161,10 +165,12 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../../" class="md-tabs__link">
           
   
@@ -235,6 +241,8 @@
           
             
               
+                
+              
               <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -293,6 +301,8 @@
       
   
   
+    
+  
   
   
     
@@ -317,14 +327,17 @@
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           
@@ -340,13 +353,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Fundamentals
@@ -358,6 +371,8 @@
               
                 
   
+  
+    
   
   
   
@@ -384,11 +399,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
         
           
           
@@ -410,7 +425,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2">
             <span class="md-nav__icon md-icon"></span>
             Ideas
@@ -444,18 +459,28 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../order_as_a_sequence_property.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    Order as a sequence property
+    Order as a property
   </span>
   
 
       </a>
+      
     </li>
   
 
@@ -2564,7 +2589,9 @@
             
             
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -2593,7 +2620,210 @@
 
 
 <h1 id="order-as-a-property">Order as a Property</h1>
-<p>Coming soon</p>
+<p>Formal order analysis defines a special property of symbolic sequences - an Order.
+The order is a sequence of natural numbers obtained from the original symbolic sequence by replacing each
+of its elements with a natural number corresponding to the index of this element in the alphabet
+sorted by the appearance of the elements in the original sequence.</p>
+<p>The concept of an Order can be conveniently demonstrated using an example:</p>
+<p>Let's assume there is a symbolic sequence "INTELLIGENCE IS THE ABILITY TO ADAPT TO CHANGE"</p>
+<p>Highlight the first appearance of new elements "<strong>I</strong><strong>N</strong><strong>T</strong><strong>E</strong><strong>L</strong>LI<strong>G</strong>EN<strong>C</strong>E<strong>_</strong>I<strong>S</strong> T<strong>H</strong>E <strong>A</strong><strong>B</strong>ILIT<strong>Y</strong> T<strong>O</strong> A<strong>D</strong>A<strong>P</strong>T TO CHANGE"</p>
+<p>Enumirate first apperance elements</p>
+<style>
+.md-typeset table:not([class]) th {
+    min-width: 0 !important;
+}
+
+.md-typeset td:not([class]):not(:last-child), .md-typeset th:not([class]):not(:last-child) {
+    border-right: .05rem solid var(--md-typeset-table-color);
+}
+
+.md-typeset td, .md-typeset th {
+    padding-left: 0.4em !important;
+    padding-right: 0.4em !important;
+    text-align: center !important;
+}
+</style>
+
+<table>
+<thead>
+<tr>
+<th>I</th>
+<th>N</th>
+<th>T</th>
+<th>E</th>
+<th>L</th>
+<th>G</th>
+<th>C</th>
+<th></th>
+<th>S</th>
+<th>H</th>
+<th>A</th>
+<th>B</th>
+<th>Y</th>
+<th>O</th>
+<th>D</th>
+<th>P</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td>11</td>
+<td>12</td>
+<td>13</td>
+<td>14</td>
+<td>15</td>
+<td>16</td>
+</tr>
+</tbody>
+</table>
+<p>Determine the order of the sequence by replacing each element of the sequence with its corresponding index</p>
+<table>
+<thead>
+<tr>
+<th>I</th>
+<th>N</th>
+<th>T</th>
+<th>E</th>
+<th>L</th>
+<th>L</th>
+<th>I</th>
+<th>G</th>
+<th>E</th>
+<th>N</th>
+<th>C</th>
+<th>E</th>
+<th>&nbsp;&nbsp;</th>
+<th>I</th>
+<th>S</th>
+<th>&nbsp;&nbsp;</th>
+<th>T</th>
+<th>H</th>
+<th>E</th>
+<th>&nbsp;&nbsp;</th>
+<th>A</th>
+<th>B</th>
+<th>I</th>
+<th>L</th>
+<th>I</th>
+<th>T</th>
+<th>Y</th>
+<th>&nbsp;&nbsp;</th>
+<th>T</th>
+<th>O</th>
+<th>&nbsp;&nbsp;</th>
+<th>A</th>
+<th>D</th>
+<th>A</th>
+<th>P</th>
+<th>T</th>
+<th>&nbsp;&nbsp;</th>
+<th>T</th>
+<th>O</th>
+<th>&nbsp;&nbsp;</th>
+<th>C</th>
+<th>H</th>
+<th>A</th>
+<th>N</th>
+<th>G</th>
+<th>E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>5</td>
+<td>1</td>
+<td>6</td>
+<td>4</td>
+<td>2</td>
+<td>7</td>
+<td>4</td>
+<td>8</td>
+<td>1</td>
+<td>9</td>
+<td>8</td>
+<td>3</td>
+<td>10</td>
+<td>4</td>
+<td>8</td>
+<td>11</td>
+<td>12</td>
+<td>1</td>
+<td>5</td>
+<td>1</td>
+<td>3</td>
+<td>13</td>
+<td>8</td>
+<td>3</td>
+<td>14</td>
+<td>8</td>
+<td>11</td>
+<td>15</td>
+<td>11</td>
+<td>16</td>
+<td>3</td>
+<td>8</td>
+<td>3</td>
+<td>14</td>
+<td>8</td>
+<td>7</td>
+<td>10</td>
+<td>11</td>
+<td>2</td>
+<td>6</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<p>Despite the triviality of the concept Order, it allows to separate
+the elements and composition of a sequence, to determine the compositional equivalence of different sequences.</p>
+<p>Example of sequences with equals orders:</p>
+<p>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.16.0/ace.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<link title="light" rel="alternate stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs-themes@1.0.0/tomorrow.min.css" disabled="disabled">
+<link title="dark" rel="alternate stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs-themes@1.0.0/tomorrow-night-blue.min.css" disabled="disabled">
+
+<div class="pyodide">
+<div class="pyodide-editor-bar">
+<span class="pyodide-bar-item">Editor (session: default)</span><span id="exec-1--run" title="Run: press Ctrl-Enter" class="pyodide-bar-item pyodide-clickable"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7Z"></path></svg></span> Run</span>
+</div>
+<div><pre id="exec-1--editor" class="pyodide-editor">import foapy
+import numpy as np
+
+seqA = list("INTELLIGENCE IS THE ABILITY TO ADAPT TO CHANGE")
+seqB = list("1N73LL1G3NC321527H324B1L17Y27024D4P72702CH4NG3")
+orderA = foapy.order(seqA)
+orderB = foapy.order(seqB)
+print("SeqA and SeqB orders are equals -", np.all(orderA == orderB))
+print("Order =", orderA)</pre></div>
+<div class="pyodide-editor-bar">
+<span class="pyodide-bar-item">Output</span><span id="exec-1--clear" class="pyodide-bar-item pyodide-clickable"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.14 3c-.51 0-1.02.2-1.41.59L2.59 14.73c-.78.77-.78 2.04 0 2.83L5.03 20h7.66l8.72-8.73c.79-.77.79-2.04 0-2.83l-4.85-4.85c-.39-.39-.91-.59-1.42-.59M17 18l-2 2h7v-2"></path></svg></span> Clear</span>
+</div>
+<pre><code id="exec-1--output" class="pyodide-output"></code></pre>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+    setupPyodide('exec-1--', install=['foapy', 'numpy'], themeLight='tomorrow', themeDark='tomorrow_night', session='default');
+});
+</script>
+</p>
 
 
 
@@ -2601,8 +2831,13 @@
 
 
 
+  
+  
 
 
+
+
+  
 
 
 
