@@ -14,7 +14,12 @@ The concept of an Order can be conveniently demonstrated using an example:
 
 Let's assume there is a symbolic sequence "INTELLIGENCE IS THE ABILITY TO ADAPT TO CHANGE"
 
-Highlight the first appearance of new elements "**I****N****T****E****L**LI**G**EN**C**E**_**I**S** T**H**E **A****B**ILIT**Y** T**O** A**D**A**P**T TO CHANGE"
+Highlight the first appearance of new elements
+
+| I | N | T | E | L | L | I | G | E | N | C | E | &nbsp;&nbsp;  | I | S |  &nbsp;&nbsp;  | T | H | E |  &nbsp;&nbsp;  | A | B | I | L | I | T | Y |  &nbsp;&nbsp;  | T | O |  &nbsp;&nbsp;  | A | D | A | P | T |  &nbsp;&nbsp;  | T | O |  &nbsp;&nbsp;  | C | H | A | N | G | E |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 2 | 3 | 4 | 5 |   |   | 6 |   |   | 7 |   | 8 |   | 9 |   |   | 10 |   |   | 11 | 12 |   |   |   |   | 13 |   |   | 14 |   |   | 15 |   | 16 |   |   |   |   |   |   |   |   |   |   |   |
+
 
 Enumirate first apperance elements
 <style>
