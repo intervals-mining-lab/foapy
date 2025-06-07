@@ -7,12 +7,12 @@ hide:
 Intervals serve as a fundamental unit of information by measuring the number of different
 items, events, or symbols that occur between reseated in a sequence.
 
-The intervals for symbol `A` in the following sequence would be `[3, 3, 1, 1, 1, 2, 1]`
+The intervals for symbol `A` in the following sequence would be `[3, 3, 1, 1, 2, 1, 1]`
 ``` mermaid
 block-beta
   columns 12
   s1["A"] s2["C"] s3["T"] s4["A"] s5["C"] s6["G"] s7["A"] s8["A"] s9["A"] s10["T"] s11["A"] s12["A"]
-  i1["3"]:3 i2["3"]:3 i3["1"]:1 i4["1"]:1 i5["1"]:1 i6["2"]:2 i7["1"]:1
+  i1["3"]:3 i2["3"]:3 i3["1"]:1 i4["1"]:1 i5["2"]:2 i6["1"]:1 i7["1"]:1
 ```
 
 In general, a sequence does not necessarily end with the same symbol it begins with.
@@ -35,7 +35,7 @@ Moreover, the average interval length is the inverse of the probability of an ev
 \hline
  & \Delta_a  & P \\
 \hline
-A & \frac{3 + 3 + 1 + 1 + 1 + 2 + 1}{7} = \frac{12}{7} \approx 1.7142; & \frac{7}{12} = (\frac{12}{7})^{-1} = \Delta_a^{-1} \\
+A & \frac{3 + 3 + 1 + 1 + 2 + 1 + 1}{7} = \frac{12}{7} \approx 1.7142; & \frac{7}{12} = (\frac{12}{7})^{-1} = \Delta_a^{-1} \\
 \hline
 C & \frac{3 + 9}{2} = \frac{12}{2} = 6 & \frac{2}{12} = \frac{1}{6} = 6^{-1} = \Delta_a^{-1} \\
 \hline
