@@ -26,8 +26,14 @@ Building on this idea, Former Order Analysis explored the potential of reinterpr
 Instead of relying solely on symbol frequencies, it reformulated the measures using the geometric mean instead of probability (arithmetic mean).
 
 \begin{array}{|c|c|}
-H= - \sum_{i=1}^{m}{p_j \log_2{p_j}} = \frac {1} {n} * \sum_{j=1}^{m}{(n_j * \log_2 \sum_{i=1}^{n_j} \frac{\Delta_{ij}}{n_j})} &  \\
+\hline
+Entropy & Average \ remoteness \\
+\hline
+H= - \sum_{i=j}^{m}{p_j \log_2{p_j}} = \frac {1} {n} * \sum_{j=1}^{m}{n_j \log_2 \Delta_{a_j}} & g = \frac{1}{n} * \sum_{i=j}^{m}{n_j \log_2{\Delta_{g_j}}} = \frac{1}{n} * \sum_{i=j}^{m}{\sum_{i=1}^{n_j} \log_2 \Delta_{ij}} \\
+\hline
 \end{array}
+
+*Example of Shennon's Entropy analog - Average remoteness. Where $n$ - seqeunce length, $m$ - alphabet power, $n_j$ - count of element $j$-th, $\Delta_{a_j}$ - average mean of intervals for element $j$-th, $\Delta_{g_j}$ - geometric mean of intervals for element $j$-th, $\Delta_{ij}$ - $i$-th interval for element $j$-thg*
 
 These measures are fine-grained and sensitive to the temporal or spatial order of elements in a sequence.
 Allows us to distinguish between sequences of symbols that may have identical probability distributions
