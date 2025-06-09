@@ -29,7 +29,7 @@ Instead of relying solely on symbol frequencies, it reformulated the measures us
 \hline
 Entropy & Average \ remoteness \\
 \hline
-H= - \sum_{i=j}^{m}{p_j \log_2{p_j}} = \frac {1} {n} * \sum_{j=1}^{m}{n_j \log_2 \Delta_{a_j}} & g = \frac{1}{n} * \sum_{i=j}^{m}{n_j \log_2{\Delta_{g_j}}} = \frac{1}{n} * \sum_{i=j}^{m}{\sum_{i=1}^{n_j} \log_2 \Delta_{ij}} \\
+H= - \sum_{j=1}^{m}{p_j \log_2{p_j}} = \frac {1} {n} * \sum_{j=1}^{m}{n_j \log_2 \Delta_{a_j}} & g = \frac{1}{n} * \sum_{j=1}^{m}{n_j \log_2{\Delta_{g_j}}} = \frac{1}{n} * \sum_{j=1}^{m}{\sum_{i=1}^{n_j} \log_2 \Delta_{ij}} \\
 \hline
 \end{array}
 
