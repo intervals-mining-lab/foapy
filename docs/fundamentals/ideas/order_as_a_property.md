@@ -7,7 +7,7 @@ hide:
 Formal order analysis defines a special property of symbolic sequences - an Order.
 The order is a sequence of natural numbers obtained from the original symbolic sequence by replacing each
 of its elements with a natural number corresponding to the index of this element in the alphabet
-sorted by the appearance of the elements in the original sequence.
+sorted by the appearance of the elements in the original sequence [1, 2, 3].
 
 The concept of an Order can be conveniently demonstrated using an example:
 
@@ -74,3 +74,9 @@ print("Order =", orderA)
     text-align: center !important;
 }
 </style>
+
+# References:
+
+1. Curtis Cooper and Robert E. Kennedy. 1992. Patterns, automata, and Stirling numbers of the second kind. Math. Comput. Educ. 26, 2 (Spring 1992), 120–124.
+2. Gumenjuk A., Kostyshin A., Simonova S. An approach to the research of the structure of linguistic and musical texts. Glottometrics. 2002. № 3. P. 61–89.
+3. (In russian) V.I. Arnold, Complexity of finite sequences of zeros and ones and geometry of finite function spaces: el. print, 2005. http://mms.mathnet.ru/meetings/2005/arnold.pdf
