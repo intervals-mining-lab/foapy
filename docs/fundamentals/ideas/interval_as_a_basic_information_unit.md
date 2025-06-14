@@ -13,6 +13,11 @@ block-beta
   columns 12
   s1["A"] s2["C"] s3["T"] s4["A"] s5["C"] s6["G"] s7["A"] s8["A"] s9["A"] s10["T"] s11["A"] s12["A"]
   i1["3"]:3 i2["3"]:3 i3["1"]:1 i4["1"]:1 i5["2"]:2 i6["1"]:1 i7["1"]:1
+
+  classDef c3 fill:#2ca02c,color:#fff;
+  classDef c4 fill:#98df8a,color:#000;
+  class s1,s4,s7,s8,s9,s11,s12 c3
+  class i1,i2,i3,i4,i5,i6,i7 c4
 ```
 
 In general, a sequence does not necessarily end with the same symbol it begins with.
@@ -26,6 +31,11 @@ block-beta
   s1["A"] s2["C"] s3["T"] s4["A"] s5["C"] s6["G"] s7["A"] s8["A"] s9["A"] s10["T"] s11["A"] s12["A"] space s13["T"] s14["C"]
   space i1["3"]:3 i2["9"]:10
   s12 --> s13
+
+  classDef c3 fill:#2ca02c,color:#fff;
+  classDef c4 fill:#98df8a,color:#000;
+  class s2,s5,s14 c3
+  class i1,i2 c4
 ```
 
 The circular pattern preserves both the statistical properties and the order of elements.
