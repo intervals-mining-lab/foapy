@@ -1,38 +1,70 @@
 # Alphabet
 
-An alphabet is an ordered set of unique elements of a sequence.
-The order of elements in the alphabet is defined by the order of their appearance in the original sequence.
+An alphabet is a m-tuple of unique elements.
 
 ## Mathematical Definition
 
-The alphabet $A$ is defined as an ordered set:
-$$A = \{a_1, a_2, ..., a_m\}$$
+Let $X$ is [_Carrier set_](./carrier_set.md#Mathematical Definition)
+
+The _alphabet_ $A$ is a m-tuple with a uniqueness constraint, can be defined:
+
+$$A = <a_1, a_2, ..., a_m>,$$
+
+$$\forall i,j \in \{1, ... ,m\}, i \neq j \implies a_i \neq a_j,$$
+
+$$\forall i \in \{1, ... ,m\} \exists a_i \in X $$
 
 Where:
-- $m$ is called a power of the alphabet
-- $a_i \neq a_j$ for all $i \neq j$ where $i,j \in [1..n]$
-- $a_i \in X$ for all $i \in \{1,2,...,m\}$
-- $X$ is an unordered set
-- $=$ is the equivalence relation defined on $X$
+
+- $m := |A|$ is called _power_ of the alphabet, $m \in N$
+- $a_i$​ is called the $i$-th _element_ (or coordinate) of the alphabet.
 
 ## Examples
 
 ### Binary Sequence
-For sequence $S = <0,1,1,0,1,0,0,1,1,0>$
-The alphabet is $A = \{0,1\}$
+A binary sequence `0110100110`
 
-### Musical Chorus
-For sequence $S = <D,Dmaj7,D6,D,D\#dim,Em,A7,Em,A7,Em,A7,Em,A9,A7>$
-The alphabet is $A = \{D,Dmaj7,D6,D,D\#dim,Em,A7,A9\}$
+represented as
+
+$X = \{0,1\}$
+
+$A = <0,1>$
+
+### Musical Chorus Sequence
+A musical chorus for `Jingle bell rock`
+
+```
+D                Dmaj7        D6
+Jingle-bell, Jingle-bell, Jingle-bell Rock.
+  D                D#dim
+Jingle-bell swing and
+ Em           A7     Em               A7            Em A7
+Jingle-bell ring. Snowin' and blowin' up bushels of fun.
+Em  A9                  A7
+Now the jingle-hop has begun.
+```
+
+$X = \{A7, A9, D, D6, Dmaj7, D\#dim, Em\}$
+
+$A = <D,Dmaj7,D6,D,D\#dim,Em,A7,A9>$
 
 ### DNA Sequence
-For sequence $S = <A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C>$
-The alphabet is $A = \{A,T,G,C\}$
+A DNA sequence `ATGCTAGCATGCTAGCATGCTAGC`
 
-### Character Sequence
-For sequence $S = <t,h,e,\ ,q,u,i,c,k,\ ,b,r,o,w,n,\ ,f,o,x,\ ,j,u,m,p,s,\ ,o,v,e,r,\ ,t,h,e,\ ,l,a,z,y,\ ,d,o,g>$
-The alphabet is $A = \{t,h,e,\ ,q,u,i,c,k,b,r,o,w,n,f,x,j,m,p,s,v,l,a,z,y,d,g}$
+$X = \{A,C,T,G\}$
 
-### Word Sequence
-For sequence $S = <the,\ ,quick,\ ,brown,\ ,fox,\ ,jumps,\ ,over,\ ,the,\ ,lazy,\ ,dog>$
-The alphabet is $A = \{the,\ ,quick, brown, fox, , jumps, over, lazy, dog\}$
+$A = <A,T,G,C>$
+
+### English Text Sequence as char sequence
+An English text sentence `the quick brown fox jumps over the lazy dog`
+
+$X = \{\ ,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z\}$
+
+$A = <t,h,e,\ ,q,u,i,c,k,b,r,o,w,n,f,x,j,m,p,s,v,l,a,z,y,d,g>$
+
+### English Text Sequence as word sequence
+An English text sentence `the quick brown fox jumps over the lazy dog`
+
+$X = \{\ ,quick, fox, brown, the, over, dog, fox, lazy\}$
+
+$A = <the,\ ,quick,brown,fox,jumps,over,lazy,dog>$

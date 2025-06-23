@@ -13,10 +13,13 @@ nav:
     - "Geomteric mean as alternative to probability": fundamentals/ideas/geometric_mean_based_characteristics.md
   - "Objects":
     - fundamentals/objects/index.md
+    - "Carrier set": fundamentals/objects/carrier_set.md
     - "Sequence": fundamentals/objects/sequence.md
     - "Alphabet": fundamentals/objects/alphabet.md
     - "Order": fundamentals/objects/order.md
     - "Interval": fundamentals/objects/interval.md
+    - "Binding": fundamentals/objects/binding.md
+    - "Mode": fundamentals/objects/mode.md
     - "Intervals Order": fundamentals/objects/intervals_order.md
     - "Intervals Tuple": fundamentals/objects/intervals_tuple.md
     - "Intervals Distribution": fundamentals/objects/intervals_distribution.md
