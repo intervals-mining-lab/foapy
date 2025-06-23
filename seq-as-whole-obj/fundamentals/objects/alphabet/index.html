@@ -572,6 +572,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -611,6 +617,27 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../carrier_set/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Carrier set
+  </span>
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -715,9 +742,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#musical-chorus" class="md-nav__link">
+  <a href="#musical-chorus-sequence" class="md-nav__link">
     <span class="md-ellipsis">
-      Musical Chorus
+      Musical Chorus Sequence
     </span>
   </a>
   
@@ -733,18 +760,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#character-sequence" class="md-nav__link">
+  <a href="#english-text-sequence-as-char-sequence" class="md-nav__link">
     <span class="md-ellipsis">
-      Character Sequence
+      English Text Sequence as char sequence
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#word-sequence" class="md-nav__link">
+  <a href="#english-text-sequence-as-word-sequence" class="md-nav__link">
     <span class="md-ellipsis">
-      Word Sequence
+      English Text Sequence as word sequence
     </span>
   </a>
   
@@ -797,6 +824,48 @@
   
   <span class="md-ellipsis">
     Interval
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Binding
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mode
   </span>
   
 
@@ -2733,9 +2802,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#musical-chorus" class="md-nav__link">
+  <a href="#musical-chorus-sequence" class="md-nav__link">
     <span class="md-ellipsis">
-      Musical Chorus
+      Musical Chorus Sequence
     </span>
   </a>
   
@@ -2751,18 +2820,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#character-sequence" class="md-nav__link">
+  <a href="#english-text-sequence-as-char-sequence" class="md-nav__link">
     <span class="md-ellipsis">
-      Character Sequence
+      English Text Sequence as char sequence
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#word-sequence" class="md-nav__link">
+  <a href="#english-text-sequence-as-word-sequence" class="md-nav__link">
     <span class="md-ellipsis">
-      Word Sequence
+      English Text Sequence as word sequence
     </span>
   </a>
   
@@ -2792,33 +2861,49 @@
 
 
 <h1 id="alphabet">Alphabet</h1>
-<p>An alphabet is an ordered set of unique elements of a sequence.
-The order of elements in the alphabet is defined by the order of their appearance in the original sequence.</p>
+<p>An alphabet is a m-tuple of unique elements.</p>
 <h2 id="mathematical-definition">Mathematical Definition</h2>
-<p>The alphabet <span class="arithmatex">\(A\)</span> is defined as an ordered set:
-<span class="arithmatex">\(<span class="arithmatex">\(A = \{a_1, a_2, ..., a_m\}\)</span>\)</span></p>
-<p>Where:
-- <span class="arithmatex">\(m\)</span> is called a power of the alphabet
-- <span class="arithmatex">\(a_i \neq a_j\)</span> for all <span class="arithmatex">\(i \neq j\)</span> where <span class="arithmatex">\(i,j \in [1..n]\)</span>
-- <span class="arithmatex">\(a_i \in X\)</span> for all <span class="arithmatex">\(i \in \{1,2,...,m\}\)</span>
-- <span class="arithmatex">\(X\)</span> is an unordered set
-- <span class="arithmatex">\(=\)</span> is the equivalence relation defined on <span class="arithmatex">\(X\)</span></p>
+<p>Let <span class="arithmatex">\(X\)</span> is <a href="../carrier_set/#Mathematical Definition"><em>Carrier set</em></a></p>
+<p>The <em>alphabet</em> <span class="arithmatex">\(A\)</span> is a m-tuple with a uniqueness constraint, can be defined:</p>
+<div class="arithmatex">\[A = &lt;a_1, a_2, ..., a_m&gt;,\]</div>
+<div class="arithmatex">\[\forall i,j \in \{1, ... ,m\}, i \neq j \implies a_i \neq a_j,\]</div>
+<div class="arithmatex">\[\forall i \in \{1, ... ,m\} \exists a_i \in X \]</div>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(m := |A|\)</span> is called <em>power</em> of the alphabet, <span class="arithmatex">\(m \in N\)</span></li>
+<li><span class="arithmatex">\(a_i\)</span>​ is called the <span class="arithmatex">\(i\)</span>-th <em>element</em> (or coordinate) of the alphabet.</li>
+</ul>
 <h2 id="examples">Examples</h2>
 <h3 id="binary-sequence">Binary Sequence</h3>
-<p>For sequence <span class="arithmatex">\(S = &lt;0,1,1,0,1,0,0,1,1,0&gt;\)</span>
-The alphabet is <span class="arithmatex">\(A = \{0,1\}\)</span></p>
-<h3 id="musical-chorus">Musical Chorus</h3>
-<p>For sequence <span class="arithmatex">\(S = &lt;D,Dmaj7,D6,D,D\#dim,Em,A7,Em,A7,Em,A7,Em,A9,A7&gt;\)</span>
-The alphabet is <span class="arithmatex">\(A = \{D,Dmaj7,D6,D,D\#dim,Em,A7,A9\}\)</span></p>
+<p>A binary sequence <code>0110100110</code></p>
+<p>represented as</p>
+<p><span class="arithmatex">\(X = \{0,1\}\)</span></p>
+<p><span class="arithmatex">\(A = &lt;0,1&gt;\)</span></p>
+<h3 id="musical-chorus-sequence">Musical Chorus Sequence</h3>
+<p>A musical chorus for <code>Jingle bell rock</code></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>D                Dmaj7        D6
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Jingle-bell, Jingle-bell, Jingle-bell Rock.
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  D                D#dim
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Jingle-bell swing and
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a> Em           A7     Em               A7            Em A7
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Jingle-bell ring. Snowin&#39; and blowin&#39; up bushels of fun.
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Em  A9                  A7
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Now the jingle-hop has begun.
+</span></code></pre></div>
+<p><span class="arithmatex">\(X = \{A7, A9, D, D6, Dmaj7, D\#dim, Em\}\)</span></p>
+<p><span class="arithmatex">\(A = &lt;D,Dmaj7,D6,D,D\#dim,Em,A7,A9&gt;\)</span></p>
 <h3 id="dna-sequence">DNA Sequence</h3>
-<p>For sequence <span class="arithmatex">\(S = &lt;A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C&gt;\)</span>
-The alphabet is <span class="arithmatex">\(A = \{A,T,G,C\}\)</span></p>
-<h3 id="character-sequence">Character Sequence</h3>
-<p>For sequence <span class="arithmatex">\(S = &lt;t,h,e,\ ,q,u,i,c,k,\ ,b,r,o,w,n,\ ,f,o,x,\ ,j,u,m,p,s,\ ,o,v,e,r,\ ,t,h,e,\ ,l,a,z,y,\ ,d,o,g&gt;\)</span>
-The alphabet is <span class="arithmatex">\(A = \{t,h,e,\ ,q,u,i,c,k,b,r,o,w,n,f,x,j,m,p,s,v,l,a,z,y,d,g}\)</span></p>
-<h3 id="word-sequence">Word Sequence</h3>
-<p>For sequence <span class="arithmatex">\(S = &lt;the,\ ,quick,\ ,brown,\ ,fox,\ ,jumps,\ ,over,\ ,the,\ ,lazy,\ ,dog&gt;\)</span>
-The alphabet is <span class="arithmatex">\(A = \{the,\ ,quick, brown, fox, , jumps, over, lazy, dog\}\)</span></p>
+<p>A DNA sequence <code>ATGCTAGCATGCTAGCATGCTAGC</code></p>
+<p><span class="arithmatex">\(X = \{A,C,T,G\}\)</span></p>
+<p><span class="arithmatex">\(A = &lt;A,T,G,C&gt;\)</span></p>
+<h3 id="english-text-sequence-as-char-sequence">English Text Sequence as char sequence</h3>
+<p>An English text sentence <code>the quick brown fox jumps over the lazy dog</code></p>
+<p><span class="arithmatex">\(X = \{\ ,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z\}\)</span></p>
+<p><span class="arithmatex">\(A = &lt;t,h,e,\ ,q,u,i,c,k,b,r,o,w,n,f,x,j,m,p,s,v,l,a,z,y,d,g&gt;\)</span></p>
+<h3 id="english-text-sequence-as-word-sequence">English Text Sequence as word sequence</h3>
+<p>An English text sentence <code>the quick brown fox jumps over the lazy dog</code></p>
+<p><span class="arithmatex">\(X = \{\ ,quick, fox, brown, the, over, dog, fox, lazy\}\)</span></p>
+<p><span class="arithmatex">\(A = &lt;the,\ ,quick,brown,fox,jumps,over,lazy,dog&gt;\)</span></p>
 
 
 

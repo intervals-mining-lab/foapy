@@ -11,7 +11,7 @@
       
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../carrier_set/">
       
       
         <link rel="next" href="../alphabet/">
@@ -572,6 +572,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -611,6 +617,27 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../carrier_set/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Carrier set
+  </span>
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -797,6 +824,48 @@
   
   <span class="md-ellipsis">
     Interval
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Binding
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mode
   </span>
   
 
@@ -2793,16 +2862,16 @@
 
 <h1 id="sequence">Sequence</h1>
 <p>A sequence is a fundamental concept in formal order analysis that is defined as a finite, enumerated collection of objects in which repetitions are allowed and order matters.
-It is the basic object for analyzing patterns, relationships, and structural properties in ordered data.</p>
+This is the basic object for analyzing patterns, relationships, and structural properties in ordered data.</p>
 <h2 id="mathematical-definition">Mathematical Definition</h2>
-<p>A sequence <span class="arithmatex">\(S\)</span> is as tuple:</p>
-<div class="arithmatex">\[S = &lt;s_1, s_2, ..., s_n&gt;\]</div>
+<p>Let <span class="arithmatex">\(X\)</span> is <a href="../carrier_set/#Mathematical Definition"><em>Carrier set</em></a></p>
+<p>A <em>sequence</em> <span class="arithmatex">\(S\)</span> is a n-tuple defined as</p>
+<div class="arithmatex">\[S = &lt;s_1, s_2, ..., s_n&gt;,\]</div>
+<div class="arithmatex">\[\forall i \in \{1, ..., n\} \exists s_i \in X\]</div>
 <p>where:</p>
 <ul>
-<li><span class="arithmatex">\(n\)</span> is the length of the sequence</li>
-<li><span class="arithmatex">\(s_i \in X\)</span> for all <span class="arithmatex">\(i \in \{1,2,...,n\}\)</span></li>
-<li><span class="arithmatex">\(X\)</span> is an unordered set</li>
-<li><span class="arithmatex">\(=\)</span> is the equivalence relation defined on <span class="arithmatex">\(X\)</span></li>
+<li><span class="arithmatex">\(s_i\)</span>​ is called the <span class="arithmatex">\(i\)</span>-th <em>element</em> (or coordinate) of the sequence.</li>
+<li><span class="arithmatex">\(n := |S|\)</span> is <em>length</em>, <span class="arithmatex">\(n \in N\)</span></li>
 </ul>
 <h2 id="examples">Examples</h2>
 <h3 id="binary-sequence">Binary Sequence</h3>
@@ -2821,20 +2890,20 @@ It is the basic object for analyzing patterns, relationships, and structural pro
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Em  A9                  A7
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Now the jingle-hop has begun.
 </span></code></pre></div>
-<p><span class="arithmatex">\(X = \{D, D6, D\#dim, A7, A9, Dmaj7, Em\}\)</span>
-<span class="arithmatex">\(S = &lt;D,Dmaj7,D6,D,D\#dim,Em,A7,Em,A7,Em,A7,Em,A9,A7&gt;\)</span></p>
+<p><span class="arithmatex">\(X = \{A7, A9, D, D6, Dmaj7, D\#dim, Em\}\)</span></p>
+<p><span class="arithmatex">\(S = &lt;D,Dmaj7,D6,D,D\#dim,Em,A7,Em,A7,Em,A7,Em,A9,A7&gt;\)</span></p>
 <h3 id="dna-sequence">DNA Sequence</h3>
 <p>A DNA sequence <code>ATGCTAGCATGCTAGCATGCTAGC</code></p>
-<p><span class="arithmatex">\(X = \{A,C,T,G\}\)</span>
-<span class="arithmatex">\(S = &lt;A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C&gt;\)</span></p>
+<p><span class="arithmatex">\(X = \{A,C,T,G\}\)</span></p>
+<p><span class="arithmatex">\(S = &lt;A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C,A,T,G,C,T,A,G,C&gt;\)</span></p>
 <h3 id="english-text-sequence-as-char-sequence">English Text Sequence as char sequence</h3>
 <p>An English text sentence <code>the quick brown fox jumps over the lazy dog</code></p>
-<p><span class="arithmatex">\(X = \{\ ,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z\}\)</span>
-<span class="arithmatex">\(S = &lt;t,h,e,\ ,q,u,i,c,k,\ ,b,r,o,w,n,\ ,f,o,x,\ ,j,u,m,p,s,\ ,o,v,e,r,\ ,t,h,e,\ ,l,a,z,y,\ ,d,o,g&gt;\)</span></p>
+<p><span class="arithmatex">\(X = \{\ ,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z\}\)</span></p>
+<p><span class="arithmatex">\(S = &lt;t,h,e,\ ,q,u,i,c,k,\ ,b,r,o,w,n,\ ,f,o,x,\ ,j,u,m,p,s,\ ,o,v,e,r,\ ,t,h,e,\ ,l,a,z,y,\ ,d,o,g&gt;\)</span></p>
 <h3 id="english-text-sequence-as-word-sequence">English Text Sequence as word sequence</h3>
 <p>An English text sentence <code>the quick brown fox jumps over the lazy dog</code></p>
-<p><span class="arithmatex">\(X = \{\ ,quick, fox, brown, the, over, dog, fox, lazy\}\)</span>
-<span class="arithmatex">\(S = &lt;the,\ ,quick,\ ,brown,\ ,fox,\ ,jumps,\ ,over,\ ,the,\ ,lazy,\ ,dog&gt;\)</span></p>
+<p><span class="arithmatex">\(X = \{\ ,quick, fox, brown, the, over, dog, fox, lazy\}\)</span></p>
+<p><span class="arithmatex">\(S = &lt;the,\ ,quick,\ ,brown,\ ,fox,\ ,jumps,\ ,over,\ ,the,\ ,lazy,\ ,dog&gt;\)</span></p>
 
 
 

@@ -14,7 +14,7 @@
         <link rel="prev" href="../order/">
       
       
-        <link rel="next" href="../intervals_order/">
+        <link rel="next" href="../binding/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -572,6 +572,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -611,6 +617,27 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../carrier_set/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Carrier set
+  </span>
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -692,6 +719,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Interval
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -702,6 +740,85 @@
 
       </a>
       
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Definition
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Binding
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mode
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -2599,6 +2716,32 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Definition
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2616,7 +2759,20 @@
 
 
 <h1 id="interval">Interval</h1>
-<p>Coming soon</p>
+<p>An <strong>interval</strong> is a natural number representing the count of different elements that occur between reseated elements in a sequence + 1.</p>
+<h2 id="mathematical-definition">Mathematical Definition</h2>
+<p>Let <em>interval</em> <span class="arithmatex">\(i \in N \backslash  \{0\}\)</span></p>
+<h2 id="examples">Examples</h2>
+<p>The intervals for symbol <code>A</code> in the following sequence would be <code>2 + 1 = 3</code>
+<pre class="mermaid"><code>block-beta
+  columns 6
+  s1["A"] s2["C"] s3["T"] s4["A"] s5["C"] s6["G"]
+  i1["3"]:3
+
+  classDef c3 fill:#2ca02c,color:#fff;
+  classDef c4 fill:#98df8a,color:#000;
+  class s1,s4,s7,s8,s9,s11,s12 c3
+  class i1,i2,i3,i4,i5,i6,i7 c4</code></pre></p>
 
 
 
