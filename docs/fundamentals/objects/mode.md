@@ -256,4 +256,4 @@ def index(x):
   return x - (high - low + 1) * ((x - low) // (high - low + 1))
 ``` -->
 
-$$\forall S \exists S_{cycle} : Z \longrightarrow X \implies S_{cycle}(i) = S\Big( i - n \times \big( ( i - 1) \ mod\ n \big) \Big)$$
+$$\forall S \exists S_{cycle} : Z \longrightarrow X \implies S_{cycle}(i) = S\big( i - n \times \lfloor ( i - 1) \div n \rfloor \big)$$
