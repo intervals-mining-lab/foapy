@@ -1,6 +1,23 @@
 # Mode
 
-The _mode_ determines the method for computing intervals between occurrences of equivalent elements.
+The _mode_ determines the method for computing intervals for the first or last appearances of the element.
+There is uncertainty about how to count the interval for the first appearance with $start$ binding and
+for the last appearance with $end$ binding, as there is no previous or following element appearance in the corresponding cases.
+
+This interval can be skipped or counted to some `imaginary` appearance of the element.
+
+The skipping option leads to cons that make reverse operation impossible in the general case -
+count of intervals less than the count of elements in the initial sequence,
+and/or intervals n-tuple contains `empty` elements. That's why the _mode_ does not have any value
+corresponding to any kind of skip first/last interval.
+<!-- TODO: Add lossy definition and reference -->
+You can use `lossy` function defined in [Interval Order to Interval Tuple](./intervals_distribution.md) section to exclude the first/last interval that would be equivalent to the skipping approach.
+
+The _mode_ defines values that assume different ways of `imaginary` elements - $boundary$ and $cycle$.
+The `imaginary` elements can be used as  `previous` or `following` reference for any element of the sequence,
+but do not produce any interval for their own. However, you can use `redundant` function defined in
+<!-- TODO: Add redundant definition and reference -->
+[Interval Order to Interval Tuple](./intervals_distribution.md) section to count intervals produced for `imaginary` elements.
 
 ## Boundary
 
@@ -218,79 +235,35 @@ At the same time, the $boundary$ mode looks like related to tree structures and 
 
 ## Mathematical Definition
 
-=== "Current"
+Let $X$ is [_Carrier set_](./carrier_set.md#Mathematical Definition)
 
-    Let $X$ is [_Carrier set_](./carrier_set.md#Mathematical Definition)
+Let $S$ is [_Sequence_](./sequence.md#Mathematical Definition)  length of $n$ described as function $S : \{1,...,n\} \longrightarrow X$
 
-    Let $S$ is [_Sequence_](./sequence.md#Mathematical Definition)  length of $n$ described as function $S : \{1,...,n\} \longrightarrow X$
+Let $\bot \notin X$ is a special _sentinel_ value.
 
-    Let $B = \{Start, End\}$ is [_Binding_](./binding.md#Mathematical Definition)
+Define $X_\bot = X \cup \{ \bot \}$ set
 
+$\forall S \ \exists \ S_{\bot} : J \longrightarrow X_{\bot} \Big| \{1,...,n\} \subset J$
 
-    Define
+Define $Mode : S \longrightarrow S_{\bot}$
 
-    Let $IO$ is n-tuple described as function $IO : \{1,...,n\} \longrightarrow \{1,...,n\}$
+$\forall S \exists S_{boundary} : \{0,...,n+1\} \longrightarrow X_\bot$
 
-    $$Mode : B \times \big\{ S \big\}  \longrightarrow \big\{ IO \big\}, $$
-
-    $$if \ \exists \ Mode^{-1} : B \times \big\{ IO \big\} \longrightarrow \big\{\{1,...,n\} \longrightarrow \{1,...,m\}\big\}\ that$$
-
-    $$\forall i \in \{1,...,n\} \ m=Mode(b),\ m^{-1}=Mode(b)^{-1}, m(S)(i) = m(m^{-1}(m(S)))(i)$$
+Define $boundary : S \longrightarrow S_{boundary}, boundary(s)(i) = \Biggl\{ \begin{array}{l} Inf, i=0 \\ s(i),  1 \le i \le n \\ Sup, i = n+1\end{array}$
 
 
-    $$Boundary(b, S)(i) = \big| i - b(S)(i) \big|$$
-
-    $$Boundary^{-1}(b, IO)(i) = \Bigg\{\begin{array}{l}  b^{-1}(IO(i) - i)(i) & if \ exists \\ 0 & otherwise   \end{array}$$
-
-    $$S_{cycled} : \big\{ \{1,...,n\} \longrightarrow X \big\} \longrightarrow \big\{ \{1,...,3 \times n\} \longrightarrow X \big\}$$
-
-    $$S_{cycled}(S)(i) = S\big( i - n \times \lfloor ( i - 1) \div n \rfloor \big)$$
-
-    $$Cycle(b, S)(i) = Boundary(b,\ S_{cycled}(S))(i+n)$$
-
-    <!-- ```python
-    low = 0
-    high = 6
-
-    def index(x):
-      return x - (high - low + 1) * ((x - low) // (high - low + 1))
-    ``` -->
-
-    Define _mode_ $M = \{ Boundary, Cycle \}  \subset \{ Mode \}$
+$\forall S \exists S_{cycle} : Z \longrightarrow X_\bot$
 
 
+<!-- ```python
+low = 0
+high = 6
 
-=== "New"
-
-    Let $P$ is [_Interator positions_](./binding.md#Mathematical Definition) length of $n$ described as function $P : \{1,...,n\} \longrightarrow \{0,...,n+1\}$
-
-    Define
-
-    <!-- Let $IO$ is n-tuple described as function $IO : \{1,...,n\} \longrightarrow \{1,...,n\}$ -->
-
-    $$Mode : \big\{ \{1,...,n\} \longrightarrow \{0,...,n+1\} \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\}, $$
-
-    $$if \ \exists \ Mode^{-1} : \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\} \longrightarrow \big\{\{1,...,n\} \longrightarrow \{0,...,n+1\}\big\}\ that$$
-
-    $$\forall i \in \{1,...,n\} \ Mode(P)(i) = Mode(Mode^{-1}(Mode(P)))(i)$$
+def index(x):
+  return x - (high - low + 1) * ((x - low) // (high - low + 1))
+``` -->
 
 
-    $$Boundary(P)(i) = \big| i - P(i) \big|$$
+Define $cycle : S \longrightarrow S_{cycle}, cycle(s)(i) = s\big( i - n \times \lfloor ( i - 1) \div n \rfloor \big) \Big| n = |s|$
 
-    $$Boundary^{-1}(IO)(i) = \Bigg\{\begin{array}{l} i - IO(i) & \ \exists \ j \in \{1,...,n\} | IO(j) = j \\ i + IO(i) & \ \exists \ j \in \{1,...,n\} |  IO(j) = n + 1  - j \end{array}$$
-
-    $$P_{cycled} : \big\{ \{1,...,n\} \longrightarrow \{0,...,n+1\} \big\} \longrightarrow \big\{ \{1,...,3 \times n\} \longrightarrow \{0,...,n+1\} \big\}$$
-
-    $$P_{cycled}(S)(i) = \Bigg\{\begin{array}{l} P(i) &, \lfloor ( i - 1) \div n \rfloor = 0 \\ ??? &, \lfloor ( i - 1) \div n \rfloor = 1 \end{array}$$
-
-    $$Cycle(b, S)(i) = Boundary(b,\ S_{cycled}(S))(i+n)$$
-
-    <!-- ```python
-    low = 0
-    high = 6
-
-    def index(x):
-      return x - (high - low + 1) * ((x - low) // (high - low + 1))
-    ``` -->
-
-    Define _mode_ $M = \{ Boundary, Cycle \}  \subset \{ Mode \}$
+Define _mode_ $M = \{ boundary, cycle \}$

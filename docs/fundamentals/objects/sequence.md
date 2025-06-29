@@ -18,6 +18,12 @@ where:
 - $s_i$​ is called the $i$-th _element_ (or coordinate) of the sequence.
 - $n := |S|$ is _length_, $n \in N$
 
+The _sequence_ $S$ can be also defined as a function
+
+$$S : \{1, ..., n\} \longrightarrow X,$$
+
+$$S(i)=s_i | i \in \{1, ..., n\}$$
+
 ## Examples
 
 ### Binary Sequence

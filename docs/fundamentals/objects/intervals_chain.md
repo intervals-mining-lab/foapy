@@ -1,24 +1,35 @@
-# Intervals Order
+# Intervals Chain
 
 An _intervals order_ is an n-tuple of natural numbers that represents the distance between equal elements in a sequence.
 
 ## Mathematical Definition
 
-Let $B = \{start, end\}$ is binding and $M = \{ terminate, cycle\}$ is mode;
+Let $B = \{Start, End\}$ is [_Binding_](./binding.md#Mathematical Definition)
 
-Let $J = \{1, ..., n\} \subset N$
+Let $M = \{Boundary, Cycle\}$ is [_Mode_](./mode.md#Mathematical Definition)
 
-Define `follow` $F : B \times M \times J^n \longrightarrow (J)^n$
+Define
 
-Define `traceble` $T : B \times M \times J^n \longrightarrow (\{True, False\})^n$
+$$Follow : B \times M \times \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{0,...,n+1\} \big\}$$
 
-N-tuple of natual numbers $IO = \{ <io_1, io_2, ..., io_n> | \forall i \in J \exists o_i \in J \}$
+$$Traceble : B \times M \times \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{0, 1\} \big\}$$
 
-are called `interval order` if and only if
+<!-- Define `follow` $F : B \times M \times J^n \longrightarrow (J)^n$
 
-$$
- \exists (b, m) \in B \times M \Bigg| \forall i \Big( T(b, m, io_i) \land \forall j \ne i \big( F(b, m, io_i) \neq  F(b, m, io_j) \big) \Big)
-$$
+Define `traceble` $T : B \times M \times J^n \longrightarrow (\{True, False\})^n$ -->
+
+N-tuple of natual numbers
+
+$$IO = \{ <io_1, io_2, ..., io_n> | \forall j \in \{1,...,n\} \exists io_j \in \{1,...,n\} \}$$
+
+is called `Intervals chain` if and only if
+
+$$\exists (b, m) \in B \times M$$
+
+that makes these statments true:
+
+1. Tracebility criteria - $\forall i \ Traceble(b, m)(IO)(i)$
+2. Chained criteria - $f=Follow(b,m)(IO),\ \forall i \forall j \ne i  | f(i) \neq f(j) \lor f(i) \in \{0, n+1\}$
 
 
 

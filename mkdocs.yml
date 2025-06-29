@@ -20,7 +20,7 @@ nav:
     - "Interval": fundamentals/objects/interval.md
     - "Binding": fundamentals/objects/binding.md
     - "Mode": fundamentals/objects/mode.md
-    - "Intervals Order": fundamentals/objects/intervals_order.md
+    - "Intervals Chain": fundamentals/objects/intervals_chain.md
     - "Intervals Tuple": fundamentals/objects/intervals_tuple.md
     - "Intervals Distribution": fundamentals/objects/intervals_distribution.md
   - "Congeneric decomposition":
