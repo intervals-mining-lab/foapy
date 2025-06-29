@@ -50,20 +50,23 @@ The definition of all possible `binding` is made in the interests of a consisten
 
     $$Binding : M \times \big\{S\big\} \longrightarrow \big\{R \big\},$$
 
+    Define $mo \subset Mo = \{ Boudary, Cycle \}$
 
     $$if \ \exists \ Binding^{-1} : M \times \big\{R \big\} \longrightarrow \big\{\{1,...,n\} \longrightarrow \{1,...,m\}\big\}\ that$$
 
     $$\forall i \in \{1,...,n\} Binding(mo, R)(i) = Binding(mo, R)( Binding^{-1}(mo, Binding(mo, R)) )(i)$$
 
-    $$Start(S)(i) = \Bigg\{\begin{array}{l} max \big\{j \in \{1,..., i - 1\}\big|S(j) = S(i) \big\} & if \ exists \\ m(S, i) & otherwise   \end{array}$$
+    $$Start(S)(i) = \Bigg\{\begin{array}{l} max \big\{j \in \{1,..., i - 1\}\big|S(j) = S(i) \big\} & if \ exists \\ Mode(S, i, mo) & otherwise   \end{array}$$
 
     $$Start^{-1}(P)(i) = \Bigg\{\begin{array}{l} \big|<j \in \{1,...i\} | P(j)=0 >\big| & if \ P(i)=0 \\ Start^{-1}(P, P(i)) & otherwise   \end{array}$$
 
-    $$End(S)(i) = \Bigg\{\begin{array}{l} min \big\{j \in \{i+1,..., n\}\big|S(j) = S(i) \big\} & if \ exists \\ n+1 & \ otherwise   \end{array}$$
+    $$End(S)(i) = \Bigg\{\begin{array}{l} min \big\{j \in \{i+1,..., n\}\big|S(j) = S(i) \big\} & if \ exists \\ Mode(S, i, mo) & \ otherwise   \end{array}$$
 
     $$End^{-1}(P)(i) = \Bigg\{\begin{array}{l} \big|<j \in \{i,...n\} | P(j)=n+1 >\big| & if \ P(i)=n+1 \\ End^{-1}(P, P(i)) & otherwise   \end{array}$$
 
     Define $B = \{ Start, End \} \subset \{ Binding \}$
+
+    $$Mode(S,i,b) = \begin{cases} 0, & (mo = Boundary) \land \nexists (j \in (1, i-1) | S(j) = S(i)) \\ n+1, & (mo = Boundary) \land \nexists (j \in (i+1, n) | S(j) = S(i)) \\ max \big\{j \in (i, n) | S(j) = S(i)\big\}, & (mo = Cycle) \land \nexists (j \in (1, i-1) | S(j) = S(i)) \\ min \big\{j \in (1, i) | S(j) = S(i) \big\}, & (mo = Cycle) \land \nexists (j \in (i+1, n) | S(j) = S(i)) \end{cases} $$
 
 
 <!-- $$if \ \exists \ Binding^{-1} : \big\{P \big\} \longrightarrow \big\{\{1,...,n\} \longrightarrow \{1,...,m\}\big\}\ that$$
