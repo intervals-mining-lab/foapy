@@ -2790,13 +2790,15 @@ The definition of all possible <code>binding</code> is made in the interests of 
 <div class="arithmatex">\[Boundary(S)(i) = \Bigg\{\begin{array}{l} 0  &amp; if \nonempty \big\{j \in \{1,..., i - 1\}\big|S(j) = S(i) \big\} \\ n+1  &amp; if \nonempty \big\{j \in \{i,..., n\}\big|S(j) = S(i) \big\}
  \end{array}\]</div>
 <div class="arithmatex">\[Binding : M \times \big\{S\big\} \longrightarrow \big\{R \big\},\]</div>
+<p>Define <span class="arithmatex">\(mo \subset Mo = \{ Boudary, Cycle \}\)</span></p>
 <div class="arithmatex">\[if \ \exists \ Binding^{-1} : M \times \big\{R \big\} \longrightarrow \big\{\{1,...,n\} \longrightarrow \{1,...,m\}\big\}\ that\]</div>
 <div class="arithmatex">\[\forall i \in \{1,...,n\} Binding(mo, R)(i) = Binding(mo, R)( Binding^{-1}(mo, Binding(mo, R)) )(i)\]</div>
-<div class="arithmatex">\[Start(S)(i) = \Bigg\{\begin{array}{l} max \big\{j \in \{1,..., i - 1\}\big|S(j) = S(i) \big\} &amp; if \ exists \\ m(S, i) &amp; otherwise   \end{array}\]</div>
+<div class="arithmatex">\[Start(S)(i) = \Bigg\{\begin{array}{l} max \big\{j \in \{1,..., i - 1\}\big|S(j) = S(i) \big\} &amp; if \ exists \\ Mode(S, i, mo) &amp; otherwise   \end{array}\]</div>
 <div class="arithmatex">\[Start^{-1}(P)(i) = \Bigg\{\begin{array}{l} \big|&lt;j \in \{1,...i\} | P(j)=0 &gt;\big| &amp; if \ P(i)=0 \\ Start^{-1}(P, P(i)) &amp; otherwise   \end{array}\]</div>
-<div class="arithmatex">\[End(S)(i) = \Bigg\{\begin{array}{l} min \big\{j \in \{i+1,..., n\}\big|S(j) = S(i) \big\} &amp; if \ exists \\ n+1 &amp; \ otherwise   \end{array}\]</div>
+<div class="arithmatex">\[End(S)(i) = \Bigg\{\begin{array}{l} min \big\{j \in \{i+1,..., n\}\big|S(j) = S(i) \big\} &amp; if \ exists \\ Mode(S, i, mo) &amp; \ otherwise   \end{array}\]</div>
 <div class="arithmatex">\[End^{-1}(P)(i) = \Bigg\{\begin{array}{l} \big|&lt;j \in \{i,...n\} | P(j)=n+1 &gt;\big| &amp; if \ P(i)=n+1 \\ End^{-1}(P, P(i)) &amp; otherwise   \end{array}\]</div>
 <p>Define <span class="arithmatex">\(B = \{ Start, End \} \subset \{ Binding \}\)</span></p>
+<div class="arithmatex">\[Mode(S,i,b) = \begin{cases} 0, &amp; (mo = Boundary) \land \nexists (j \in (1, i-1) | S(j) = S(i)) \\ n+1, &amp; (mo = Boundary) \land \nexists (j \in (i+1, n) | S(j) = S(i)) \\ max \big\{j \in (i, n) | S(j) = S(i)\big\}, &amp; (mo = Cycle) \land \nexists (j \in (1, i-1) | S(j) = S(i)) \\ min \big\{j \in (1, i) | S(j) = S(i) \big\}, &amp; (mo = Cycle) \land \nexists (j \in (i+1, n) | S(j) = S(i)) \end{cases} \]</div>
 </div>
 </div>
 </div>
