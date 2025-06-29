@@ -22,7 +22,7 @@
     
     
       
-        <title>Intervals Order - FoaPy</title>
+        <title>Intervals Chain - FoaPy</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#intervals-order" class="md-skip">
+        <a href="#intervals-chain" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Intervals Order
+              Intervals Chain
             
           </span>
         </div>
@@ -786,7 +786,7 @@
           
   
   <span class="md-ellipsis">
-    Intervals Order
+    Intervals Chain
   </span>
   
 
@@ -797,7 +797,7 @@
         
   
   <span class="md-ellipsis">
-    Intervals Order
+    Intervals Chain
   </span>
   
 
@@ -2914,18 +2914,27 @@
   
 
 
-<h1 id="intervals-order">Intervals Order</h1>
+<h1 id="intervals-chain">Intervals Chain</h1>
 <p>An <em>intervals order</em> is an n-tuple of natural numbers that represents the distance between equal elements in a sequence.</p>
 <h2 id="mathematical-definition">Mathematical Definition</h2>
-<p>Let <span class="arithmatex">\(B = \{start, end\}\)</span> is binding and <span class="arithmatex">\(M = \{ terminate, cycle\}\)</span> is mode;</p>
-<p>Let <span class="arithmatex">\(J = \{1, ..., n\} \subset N\)</span></p>
-<p>Define <code>follow</code> <span class="arithmatex">\(F : B \times M \times J^n \longrightarrow (J)^n\)</span></p>
-<p>Define <code>traceble</code> <span class="arithmatex">\(T : B \times M \times J^n \longrightarrow (\{True, False\})^n\)</span></p>
-<p>N-tuple of natual numbers <span class="arithmatex">\(IO = \{ &lt;io_1, io_2, ..., io_n&gt; | \forall i \in J \exists o_i \in J \}\)</span></p>
-<p>are called <code>interval order</code> if and only if</p>
-<div class="arithmatex">\[
- \exists (b, m) \in B \times M \Bigg| \forall i \Big( T(b, m, io_i) \land \forall j \ne i \big( F(b, m, io_i) \neq  F(b, m, io_j) \big) \Big)
-\]</div>
+<p>Let <span class="arithmatex">\(B = \{Start, End\}\)</span> is <a href="../binding/#Mathematical Definition"><em>Binding</em></a></p>
+<p>Let <span class="arithmatex">\(M = \{Boundary, Cycle\}\)</span> is <a href="../mode/#Mathematical Definition"><em>Mode</em></a></p>
+<p>Define</p>
+<div class="arithmatex">\[Follow : B \times M \times \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{0,...,n+1\} \big\}\]</div>
+<div class="arithmatex">\[Traceble : B \times M \times \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{0, 1\} \big\}\]</div>
+<!-- Define `follow` $F : B \times M \times J^n \longrightarrow (J)^n$
+
+Define `traceble` $T : B \times M \times J^n \longrightarrow (\{True, False\})^n$ -->
+
+<p>N-tuple of natual numbers</p>
+<div class="arithmatex">\[IO = \{ &lt;io_1, io_2, ..., io_n&gt; | \forall j \in \{1,...,n\} \exists io_j \in \{1,...,n\} \}\]</div>
+<p>is called <code>Intervals chain</code> if and only if</p>
+<div class="arithmatex">\[\exists (b, m) \in B \times M\]</div>
+<p>that makes these statments true:</p>
+<ol>
+<li>Tracebility criteria - <span class="arithmatex">\(\forall i \ Traceble(b, m)(IO)(i)\)</span></li>
+<li>Chained criteria - <span class="arithmatex">\(f=Follow(b,m)(IO),\ \forall i \forall j \ne i  | f(i) \neq f(j) \lor f(i) \in \{0, n+1\}\)</span></li>
+</ol>
 <p>Where:</p>
 <ul>
 <li><span class="arithmatex">\(n := |O|\)</span> is called <em>length</em> of the order, <span class="arithmatex">\(n \in N\)</span></li>

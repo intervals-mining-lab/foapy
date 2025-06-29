@@ -11,10 +11,6 @@
       
       
       
-        <link rel="prev" href="../binding/">
-      
-      
-        <link rel="next" href="../intervals_order/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -165,12 +161,10 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../../" class="md-tabs__link">
           
   
@@ -299,8 +293,6 @@
       
   
   
-    
-  
   
   
     
@@ -325,17 +317,14 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           
@@ -351,13 +340,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Fundamentals
@@ -547,8 +536,6 @@
                 
   
   
-    
-  
   
   
     
@@ -584,11 +571,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
         
           
           
@@ -610,7 +597,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
             Objects
@@ -749,30 +736,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Mode
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="./" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -781,53 +748,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#boundary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Boundary
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cycle
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mathematical-definition" class="md-nav__link">
-    <span class="md-ellipsis">
-      Mathematical Definition
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -840,11 +760,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../intervals_order/" class="md-nav__link">
+      <a href="../intervals_chain/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Intervals Order
+    Intervals Chain
   </span>
   
 
@@ -2786,12 +2706,12 @@ count of intervals less than the count of elements in the initial sequence,
 and/or intervals n-tuple contains <code>empty</code> elements. That's why the <em>mode</em> does not have any value
 corresponding to any kind of skip first/last interval.</p>
 <!-- TODO: Add lossy definition and reference -->
-<p>You can use <code>lossy</code> function defined in <a href="../intervals_distribution/">Interval Order to Interval Tuple</a> section to exclude the first/last interval that would be equivalent to the skipping approach.</p>
+<p>You can use <code>lossy</code> function defined in <a href="./intervals_distribution.md">Interval Order to Interval Tuple</a> section to exclude the first/last interval that would be equivalent to the skipping approach.</p>
 <p>The <em>mode</em> defines values that assume different ways of <code>imaginary</code> elements - <span class="arithmatex">\(boundary\)</span> and <span class="arithmatex">\(cycle\)</span>.
 The <code>imaginary</code> elements can be used as  <code>previous</code> or <code>following</code> reference for any element of the sequence,
 but do not produce any interval for their own. However, you can use <code>redundant</code> function defined in</p>
 <!-- TODO: Add redundant definition and reference -->
-<p><a href="../intervals_distribution/">Interval Order to Interval Tuple</a> section to count intervals produced for <code>imaginary</code> elements.</p>
+<p><a href="./intervals_distribution.md">Interval Order to Interval Tuple</a> section to count intervals produced for <code>imaginary</code> elements.</p>
 <h2 id="boundary">Boundary</h2>
 <p>The <span class="arithmatex">\(boundary\)</span> mode extends the sequence with <code>imaginary</code> elements - <code>Infimum</code> (<span class="arithmatex">\(Inf\)</span>) and <code>Supremum</code> (<span class="arithmatex">\(Sup\)</span> ),
 which are equal to any element of the sequence. <code>Infimum</code> element placed on <span class="arithmatex">\(0\)</span> position and <code>Supremum</code> on <span class="arithmatex">\(n+1\)</span> position of the sequence.</p>
@@ -2801,11 +2721,11 @@ which are equal to any element of the sequence. <code>Infimum</code> element pla
 <pre class="mermaid"><code>block-beta
   columns 8
   p0["0"]        p1["1"] space:4                         p6["n"] p7["n + 1"]
-  inf["Infimum"] s1["A"] s2["C"] s3["T"] s4["C"] s5["A"] s6["G"] sup["Supremum"]
-  infa["Infimum"] ia1["1"]:1 space:6
-  infc["Infimum"] ic1["2"]:2 space:5
-  inft["Infimum"] it1["3"]:3 space:4
-  infg["Infimum"] ig1["6"]:6 space:1
+  inf["⊥"] s1["A"] s2["C"] s3["T"] s4["C"] s5["A"] s6["G"] sup["⊥"]
+  infa["⊥"] ia1["1"]:1 space:6
+  infc["⊥"] ic1["2"]:2 space:5
+  inft["⊥"] it1["3"]:3 space:4
+  infg["⊥"] ig1["6"]:6 space:1
 
   classDef imaginary fill:#526cfe09,color:#000,stroke-dasharray: 10 5;
   classDef position fill:#fff,color:#000,stroke-width:0px;
@@ -2995,12 +2915,15 @@ which are equal to any element of the sequence. <code>Infimum</code> element pla
 <p>The <span class="arithmatex">\(cycle\)</span> mode is inspired and aligned with the idea of representativeness heuristic, which is fundamental in probability and statistics, and the Necklace problems in combinatorics.</p>
 <p>At the same time, the <span class="arithmatex">\(boundary\)</span> mode looks like related to tree structures and graph theory.</p>
 <h2 id="mathematical-definition">Mathematical Definition</h2>
-<p>Let <span class="arithmatex">\(X\)</span> is <a href="../carrier_set/#Mathematical Definition"><em>Carrier set</em></a></p>
-<p>Let <span class="arithmatex">\(S\)</span> is <a href="../sequence/#Mathematical Definition"><em>Sequence</em></a>  length of <span class="arithmatex">\(n\)</span> described as function <span class="arithmatex">\(S : \{1,...,n\} \longrightarrow X\)</span></p>
-<p>Define <em>mode</em> <span class="arithmatex">\(M = \{ boundary, cycle \}\)</span></p>
-<p>Define set <span class="arithmatex">\(\bot = \{ Inf, Sup \ | \forall s \in X(s = Inf \land s = Sup) \}\)</span></p>
-<p>Define <span class="arithmatex">\(X_\bot = X \cup \bot\)</span> set</p>
-<div class="arithmatex">\[\forall S \exists S_{boundary} : \{0,...,n+1\} \longrightarrow X_\bot \implies S_{boundary}(i) = \Biggl\{ \begin{array}{l} Inf, i=0 \\ S(i),  1 \le i \le n \\ Sup, i = n+1\end{array}\]</div>
+<p>Let <span class="arithmatex">\(X\)</span> is <a href="./carrier_set.md#Mathematical Definition"><em>Carrier set</em></a></p>
+<p>Let <span class="arithmatex">\(S\)</span> is <a href="./sequence.md#Mathematical Definition"><em>Sequence</em></a>  length of <span class="arithmatex">\(n\)</span> described as function <span class="arithmatex">\(S : \{1,...,n\} \longrightarrow X\)</span></p>
+<p>Let <span class="arithmatex">\(\bot \notin X\)</span> is a special <em>sentinel</em> value.</p>
+<p>Define <span class="arithmatex">\(X_\bot = X \cup \{ \bot \}\)</span> set</p>
+<p><span class="arithmatex">\(\forall S \ \exists \ S_{\bot} : J \longrightarrow X_{\bot} \Big| \{1,...,n\} \subset J\)</span></p>
+<p>Define <span class="arithmatex">\(Mode : S \longrightarrow S_{\bot}\)</span></p>
+<p><span class="arithmatex">\(\forall S \exists S_{boundary} : \{0,...,n+1\} \longrightarrow X_\bot\)</span></p>
+<p>Define <span class="arithmatex">\(boundary : S \longrightarrow S_{boundary}, boundary(s)(i) = \Biggl\{ \begin{array}{l} Inf, i=0 \\ s(i),  1 \le i \le n \\ Sup, i = n+1\end{array}\)</span></p>
+<p><span class="arithmatex">\(\forall S \exists S_{cycle} : Z \longrightarrow X_\bot\)</span></p>
 <!-- ```python
 low = 0
 high = 6
@@ -3009,7 +2932,8 @@ def index(x):
   return x - (high - low + 1) * ((x - low) // (high - low + 1))
 ``` -->
 
-<div class="arithmatex">\[\forall S \exists S_{cycle} : Z \longrightarrow X \implies S_{cycle}(i) = S\big( i - n \times \lfloor ( i - 1) \div n \rfloor \big)\]</div>
+<p>Define <span class="arithmatex">\(cycle : S \longrightarrow S_{cycle}, cycle(s)(i) = s\big( i - n \times \lfloor ( i - 1) \div n \rfloor \big) \Big| n = |s|\)</span></p>
+<p>Define <em>mode</em> <span class="arithmatex">\(M = \{ boundary, cycle \}\)</span></p>
 
 
 
