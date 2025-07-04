@@ -1,28 +1,45 @@
-# Intervals Chain
+# Intervals Chained
 
-An _intervals order_ is an n-tuple of natural numbers that represents the distance between equal elements in a sequence.
+An _intervals chained is an n-tuple of natural numbers that represents the distance between equal elements in a sequence.
 
 ## Mathematical Definition
 
-Let $B = \{Start, End\}$ is [_Binding_](./binding.md#Mathematical Definition)
+Let $X$ is [_Carrier set_](./carrier_set.md#Mathematical Definition)
 
-Let $M = \{Boundary, Cycle\}$ is [_Mode_](./mode.md#Mathematical Definition)
+Let $S$ is [_Sequence_](./sequence.md#Mathematical Definition)  length of $n$ described as function $S : \{1,...,n\} \longrightarrow X$
 
 Define
 
-$$Follow : B \times M \times \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{0,...,n+1\} \big\}$$
+$$IntervalsChained = <io_1, io_2, ..., io_n> | \forall j \in \{1,...,n\} \exists io_j \in \{1,...,n\},$$
 
-$$Traceble : B \times M \times \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{0, 1\} \big\}$$
+if exists
 
+$$Intervals : \big\{S\}  \longrightarrow \big\{ IntervalsChained \big\},$$
+
+$$Intervals^{-1} : \big\{ IntervalsChained \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{1,...,m\} \big\},$$
+
+
+$$Intervals(S) = Intervals(Intervals^{-1}(Intervals(S)))$$
+
+and exists
+
+$$Follow : B \times \big\{ IntervalsChained \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\}$$
+
+
+<!-- $$Follow : B \times \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{0,...,n+1\} \big\}$$
+
+$$Traceble : B \times \big\{ \{1,...,n\} \longrightarrow \{1,...,n\} \big\}  \longrightarrow \big\{ \{1,...,n\} \longrightarrow \{0, 1\} \big\}$$
+ -->
 <!-- Define `follow` $F : B \times M \times J^n \longrightarrow (J)^n$
 
 Define `traceble` $T : B \times M \times J^n \longrightarrow (\{True, False\})^n$ -->
 
-N-tuple of natual numbers
 
-$$IO = \{ <io_1, io_2, ..., io_n> | \forall j \in \{1,...,n\} \exists io_j \in \{1,...,n\} \}$$
 
-is called `Intervals chain` if and only if
+
+
+
+<!-- is called `Intervals chain` if and only if
 
 $$\exists (b, m) \in B \times M$$
 
@@ -31,7 +48,7 @@ that makes these statments true:
 1. Tracebility criteria - $\forall i \ Traceble(b, m)(IO)(i)$
 2. Chained criteria - $f=Follow(b,m)(IO),\ \forall i \forall j \ne i  | f(i) \neq f(j) \lor f(i) \in \{0, n+1\}$
 
-
+ -->
 
 
 Where:

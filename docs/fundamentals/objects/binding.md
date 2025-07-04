@@ -39,16 +39,52 @@ The definition of all possible `binding` is made in the interests of a consisten
 
     Let $S$ is [_Sequence_](./sequence.md#Mathematical Definition)  length of $n$ described as function $S : \{1,...,n\} \longrightarrow X$
 
-    Let $R$ is _n-tuple_ of `iterating positions` of equivalent elements $P : \{1,...,n\} \longrightarrow \{0,...,n+1\}$
+    Let
 
-    Let $M$ is Mode - $M : \{1,...,n\} \longrightarrow \{0,...,n+1\}$
+    $$S_{cycled} : \big\{ \{1,...,n\} \longrightarrow X \big\} \longrightarrow \big\{ Z \longrightarrow X \big\}$$
+
+    $$S_{cycled}(S)(i) = S\big( i - n \times \lfloor ( i - 1) \div n \rfloor \big)$$
+
+    $$R : \{1,...,n\} \longrightarrow \{-n,...,2n\} $$
+
+    $$Binding : \big\{S\big\} \longrightarrow \big\{ R \big\},$$
+
+
+    $$if \ \exists \ Binding^{-1} : \big\{R \big\} \longrightarrow \big\{\{1,...,n\} \longrightarrow \{1,...,m\}\big\}\ that$$
+
+    $$\forall i \in \{1,...,n\} Binding(R)(i) = Binding(Binding^{-1}(Binding(R)) )(i)$$
+
+
+    $$Start(S)(i) = max(\big\{j \in Z \big|S_{cycled}(j) = S(i) \land j \leq i-1 \big\})$$
+
+    $$Start^{-1}(R)(i) = \Bigg\{\begin{array}{l} \big|<j \in \{1,...i\} | R(j)=\leq 0 >\big| & if \ R(i) \leq 0 \\ Start^{-1}(R, R(i)) & otherwise   \end{array}$$
+
+    $$End(S)(i) = min(\big\{j \in Z \big|S_{cycled}(j) = S(i) \land j \geq i+1 \big\}$$
+
+    $$End^{-1}(R)(i) = \Bigg\{\begin{array}{l} \big|<j \in \{i,...n\} | R(j) \geq n+1 >\big| & if \ R(i) \geq n+1 \\ End^{-1}(R, R(i)) & otherwise   \end{array}$$
+
+    Lemma:
+
+    $$\forall S : \{1,...,n\} \longrightarrow X, \ \forall i \in \{1,..n\} \Big| 1 \leq |\ Start(S)(i) - i\ | \leq n \land 1 \leq | End(S)(i) - i\ | \leq n$$
+
+
+    Let $Mode$ is __Mode__
+
+    $$Mode : \big\{ \{1,...,n\} \longrightarrow \{-n,...,2n\} \big\} \longrightarrow \big\{ \{1,...,n\} \longrightarrow  \{1,...,n\} \big\}$$
 
     Define
 
-    $$Boundary(S)(i) = \Bigg\{\begin{array}{l} 0  & if \nonempty \big\{j \in \{1,..., i - 1\}\big|S(j) = S(i) \big\} \\ n+1  & if \nonempty \big\{j \in \{i,..., n\}\big|S(j) = S(i) \big\}
-     \end{array}$$
+    $$Cycle(R)(i) = \Bigg\{\begin{array}{l} R(i) - i  & , R(j) > j \ | \ \forall j \in \{1,..,n\} \\ i - R(i)  & , R(j) < j \ | \ \forall j \in \{1,..,n\}\end{array}$$
 
-    $$Binding : M \times \big\{S\big\} \longrightarrow \big\{R \big\},$$
+    $$Cycle^{-1}(IO)(i) = \Bigg\{\begin{array}{l} i - IO(i) & , \exists j \in \{1,..,n\} | IO(j) > j  \\ i + IO(i) & , \exists j \in \{1,..,n\} | IO(j) > n - j \end{array}$$
+
+    $$Boundary(R)(i) = \Bigg\{\begin{array}{l} i  & , R(i) < 1 \\ Cycle(R)(i)  & , 1 \leq R(i) \leq n \\ n - i + 1 & , R(i) > n \end{array}$$
+
+    $$Boundary^{-1}(IO)(i) = \Bigg\{\begin{array}{l} i - IO(i) & , \exists j \in \{1,..,n\} | IO(j) = j  \\ i + IO(i) & , \exists j \in \{1,..,n\} | IO(j) = n - j +1\end{array}$$
+
+
+
+    $$Binding : M \times \big\{S\big\} \longrightarrow \big\{ \big\},$$
 
 
     $$if \ \exists \ Binding^{-1} : M \times \big\{R \big\} \longrightarrow \big\{\{1,...,n\} \longrightarrow \{1,...,m\}\big\}\ that$$

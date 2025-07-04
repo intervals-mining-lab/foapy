@@ -17,11 +17,11 @@ nav:
     - "Sequence": fundamentals/objects/sequence.md
     - "Alphabet": fundamentals/objects/alphabet.md
     - "Order": fundamentals/objects/order.md
-    - "Interval": fundamentals/objects/interval.md
-    - "Binding": fundamentals/objects/binding.md
-    - "Mode": fundamentals/objects/mode.md
-    - "Intervals Chain": fundamentals/objects/intervals_chain.md
-    - "Intervals Tuple": fundamentals/objects/intervals_tuple.md
+    - "Intervals Chained":
+      - fundamentals/objects/intervals_chained/index.md
+      - "Cycled": fundamentals/objects/intervals_chained/cycled.md
+      - "Boundary": fundamentals/objects/intervals_chained/boundary.md
+    - "Intervals": fundamentals/objects/intervals.md
     - "Intervals Distribution": fundamentals/objects/intervals_distribution.md
   - "Congeneric decomposition":
     - fundamentals/congeneric_decomposition/index.md
