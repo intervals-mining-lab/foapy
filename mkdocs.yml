@@ -23,7 +23,6 @@ nav:
       - "Cycled": fundamentals/objects/intervals_chain/cycled.md
     - "Intervals": fundamentals/objects/intervals.md
     - "Intervals Distribution": fundamentals/objects/intervals_distribution.md
-    - "Binding": fundamentals/objects/binding.md
   - "Congeneric decomposition":
     - fundamentals/congeneric_decomposition/index.md
     - "Congeneric sequences": fundamentals/congeneric_decomposition/congeneric_sequences.md
