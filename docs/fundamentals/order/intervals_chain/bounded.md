@@ -244,4 +244,4 @@ _Intervals chain_ $IC$ have been calculated with _Bounded binding_ have a specia
 
 ---
 
-Let $B = \{Start, End\} \subset \{Binding\}$ is set of [_Bounded Binding_](./binding.md#Mathematical Definition)
+Let $B = \{Start, End\} \subset \{Binding\}$ is set of _Bounded Binding_

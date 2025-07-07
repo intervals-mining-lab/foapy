@@ -28,7 +28,7 @@ nav:
     - "Characteristics":
       - fundamentals/order/characteristics/index.md
       - "Arithmetic mean": fundamentals/order/characteristics/arithmetic_mean.md
-      - "Geometric mean": fundamentals/characteristics/geometric_mean.md
+      - "Geometric mean": fundamentals/order/characteristics/geometric_mean.md
       - "Average remoteness": fundamentals/order/characteristics/average_remoteness.md
       - "Depth": fundamentals/order/characteristics/depth.md
       - "Volume": fundamentals/order/characteristics/volume.md

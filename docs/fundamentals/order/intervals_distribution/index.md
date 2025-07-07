@@ -95,7 +95,7 @@ An _intervals distribution_ is an n-tuple of natural numbers where the index rep
 
 ---
 
-_Intervals distribution_ used as an input data in calculating [characteristics](../../characteristics/index.md).
+_Intervals distribution_ used as an input data in calculating [characteristics](../characteristics/index.md).
 While characteristics could be calculated based on the _itervals chain_ _intervals distribution_ highlights that intervals themselves are enough to measure the [order](../order.md) of a sequence
 and intervals connectivity in _intervals chain_ does not affect measure values.
 Whether it is possible in general to reconstruct distinctly an _interval chain_ by the given _interval distribution_ is an open question.

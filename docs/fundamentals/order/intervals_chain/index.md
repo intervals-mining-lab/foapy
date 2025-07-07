@@ -424,7 +424,7 @@ There should exists an inverse function that restores by _interval chain_ a sequ
 
 Formal order analysis identifies two groups of _Bindings_:
 
-- [Bounded](./bounded.md.md) - consider a sequence to be finite and bounded. Operates with the minimum data required to determine _intervals chains_ and _sequence_.
+- [Bounded](./bounded.md) - consider a sequence to be finite and bounded. Operates with the minimum data required to determine _intervals chains_ and _sequence_.
 - [Cycled](./cycled.md) - treats a sequence as a subsequence representing an infinite sequence. Connects FOA with the fundamental ideas underlying statistics and probability theory.
 
 ## Mathematical Definition

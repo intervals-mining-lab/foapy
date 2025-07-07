@@ -1,11 +1,12 @@
 import numpy as np
 from numpy import ma
 
-from foapy import binding, mode
+from foapy import binding as binding_enum
+from foapy import mode as mode_enum
 from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 
 
-def intervals(X, bind, mod):
+def intervals(X, binding, mode):
     """
     Finding array of array of intervals of the uniform
     sequences in the given input sequence
@@ -157,13 +158,19 @@ def intervals(X, bind, mod):
     """
 
     # Validate binding
-    if bind not in {binding.start, binding.end}:
+    if binding not in {binding_enum.start, binding_enum.end}:
         raise ValueError(
             {"message": "Invalid binding value. Use binding.start or binding.end."}
         )
 
     # Validate mode
-    if mod not in {mode.lossy, mode.normal, mode.cycle, mode.redundant}:
+    valid_modes = {
+        mode_enum.lossy,
+        mode_enum.normal,
+        mode_enum.cycle,
+        mode_enum.redundant,
+    }
+    if mode not in valid_modes:
         raise ValueError(
             {"message": "Invalid mode value. Use mode.lossy,normal,cycle or redundant."}
         )
@@ -199,7 +206,7 @@ def intervals(X, bind, mod):
         )
 
     extended_mask = np.empty((power, length + 1), dtype=bool)
-    if bind == binding.end:
+    if binding == binding_enum.end:
         extended_mask[:, :-1] = ~mask[::-1, ::-1]
     else:
         extended_mask[:, :-1] = ~mask
@@ -217,33 +224,33 @@ def intervals(X, bind, mod):
 
     indecies = np.zeros(positions.shape[1], dtype=int)
     indecies[1:] = positions[1, 1:] - positions[1, :-1]
-    delta = indecies[last_indexes] if mod == mode.cycle else 1
+    delta = indecies[last_indexes] if mode == mode_enum.cycle else 1
     indecies[first_indexes] = positions[1][first_indexes] + delta
 
     split_boarders = np.zeros(power * 2, dtype=int)
 
-    if mod == mode.lossy:
+    if mode == mode_enum.lossy:
         split_boarders[positions[0][last_indexes[:1]] * 2] = first_indexes[:1] + 1
         split_boarders[positions[0][last_indexes[1:]] * 2] = (
             np.fmax(last_indexes[:-1], first_indexes[1:]) + 1
         )
         split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes
-    elif mod == mode.normal:
+    elif mode == mode_enum.normal:
         split_boarders[positions[0][last_indexes[:1]] * 2] = 0
         split_boarders[positions[0][last_indexes[1:]] * 2] = last_indexes[:-1] + 1
         split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes
-    elif mod == mode.cycle:
+    elif mode == mode_enum.cycle:
         split_boarders[positions[0][last_indexes[:1]] * 2] = 0
         split_boarders[positions[0][last_indexes[1:]] * 2] = last_indexes[:-1] + 1
         split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes
-    elif mod == mode.redundant:
+    elif mode == mode_enum.redundant:
         split_boarders[positions[0][last_indexes[:1]] * 2] = 0
         split_boarders[positions[0][last_indexes[1:]] * 2] = 0
         split_boarders[positions[0][last_indexes] * 2 + 1] = last_indexes + 1
 
     preserve_previous = np.frompyfunc(lambda x, y: x if y == 0 else y, 2, 1)
     split_boarders = preserve_previous.accumulate(split_boarders)
-    if bind == binding.end:
+    if binding == binding_enum.end:
         split_boarders[:-1] = np.diff(split_boarders)
         split_boarders[-1:] = len(indecies) - split_boarders[-1]
         split_boarders = np.cumsum(split_boarders[::-1])
