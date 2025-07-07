@@ -5,7 +5,7 @@ This is the basic object for analyzing patterns, relationships, and structural p
 
 ## Mathematical Definition
 
-Let $X$ is [_Carrier set_](./carrier_set.md#Mathematical Definition)
+Let $X$ is [_Carrier set_](./carrier_set.md#mathematical-definition)
 
 A _sequence_ $S$ is a n-tuple defined as
 

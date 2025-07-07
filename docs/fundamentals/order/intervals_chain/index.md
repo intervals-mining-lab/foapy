@@ -429,9 +429,9 @@ Formal order analysis identifies two groups of _Bindings_:
 
 ## Mathematical Definition
 
-Let $X$ is [_Carrier set_](../carrier_set.md#Mathematical Definition)
+Let $X$ is [_Carrier set_](../carrier_set.md#mathematical-definition)
 
-Let $S$ is [_Sequence_](../sequence.md#Mathematical Definition)  length of $n$ described as function $S : \{1,...,n\} \longrightarrow X$
+Let $S$ is [_Sequence_](../sequence.md#mathematical-definition)  length of $n$ described as function $S : \{1,...,n\} \longrightarrow X$
 
 ### Define Bindings
 

@@ -4,7 +4,7 @@ An alphabet is a m-tuple of unique elements.
 
 ## Mathematical Definition
 
-Let $X$ is [_Carrier set_](./carrier_set.md#Mathematical Definition)
+Let $X$ is [_Carrier set_](./carrier_set.md#mathematical-definition)
 
 The _alphabet_ $A$ is a m-tuple with a uniqueness constraint, can be defined:
 
