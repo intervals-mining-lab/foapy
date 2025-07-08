@@ -203,10 +203,13 @@ The following diagrams give a hand in understanding how the Objects and Methods 
     flowchart TB
         Start@{ shape: sm-circ, label: "" }-- Sequence -->fork1@{ shape: sm-circ, label: "" }
         fork1-- Sequence -->alphabet
-        alphabet-- Alphabet -->OA@{ shape: cross-circ }
-        fork1-- Sequence -->O@{label: "order"}
-        O-- Order -->OA@{ shape: sm-circ, label: "order + alphabet" }
+        alphabet-- Alphabet -->OA@{ shape: sm-circ }
+        fork1-- Sequence -->order
+        order-- Order -->OA
         OA-- Sequence -->End@{ shape: sm-circ }
+
+        click alphabet "./alphabet" "Alphabet"
+        click order "./order" "Order"
     ```
 
 === "Interval-based characteristics"
@@ -215,23 +218,36 @@ The following diagrams give a hand in understanding how the Objects and Methods 
         Start@{ shape: sm-circ, label: "" }-- Sequence -->fork1@{ shape: sm-circ, label: "" }
         fork1-- Sequence -->alphabet
         alphabet-- Alphabet -->OA@{ shape: cross-circ }
-        O@{label: "order"}-- Order -->OA@{ shape: sm-circ }
+        order-- Order -->OA@{ shape: sm-circ }
         OA-- Sequence -->End@{ shape: sm-circ }
 
         fork1@{ shape: sm-circ, label: "" }-- Sequence -->intervals
         intervals-- Intervals Chain -->fork@{ shape: sm-circ, label: "" }
         fork@{ shape: sm-circ, label: "" }-- Intervals Chain -->inverseIntervals@{ label: "intervals⁻¹" }
         fork@{ shape: sm-circ, label: "" }-- Intervals Chain -->distribution
-        inverseIntervals@{ label: "intervals⁻¹" }-- Reconstructed Sequence --> O@{label: "order"}
+        inverseIntervals@{ label: "intervals⁻¹" }-- Reconstructed Sequence --> order
         distribution-- Intervals Distribution --> M@{ shape: sm-circ, label: "order + alphabet" }
-        M --> dg@{ label: "Δg" }
         M --> da@{ label: "Δa" }
+        M --> dg@{ label: "Δg" }
         M --> g@{ label: "g" }
-        M --> G@{ label: "G" }
         M --> V@{ label: "V" }
-        dg -- float --> EndMeasuredg@{ shape: sm-circ }
+        M --> G@{ label: "G" }
         da -- float --> EndMeasureda@{ shape: sm-circ }
+        dg -- float --> EndMeasuredg@{ shape: sm-circ }
         g -- float --> EndMeasureg@{ shape: sm-circ }
-        G -- float --> EndMeasureG@{ shape: sm-circ }
         V -- int --> EndMeasureV@{ shape: sm-circ }
+        G -- float --> EndMeasureG@{ shape: sm-circ }
+
+
+        click alphabet "./alphabet" "Alphabet"
+        click order "./order" "Order"
+        click intervals "./intervals_chain/#define-intervals-chain" "Intervals"
+        click inverseIntervals "./intervals_chain/#define-intervals-chain" "Intervals⁻"
+        click distribution "./intervals_distribution" "Distribution"
+        click distribution "./intervals_distribution" "Distribution"
+        click dg "./characteristics/geometric_mean" "Geomteric mean"
+        click da "./characteristics/arithmetic_mean" "Arithmetic mean"
+        click g "./characteristics/average_remoteness" "Average remoteness"
+        click G "./characteristics/depth" "Depth"
+        click V "./characteristics/volume" "Volume"
     ```

@@ -157,7 +157,7 @@ Let $Binding$ is [Binding](./index.md#define-bindings)
 
     Define
 
-    $$IC = <ic_1, ic_2, ..., ic_n> | \forall j \in \{1,...,n\} \exists ic_j \in \{1,...,n\},$$
+    $$IC = <\Delta_1, \Delta_2, ..., \Delta_n> | \forall j \in \{1,...,n\} \exists \Delta_j \in \{1,...,n\},$$
 
     $$\exists \ Intervals : \big\{S\}  \longrightarrow \big\{ IC \big\},$$
 
@@ -181,14 +181,14 @@ Let $Binding$ is [Binding](./index.md#define-bindings)
     Where:
 
     - $n := |IC|$ is called _length_ of the _intervals chained_, $n \in N$
-    - $ic_i$​ is called the $i$-th _element_ (or interval) of the _intervals chained_
+    - $\Delta_i$​ is called the $i$-th _element_ (or interval) of the _intervals chained_
 
 
 === "$End$ binding"
 
     Define
 
-    $$IC = <ic_1, ic_2, ..., ic_n> | \forall j \in \{1,...,n\} \exists ic_j \in \{1,...,n\},$$
+    $$IC = <\Delta_1, \Delta_2, ..., \Delta_n> | \forall j \in \{1,...,n\} \exists \Delta_j \in \{1,...,n\},$$
 
     $$\exists \ Intervals : \big\{S\}  \longrightarrow \big\{ IC \big\},$$
 
@@ -212,7 +212,7 @@ Let $Binding$ is [Binding](./index.md#define-bindings)
     Where:
 
     - $n := |IC|$ is called _length_ of the _intervals chained_, $n \in N$
-    - $ic_i$​ is called the $i$-th _element_ (or interval) of the _intervals chained_
+    - $\Delta_i$​ is called the $i$-th _element_ (or interval) of the _intervals chained_
 
 
 ---

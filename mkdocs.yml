@@ -29,15 +29,14 @@ nav:
       - fundamentals/order/characteristics/index.md
       - "Arithmetic mean": fundamentals/order/characteristics/arithmetic_mean.md
       - "Geometric mean": fundamentals/order/characteristics/geometric_mean.md
+      - "Volume": fundamentals/order/characteristics/volume.md
       - "Average remoteness": fundamentals/order/characteristics/average_remoteness.md
       - "Depth": fundamentals/order/characteristics/depth.md
-      - "Volume": fundamentals/order/characteristics/volume.md
   - "Congeneric decomposition":
     - fundamentals/congeneric_decomposition/index.md
     - "Congeneric sequences": fundamentals/congeneric_decomposition/congeneric_sequences.md
     - "Congeneric orders": fundamentals/congeneric_decomposition/congeneric_orders.md
     - "Congeneric intervals order": fundamentals/congeneric_decomposition/congeneric_intervals_order.md
-    - "Congeneric intervals tuple": fundamentals/congeneric_decomposition/congeneric_intervals_tuple.md
     - "Congeneric intervals distribution": fundamentals/congeneric_decomposition/congeneric_intervals_distribution.md
     - "Characteristics":
       - fundamentals/congeneric_decomposition/characteristics/index.md

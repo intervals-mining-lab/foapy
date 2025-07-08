@@ -8,7 +8,7 @@ The package provides a comprehensive set of vector characteristics for measuring
 
 The table below summarizes vector representation of the characteristics that depend only on intervals:
 
-| Linear scale | |Logarifmic scale | |
+| Linear scale | |Logarithmic scale | |
 |------------- |-||-----------------|
 | [Arithmetic Mean](arithmetic_mean.md) | $\left[ \Delta_{a_j} \right]_{1 \le j \le m} = \left[ \frac{1}{n_j} * \sum_{i=1}^{n_j} \Delta_{ij} \right]_{1 \le j \le m}$ || |
 | [Geometric Mean](geometric_mean.md) | $\left[ \Delta_{g_j} \right]_{1 \le j \le m} = \left[ \left( \prod_{i=1}^{n_j} \Delta_{ij} \right)^{1/n_j} \right]_{1 \le j \le m}$ | $\left[ g_j \right]_{1 \le j \le m} = \left[ \frac{1}{n_j} * \sum_{i=1}^{n_j} \log_2 \Delta_{ij} \right]_{1 \le j \le m}$ | [Average Remoteness](average_remoteness.md) |
