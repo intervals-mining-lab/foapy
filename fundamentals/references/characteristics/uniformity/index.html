@@ -14,7 +14,7 @@
         <link rel="prev" href="../regularity/">
       
       
-        <link rel="next" href="../ma/">
+        <link rel="next" href="../volume/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -996,11 +996,32 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../fundamentals/characteristics/geometric_mean.md" class="md-nav__link">
+      <a href="../../../fundamentals/order/characteristics/geometric_mean/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     Geometric mean
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../fundamentals/order/characteristics/volume/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Volume
   </span>
   
 
@@ -1052,27 +1073,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../fundamentals/order/characteristics/volume/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Volume
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -1100,8 +1100,6 @@
       
         
           
-        
-      
         
       
         
@@ -1225,27 +1223,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../fundamentals/congeneric_decomposition/congeneric_intervals_tuple/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Congeneric intervals tuple
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../fundamentals/congeneric_decomposition/congeneric_intervals_distribution/" class="md-nav__link">
         
   
@@ -1301,7 +1278,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_6" >
         
           
           
@@ -1317,14 +1294,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_4_7" id="__nav_2_4_7_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_4_6" id="__nav_2_4_6_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_4_7">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4_6">
             <span class="md-nav__icon md-icon"></span>
             Characteristics
           </label>
@@ -2232,7 +2209,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../arithmetic_mean.md" class="md-nav__link">
+      <a href="../arithmetic_mean/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2253,7 +2230,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../average_remoteness.md" class="md-nav__link">
+      <a href="../average_remoteness/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2274,7 +2251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../depth.md" class="md-nav__link">
+      <a href="../depth/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2316,7 +2293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../geometric_mean.md" class="md-nav__link">
+      <a href="../geometric_mean/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2473,7 +2450,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../volume.md" class="md-nav__link">
+      <a href="../volume/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3056,7 +3033,7 @@
 
 
 <h2 id="foapy.characteristics.uniformity" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">uniformity</span><span class="p">(</span><span class="n">intervals</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">uniformity</span><span class="p">(</span><span class="n">intervals_grouped</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3294,7 +3271,7 @@
 <span class="normal"><a href="#__codelineno-0-76">76</a></span>
 <span class="normal"><a href="#__codelineno-0-77">77</a></span>
 <span class="normal"><a href="#__codelineno-0-78">78</a></span>
-<span class="normal"><a href="#__codelineno-0-79">79</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">uniformity</span><span class="p">(</span><span class="n">intervals</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="normal"><a href="#__codelineno-0-79">79</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">uniformity</span><span class="p">(</span><span class="n">intervals_grouped</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="sd">    Calculates uniformity of intervals grouped by element of the alphabet.</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a>
@@ -3364,9 +3341,9 @@
 </span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">    &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
 </span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">foapy.characteristics</span><span class="w"> </span><span class="kn">import</span> <span class="n">average_remoteness</span><span class="p">,</span> <span class="n">identifying_information</span>
 </span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="n">total_elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">intervals</span><span class="p">)</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="n">total_elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">intervals_grouped</span><span class="p">)</span>
 </span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a>
-</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="n">H</span> <span class="o">=</span> <span class="n">identifying_information</span><span class="p">(</span><span class="n">intervals</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="n">H</span> <span class="o">=</span> <span class="n">identifying_information</span><span class="p">(</span><span class="n">intervals_grouped</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
 </span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="n">g</span> <span class="o">=</span> <span class="n">average_remoteness</span><span class="p">(</span><span class="n">total_elements</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
 </span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a>
 </span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="k">return</span> <span class="n">H</span> <span class="o">-</span> <span class="n">g</span>
