@@ -19,6 +19,21 @@ Where:
 - $m := |A|$ is called _power_ of the alphabet, $m \in N$
 - $a_i$​ is called the $i$-th _element_ (or coordinate) of the alphabet.
 
+### Alphabet of Sequence
+
+Let $X$ is [_Carrier set_](./carrier_set.md#mathematical-definition)
+
+Let $S$ is [_Sequence_](./sequence.md#mathematical-definition) described as function  $S : \{1,...,n\} \longrightarrow X$
+
+$$alphabet(S) :  \big\{\{1,...,n\} \longrightarrow X \big\} \longrightarrow \big\{\{1,...,m\} \longrightarrow X \big\}$$
+
+$$alphabet(S) = \big<S(i) \big| i \in \{1,...,n\}, \forall k < i,  S(i) \neq S(k)\big>$$
+
+
+Where:
+
+- $m \leq n$ - power of the alphabet is not greater than length of the sequence
+
 ## Examples
 
 ### Binary Sequence

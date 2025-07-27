@@ -19,6 +19,45 @@ Where:
 - $n := |O|$ is called _length_ of the order, $n \in N$
 - $o_i$​ is called the $i$-th _element_ (or coordinate) of the order
 
+### Order of Sequence
+
+Let $X$ is [_Carrier set_](./carrier_set.md#mathematical-definition)
+
+Let $S$ is [_Sequence_](./sequence.md#mathematical-definition) described as function  $S : \{1,...,n\} \longrightarrow X$
+
+Let $alphabet$ is [_Alphabet function_](./alphabet.md#alphabet-of-sequence)
+
+$$alphabet : \big\{\{1,...,n\} \longrightarrow X \big\} \longrightarrow \big\{\{1,...,m\} \longrightarrow X \big\}$$
+
+Define
+
+$$ordert(S) :  \big\{\{1,...,n\} \longrightarrow X \big\} \longrightarrow \big\{\{1,...,n\} \longrightarrow \{1,...,n\} \big\}$$
+
+$$A = alphabet(S)$$
+
+$$order(S)(i) = j \big| j \in \{1,...,n\}, S(i)=A(j)$$
+
+### Order product Alphabet
+
+Let $X$ is a [_Carrier set_](./carrier_set.md)
+
+Let $A$ is a [_Aphabet_](./alphabet.md) $A : \{1, ..., m\} \longrightarrow X,$
+
+Let $S$ is a [_Sequenece_](./sequence.md) $S : \{1, ..., n\} \longrightarrow X,$
+
+the following equations are true
+
+$$O = order(S),$$
+
+$$A = alphabet(S),$$
+
+$$S = ( O \odot A),$$
+
+$$S(i) = A(O(i))$$
+
+
+
+
 ## Examples
 
 ### Valid order

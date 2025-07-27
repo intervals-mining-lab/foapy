@@ -32,6 +32,23 @@ nav:
       - "Volume": fundamentals/order/characteristics/volume.md
       - "Average remoteness": fundamentals/order/characteristics/average_remoteness.md
       - "Depth": fundamentals/order/characteristics/depth.md
+  - "Partials and congenerics":
+    - fundamentals/partials_and_congenerics/index.md
+    - "Carrier set": fundamentals/partials_and_congenerics/carrier_set.md
+    - "Sequence":
+      - fundamentals/partials_and_congenerics/sequence/index.md
+      - "Congeneric": fundamentals/partials_and_congenerics/sequence/congeneric.md
+    - "Alphabet":
+      - fundamentals/partials_and_congenerics/alphabet/index.md
+      - "Congeneric": fundamentals/partials_and_congenerics/alphabet/congeneric.md
+    - "Order":
+      - fundamentals/partials_and_congenerics/order/index.md
+      - "Congeneric": fundamentals/partials_and_congenerics/order/congeneric.md
+    - "Intervals chain":
+      - fundamentals/partials_and_congenerics/intervals_chain/index.md
+      - "Congeneric": fundamentals/partials_and_congenerics/intervals_chain/congeneric.md
+    - "Intervals distribution": fundamentals/partials_and_congenerics/intervals_distribution.md
+    - "Characteristics": fundamentals/partials_and_congenerics/characteristics.md
   - "Congeneric decomposition":
     - fundamentals/congeneric_decomposition/index.md
     - "Congeneric sequences": fundamentals/congeneric_decomposition/congeneric_sequences.md
