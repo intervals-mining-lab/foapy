@@ -11,22 +11,22 @@
       
       
       
-        <link rel="prev" href="../average_remoteness/">
+        <link rel="prev" href="../orders/">
       
       
-        <link rel="next" href="../descriptive_information/">
+        <link rel="next" href="../intervals_distribution/">
       
       
-      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
       
-        <title>Depths - FoaPy</title>
+        <title>Intervals chains - FoaPy</title>
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.a40c8224.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.a40c8224.min.css">
       
       
 
@@ -45,15 +45,15 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/_markdown_exec_pyodide.css">
+      <link rel="stylesheet" href="../../../assets/_markdown_exec_pyodide.css">
     
-      <link rel="stylesheet" href="../../../../assets/_markdown_exec_ansi.css">
+      <link rel="stylesheet" href="../../../assets/_markdown_exec_ansi.css">
     
-      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../../assets/css/custom.css">
+      <link rel="stylesheet" href="../../../assets/css/custom.css">
     
-    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#depth" class="md-skip">
+        <a href="#congeneric-intervals-chains" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +92,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../../.." title="FoaPy" class="md-header__button md-logo" aria-label="FoaPy" data-md-component="logo">
+    <a href="../../.." title="FoaPy" class="md-header__button md-logo" aria-label="FoaPy" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Depths
+              Intervals chains
             
           </span>
         </div>
@@ -150,7 +150,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../.." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
     
@@ -171,7 +171,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../../" class="md-tabs__link">
+        <a href="../../" class="md-tabs__link">
           
   
     
@@ -191,7 +191,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../../references/alphabet/" class="md-tabs__link">
+        <a href="../../../references/alphabet/" class="md-tabs__link">
           
   
     
@@ -211,7 +211,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../../development/development/" class="md-tabs__link">
+        <a href="../../../development/development/" class="md-tabs__link">
           
   
     
@@ -252,7 +252,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../../.." title="FoaPy" class="md-nav__button md-logo" aria-label="FoaPy" data-md-component="logo">
+    <a href="../../.." title="FoaPy" class="md-nav__button md-logo" aria-label="FoaPy" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -282,7 +282,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -318,10 +318,6 @@
       
         
       
-        
-      
-        
-      
     
     
       
@@ -340,7 +336,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../" class="md-nav__link ">
+            <a href="../../" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -404,7 +400,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../ideas/" class="md-nav__link ">
+            <a href="../../ideas/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -437,7 +433,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ideas/sequence_as_a_whole_object/" class="md-nav__link">
+      <a href="../../ideas/sequence_as_a_whole_object/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -458,7 +454,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ideas/order_as_a_property/" class="md-nav__link">
+      <a href="../../ideas/order_as_a_property/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -479,7 +475,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ideas/congeneric_decomposition/" class="md-nav__link">
+      <a href="../../ideas/congeneric_decomposition/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -500,7 +496,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ideas/interval_as_a_basic_information_unit/" class="md-nav__link">
+      <a href="../../ideas/interval_as_a_basic_information_unit/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -521,7 +517,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ideas/geometric_mean_based_characteristics/" class="md-nav__link">
+      <a href="../../ideas/geometric_mean_based_characteristics/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -585,7 +581,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../order/" class="md-nav__link ">
+            <a href="../../order/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -618,7 +614,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/carrier_set/" class="md-nav__link">
+      <a href="../../order/carrier_set/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -639,7 +635,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/sequence/" class="md-nav__link">
+      <a href="../../order/sequence/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -660,7 +656,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/alphabet/" class="md-nav__link">
+      <a href="../../order/alphabet/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -681,7 +677,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/order/" class="md-nav__link">
+      <a href="../../order/order/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -727,7 +723,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../order/intervals_chain/" class="md-nav__link ">
+            <a href="../../order/intervals_chain/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -760,7 +756,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/intervals_chain/bounded/" class="md-nav__link">
+      <a href="../../order/intervals_chain/bounded/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -781,7 +777,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/intervals_chain/cycled/" class="md-nav__link">
+      <a href="../../order/intervals_chain/cycled/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -835,7 +831,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../order/intervals_distribution/" class="md-nav__link ">
+            <a href="../../order/intervals_distribution/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -868,7 +864,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/intervals_distribution/lossy/" class="md-nav__link">
+      <a href="../../order/intervals_distribution/lossy/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -889,7 +885,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/intervals_distribution/redundant/" class="md-nav__link">
+      <a href="../../order/intervals_distribution/redundant/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -949,7 +945,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../order/characteristics/" class="md-nav__link ">
+            <a href="../../order/characteristics/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -982,7 +978,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/characteristics/arithmetic_mean/" class="md-nav__link">
+      <a href="../../order/characteristics/arithmetic_mean/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1003,7 +999,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/characteristics/geometric_mean/" class="md-nav__link">
+      <a href="../../order/characteristics/geometric_mean/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1024,7 +1020,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/characteristics/volume/" class="md-nav__link">
+      <a href="../../order/characteristics/volume/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1045,7 +1041,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/characteristics/average_remoteness/" class="md-nav__link">
+      <a href="../../order/characteristics/average_remoteness/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1066,7 +1062,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../order/characteristics/depth/" class="md-nav__link">
+      <a href="../../order/characteristics/depth/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1138,7 +1134,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../partials_and_congenerics/" class="md-nav__link ">
+            <a href="../../partials_and_congenerics/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1171,7 +1167,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../partials_and_congenerics/carrier_set/" class="md-nav__link">
+      <a href="../../partials_and_congenerics/carrier_set/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1215,7 +1211,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../partials_and_congenerics/sequence/" class="md-nav__link ">
+            <a href="../../partials_and_congenerics/sequence/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1248,7 +1244,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../partials_and_congenerics/sequence/congeneric/" class="md-nav__link">
+      <a href="../../partials_and_congenerics/sequence/congeneric/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1300,7 +1296,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../partials_and_congenerics/alphabet/" class="md-nav__link ">
+            <a href="../../partials_and_congenerics/alphabet/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1333,7 +1329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../partials_and_congenerics/alphabet/congeneric/" class="md-nav__link">
+      <a href="../../partials_and_congenerics/alphabet/congeneric/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1385,7 +1381,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../partials_and_congenerics/order/" class="md-nav__link ">
+            <a href="../../partials_and_congenerics/order/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1418,7 +1414,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../partials_and_congenerics/order/congeneric/" class="md-nav__link">
+      <a href="../../partials_and_congenerics/order/congeneric/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1470,7 +1466,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../partials_and_congenerics/intervals_chain/" class="md-nav__link ">
+            <a href="../../partials_and_congenerics/intervals_chain/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1503,7 +1499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../partials_and_congenerics/intervals_chain/congeneric/" class="md-nav__link">
+      <a href="../../partials_and_congenerics/intervals_chain/congeneric/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1532,7 +1528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../partials_and_congenerics/intervals_distribution/" class="md-nav__link">
+      <a href="../../partials_and_congenerics/intervals_distribution/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1553,7 +1549,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../partials_and_congenerics/characteristics/" class="md-nav__link">
+      <a href="../../partials_and_congenerics/characteristics/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1600,6 +1596,8 @@
       
         
       
+        
+      
     
     
       
@@ -1615,7 +1613,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1648,11 +1646,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../congeneric_sequences/" class="md-nav__link">
+      <a href="../sequences/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Congeneric sequences
+    Sequences
   </span>
   
 
@@ -1669,11 +1667,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../congeneric_orders/" class="md-nav__link">
+      <a href="../alphabet/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Congeneric orders
+    Alphabet
   </span>
   
 
@@ -1690,148 +1688,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../congeneric_intervals_order/" class="md-nav__link">
+      <a href="../orders/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Congeneric intervals order
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../congeneric_intervals_distribution/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Congeneric intervals distribution
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_6" checked>
-        
-          
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
-              
-  
-  <span class="md-ellipsis">
-    Characteristics
-  </span>
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_2_5_6" id="__nav_2_5_6_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_5_6">
-            <span class="md-nav__icon md-icon"></span>
-            Characteristics
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../arithmetic_mean/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Arithmetic means
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../average_remoteness/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Average remotenesses
+    Orders
   </span>
   
 
@@ -1857,15 +1718,96 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Intervals chains
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    Depths
+    Intervals chains
   </span>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Definition
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mathematical Definition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#as-m-tuple-of-congeneric-intervals-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      as m-tuple of congeneric intervals chain
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#as-matrix-ml" class="md-nav__link">
+    <span class="md-ellipsis">
+      as matrix (m,l)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-congeneric-sequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      from Congeneric Sequences
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-congeneric-orders" class="md-nav__link">
+    <span class="md-ellipsis">
+      from Congeneric Orders
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1879,7 +1821,90 @@
   
   
     <li class="md-nav__item">
-      <a href="../descriptive_information/" class="md-nav__link">
+      <a href="../intervals_distribution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intervals distribution
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_7" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../characteristics/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Characteristics
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_5_7" id="__nav_2_5_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            Characteristics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../characteristics/descriptive_information/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1900,28 +1925,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../geometric_mean/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Geometric means
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../identifying_information/" class="md-nav__link">
+      <a href="../characteristics/identifying_information/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1942,11 +1946,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../periodicity/" class="md-nav__link">
+      <a href="../characteristics/regularity/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Periodicity
+    Regularity
   </span>
   
 
@@ -1963,7 +1967,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../uniformity/" class="md-nav__link">
+      <a href="../characteristics/uniformity/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1977,338 +1981,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../volume/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Volume
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
-        
-          
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../../connections_to_other_mathfields/" class="md-nav__link ">
-              
-  
-  <span class="md-ellipsis">
-    Connections to other mathfields
-  </span>
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_6">
-            <span class="md-nav__icon md-icon"></span>
-            Connections to other mathfields
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../connections_to_other_mathfields/information_theory/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Information theory
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../connections_to_other_mathfields/probability_theory/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Probability theory
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../connections_to_other_mathfields/statistics/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Statistics
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../connections_to_other_mathfields/combinatorics/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Combinatorics
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
-        
-          
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../../applications/" class="md-nav__link ">
-              
-  
-  <span class="md-ellipsis">
-    Applications
-  </span>
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_7">
-            <span class="md-nav__icon md-icon"></span>
-            Applications
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../applications/text_mining/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Text mining
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../applications/bioinformatics/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Bioinformatics
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../applications/music_analysis/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Music analysis
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../applications/other_applications/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Other applications
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -2392,7 +2067,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/alphabet/" class="md-nav__link">
+      <a href="../../../references/alphabet/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2413,7 +2088,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/order/" class="md-nav__link">
+      <a href="../../../references/order/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2434,7 +2109,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/intervals/" class="md-nav__link">
+      <a href="../../../references/intervals/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2455,7 +2130,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/binding/" class="md-nav__link">
+      <a href="../../../references/binding/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2476,7 +2151,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/mode/" class="md-nav__link">
+      <a href="../../../references/mode/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2524,7 +2199,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../references/ma/" class="md-nav__link ">
+            <a href="../../../references/ma/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2557,7 +2232,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/ma/alphabet/" class="md-nav__link">
+      <a href="../../../references/ma/alphabet/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2578,7 +2253,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/ma/order/" class="md-nav__link">
+      <a href="../../../references/ma/order/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2599,7 +2274,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/ma/intervals/" class="md-nav__link">
+      <a href="../../../references/ma/intervals/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2669,7 +2344,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../references/characteristics/" class="md-nav__link ">
+            <a href="../../../references/characteristics/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2702,7 +2377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/arithmetic_mean/" class="md-nav__link">
+      <a href="../../../references/characteristics/arithmetic_mean/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2723,7 +2398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/average_remoteness/" class="md-nav__link">
+      <a href="../../../references/characteristics/average_remoteness/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2744,7 +2419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/depth/" class="md-nav__link">
+      <a href="../../../references/characteristics/depth/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2765,7 +2440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/descriptive_information/" class="md-nav__link">
+      <a href="../../../references/characteristics/descriptive_information/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2786,7 +2461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/geometric_mean/" class="md-nav__link">
+      <a href="../../../references/characteristics/geometric_mean/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2807,7 +2482,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/identifying_information/" class="md-nav__link">
+      <a href="../../../references/characteristics/identifying_information/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2828,7 +2503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/regularity/" class="md-nav__link">
+      <a href="../../../references/characteristics/regularity/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2849,7 +2524,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/uniformity/" class="md-nav__link">
+      <a href="../../../references/characteristics/uniformity/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2870,7 +2545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/volume/" class="md-nav__link">
+      <a href="../../../references/characteristics/volume/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2928,7 +2603,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../references/characteristics/ma/" class="md-nav__link ">
+            <a href="../../../references/characteristics/ma/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2961,7 +2636,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/ma/arithmetic_mean/" class="md-nav__link">
+      <a href="../../../references/characteristics/ma/arithmetic_mean/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2982,7 +2657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/ma/average_remoteness/" class="md-nav__link">
+      <a href="../../../references/characteristics/ma/average_remoteness/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3003,7 +2678,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/ma/depth/" class="md-nav__link">
+      <a href="../../../references/characteristics/ma/depth/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3024,7 +2699,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/ma/geometric_mean/" class="md-nav__link">
+      <a href="../../../references/characteristics/ma/geometric_mean/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3045,7 +2720,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/ma/identifying_information/" class="md-nav__link">
+      <a href="../../../references/characteristics/ma/identifying_information/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3066,7 +2741,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/ma/periodicity/" class="md-nav__link">
+      <a href="../../../references/characteristics/ma/periodicity/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3087,7 +2762,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/ma/uniformity/" class="md-nav__link">
+      <a href="../../../references/characteristics/ma/uniformity/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3108,7 +2783,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/characteristics/ma/volume/" class="md-nav__link">
+      <a href="../../../references/characteristics/ma/volume/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3170,7 +2845,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../references/exceptions/" class="md-nav__link ">
+            <a href="../../../references/exceptions/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -3203,7 +2878,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/exceptions/inconsistent_order/" class="md-nav__link">
+      <a href="../../../references/exceptions/inconsistent_order/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3224,7 +2899,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../references/exceptions/not_1d_array/" class="md-nav__link">
+      <a href="../../../references/exceptions/not_1d_array/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3306,7 +2981,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../development/development/" class="md-nav__link">
+      <a href="../../../development/development/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3327,7 +3002,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../development/benchmarks/" class="md-nav__link">
+      <a href="../../../development/benchmarks/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3348,7 +3023,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../development/coverage/" class="md-nav__link">
+      <a href="../../../development/coverage/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3389,6 +3064,65 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Definition
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mathematical Definition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#as-m-tuple-of-congeneric-intervals-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      as m-tuple of congeneric intervals chain
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#as-matrix-ml" class="md-nav__link">
+    <span class="md-ellipsis">
+      as matrix (m,l)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-congeneric-sequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      from Congeneric Sequences
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-congeneric-orders" class="md-nav__link">
+    <span class="md-ellipsis">
+      from Congeneric Orders
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3405,8 +3139,202 @@
   
 
 
-<h1 id="depth">Depth</h1>
-<p>Coming soon</p>
+<h1 id="congeneric-intervals-chains">Congeneric Intervals Chains</h1>
+<p><em>Congeneric Intervals Chains</em> is a stack of a <a href="../../partials_and_congenerics/sequence/#compatibility"><em>compatible</em></a> <a href="../../partials_and_congenerics/intervals_chain/congeneric/"><em>congeric interval chain</em></a>
+that represents <a href="../../order/intervals_chain/"><em>Intervals Chain</em></a> or <a href="../../partials_and_congenerics/intervals_chain/"><em>Partial Intervals Chain</em></a>. The <em>congeneric intervals chains</em> are sorted in the stack by the first position with a <em>non-empty</em> element in it.</p>
+<pre class="mermaid"><code>block-beta
+columns 30
+
+space i1["1"] i2["2"] i3["3"] i4["4"] i5["5"] i6["6"] i7["7"] i8["8"] i9["9"] i10["10"] i11["11"] i12["12"]
+i13["13"] i14["14"] i15["15"] i16["16"] i17["17"] i18["18"] i19["19"] i20["20"]
+i21["21"] i22["22"] i23["23"] i24["24"] i25["25"] i26["26"] i27["27"]
+i28["28"] i29["29"]
+
+j1["1"] s1["23"] s2["-"] s3["-"] s4["-"] s5["-"] s6["-"] s7["6"] s8["-"] s9["-"] s10["-"]
+s11["-"] s12["-"] s13["-"] s14["-"] s15["-"] s16["-"] s17["-"] s18["-"] s19["-"] s20["-"]
+s21["-"] s22["-"] s23["-"] s24["-"] s25["-"] s26["-"] s27["-"] s28["-"] s29["-"]
+
+j2["2"] n1["-"] n2["21"] n3["-"] n4["-"] n5["-"] n6["-"] n7["-"] n8["-"] n9["-"] n10["8"]
+n11["-"] n12["-"] n13["-"] n14["-"] n15["-"] n16["-"] n17["-"] n18["-"] n19["-"] n20["-"]
+n21["-"] n22["-"] n23["-"] n24["-"] n25["-"] n26["-"] n27["-"] n28["-"] n29["-"]
+
+j3["3"] t1["-"] t2["-"] t3["3"] t4["-"] t5["-"] t6["-"] t7["-"] t8["-"] t9["-"] t10["-"]
+t11["-"] t12["-"] t13["-"] t14["-"] t15["-"] t16["-"] t17["14"] t18["-"] t19["-"] t20["-"]
+t21["-"] t22["-"] t23["-"] t24["-"] t25["-"] t26["9"] t27["-"] t28["-"] t29["3"]
+
+j4["4"] e1["-"] e2["-"] e3["-"] e4["21"] e5["-"] e6["-"] e7["-"] e8["-"] e9["5"] e10["-"]
+e11["-"] e12["3"] e13["-"] e14["-"] e15["-"] e16["-"] e17["-"] e18["-"] e19["-"] e20["-"]
+e21["-"] e22["-"] e23["-"] e24["-"] e25["-"] e26["-"] e27["-"] e28["-"] e29["-"]
+
+j5["5"] l1["-"] l2["-"] l3["-"] l4["-"] l5["10"] l6["1"] l7["-"] l8["-"] l9["-"] l10["-"]
+l11["-"] l12["-"] l13["-"] l14["-"] l15["-"] l16["-"] l17["-"] l18["-"] l19["-"] l20["-"]
+l21["-"] l22["-"] l23["-"] l24["18"] l25["-"] l26["-"] l27["-"] l28["-"] l29["-"]
+
+j6["6"] g1["-"] g2["-"] g3["-"] g4["-"] g5["-"] g6["-"] g7["-"] g8["29"] g9["-"] g10["-"]
+g11["-"] g12["-"] g13["-"] g14["-"] g15["-"] g16["-"] g17["-"] g18["-"] g19["-"] g20["-"]
+g21["-"] g22["-"] g23["-"] g24["-"] g25["-"] g26["-"] g27["-"] g28["-"] g29["-"]
+
+j7["7"] c1["-"] c2["-"] c3["-"] c4["-"] c5["-"] c6["-"] c7["-"] c8["-"] c9["-"] c10["-"]
+c11["29"] c12["-"] c13["-"] c14["-"] c15["-"] c16["-"] c17["-"] c18["-"] c19["-"] c20["-"]
+c21["-"] c22["-"] c23["-"] c24["-"] c25["-"] c26["-"] c27["-"] c28["-"] c29["-"]
+
+j8["8"] sp1["-"] sp2["-"] sp3["-"] sp4["-"] sp5["-"] sp6["-"] sp7["-"] sp8["-"] sp9["-"] sp10["-"]
+sp11["-"] sp12["-"] sp13["22"] sp14["-"] sp15["-"] sp16["3"] sp17["-"] sp18["-"] sp19["-"] sp20["4"]
+sp21["-"] sp22["-"] sp23["-"] sp24["-"] sp25["-"] sp26["-"] sp27["-"] sp28["-"] sp29["-"]
+
+j9["9"] b1["-"] b2["-"] b3["-"] b4["-"] b5["-"] b6["-"] b7["-"] b8["-"] b9["-"] b10["-"]
+b11["-"] b12["-"] b13["-"] b14["-"] b15["-"] b16["-"] b17["-"] b18["-"] b19["-"] b20["-"]
+b21["-"] b22["29"] b23["-"] b24["-"] b25["-"] b26["-"] b27["-"] b28["-"] b29["-"]
+
+
+classDef c1 fill:#ff7f0e,color:#fff;
+classDef c2 fill:#ffbb78,color:#000;
+classDef c3 fill:#2ca02c,color:#fff;
+classDef c4 fill:#98df8a,color:#000;
+classDef c5 fill:#d62728,color:#fff;
+classDef c6 fill:#ff9896,color:#000;
+classDef c7 fill:#9467bd,color:#fff;
+classDef c8 fill:#c5b0d5,color:#000;
+classDef c9 fill:#8c564b,color:#fff;
+classDef c10 fill:#c49c94,color:#000;
+classDef c11 fill:#e377c2,color:#fff;
+classDef c12 fill:#f7b6d2,color:#000;
+classDef c13 fill:#bcbd22,color:#fff;
+classDef c14 fill:#dbdb8d,color:#000;
+classDef c15 fill:#17becf,color:#fff;
+classDef c16 fill:#9edae5,color:#000;
+
+classDef skip fill:#ffffff
+classDef index fill:#ffffff,stroke-width:0px
+
+class s2,s3,s4,s5,s6,s8,s9,s10 index
+class s11,s12,s13,s14,s15,s16,s17,s18,s19,s20 index
+class s21,s22,s23,s24,s25,s26,s27,s28,s29 index
+
+class n1,n3,n4,n5,n6,n7,n8,n9 index
+class n11,n12,n13,n14,n15,n16,n17,n18,n19,n20 index
+class n21,n22,n23,n24,n25,n26,n27,n28,n29 index
+
+class t1,t2,t4,t5,t6,t7,t8,t9,t10 index
+class t11,t12,t13,t14,t15,t16,t18,t19,t20 index
+class t21,t22,t23,t24,t25,t27,t28 index
+
+class e1,e2,e3,e5,e6,e7,e8,e10 index
+class e11,e13,e14,e15,e16,e17,e18,e19,e20 index
+class e21,e22,e23,e24,e25,e26,e27,e28,e29 index
+
+class l1,l2,l3,l4,l7,l8,l9,l10 index
+class l11,l12,l13,l14,l15,l16,l17,l18,l19,l20 index
+class l21,l22,l23,l25,l26,l27,l28,l29 index
+
+class g1,g2,g3,g4,g5,g6,g7,g9,g10 index
+class g11,g12,g13,g14,g15,g16,g17,g18,g19,g20 index
+class g21,g22,g23,g24,g25,g26,g27,g28,g29 index
+
+class c1,c2,c3,c4,c5,c6,c7,c8,c9,c10 index
+class c12,c13,c14,c15,c16,c17,c18,c19,c20 index
+class c21,c22,c23,c24,c25,c26,c27,c28,c29 index
+
+class sp1,sp2,sp3,sp4,sp5,sp6,sp7,sp8,sp9,sp10 index
+class sp11,sp12,sp14,sp15,sp17,sp18,sp19 index
+class sp21,sp22,sp23,sp24,sp25,sp26,sp27,sp28,sp29 index
+
+class b1,b2,b3,b4,b5,b6,b7,b8,b9,b10 index
+class b11,b12,b13,b14,b15,b16,b17,b18,b19,b20 index
+class b21,b23,b24,b25,b26,b27,b28,b29 index
+
+
+class i1,i2,i3,i4,i5,i6,i7,i8,i9,i10 index
+class i11,i12,i13,i14,i15,i16,i17,i18,i19,i20 index
+class i21,i22,i23,i24,i25,i26,i27,i28,i29 index
+
+class j1,j2,j3,j4,j5,j6,j7,j8,j9 index</code></pre>
+<h2 id="mathematical-definition">Mathematical Definition</h2>
+<p>Let <span class="arithmatex">\(IC_{c}\)</span> is <a href="../../partials_and_congenerics/intervals_chain/congeneric/#mathematical-definition"><em>Congeneric Interval Chain</em></a></p>
+<p>Define a <em>Congeric intervals chains</em></p>
+<h3 id="as-m-tuple-of-congeneric-intervals-chain">as m-tuple of congeneric intervals chain</h3>
+<p>Let <span class="arithmatex">\(compatible(IC1_c, IC2_c)\)</span> is <a href="../../partials_and_congenerics/sequence/#compatibility"><em>compatibility of Partial Sequences function</em></a></p>
+<p><span class="arithmatex">\(CIC\)</span> is m-tuple of <span class="arithmatex">\(IC_c\)</span> <em>intervals chain</em></p>
+<div class="arithmatex">\[CIC = &lt;cic_1, cic_2, ..., cic_m&gt;,\]</div>
+<div class="arithmatex">\[\forall j \in \{1, ..., m\} \exists cic_j \in \{IC_c\}, \]</div>
+<p>all <em>congeneric intervals chains</em> are <em>compatible</em></p>
+<div class="arithmatex">\[compatible(CIC(k), CIC(j)) \bigg| \forall k,j \in \{1, ..., m\}, k \ne j,\]</div>
+<p>and sorted by first apperance of <em>non-empty</em> element</p>
+<div class="arithmatex">\[\forall k &gt; j \in \{1,...,m\},\ x &lt; i \in \{1,...,l\}, CIC(k)(x) \ne 1 \bigg| CIC(j)(i) \notin \{-\} \land CIC(j)(x) \in \{-\}\]</div>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(cic_j\)</span>​ is called the <span class="arithmatex">\(j\)</span>-th <em>congeneric intervals chain</em>.</li>
+<li><span class="arithmatex">\(l := |CIC(1)|\)</span> is <em>length</em>, <span class="arithmatex">\(l \in N\)</span></li>
+<li><span class="arithmatex">\(m := |CIC|\)</span> is <em>power</em>, <span class="arithmatex">\(m \in N\)</span></li>
+</ul>
+<h3 id="as-matrix-ml">as matrix (m,l)</h3>
+<p><span class="arithmatex">\(CIC\)</span> is (m,l) matrix of <span class="arithmatex">\(\{1,..,, l\} \cup \{-\}\)</span></p>
+<div class="arithmatex">\[
+CIC =
+\begin{pmatrix}
+\Delta_{1,1} &amp; \Delta_{1,2} &amp; \cdots &amp; \Delta_{1,l} \\
+\Delta_{2,1} &amp; \Delta_{2,2} &amp; \cdots &amp; \Delta_{2,l} \\
+\vdots   &amp; \vdots   &amp; \ddots &amp; \vdots   \\
+\Delta_{m,1} &amp; \Delta_{m,2} &amp; \cdots &amp; \Delta_{m,l}
+\end{pmatrix}
+\]</div>
+<div class="arithmatex">\[\forall j \in \{1, ..., m\}, i \in \{1, ..., l\} \exists \Delta_{j,i} \in \{1,..,, l\} \cup \{-\}, \]</div>
+<p>columns are <em>compatible</em></p>
+<div class="arithmatex">\[\ \Delta_{k,i} \in \{-\} \big | \forall i \in \{1,...,l\}, \forall j \in \{1,...,m\}, \forall  k \ne j,\ \Delta_{j,i} \in \{1,...,l\} \]</div>
+<p>and sorted by first apperance of <em>non-empty</em> element</p>
+<div class="arithmatex">\[\forall k &gt; j \in \{1,...,m\},\ x &lt; i \in \{1,...,l\}, \Delta_{k,x} \in \{-\} \bigg| \Delta_{j,i} \in \{1,...,l\} \land \Delta_{j,x} \in \{-\}\]</div>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(\Delta_j\)</span>​ is called the <span class="arithmatex">\(j\)</span>-th <em>congeneric intervals chain</em> or <span class="arithmatex">\(j\)</span>-th <em>row</em>.</li>
+<li><span class="arithmatex">\(\Delta_{j,i}\)</span>​ is called the <span class="arithmatex">\(i\)</span>-th element of <span class="arithmatex">\(j\)</span>-th <em>congeneric intervals chain</em>.</li>
+<li><span class="arithmatex">\(l\)</span> is <em>length</em>, <span class="arithmatex">\(l \in N\)</span></li>
+<li><span class="arithmatex">\(m\)</span> is <em>power</em>, <span class="arithmatex">\(m \in N\)</span></li>
+</ul>
+<h3 id="from-congeneric-sequences">from Congeneric Sequences</h3>
+<p>Let <span class="arithmatex">\(X_{-}\)</span> is a <a href="../../partials_and_congenerics/carrier_set/#mathematical-definition"><em>Parial carrier set</em></a></p>
+<p>Let <span class="arithmatex">\(CS\)</span> is <a href="../sequences/#mathematical-definition"><em>Congeneric Sequences</em></a> - (m,l) matrix of <span class="arithmatex">\(X_{-}\)</span></p>
+<p>Let <span class="arithmatex">\(Binging_p\)</span> is <a href="../../partials_and_congenerics/intervals_chain/#define-partial-bindings"><em>Partial Binding</em></a></p>
+<p>Let <span class="arithmatex">\(Intervals_p\)</span> is <a href="../../partials_and_congenerics/intervals_chain/#define-partial-intervals-chain"><em>Partial Intervals function</em></a> described as function</p>
+<div class="arithmatex">\[Intervals_p : \big\{Binding_p\big\} \times \big\{S_p\}  \longrightarrow \big\{ IC_p \big\}\]</div>
+<div class="arithmatex">\[
+CS =
+\begin{pmatrix}
+cs_{1,1} &amp; cs_{1,2} &amp; \cdots &amp; cs_{1,l} \\
+cs_{2,1} &amp; cs_{2,2} &amp; \cdots &amp; cs_{2,l} \\
+\vdots   &amp; \vdots   &amp; \ddots &amp; \vdots   \\
+cs_{m,1} &amp; cs_{m,2} &amp; \cdots &amp; cs_{m,l}
+\end{pmatrix}
+\]</div>
+<p>Define</p>
+<div class="arithmatex">\[congenerics\_intervals\_chains : \{CS\} \longrightarrow \{CIC\}\]</div>
+<div class="arithmatex">\[congenerics\_intervals\_chains(CS)(j)(i) = Intervals_p(CS(j))(i) \]</div>
+<div class="arithmatex">\[\exists congenerics\_intervals\_chain^{-1} : \{CIC\} \longrightarrow \{CS\},\]</div>
+<div class="arithmatex">\[congenerics\_intervals\_chains^{-1}(CIC)(i) = \Bigg\{\begin{array}{l}
+    j, &amp; \exists j \in \{1,...,m\}, CIC(j)(i) \notin \{-\} \\
+    -, &amp;   otherwise
+\end{array}\]</div>
+<h3 id="from-congeneric-orders">from Congeneric Orders</h3>
+<p>Let <span class="arithmatex">\(CO\)</span> is <a href="../orders/#mathematical-definition"><em>Congeneric Orders</em></a> - (m,l) matrix of <span class="arithmatex">\(\{1,...,l\} \cup \{-\}\)</span></p>
+<p>Let <span class="arithmatex">\(Binging_p\)</span> is <a href="../../partials_and_congenerics/intervals_chain/#define-partial-bindings"><em>Partial Binding</em></a></p>
+<p>Let <span class="arithmatex">\(Intervals_p\)</span> is <a href="../../partials_and_congenerics/intervals_chain/#define-partial-intervals-chain"><em>Partial Intervals function</em></a> described as function</p>
+<div class="arithmatex">\[Intervals_p : \big\{Binding_p\big\} \times \big\{S_p\}  \longrightarrow \big\{ IC_p \big\}\]</div>
+<div class="arithmatex">\[
+CO =
+\begin{pmatrix}
+co_{1,1} &amp; co_{1,2} &amp; \cdots &amp; co_{1,l} \\
+co_{2,1} &amp; co_{2,2} &amp; \cdots &amp; co_{2,l} \\
+\vdots   &amp; \vdots   &amp; \ddots &amp; \vdots   \\
+co_{m,1} &amp; co_{m,2} &amp; \cdots &amp; co_{m,l}
+\end{pmatrix}
+\]</div>
+<p>Define</p>
+<div class="arithmatex">\[congenerics\_intervals\_chains : \{CO\} \longrightarrow \{CIC\}\]</div>
+<div class="arithmatex">\[congenerics\_intervals\_chains(CO)(j)(i) = Intervals_p(CO(j))(i) \]</div>
+<div class="arithmatex">\[\exists congenerics\_intervals\_chain^{-1} : \{CIC\} \longrightarrow \{CO\},\]</div>
+<div class="arithmatex">\[congenerics\_intervals\_chains^{-1}(CIC)(i) = \Bigg\{\begin{array}{l}
+    1, &amp; \exists j \in \{1,...,m\}, CIC(j)(i) \notin \{-\} \\
+    -, &amp;   otherwise
+\end{array}\]</div>
 
 
 
@@ -3512,14 +3440,14 @@
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
     
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.path", "navigation.indexes", "navigation.tracking", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.path", "navigation.indexes", "navigation.tracking", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.60a45f97.min.js"></script>
       
-        <script src="../../../../assets/_markdown_exec_pyodide.js"></script>
+        <script src="../../../assets/_markdown_exec_pyodide.js"></script>
       
-        <script src="../../../../assets/js/mathjax.js"></script>
+        <script src="../../../assets/js/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
