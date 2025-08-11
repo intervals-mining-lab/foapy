@@ -1,3 +1,0 @@
-# Descriptive Information
-
-Coming soon

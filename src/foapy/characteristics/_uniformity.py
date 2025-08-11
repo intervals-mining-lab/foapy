@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def uniformity(intervals, dtype=None):
+def uniformity(intervals_grouped, dtype=None):
     """
     Calculates uniformity of intervals grouped by element of the alphabet.
 
@@ -71,9 +71,9 @@ def uniformity(intervals, dtype=None):
     """  # noqa: E501
     from foapy.characteristics import average_remoteness, identifying_information
 
-    total_elements = np.concatenate(intervals)
+    total_elements = np.concatenate(intervals_grouped)
 
-    H = identifying_information(intervals, dtype=dtype)
+    H = identifying_information(intervals_grouped, dtype=dtype)
     g = average_remoteness(total_elements, dtype=dtype)
 
     return H - g

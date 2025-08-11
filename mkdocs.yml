@@ -6,50 +6,74 @@ nav:
   - fundamentals/index.md
   - "Ideas":
     - fundamentals/ideas/index.md
-    - "Sequence as a whole object": fundamentals/ideas/sequence_as_an_system_object.md
-    - "Order as a sequence property": fundamentals/ideas/order_as_a_sequence_property.md
+    - "Sequence as a whole object": fundamentals/ideas/sequence_as_a_whole_object.md
+    - "Order as a property": fundamentals/ideas/order_as_a_property.md
     - "Congeneric decomposition": fundamentals/ideas/congeneric_decomposition.md
     - "Interval as a basic information unit": fundamentals/ideas/interval_as_a_basic_information_unit.md
     - "Geomteric mean as alternative to probability": fundamentals/ideas/geometric_mean_based_characteristics.md
-  - "Objects":
-    - fundamentals/objects/index.md
-    - "Sequence": fundamentals/objects/sequence.md
-    - "Alphabet": fundamentals/objects/alphabet.md
-    - "Order": fundamentals/objects/order.md
-    - "Interval": fundamentals/objects/interval.md
-    - "Intervals Order": fundamentals/objects/intervals_order.md
-    - "Intervals Tuple": fundamentals/objects/intervals_tuple.md
-    - "Intervals Distribution": fundamentals/objects/intervals_distribution.md
+  - "Order and its measures":
+    - fundamentals/order/index.md
+    - "Carrier set": fundamentals/order/carrier_set.md
+    - "Sequence": fundamentals/order/sequence.md
+    - "Alphabet": fundamentals/order/alphabet.md
+    - "Order": fundamentals/order/order.md
+    - "Intervals Chain":
+      - fundamentals/order/intervals_chain/index.md
+      - "Bounded": fundamentals/order/intervals_chain/bounded.md
+      - "Cycled": fundamentals/order/intervals_chain/cycled.md
+    - "Intervals Distribution":
+      - fundamentals/order/intervals_distribution/index.md
+      - "Lossy": fundamentals/order/intervals_distribution/lossy.md
+      - "Redundant": fundamentals/order/intervals_distribution/redundant.md
+    - "Characteristics":
+      - fundamentals/order/characteristics/index.md
+      - "Arithmetic mean": fundamentals/order/characteristics/arithmetic_mean.md
+      - "Geometric mean": fundamentals/order/characteristics/geometric_mean.md
+      - "Volume": fundamentals/order/characteristics/volume.md
+      - "Average remoteness": fundamentals/order/characteristics/average_remoteness.md
+      - "Depth": fundamentals/order/characteristics/depth.md
+  - "Partials and congenerics":
+    - fundamentals/partials_and_congenerics/index.md
+    - "Carrier set": fundamentals/partials_and_congenerics/carrier_set.md
+    - "Sequence":
+      - fundamentals/partials_and_congenerics/sequence/index.md
+      - "Congeneric": fundamentals/partials_and_congenerics/sequence/congeneric.md
+    - "Alphabet":
+      - fundamentals/partials_and_congenerics/alphabet/index.md
+      - "Congeneric": fundamentals/partials_and_congenerics/alphabet/congeneric.md
+    - "Order":
+      - fundamentals/partials_and_congenerics/order/index.md
+      - "Congeneric": fundamentals/partials_and_congenerics/order/congeneric.md
+    - "Intervals chain":
+      - fundamentals/partials_and_congenerics/intervals_chain/index.md
+      - "Congeneric": fundamentals/partials_and_congenerics/intervals_chain/congeneric.md
+    - "Intervals distribution": fundamentals/partials_and_congenerics/intervals_distribution.md
+    - "Characteristics": fundamentals/partials_and_congenerics/characteristics.md
   - "Congeneric decomposition":
     - fundamentals/congeneric_decomposition/index.md
-    - "Congeneric sequences": fundamentals/congeneric_decomposition/congeneric_sequences.md
-    - "Congeneric orders": fundamentals/congeneric_decomposition/congeneric_orders.md
-    - "Congeneric intervals order": fundamentals/congeneric_decomposition/congeneric_intervals_order.md
-    - "Congeneric intervals tuple": fundamentals/congeneric_decomposition/congeneric_intervals_tuple.md
-    - "Congeneric intervals distribution": fundamentals/congeneric_decomposition/congeneric_intervals_distribution.md
-  - "Characteristics":
-    - fundamentals/characteristics/index.md
-    - "Arithmetic mean": fundamentals/characteristics/arithmetic_mean.md
-    - "Average remoteness": fundamentals/characteristics/average_remoteness.md
-    - "Depth": fundamentals/characteristics/depth.md
-    - "Descriptive information": fundamentals/characteristics/descriptive_information.md
-    - "Geometric mean": fundamentals/characteristics/geometric_mean.md
-    - "Identifying information": fundamentals/characteristics/identifying_information.md
-    - "Periodicity": fundamentals/characteristics/periodicity.md
-    - "Uniformity": fundamentals/characteristics/uniformity.md
-    - "Volume": fundamentals/characteristics/volume.md
-  - "Connections to other mathfields":
-    - fundamentals/connections_to_other_mathfields/index.md
-    - "Information theory": fundamentals/connections_to_other_mathfields/information_theory.md
-    - "Probability theory": fundamentals/connections_to_other_mathfields/probability_theory.md
-    - "Statistics": fundamentals/connections_to_other_mathfields/statistics.md
-    - "Combinatorics": fundamentals/connections_to_other_mathfields/combinatorics.md
-  - "Applications":
-    - fundamentals/applications/index.md
-    - "Text mining": fundamentals/applications/text_mining.md
-    - "Bioinformatics": fundamentals/applications/bioinformatics.md
-    - "Music analysis": fundamentals/applications/music_analysis.md
-    - "Other applications": fundamentals/applications/other_applications.md
+    - "Sequences": fundamentals/congeneric_decomposition/sequences.md
+    - "Alphabet": fundamentals/congeneric_decomposition/alphabet.md
+    - "Orders": fundamentals/congeneric_decomposition/orders.md
+    - "Intervals chains": fundamentals/congeneric_decomposition/intervals_chains.md
+    - "Intervals distribution": fundamentals/congeneric_decomposition/intervals_distribution.md
+    - "Characteristics":
+      - fundamentals/congeneric_decomposition/characteristics/index.md
+      - "Descriptive informations": fundamentals/congeneric_decomposition/characteristics/descriptive_information.md
+      - "Identifying information": fundamentals/congeneric_decomposition/characteristics/identifying_information.md
+      - "Regularity": fundamentals/congeneric_decomposition/characteristics/regularity.md
+      - "Uniformity": fundamentals/congeneric_decomposition/characteristics/uniformity.md
+  # - "Connections to other mathfields":
+  #   - fundamentals/connections_to_other_mathfields/index.md
+  #   - "Information theory": fundamentals/connections_to_other_mathfields/information_theory.md
+  #   - "Probability theory": fundamentals/connections_to_other_mathfields/probability_theory.md
+  #   - "Statistics": fundamentals/connections_to_other_mathfields/statistics.md
+  #   - "Combinatorics": fundamentals/connections_to_other_mathfields/combinatorics.md
+  # - "Applications":
+  #   - fundamentals/applications/index.md
+  #   - "Text mining": fundamentals/applications/text_mining.md
+  #   - "Bioinformatics": fundamentals/applications/bioinformatics.md
+  #   - "Music analysis": fundamentals/applications/music_analysis.md
+  #   - "Other applications": fundamentals/applications/other_applications.md
 - "References":
   - "foapy.alphabet": references/alphabet.md
   - "foapy.order": references/order.md
@@ -138,12 +162,16 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
   - tables
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 plugins:
 - autorefs

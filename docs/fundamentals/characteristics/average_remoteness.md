@@ -1,3 +1,0 @@
-# Average Remoteness
-
-Coming soon

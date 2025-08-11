@@ -1,3 +1,0 @@
-# Arithmetic Mean
-
-Coming soon

@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def regularity(intervals, dtype=None):
+def regularity(intervals_grouped, dtype=None):
     """
     Calculates regularity of intervals grouped by element of the alphabet.
 
@@ -75,7 +75,7 @@ def regularity(intervals, dtype=None):
     """  # noqa: E501
     from foapy.characteristics import descriptive_information, geometric_mean
 
-    total_elements = np.concatenate(intervals)
+    total_elements = np.concatenate(intervals_grouped)
     g = geometric_mean(total_elements, dtype=dtype)
-    D = descriptive_information(intervals, dtype=dtype)
+    D = descriptive_information(intervals_grouped, dtype=dtype)
     return g / D
