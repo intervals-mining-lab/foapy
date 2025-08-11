@@ -456,6 +456,10 @@ Let $Binding = <Iterator, \bot>$ is [_Binding_](../../order/intervals_chain/inde
 
 Let $R : \{1,...,l\} \longrightarrow \{1,...,l\} \cup \bot,$ is a corresponding [_references_](../../order/intervals_chain/index.md#define-bindings)
 
+Let $Intervals$ is [_Intervals function_](../../order/intervals_chain/index.md#define-intervals-chain) described as function
+
+$$Intervals : \big\{Binding\big\} \times \big\{S\}  \longrightarrow \big\{ IC \big\}$$
+
 Then _Iterator_ defined as $Iterator \big\{  S \big\} \longrightarrow \big\{ R \big\},$
 
 ### Define Partial Bindings

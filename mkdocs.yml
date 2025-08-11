@@ -51,33 +51,29 @@ nav:
     - "Characteristics": fundamentals/partials_and_congenerics/characteristics.md
   - "Congeneric decomposition":
     - fundamentals/congeneric_decomposition/index.md
-    - "Congeneric sequences": fundamentals/congeneric_decomposition/congeneric_sequences.md
-    - "Congeneric orders": fundamentals/congeneric_decomposition/congeneric_orders.md
-    - "Congeneric intervals order": fundamentals/congeneric_decomposition/congeneric_intervals_order.md
-    - "Congeneric intervals distribution": fundamentals/congeneric_decomposition/congeneric_intervals_distribution.md
+    - "Sequences": fundamentals/congeneric_decomposition/sequences.md
+    - "Alphabet": fundamentals/congeneric_decomposition/alphabet.md
+    - "Orders": fundamentals/congeneric_decomposition/orders.md
+    - "Intervals chains": fundamentals/congeneric_decomposition/intervals_chains.md
+    - "Intervals distribution": fundamentals/congeneric_decomposition/intervals_distribution.md
     - "Characteristics":
       - fundamentals/congeneric_decomposition/characteristics/index.md
-      - "Arithmetic means": fundamentals/congeneric_decomposition/characteristics/arithmetic_mean.md
-      - "Average remotenesses": fundamentals/congeneric_decomposition/characteristics/average_remoteness.md
-      - "Depths": fundamentals/congeneric_decomposition/characteristics/depth.md
       - "Descriptive informations": fundamentals/congeneric_decomposition/characteristics/descriptive_information.md
-      - "Geometric means": fundamentals/congeneric_decomposition/characteristics/geometric_mean.md
       - "Identifying information": fundamentals/congeneric_decomposition/characteristics/identifying_information.md
-      - "Periodicity": fundamentals/congeneric_decomposition/characteristics/periodicity.md
+      - "Regularity": fundamentals/congeneric_decomposition/characteristics/regularity.md
       - "Uniformity": fundamentals/congeneric_decomposition/characteristics/uniformity.md
-      - "Volume": fundamentals/congeneric_decomposition/characteristics/volume.md
-  - "Connections to other mathfields":
-    - fundamentals/connections_to_other_mathfields/index.md
-    - "Information theory": fundamentals/connections_to_other_mathfields/information_theory.md
-    - "Probability theory": fundamentals/connections_to_other_mathfields/probability_theory.md
-    - "Statistics": fundamentals/connections_to_other_mathfields/statistics.md
-    - "Combinatorics": fundamentals/connections_to_other_mathfields/combinatorics.md
-  - "Applications":
-    - fundamentals/applications/index.md
-    - "Text mining": fundamentals/applications/text_mining.md
-    - "Bioinformatics": fundamentals/applications/bioinformatics.md
-    - "Music analysis": fundamentals/applications/music_analysis.md
-    - "Other applications": fundamentals/applications/other_applications.md
+  # - "Connections to other mathfields":
+  #   - fundamentals/connections_to_other_mathfields/index.md
+  #   - "Information theory": fundamentals/connections_to_other_mathfields/information_theory.md
+  #   - "Probability theory": fundamentals/connections_to_other_mathfields/probability_theory.md
+  #   - "Statistics": fundamentals/connections_to_other_mathfields/statistics.md
+  #   - "Combinatorics": fundamentals/connections_to_other_mathfields/combinatorics.md
+  # - "Applications":
+  #   - fundamentals/applications/index.md
+  #   - "Text mining": fundamentals/applications/text_mining.md
+  #   - "Bioinformatics": fundamentals/applications/bioinformatics.md
+  #   - "Music analysis": fundamentals/applications/music_analysis.md
+  #   - "Other applications": fundamentals/applications/other_applications.md
 - "References":
   - "foapy.alphabet": references/alphabet.md
   - "foapy.order": references/order.md

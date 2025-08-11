@@ -1,10 +1,10 @@
-# Identifying Information
+# Regularity
 
-The Identifying Information or Entropy
+The Regularity
 
 ## Mathematical Definition
 
-The identifying information/entropy can be calculated
+The regularity can be calculated
 
 
 ### from Congeneric Intervals Chains
@@ -21,10 +21,18 @@ CIC =
 \end{pmatrix}
 $$
 
-$$H=\frac {1} {n} * \sum_{j=1}^{m}{\Bigg(n_j \times \log_2 \bigg( \sum_{i=1}^{l}{\Bigg\{\begin{array}{l}
+$$r= \sqrt[n]{\prod_{j=1}^{m} \frac{
+\prod_{j=1}^{l} \Bigg\{\begin{array}{l}
+    \Delta_{i,j}, & \Delta_{i,j} \notin \{-\} \\
+    1, &   \Delta_{i,j} \in \{ - \}
+\end{array}}
+{{\left(\frac{1}{n_j} \times \sum_{i=1}^{l}{\Bigg\{\begin{array}{l}
     \Delta_{i,j}, & \Delta_{i,j} \notin \{-\} \\
     0, &   \Delta_{i,j} \in \{ - \}
-\end{array}}\bigg) - \log_2 n_j^{n_j} \Bigg)}$$
+\end{array}}\right)^{n_j}}
+}
+}$$
+
 
 where $m$ the _power_, $n_j = \sum_{i=1}^{l}{\Bigg\{\begin{array}{l}
     1, & \Delta_{i,j} \notin \{-\} \\
@@ -49,7 +57,14 @@ cid_{m,1} & cid_{m,2} & \cdots & cid_{m,l}
 \end{pmatrix}
 $$
 
-$$H=\frac {1} {n} * \sum_{j=1}^{m}{\Bigg(n_j \times \log_2 \sum_{i=1}^{l}{ \frac{i \times cid_{i,j}}{n_j}} \Bigg)}$$
+$$r= \sqrt[n]{\prod_{j=1}^{m} \frac{
+\prod_{j=1}^{l} \Bigg\{\begin{array}{l}
+    i \times cid_{i,j}, & cid_{i,j} \neq 0 \\
+    1, &   cid_{i,j} = 0
+\end{array}}
+{{\left(\frac{1}{n_j} \times \sum_{i=1}^{l}{(i \times cid_{i,j})}\right)^{n_j}}
+}
+}$$
 
 
 where $m$ the _power_, $n_j = \sum_{i=1}^{l}{cid_{i,j}}$ is count of _non-empty_ elements in $j$ _congeneric intervals distribution_,

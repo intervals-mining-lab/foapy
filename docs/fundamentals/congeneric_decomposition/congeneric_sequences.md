@@ -1,3 +1,0 @@
-# Congeneric Sequences
-
-Coming soon

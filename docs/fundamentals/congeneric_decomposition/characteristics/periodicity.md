@@ -1,3 +1,0 @@
-# Periodicity
-
-Coming soon
