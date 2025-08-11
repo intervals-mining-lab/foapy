@@ -1,27 +1,34 @@
-<!-- These are examples of badges you might want to add to your README:
-     please update the URLs accordingly
-
-[![Built Status](https://api.cirrus-ci.com/github/<USER>/foapy.svg?branch=main)](https://cirrus-ci.com/github/<USER>/foapy)
-[![ReadTheDocs](https://readthedocs.org/projects/foapy/badge/?version=latest)](https://foapy.readthedocs.io/en/stable/)
-[![Coveralls](https://img.shields.io/coveralls/github/<USER>/foapy/main.svg)](https://coveralls.io/r/<USER>/foapy)
-[![PyPI-Server](https://img.shields.io/pypi/v/foapy.svg)](https://pypi.org/project/foapy/)
-[![Conda-Forge](https://img.shields.io/conda/vn/conda-forge/foapy.svg)](https://anaconda.org/conda-forge/foapy)
-[![Monthly Downloads](https://pepy.tech/badge/foapy/month)](https://pepy.tech/project/foapy)
-[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter)](https://twitter.com/foapy)
--->
-
-[![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
-
 # foapy
 
-> Formal order analysis library
+**foapy** is a Python library for Formal Order Analysis (FOA), providing a comprehensive toolkit for analyzing and characterizing sequences, orders, and their structural properties. The library is designed for researchers, data scientists, and developers interested in symbolic sequence analysis, combinatorics, information theory, and related fields.
 
-A longer description of your project goes here...
+## Features
 
+- **Alphabets and Orders:** Tools to define and manipulate alphabets, generate and analyze orders, and extract structural information from sequences.
+- **Intervals and Chains:** Compute intervals, interval chains, and distributions for sequences, supporting both basic and advanced FOA concepts.
+- **Congeneric Decomposition:** Decompose sequences into congeneric components, enabling detailed structural and informational analysis.
+- **Mathematical Characteristics:** Calculate a wide range of characteristics, including arithmetic mean, geometric mean, volume, average remoteness, depth, descriptive and identifying information, regularity, and uniformity.
+- **Extensive Documentation:** In-depth explanations of mathematical foundations, algorithms, and usage examples.
+- **Test Suite:** Comprehensive tests to ensure correctness and reliability.
 
-<!-- pyscaffold-notes -->
+## Project Structure
 
-## Note
+- **Source Code:** [`./src`](./src)
+  Contains the implementation of all FOA algorithms, data structures, and characteristics.
+- **Documentation:** [`./docs`](./docs)
+  Includes detailed guides, mathematical background, API references, and examples. The documentation is written in Markdown and can be built as a website using MkDocs.
+- **Tests:** [`./test`](./test)
+  Contains unit tests and example-based tests to verify the correctness of the library.
 
-This project has been set up using PyScaffold 4.5. For details and usage
-information on PyScaffold see https://pyscaffold.org/.
+## Documentation
+
+The documentation in [`./docs`](./docs) covers:
+
+- **Fundamentals:** Core concepts of formal order analysis, including alphabets, sequences, orders, intervals, and their mathematical properties.
+- **Order and Measures:** Detailed descriptions of order-related structures and their characteristics.
+- **Congeneric Decomposition:** Step-by-step guides to decomposing sequences and interpreting the results.
+- **Mathematical Definitions:** Formal definitions and derivations of all implemented characteristics.
+- **API Reference:** Usage and parameter details for all public functions and classes.
+- **Development and Benchmarks:** Information on contributing, code coverage, and performance benchmarks.
+
+To view the documentation as a website, install [MkDocs](https://www.mkdocs.org/) and run:
