@@ -5,6 +5,11 @@
     "aliases": []
   },
   {
+    "version": "posthog-integration",
+    "title": "posthog-integration",
+    "aliases": []
+  },
+  {
     "version": "main",
     "title": "main",
     "aliases": []
