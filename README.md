@@ -1,34 +1,120 @@
 # foapy
 
-**foapy** is a Python library for Formal Order Analysis (FOA), providing a comprehensive toolkit for analyzing and characterizing sequences, orders, and their structural properties. The library is designed for researchers, data scientists, and developers interested in symbolic sequence analysis, combinatorics, information theory, and related fields.
+Python library for Formal Order Analysis (FOA) of symbolic sequences.
+
+## What is FOA?
+
+Formal Order Analysis (FOA) studies the structure of symbolic sequences by:
+
+- Mapping a sequence to its order and alphabet (the set of unique symbols in order of first appearance).
+- Extracting intervals between repeated occurrences of the same symbol under different boundary modes.
+- Quantifying structure with characteristics (e.g., arithmetic/geometric means, volume, average remoteness, depth, descriptive/identifying information, regularity, uniformity).
+
+This enables robust analysis for text, biological sequences, musical motifs, logs, and any categorical time series.
 
 ## Features
 
-- **Alphabets and Orders:** Tools to define and manipulate alphabets, generate and analyze orders, and extract structural information from sequences.
-- **Intervals and Chains:** Compute intervals, interval chains, and distributions for sequences, supporting both basic and advanced FOA concepts.
-- **Congeneric Decomposition:** Decompose sequences into congeneric components, enabling detailed structural and informational analysis.
-- **Mathematical Characteristics:** Calculate a wide range of characteristics, including arithmetic mean, geometric mean, volume, average remoteness, depth, descriptive and identifying information, regularity, and uniformity.
-- **Extensive Documentation:** In-depth explanations of mathematical foundations, algorithms, and usage examples.
-- **Test Suite:** Comprehensive tests to ensure correctness and reliability.
+- **Alphabets and Orders:** Define alphabets and compute orders of sequences.
+- **Intervals and Chains:** Extract intervals for multiple binding and boundary modes.
+- **Congeneric Decomposition:** Decompose sequences into congeneric components.
+- **Mathematical Characteristics:** Arithmetic mean, geometric mean, volume, average remoteness, depth, descriptive and identifying information, regularity, uniformity.
+- **Masked-array Support:** FOA on partially observed sequences via `foapy.ma`.
+- **Extensive Documentation:** Theory, algorithms, and examples.
+
+## Installation
+
+- From PyPI:
+
+```bash
+pip install foapy
+```
+
+- From source (with tox workflows):
+
+```bash
+git clone https://github.com/intervals-mining-lab/foapy.git
+cd foapy
+python -m pip install --upgrade pip
+python -m pip install tox
+
+# Run tests (isolated env)
+tox -e default
+
+# Build distribution artifacts (sdist and wheel)
+tox -e build
+
+# Optionally clean build artifacts
+tox -e clean
+```
+
+## Quick start
+
+Compute order, intervals, and a characteristic:
+
+```python
+import foapy
+
+# 1) Order and alphabet
+source = ['a', 'b', 'a', 'c', 'd']
+order = foapy.order(source)
+print(order)  # [0 1 0 2 3]
+
+order_arr, alphabet = foapy.order(source, True)
+print(order_arr, alphabet)  # [0 1 0 2 3] ['a' 'b' 'c' 'd']
+
+# 2) Intervals (binding to start, normal mode)
+from foapy import binding, mode
+intervals = foapy.intervals(['a', 'b', 'a', 'c', 'a', 'd'], binding.start, mode.normal)
+print(intervals)  # [1 2 2 3 2 5]
+
+# 3) A characteristic (volume = product of intervals)
+val = foapy.characteristics.volume(intervals)
+print(val)  # 192
+```
+
+Masked arrays (optional):
+
+```python
+import numpy as np
+import numpy.ma as ma
+import foapy
+
+seq = ma.masked_array(['a', 'b', 'a', 'c', 'd'], mask=[0, 1, 0, 0, 0])
+order_ma = foapy.ma.order(seq)
+intervals_grouped = foapy.ma.intervals(order_ma, foapy.binding.start, foapy.mode.normal)
+u = foapy.characteristics.uniformity(intervals_grouped)
+print(u)
+```
 
 ## Project Structure
 
 - **Source Code:** [`./src`](./src)
-  Contains the implementation of all FOA algorithms, data structures, and characteristics.
 - **Documentation:** [`./docs`](./docs)
-  Includes detailed guides, mathematical background, API references, and examples. The documentation is written in Markdown and can be built as a website using MkDocs.
-- **Tests:** [`./test`](./test)
-  Contains unit tests and example-based tests to verify the correctness of the library.
+- **Tests:** [`./tests`](./tests)
 
 ## Documentation
 
-The documentation in [`./docs`](./docs) covers:
+Online documentation: [intervals-mining-lab.github.io/foapy](https://intervals-mining-lab.github.io/foapy).
 
-- **Fundamentals:** Core concepts of formal order analysis, including alphabets, sequences, orders, intervals, and their mathematical properties.
-- **Order and Measures:** Detailed descriptions of order-related structures and their characteristics.
-- **Congeneric Decomposition:** Step-by-step guides to decomposing sequences and interpreting the results.
-- **Mathematical Definitions:** Formal definitions and derivations of all implemented characteristics.
-- **API Reference:** Usage and parameter details for all public functions and classes.
-- **Development and Benchmarks:** Information on contributing, code coverage, and performance benchmarks.
+The documentation in [`./docs`](./docs) covers fundamentals, algorithms, characteristics, applications, and development notes.
 
-To view the documentation as a website, install [MkDocs](https://www.mkdocs.org/) and run:
+Build and serve the docs locally (via tox):
+
+```bash
+# Build docs into docs/_build
+tox -e docs
+
+# Serve docs with live-reload for development
+tox -e docsserve
+```
+
+## Testing
+
+Run the test suite (via tox):
+
+```bash
+tox -e default
+
+# Pass arguments to pytest after --, e.g. run a subset:
+tox -e default -- -k order -q
+```
