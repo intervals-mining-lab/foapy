@@ -63,3 +63,12 @@ class TestOrder(TestCase):
         exists_array, exists_alphabet = order(X, True)
         assert_array_equal(expected_alphabet, exists_alphabet)
         assert_array_equal(expected_array, exists_array)
+
+    def test_reverse(self):
+        length = np.random.randint(1, 50000)
+        alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
+        X = np.random.choice(alphabet, length)
+
+        exists_order, exists_alphabet = order(X, True)
+        X_restore = exists_alphabet[exists_order]
+        assert_array_equal(X, X_restore)
