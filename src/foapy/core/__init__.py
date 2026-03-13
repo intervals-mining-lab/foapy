@@ -22,8 +22,18 @@ else:
 
     # isort: on
 
-    __all__ = list({"binding", "mode", "intervals", "order", "alphabet",
-                    "intervals_chain", "intervals_tuple", "intervals_distribution"})
+    __all__ = list(
+        {
+            "binding",
+            "mode",
+            "intervals",
+            "order",
+            "alphabet",
+            "intervals_chain",
+            "intervals_tuple",
+            "intervals_distribution",
+        }
+    )
 
     def __dir__():
         return __all__
