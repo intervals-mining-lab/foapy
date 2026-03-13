@@ -2,6 +2,7 @@ import numpy as np
 from numpy import ndarray
 
 from foapy.core import binding as constants_binding
+from foapy.core import intervals_chain, intervals_tuple
 from foapy.core import mode as constants_mode
 
 
@@ -135,40 +136,9 @@ def intervals(X, binding: int, mode: int) -> ndarray:
     if binding == constants_binding.end:
         ar = ar[::-1]
 
-    perm = ar.argsort(kind="mergesort")
+    result = intervals_chain(ar, mode)
+    result = intervals_tuple(ar, result, mode, binding)
 
-    mask_shape = ar.shape
-    mask = np.empty(mask_shape[0] + 1, dtype=bool)
-    mask[:1] = True
-    mask[1:-1] = ar[perm[1:]] != ar[perm[:-1]]
-    mask[-1:] = True  # or  mask[-1] = True
-
-    first_mask = mask[:-1]
-    last_mask = mask[1:]
-
-    intervals = np.empty(ar.shape, dtype=np.intp)
-    intervals[1:] = perm[1:] - perm[:-1]
-
-    delta = len(ar) - perm[last_mask] if mode == constants_mode.cycle else 1
-    intervals[first_mask] = perm[first_mask] + delta
-
-    inverse_perm = np.empty(ar.shape, dtype=np.intp)
-    inverse_perm[perm] = np.arange(ar.shape[0])
-
-    if mode == constants_mode.lossy:
-        intervals[first_mask] = 0
-        intervals = intervals[inverse_perm]
-        result = intervals[intervals != 0]
-    elif mode == constants_mode.normal:
-        result = intervals[inverse_perm]
-    elif mode == constants_mode.cycle:
-        result = intervals[inverse_perm]
-    elif mode == constants_mode.redundant:
-        result = intervals[inverse_perm]
-        redundant_intervals = len(ar) - perm[last_mask]
-        if binding == constants_binding.end:
-            redundant_intervals = redundant_intervals[::-1]
-        result = np.concatenate((result, redundant_intervals))
     if binding == constants_binding.end:
         result = result[::-1]
 

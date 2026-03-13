@@ -29,6 +29,9 @@ else:
     from foapy.core import alphabet  # noqa: F401
     from foapy.core import binding  # noqa: F401
     from foapy.core import intervals  # noqa: F401
+    from foapy.core import intervals_chain  # noqa: F401
+    from foapy.core import intervals_distribution  # noqa: F401
+    from foapy.core import intervals_tuple  # noqa: F401
     from foapy.core import mode  # noqa: F401
     from foapy.core import order  # noqa: F401
 
@@ -41,6 +44,8 @@ else:
     __all__ = list(
         __foapy_submodules__
         | {"order", "intervals", "alphabet", "binding", "mode"}
+        | {"intervals_chain", "intervals_tuple"}
+        | {"intervals_distribution"}
         | {"__version__", "__array_namespace_info__"}
     )
 
@@ -74,6 +79,9 @@ else:
             "exceptions" "ma",
             "order",
             "intervals",
+            "intervals_chain",
+            "intervals_tuple",
+            "intervals_distribution",
             "alphabet",
             "binding",
             "mode",
