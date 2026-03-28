@@ -16,8 +16,8 @@
 
 **Purpose**: Verify existing test infrastructure works before adding new files.
 
-- [ ] T001 Verify `tox -e default` passes on current branch (baseline)
-- [ ] T002 Verify `pipx run pre-commit run --all-files` passes on current branch (baseline)
+- [X] T001 Verify `tox -e default` passes on current branch (baseline)
+- [X] T002 Verify `pipx run pre-commit run --all-files` passes on current branch (baseline)
 
 ---
 
@@ -27,11 +27,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T003 Write failing tests for `chain_mode` enum attributes in `tests/test_chain_mode.py`
-- [ ] T004 Implement `chain_mode` enum (`boundary=1`, `cycle=2`) in `src/foapy/core/_chain_mode.py`
-- [ ] T005 [P] Write failing tests for `tuple_mode` enum attributes in `tests/test_tuple_mode.py`
-- [ ] T006 [P] Implement `tuple_mode` enum (`lossy=1`, `normal=2`, `redundant=3`) in `src/foapy/core/_tuple_mode.py`
-- [ ] T007 Run `tox -e default` — T003–T006 tests must pass before proceeding
+- [X] T003 Write failing tests for `chain_mode` enum attributes in `tests/test_chain_mode.py`
+- [X] T004 Implement `chain_mode` enum (`boundary=1`, `cycle=2`) in `src/foapy/core/_chain_mode.py`
+- [X] T005 [P] Write failing tests for `tuple_mode` enum attributes in `tests/test_tuple_mode.py`
+- [X] T006 [P] Implement `tuple_mode` enum (`lossy=1`, `normal=2`, `redundant=3`) in `src/foapy/core/_tuple_mode.py`
+- [X] T007 Run `tox -e default` — T003–T006 tests must pass before proceeding
 
 **Checkpoint**: `chain_mode` and `tuple_mode` enums importable and tested — user story phases can now begin.
 
@@ -45,14 +45,14 @@
 
 ### Tests for User Story 1 (TDD — write and FAIL before implementing)
 
-- [ ] T008 [US1] Write failing tests for `intervals_chain` covering: empty sequence, single element, all-unique elements, all-identical elements, mixed sequence with `binding.start` + `chain_mode.boundary`, `binding.end` + `chain_mode.boundary`, `binding.start` + `chain_mode.cycle`, `binding.end` + `chain_mode.cycle`, non-1D input raises `Not1DArrayException`, invalid binding raises `ValueError`, invalid chain_mode raises `ValueError` — in `tests/test_intervals_chain.py`
+- [X] T008 [US1] Write failing tests for `intervals_chain` covering: empty sequence, single element, all-unique elements, all-identical elements, mixed sequence with `binding.start` + `chain_mode.boundary`, `binding.end` + `chain_mode.boundary`, `binding.start` + `chain_mode.cycle`, `binding.end` + `chain_mode.cycle`, non-1D input raises `Not1DArrayException`, invalid binding raises `ValueError`, invalid chain_mode raises `ValueError` — in `tests/test_intervals_chain.py`
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Implement `intervals_chain(X, binding, chain_mode)` returning plain 1-D ndarray using numpy vectorized ops (`argsort(kind="mergesort")`, boolean masking, index arithmetic) — no Python loops — in `src/foapy/core/_intervals_chain.py`
-- [ ] T010 [US1] Add numpy-style docstring to `intervals_chain` (description, Parameters, Returns, Raises, Examples) in `src/foapy/core/_intervals_chain.py`
-- [ ] T011 [US1] Export `intervals_chain` from `src/foapy/core/__init__.py`
-- [ ] T012 [US1] Run `tox -e default` — all T008 tests must pass
+- [X] T009 [US1] Implement `intervals_chain(X, binding, chain_mode)` returning plain 1-D ndarray using numpy vectorized ops (`argsort(kind="mergesort")`, boolean masking, index arithmetic) — no Python loops — in `src/foapy/core/_intervals_chain.py`
+- [X] T010 [US1] Add numpy-style docstring to `intervals_chain` (description, Parameters, Returns, Raises, Examples) in `src/foapy/core/_intervals_chain.py`
+- [X] T011 [US1] Export `intervals_chain` from `src/foapy/core/__init__.py`
+- [X] T012 [US1] Run `tox -e default` — all T008 tests must pass
 
 **Checkpoint**: `intervals_chain` is fully functional and independently tested.
 
@@ -66,13 +66,13 @@
 
 ### Tests for User Story 5 (TDD — write and FAIL before implementing)
 
-- [ ] T013 [US5] Write failing tests for `binding(chain)` covering: chain from `binding.start`, chain from `binding.end`, empty chain returns `binding.start`, invalid (non-chain) input raises `ValueError` — in `tests/test_binding_callable.py`
+- [X] T013 [US5] Write failing tests for `binding(chain)` covering: chain from `binding.start`, chain from `binding.end`, empty chain returns `binding.start`, invalid (non-chain) input raises `ValueError` — in `tests/test_binding_callable.py`
 
 ### Implementation for User Story 5
 
-- [ ] T014 [US5] Implement `binding(chain)` callable form by adding `__new__` to the `binding` class in `src/foapy/core/_binding.py` — structural detection from ndarray values, no Python loops
-- [ ] T015 [US5] Add numpy-style docstring to `binding(chain)` callable form in `src/foapy/core/_binding.py`
-- [ ] T016 [US5] Run `tox -e default` — all T013 tests must pass
+- [X] T014 [US5] Implement `binding(chain)` callable form by adding `__new__` to the `binding` class in `src/foapy/core/_binding.py` — structural detection from ndarray values, no Python loops
+- [X] T015 [US5] Add numpy-style docstring to `binding(chain)` callable form in `src/foapy/core/_binding.py`
+- [X] T016 [US5] Run `tox -e default` — all T013 tests must pass
 
 **Checkpoint**: `binding(chain)` is fully functional and independently tested.
 
@@ -86,13 +86,13 @@
 
 ### Tests for User Story 7 (TDD — write and FAIL before implementing)
 
-- [ ] T017 [US7] Write failing tests for `chain_mode(chain)` covering: chain from `chain_mode.boundary`, chain from `chain_mode.cycle`, empty chain returns `chain_mode.cycle`, invalid input raises `ValueError` — in `tests/test_chain_mode_callable.py`
+- [X] T017 [US7] Write failing tests for `chain_mode(chain)` covering: chain from `chain_mode.boundary`, chain from `chain_mode.cycle`, empty chain returns `chain_mode.cycle`, invalid input raises `ValueError` — in `tests/test_chain_mode_callable.py`
 
 ### Implementation for User Story 7
 
-- [ ] T018 [US7] Implement `chain_mode(chain)` callable form by extending `chain_mode` class in `src/foapy/core/_chain_mode.py` with `__new__` — structural detection using interval group sum property, no Python loops
-- [ ] T019 [US7] Add numpy-style docstring to `chain_mode(chain)` callable form in `src/foapy/core/_chain_mode.py`
-- [ ] T020 [US7] Run `tox -e default` — all T017 tests must pass
+- [X] T018 [US7] Implement `chain_mode(chain)` callable form by extending `chain_mode` class in `src/foapy/core/_chain_mode.py` with `__new__` — structural detection using interval group sum property, no Python loops
+- [X] T019 [US7] Add numpy-style docstring to `chain_mode(chain)` callable form in `src/foapy/core/_chain_mode.py`
+- [X] T020 [US7] Run `tox -e default` — all T017 tests must pass
 
 **Checkpoint**: `chain_mode(chain)` is fully functional and independently tested.
 
@@ -106,14 +106,14 @@
 
 ### Tests for User Story 2 (TDD — write and FAIL before implementing)
 
-- [ ] T021 [US2] Write failing tests for `intervals_tuple` covering: all three `tuple_mode` values, empty chain, all-unique elements, all-identical elements, chains from both `chain_mode.boundary` and `chain_mode.cycle` (all 6 combinations), single-occurrence elements with `tuple_mode.redundant`, invalid `tuple_mode` raises `ValueError` — in `tests/test_intervals_tuple.py`
+- [X] T021 [US2] Write failing tests for `intervals_tuple` covering: all three `tuple_mode` values, empty chain, all-unique elements, all-identical elements, chains from both `chain_mode.boundary` and `chain_mode.cycle` (all 6 combinations), single-occurrence elements with `tuple_mode.redundant`, invalid `tuple_mode` raises `ValueError` — in `tests/test_intervals_tuple.py`
 
 ### Implementation for User Story 2
 
-- [ ] T022 [US2] Implement `intervals_tuple(chain, tuple_mode)` using numpy vectorized boundary detection (`i - v` outside `[0, n]` mask), boolean indexing for lossy, `np.concatenate` for redundant trailing intervals — no Python loops — in `src/foapy/core/_intervals_tuple.py`
-- [ ] T023 [US2] Add numpy-style docstring to `intervals_tuple` in `src/foapy/core/_intervals_tuple.py`
-- [ ] T024 [US2] Export `intervals_tuple` from `src/foapy/core/__init__.py`
-- [ ] T025 [US2] Run `tox -e default` — all T021 tests must pass
+- [X] T022 [US2] Implement `intervals_tuple(chain, tuple_mode)` using numpy vectorized boundary detection (`i - v` outside `[0, n]` mask), boolean indexing for lossy, `np.concatenate` for redundant trailing intervals — no Python loops — in `src/foapy/core/_intervals_tuple.py`
+- [X] T023 [US2] Add numpy-style docstring to `intervals_tuple` in `src/foapy/core/_intervals_tuple.py`
+- [X] T024 [US2] Export `intervals_tuple` from `src/foapy/core/__init__.py`
+- [X] T025 [US2] Run `tox -e default` — all T021 tests must pass
 
 **Checkpoint**: `intervals_tuple` is fully functional and independently tested.
 
@@ -127,14 +127,14 @@
 
 ### Tests for User Story 6 (TDD — write and FAIL before implementing)
 
-- [ ] T026 [US6] Write failing tests for `is_valid_intervals_chain` covering: valid chain returns `True`, empty array returns `True`, array with zeros returns `False`, array with negatives returns `False`, array with value > len(array) returns `False`, non-1D array returns `False` (no exception), non-array returns `False` (no exception) — in `tests/test_is_valid_intervals_chain.py`
+- [X] T026 [US6] Write failing tests for `is_valid_intervals_chain` covering: valid chain returns `True`, empty array returns `True`, array with zeros returns `False`, array with negatives returns `False`, array with value > len(array) returns `False`, non-1D array returns `False` (no exception), non-array returns `False` (no exception) — in `tests/test_is_valid_intervals_chain.py`
 
 ### Implementation for User Story 6
 
-- [ ] T027 [US6] Implement `is_valid_intervals_chain(chain)` using numpy vectorized checks — no Python loops, never raises — in `src/foapy/core/_is_valid_intervals_chain.py`
-- [ ] T028 [US6] Add numpy-style docstring to `is_valid_intervals_chain` in `src/foapy/core/_is_valid_intervals_chain.py`
-- [ ] T029 [US6] Export `is_valid_intervals_chain` from `src/foapy/core/__init__.py`
-- [ ] T030 [US6] Run `tox -e default` — all T026 tests must pass
+- [X] T027 [US6] Implement `is_valid_intervals_chain(chain)` using numpy vectorized checks — no Python loops, never raises — in `src/foapy/core/_is_valid_intervals_chain.py`
+- [X] T028 [US6] Add numpy-style docstring to `is_valid_intervals_chain` in `src/foapy/core/_is_valid_intervals_chain.py`
+- [X] T029 [US6] Export `is_valid_intervals_chain` from `src/foapy/core/__init__.py`
+- [X] T030 [US6] Run `tox -e default` — all T026 tests must pass
 
 **Checkpoint**: `is_valid_intervals_chain` is fully functional and independently tested.
 
@@ -148,14 +148,14 @@
 
 ### Tests for User Story 3 (TDD — write and FAIL before implementing)
 
-- [ ] T031 [US3] Write failing tests for `intervals_distribution` covering: known tuple with expected counts, empty tuple returns empty array, all-equal tuple with single non-zero position, single-element tuple — in `tests/test_intervals_distribution.py`
+- [X] T031 [US3] Write failing tests for `intervals_distribution` covering: known tuple with expected counts, empty tuple returns empty array, all-equal tuple with single non-zero position, single-element tuple — in `tests/test_intervals_distribution.py`
 
 ### Implementation for User Story 3
 
-- [ ] T032 [US3] Implement `intervals_distribution(tuple_result)` using `np.bincount(tuple_result - 1)` — no Python loops — in `src/foapy/core/_intervals_distribution.py`
-- [ ] T033 [US3] Add numpy-style docstring to `intervals_distribution` in `src/foapy/core/_intervals_distribution.py`
-- [ ] T034 [US3] Export `intervals_distribution` from `src/foapy/core/__init__.py`
-- [ ] T035 [US3] Run `tox -e default` — all T031 tests must pass
+- [X] T032 [US3] Implement `intervals_distribution(tuple_result)` using `np.bincount(tuple_result - 1)` — no Python loops — in `src/foapy/core/_intervals_distribution.py`
+- [X] T033 [US3] Add numpy-style docstring to `intervals_distribution` in `src/foapy/core/_intervals_distribution.py`
+- [X] T034 [US3] Export `intervals_distribution` from `src/foapy/core/__init__.py`
+- [X] T035 [US3] Run `tox -e default` — all T031 tests must pass
 
 **Checkpoint**: `intervals_distribution` is fully functional and independently tested.
 
@@ -169,8 +169,8 @@
 
 ### Tests for User Story 4
 
-- [ ] T036 [US4] Write pipeline consistency tests comparing `intervals()` vs `intervals_tuple(intervals_chain(X, b, chain_mode), tuple_mode)` for all 4 mode mappings (`lossy`, `normal`, `cycle`, `redundant`) on: empty sequence, single element, all-unique, all-identical, mixed real-world sequences with both `binding.start` and `binding.end` — in `tests/test_pipeline_consistency.py`
-- [ ] T037 [US4] Run `tox -e default` — all T036 tests must pass
+- [X] T036 [US4] Write pipeline consistency tests comparing `intervals()` vs `intervals_tuple(intervals_chain(X, b, chain_mode), tuple_mode)` for all 4 mode mappings (`lossy`, `normal`, `cycle`, `redundant`) on: empty sequence, single element, all-unique, all-identical, mixed real-world sequences with both `binding.start` and `binding.end` — in `tests/test_pipeline_consistency.py`
+- [X] T037 [US4] Run `tox -e default` — all T036 tests must pass
 
 **Checkpoint**: Decomposed pipeline is provably consistent with existing `intervals()` for all supported modes.
 
@@ -184,25 +184,25 @@
 
 ### foapy.ma Tests (TDD — write and FAIL before implementing)
 
-- [ ] T038 [P] [US8] Write failing tests for `foapy.ma.intervals_chain` covering masked-array sequences (missing values handled correctly) in `tests/test_ma_intervals_chain.py`
-- [ ] T039 [P] [US8] Write failing tests for `foapy.ma.intervals_tuple` in `tests/test_ma_intervals_tuple.py`
-- [ ] T040 [P] [US8] Write failing tests for `foapy.ma.intervals_distribution` in `tests/test_ma_intervals_distribution.py`
+- [X] T038 [P] [US8] Write failing tests for `foapy.ma.intervals_chain` covering masked-array sequences (missing values handled correctly) in `tests/test_ma_intervals_chain.py`
+- [X] T039 [P] [US8] Write failing tests for `foapy.ma.intervals_tuple` in `tests/test_ma_intervals_tuple.py`
+- [X] T040 [P] [US8] Write failing tests for `foapy.ma.intervals_distribution` in `tests/test_ma_intervals_distribution.py`
 
 ### foapy.ma Implementation
 
-- [ ] T041 [P] [US8] Implement `foapy.ma.intervals_chain` mirroring core API for masked arrays in `src/foapy/ma/_intervals_chain.py`
-- [ ] T042 [P] [US8] Implement `foapy.ma.intervals_tuple` in `src/foapy/ma/_intervals_tuple.py`
-- [ ] T043 [P] [US8] Implement `foapy.ma.intervals_distribution` in `src/foapy/ma/_intervals_distribution.py`
-- [ ] T044 [US8] Export `intervals_chain`, `intervals_tuple`, `intervals_distribution` from `src/foapy/ma/__init__.py`
-- [ ] T045 [US8] Export all new public symbols (`chain_mode`, `tuple_mode`, `intervals_chain`, `intervals_tuple`, `intervals_distribution`, `binding`, `is_valid_intervals_chain`) from `src/foapy/__init__.py`
-- [ ] T046 [US8] Run `tox -e default` — all T038–T040 tests must pass
+- [X] T041 [P] [US8] Implement `foapy.ma.intervals_chain` mirroring core API for masked arrays in `src/foapy/ma/_intervals_chain.py`
+- [X] T042 [P] [US8] Implement `foapy.ma.intervals_tuple` in `src/foapy/ma/_intervals_tuple.py`
+- [X] T043 [P] [US8] Implement `foapy.ma.intervals_distribution` in `src/foapy/ma/_intervals_distribution.py`
+- [X] T044 [US8] Export `intervals_chain`, `intervals_tuple`, `intervals_distribution` from `src/foapy/ma/__init__.py`
+- [X] T045 [US8] Export all new public symbols (`chain_mode`, `tuple_mode`, `intervals_chain`, `intervals_tuple`, `intervals_distribution`, `binding`, `is_valid_intervals_chain`) from `src/foapy/__init__.py`
+- [X] T046 [US8] Run `tox -e default` — all T038–T040 tests must pass
 
 ### Benchmarks
 
-- [ ] T047 [P] [US8] Add benchmark script measuring `intervals_chain` at n=100, n=10_000, n=1_000_000 in `benchmarks/bench_intervals_chain.py`
-- [ ] T048 [P] [US8] Add benchmark script for `intervals_tuple` (all tuple_mode values) in `benchmarks/bench_intervals_tuple.py`
-- [ ] T049 [P] [US8] Add benchmark script for `intervals_distribution` in `benchmarks/bench_intervals_distribution.py`
-- [ ] T050 [P] [US8] Add full end-to-end pipeline benchmark in `benchmarks/bench_pipeline_full.py`
+- [X] T047 [P] [US8] Add benchmark script measuring `intervals_chain` at n=100, n=10_000, n=1_000_000 in `benchmarks/bench_intervals_chain.py`
+- [X] T048 [P] [US8] Add benchmark script for `intervals_tuple` (all tuple_mode values) in `benchmarks/bench_intervals_tuple.py`
+- [X] T049 [P] [US8] Add benchmark script for `intervals_distribution` in `benchmarks/bench_intervals_distribution.py`
+- [X] T050 [P] [US8] Add full end-to-end pipeline benchmark in `benchmarks/bench_pipeline_full.py`
 
 **Checkpoint**: All foapy.ma variants tested and working; all symbols importable from top-level foapy namespace; benchmark scripts runnable.
 
@@ -212,8 +212,8 @@
 
 **Purpose**: Final quality gate — linting, formatting, full test suite validation.
 
-- [ ] T051 Run `pipx run pre-commit run --all-files --show-diff-on-failure` and fix any black/isort/flake8 issues across all new files
-- [ ] T052 Run `tox -e default` — full test suite must pass with zero failures or errors
+- [X] T051 Run `pipx run pre-commit run --all-files --show-diff-on-failure` and fix any black/isort/flake8 issues across all new files
+- [X] T052 Run `tox -e default` — full test suite must pass with zero failures or errors
 
 ---
 
