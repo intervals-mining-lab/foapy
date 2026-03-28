@@ -78,3 +78,9 @@ Each characteristic is a standalone module (e.g., `volume`, `arithmetic_mean`, `
 Tests are in `tests/`. Characteristics tests share a base class `CharacteristicsTest` (in `tests/test_characteristics/characterisitcs_test.py`) providing `AssertCase()` and `AssertBatch()` helpers. `AssertBatch` verifies results across all `binding × mode` combinations using a nested dict of expected values.
 
 Numerical comparisons use epsilon tolerance — use `AssertCase`/`AssertBatch` rather than plain `assert` for floating-point characteristics.
+
+## Active Technologies
+- Python 3.8+ + numpy >= 1.20 (sole runtime dependency per constitution) (002-decompose-intervals-pipeline)
+
+## Recent Changes
+- 002-decompose-intervals-pipeline: Added Python 3.8+ + numpy >= 1.20 (sole runtime dependency per constitution)

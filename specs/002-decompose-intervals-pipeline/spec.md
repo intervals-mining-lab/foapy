@@ -5,20 +5,32 @@
 **Status**: Draft
 **Input**: User description: "We need to decompose src/foapy/core/intervals. From order/sequence -> intervals -> characteristics to order/sequence -> intervals_chain -> intervals_tuple -> intervals_distribution -> characteristics. To be consistent with what is described in docs/fundamentals"
 
+## Clarifications
+
+### Session 2026-03-28
+
+- Q: Should `binding(chain)` and `chain_mode(chain)` raise an exception or return a default for an empty chain? → A: Return defaults — `binding.start` for `binding(chain)` and `chain_mode.cycle` for `chain_mode(chain)`.
+
+### Session 2026-03-28 (first pass)
+
+- Q: Should `intervals_chain` return a plain ndarray (with structural detection of binding/chain_mode from values) or a metadata-carrying named tuple? → A: Plain ndarray. The separation of `chain_mode` into `cycle` and `boundary` makes structural detection **mathematically deterministic** — this is the reason for the separation. No named tuple or attached metadata is needed.
+- Q: How does `tuple_mode` behave on new combinations (`cycle + lossy`, `cycle + redundant`)? → A: `tuple_mode` works uniformly on any chain by checking whether `i - interval` falls outside `[0, n]`: if so, the interval is a first/last-occurrence (boundary) interval. `lossy` drops all such intervals. `normal` keeps them as-is. `redundant` expands each into two intervals — leading and trailing — with trailing intervals appended to the end of the result in element-appearance order. This definition is independent of `chain_mode`, so all six combinations are valid.
+- Q: Does `intervals_chain` accept only the output of `order()` (pre-ordered integer indices) or any raw 1-D sequence? → A: Any raw 1-D sequence (strings, ints, objects) — same as `intervals()` today. No pre-ordering required.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Access Intervals Chain as a Standalone Step (Priority: P1)
 
-A library user working through the FOA pipeline wants to obtain the raw intervals chain from an ordered sequence. The chain is the n-tuple of distances between equal elements computed according to a specific binding direction and chain construction mode. Today they must call `intervals()` which bundles all steps together. They need `intervals_chain` as a callable step that accepts a sequence, a binding direction, and a chain mode (`cycle` or `boundary`) and returns the raw chain.
+A library user working through the FOA pipeline wants to obtain the raw intervals chain from any 1-D sequence (strings, integers, or any comparable elements). The chain is the n-tuple of distances between equal elements computed according to a specific binding direction and chain construction mode. Today they must call `intervals()` which bundles all steps together. They need `intervals_chain` as a callable step that accepts any raw 1-D sequence, a binding direction, and a chain mode (`cycle` or `boundary`) and returns the raw chain — no pre-ordering via `order()` is required.
 
 **Why this priority**: `intervals_chain` is the foundational intermediate representation described in the fundamentals documentation. The `chain_mode` parameter determines whether the sequence is treated as cyclic or bounded during chain construction — a distinction that was previously conflated inside a single `mode` enum.
 
-**Independent Test**: Can be fully tested by calling `intervals_chain(ordered_sequence, binding, chain_mode)` on a known input and verifying the returned chain matches expected values per the fundamentals documentation — without invoking `intervals_tuple` or `intervals_distribution`.
+**Independent Test**: Can be fully tested by calling `intervals_chain(X, binding, chain_mode)` on a known raw sequence and verifying the returned plain 1-D array matches expected values per the fundamentals documentation — without invoking `intervals_tuple` or `intervals_distribution`.
 
 **Acceptance Scenarios**:
 
-1. **Given** an ordered sequence `[b, a, b, c, b]`, `binding.start`, and `chain_mode.boundary`, **When** `intervals_chain` is called, **Then** it returns the raw distances between consecutive equal elements with boundary distances to the start of the sequence for each first occurrence.
-2. **Given** the same sequence, `binding.end`, and `chain_mode.boundary`, **When** `intervals_chain` is called, **Then** it returns distances computed right-to-left with boundary distances from the end of the sequence.
+1. **Given** a raw sequence `[b, a, b, c, b]`, `binding.start`, and `chain_mode.boundary`, **When** `intervals_chain` is called, **Then** it returns the raw distances between consecutive equal elements with boundary distances to the start of the sequence for each first occurrence.
+2. **Given** the same raw sequence, `binding.end`, and `chain_mode.boundary`, **When** `intervals_chain` is called, **Then** it returns distances computed right-to-left with boundary distances from the end of the sequence.
 3. **Given** any sequence and `chain_mode.cycle`, **When** `intervals_chain` is called, **Then** the leading and trailing boundary distances are combined into a single cyclic interval per element as if the sequence were circular.
 4. **Given** an empty sequence, **When** `intervals_chain` is called, **Then** it returns an empty result without error.
 5. **Given** a sequence where every element is unique, **When** `intervals_chain` is called, **Then** each element's chain contains only its boundary interval.
@@ -29,17 +41,25 @@ A library user working through the FOA pipeline wants to obtain the raw interval
 
 A library user wants to apply a tuple transformation mode (`lossy`, `normal`, or `redundant`) to an already-computed intervals chain to obtain the intervals tuple used as input to characteristics. The binding direction is inferred from the chain structure. They need `intervals_tuple` as a standalone callable that accepts only a raw chain and a `tuple_mode` — with no separate binding or chain_mode argument.
 
-**Why this priority**: Separating `tuple_mode` from `chain_mode` allows users to independently control how the chain is built (bounded vs cyclic) and how the resulting tuple is shaped (which boundary intervals to include or drop). These are orthogonal choices that the previous single `mode` enum conflated.
+`tuple_mode` operates by detecting boundary intervals: for each position `i` and its interval value `v`, if `i - v` falls outside `[0, sequence_length]` the interval is a first/last-occurrence (boundary) interval. This detection is uniform and works identically on chains built with either `chain_mode.boundary` or `chain_mode.cycle`.
+
+- `tuple_mode.lossy`: drops all boundary intervals; interior intervals are kept as-is.
+- `tuple_mode.normal`: keeps all intervals as-is (boundary intervals remain in place).
+- `tuple_mode.redundant`: replaces each boundary interval with two intervals — the leading distance (from sequence start to first occurrence) and the trailing distance (from last occurrence to sequence end). Trailing intervals are appended to the end of the result in element-appearance order.
+
+**Why this priority**: Separating `tuple_mode` from `chain_mode` allows users to independently control how the chain is built (bounded vs cyclic) and how the resulting tuple is shaped. All six combinations of `chain_mode × tuple_mode` are valid.
 
 **Independent Test**: Can be fully tested by calling `intervals_tuple(chain, tuple_mode)` on a known chain and verifying the output matches expected per each tuple_mode's definition, without needing `intervals_distribution`.
 
 **Acceptance Scenarios**:
 
-1. **Given** an intervals chain and `tuple_mode.lossy`, **When** `intervals_tuple` is called, **Then** boundary intervals (first-occurrence distances) are excluded from the result.
-2. **Given** an intervals chain and `tuple_mode.normal`, **When** `intervals_tuple` is called, **Then** one boundary interval is included per element as produced by the chain's boundary mode.
-3. **Given** an intervals chain and `tuple_mode.redundant`, **When** `intervals_tuple` is called, **Then** both the leading and trailing boundary intervals are included.
-4. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.boundary)`, **When** `intervals_tuple(chain, tuple_mode.normal)` is called, **Then** the result is identical to what the previous `intervals(X, binding.start, mode.normal)` would have returned.
-5. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.cycle)`, **When** `intervals_tuple(chain, tuple_mode.normal)` is called, **Then** the result is identical to what the previous `intervals(X, binding.start, mode.cycle)` would have returned.
+1. **Given** an intervals chain and `tuple_mode.lossy`, **When** `intervals_tuple` is called, **Then** all boundary intervals (those whose back-reference `i - v` falls outside `[0, n]`) are excluded from the result; interior intervals are kept.
+2. **Given** an intervals chain and `tuple_mode.normal`, **When** `intervals_tuple` is called, **Then** all intervals (including boundary ones) are returned as-is with no modification.
+3. **Given** an intervals chain and `tuple_mode.redundant`, **When** `intervals_tuple` is called, **Then** each boundary interval is replaced by its leading component (distance to start) and a trailing component (distance to end) is appended at the result's tail in element-appearance order.
+4. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.boundary)`, **When** `intervals_tuple(chain, tuple_mode.normal)` is called, **Then** the result is identical to `intervals(X, binding.start, mode.normal)`.
+5. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.cycle)`, **When** `intervals_tuple(chain, tuple_mode.normal)` is called, **Then** the result is identical to `intervals(X, binding.start, mode.cycle)`.
+6. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.cycle)`, **When** `intervals_tuple(chain, tuple_mode.lossy)` is called, **Then** the cyclic boundary intervals are dropped (they satisfy `i - v < 0`) and only interior intervals remain — identical to `intervals(X, binding.start, mode.lossy)`.
+7. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.cycle)`, **When** `intervals_tuple(chain, tuple_mode.redundant)` is called, **Then** each cyclic interval is split into its leading and trailing components and trailing values are appended in element-appearance order.
 
 ---
 
@@ -83,7 +103,7 @@ A library user who currently calls `intervals(sequence, binding, mode)` needs as
 
 ### User Story 5 - Determine Binding Direction from an Intervals Chain (Priority: P2)
 
-A library user who has an intervals chain needs to know which binding direction (`start` or `end`) was used to produce it, without having to track this metadata separately. They need `binding(chain)` as a standalone callable that inspects the chain and returns its binding direction.
+A library user who has an intervals chain (plain 1-D array) needs to know which binding direction (`start` or `end`) was used to produce it, without having to track this metadata separately. They need `binding(chain)` as a standalone callable that determines the binding direction from the structural properties of the chain values — this determination is mathematically deterministic given the `cycle`/`boundary` separation of `chain_mode`.
 
 **Why this priority**: `binding(chain)` enables `intervals_tuple(chain, mode)` to work without an explicit binding argument, and gives users a way to introspect chains received from external sources.
 
@@ -94,7 +114,7 @@ A library user who has an intervals chain needs to know which binding direction 
 1. **Given** a chain produced with `binding.start`, **When** `binding(chain)` is called, **Then** it returns `binding.start`.
 2. **Given** a chain produced with `binding.end`, **When** `binding(chain)` is called, **Then** it returns `binding.end`.
 3. **Given** an array that is not a valid intervals chain, **When** `binding(chain)` is called, **Then** it raises an appropriate exception indicating the input is invalid.
-4. **Given** an empty array, **When** `binding(chain)` is called, **Then** it returns a defined result or raises a descriptive exception.
+4. **Given** an empty array, **When** `binding(chain)` is called, **Then** it returns `binding.start` as the default.
 
 ---
 
@@ -117,7 +137,7 @@ A library user receiving an intervals chain from an external source needs to ver
 
 ### User Story 7 - Determine Chain Mode from an Intervals Chain (Priority: P2)
 
-A library user who has an intervals chain needs to know whether it was built with `chain_mode.cycle` or `chain_mode.boundary`, without having to track this metadata separately alongside the chain. They need `chain_mode(chain)` as a standalone callable that inspects the chain's structure and returns the chain mode used to produce it.
+A library user who has an intervals chain (plain 1-D array) needs to know whether it was built with `chain_mode.cycle` or `chain_mode.boundary`, without tracking this metadata separately. They need `chain_mode(chain)` as a standalone callable that determines chain mode from the structural properties of the chain values — this is mathematically deterministic: in `chain_mode.cycle`, each element's intervals sum to `n` (sequence length); in `chain_mode.boundary`, they need not.
 
 **Why this priority**: `chain_mode(chain)` completes the set of introspection functions alongside `binding(chain)`, allowing fully metadata-free chain passing between pipeline stages. It is also the basis for validating that chain construction choices are consistent with downstream tuple mode selections.
 
@@ -128,7 +148,7 @@ A library user who has an intervals chain needs to know whether it was built wit
 1. **Given** a chain produced with `chain_mode.boundary`, **When** `chain_mode(chain)` is called, **Then** it returns `chain_mode.boundary`.
 2. **Given** a chain produced with `chain_mode.cycle`, **When** `chain_mode(chain)` is called, **Then** it returns `chain_mode.cycle`.
 3. **Given** an array that is not a valid intervals chain, **When** `chain_mode(chain)` is called, **Then** it raises an appropriate exception indicating the input is invalid.
-4. **Given** an empty array, **When** `chain_mode(chain)` is called, **Then** it returns a defined result or raises a descriptive exception consistent with other introspection functions.
+4. **Given** an empty array, **When** `chain_mode(chain)` is called, **Then** it returns `chain_mode.cycle` as the default.
 
 ---
 
@@ -156,8 +176,8 @@ A library user adopting the decomposed pipeline needs to understand what each fu
 - How does each stage handle a sequence with all identical elements? Every position belongs to one element; the chain forms a single long interval sequence.
 - What happens when `intervals_distribution` receives a tuple with a single element? It must return a distribution of length equal to that single interval value.
 - How does `intervals_tuple` behave with `tuple_mode.redundant` when an element appears only once in the sequence? Both the leading and trailing boundary intervals must still be included per mode definition.
-- What does `binding(chain)` return for an empty chain? Behaviour must be defined and documented (either a default, or a descriptive error).
-- What does `chain_mode(chain)` return when the mode cannot be determined unambiguously (e.g., a symmetric chain)? It must specify its tie-breaking or error behaviour explicitly.
+- What does `binding(chain)` return for an empty chain? It returns `binding.start` as the default. What does `chain_mode(chain)` return for an empty chain? It returns `chain_mode.cycle` as the default.
+- `chain_mode(chain)` determination is mathematically deterministic: in `chain_mode.cycle`, every element's interval sum equals `n`; in `chain_mode.boundary`, this does not hold for all elements. No ambiguity exists; the function never needs tie-breaking logic.
 - What does `is_valid_intervals_chain` do when the chain contains values that could match either chain_mode? It must return a deterministic boolean without ambiguity.
 - What are the expected benchmark thresholds for very large inputs (≥1,000,000 elements)? Performance is not required to meet a specific target but must be measurable.
 
@@ -165,8 +185,8 @@ A library user adopting the decomposed pipeline needs to understand what each fu
 
 ### Functional Requirements
 
-- **FR-001**: The library MUST expose `intervals_chain` as a publicly callable function that accepts a 1-D sequence, a binding direction, and a `chain_mode` value (`cycle` or `boundary`) and returns the raw intervals chain.
-- **FR-002**: The library MUST expose `intervals_tuple` as a publicly callable function that accepts a raw intervals chain and a `tuple_mode` value (`lossy`, `normal`, or `redundant`) — with no explicit binding or chain_mode argument — and returns the boundary-adjusted intervals tuple by inferring binding from the chain.
+- **FR-001**: The library MUST expose `intervals_chain` as a publicly callable function that accepts any raw 1-D sequence (strings, integers, or any comparable elements — no pre-ordering required), a binding direction, and a `chain_mode` value (`cycle` or `boundary`) and returns the raw intervals chain as a **plain 1-D ndarray** (no metadata wrapper). The chain values alone are sufficient to determine binding and chain_mode via structural properties.
+- **FR-002**: The library MUST expose `intervals_tuple` as a publicly callable function that accepts a raw intervals chain (plain 1-D ndarray) and a `tuple_mode` value (`lossy`, `normal`, or `redundant`) — with no explicit binding or chain_mode argument. It MUST detect boundary intervals by checking whether `i - v` falls outside `[0, sequence_length]` for each position `i` and interval value `v`, applying the selected mode uniformly: `lossy` drops them, `normal` keeps them as-is, `redundant` expands each into leading and trailing components with trailing values appended in element-appearance order. All six `chain_mode × tuple_mode` combinations are valid.
 - **FR-003**: The library MUST expose `intervals_distribution` as a publicly callable function that accepts an intervals tuple and returns the count distribution of interval lengths.
 - **FR-004**: The library MUST expose a `chain_mode` enum with two values: `boundary` (treats sequence as finite and bounded) and `cycle` (treats sequence as circular).
 - **FR-005**: The library MUST expose a `tuple_mode` enum with three values: `lossy` (drop boundary intervals), `normal` (keep one boundary interval per element), and `redundant` (include both leading and trailing boundary intervals).
@@ -179,8 +199,8 @@ A library user adopting the decomposed pipeline needs to understand what each fu
 - **FR-012**: `intervals_tuple` MUST raise `ValueError` for invalid `tuple_mode` values.
 - **FR-013**: The existing `intervals()` function MUST remain available and continue to produce identical results to preserve backward compatibility.
 - **FR-014**: `intervals_chain`, `intervals_tuple`, and `intervals_distribution` MUST each have a masked-array equivalent in `foapy.ma` that mirrors the core API behaviour for sequences with missing values.
-- **FR-015**: The library MUST expose `binding` as a publicly callable function that accepts an intervals chain and returns the binding direction used to produce it, raising an appropriate exception for invalid input.
-- **FR-016**: The library MUST expose `chain_mode` as a publicly callable function (distinct from the `chain_mode` enum) that accepts an intervals chain and returns the chain mode (`boundary` or `cycle`) used to produce it, raising an appropriate exception for invalid input.
+- **FR-015**: The library MUST expose `binding` as a publicly callable function that accepts an intervals chain and returns the binding direction used to produce it; it MUST raise `ValueError` for invalid input; for empty chains it MUST return `binding.start` as the default.
+- **FR-016**: The library MUST expose `chain_mode` as a publicly callable function (distinct from the `chain_mode` enum) that accepts an intervals chain and returns the chain mode (`boundary` or `cycle`) used to produce it; it MUST raise `ValueError` for invalid input; for empty chains it MUST return `chain_mode.cycle` as the default.
 - **FR-017**: The library MUST expose `is_valid_intervals_chain` as a publicly callable function that accepts any array and returns a boolean indicating whether it satisfies the structural properties of a valid intervals chain, without raising exceptions for invalid input.
 - **FR-018**: Every new public function MUST have inline documentation covering: description, parameters, return value, exceptions raised, and at least one usage example.
 - **FR-019**: Every new public function MUST have a dedicated test module covering all acceptance scenarios, all applicable binding and chain_mode or tuple_mode combinations, and all edge cases defined in this spec.
@@ -190,7 +210,7 @@ A library user adopting the decomposed pipeline needs to understand what each fu
 
 - **chain_mode enum**: Two values — `boundary` (sequence treated as finite; boundary intervals are distances from sequence edges to first/last occurrence) and `cycle` (sequence treated as circular; leading and trailing boundary distances are summed into a single cyclic interval). Controls how `intervals_chain` builds the chain.
 - **tuple_mode enum**: Three values — `lossy` (boundary intervals dropped), `normal` (one boundary interval retained per element), `redundant` (both leading and trailing boundary intervals included). Controls how `intervals_tuple` shapes the tuple from the chain.
-- **Intervals Chain**: An n-tuple of natural numbers representing distances between equal elements in a sequence; indexed by sequence position; computed from a sequence, a binding direction, and a chain_mode; carries enough structural information to determine both binding direction and chain_mode without additional metadata.
+- **Intervals Chain**: A plain 1-D ndarray of natural numbers representing distances between equal elements in a sequence; indexed by sequence position; computed from a sequence, a binding direction, and a chain_mode; the values alone are sufficient to determine both binding direction and chain_mode via structural mathematical properties (no attached metadata needed).
 - **Intervals Tuple**: The boundary-adjusted form of an intervals chain shaped by tuple_mode; length may differ from the chain depending on tuple_mode (lossy reduces, redundant extends); direct input to distribution calculation.
 - **Intervals Distribution**: An array indexed by interval length (1-based) where each value is the count of that length's appearances in the intervals tuple; length equals the maximum interval value in the tuple.
 
@@ -213,10 +233,10 @@ A library user adopting the decomposed pipeline needs to understand what each fu
 
 - The existing `intervals()` function is kept in the public API unchanged; it may internally delegate to the new primitives or remain as-is.
 - The split of `mode` into `chain_mode` and `tuple_mode` is a new public API addition; it does not remove the existing `mode` enum or break any existing call sites.
-- The combination `chain_mode.cycle` + `tuple_mode.lossy` and `chain_mode.cycle` + `tuple_mode.redundant` are new combinations not possible with the old `mode` enum; their behaviour is defined by the orthogonal composition of cycle chain construction and the respective tuple boundary handling.
+- All six `chain_mode × tuple_mode` combinations are valid. `chain_mode.cycle + tuple_mode.lossy` and `chain_mode.cycle + tuple_mode.redundant` are new combinations not possible with the old `mode` enum; their behaviour is defined by the uniform boundary-detection algorithm in `intervals_tuple` (check `i - v` outside `[0, n]`): cyclic intervals satisfy this condition and are treated as boundary intervals subject to the same lossy/redundant rules as bounded boundary intervals.
 - Characteristics functions continue to accept intervals tuples directly; `intervals_distribution` is a separate analysis step, not a required intermediary for existing characteristics.
 - The masked-array variants for `intervals_chain`, `intervals_tuple`, and `intervals_distribution` are in scope; `foapy.ma` equivalents for `binding`, `chain_mode(chain)`, and `is_valid_intervals_chain` are out of scope unless the masked chain representation requires special handling.
-- The intervals chain encodes both binding direction and chain_mode structurally, making them determinable without additional metadata; this is a core mathematical assumption the feature depends on.
+- The intervals chain (plain ndarray) encodes both binding direction and chain_mode in its values deterministically. For `chain_mode.cycle`, every element's interval group sums to `n` (sequence length); for `chain_mode.boundary`, this does not hold for all elements. This is a **proven mathematical property** resulting from the separation of `chain_mode` into `cycle` and `boundary` — not a heuristic or open question.
 - Test conventions follow the existing `CharacteristicsTest`-style base classes and `AssertBatch` helpers where applicable.
 - Performance benchmarks use the existing benchmarking infrastructure in `docs/development/benchmarks.md`.
 - No breaking changes are made to any existing public API signatures.
