@@ -99,40 +99,42 @@ def intervals_tuple(chain, tuple_mode: int) -> ndarray:
     # Infer binding direction to choose correct boundary detection formula.
     b = binding_cls(ar)
 
-    if b == binding_cls.start:
-        # boundary interval at position i iff ar[i] > i
-        boundary_mask = ar > positions
-    else:
-        # binding.end: boundary interval at position i iff ar[i] > (n - 1 - i)
-        boundary_mask = ar > (n - 1 - positions)
+    if b == binding_cls.end:
+        ar = ar[::-1]
+
+    # boundary interval at position i iff ar[i] > i
+    boundary_mask = ar > positions
+
+    delta = len(boundary_mask[boundary_mask])
 
     if tuple_mode == tuple_mode_cls.lossy:
-        return ar[~boundary_mask]
+        delta = -delta
 
-    # tuple_mode.redundant: append complementary boundary intervals.
-    if b == binding_cls.start:
+    result_length = n + delta
+
+    result = np.empty(result_length, dtype=np.intp)
+
+    if tuple_mode == tuple_mode_cls.lossy:
+        result[:result_length] = ar[~boundary_mask]
+    else:
+        result[:n] = ar
+
+    if tuple_mode == tuple_mode_cls.redundant:
         # Trailing intervals: n - last_pos for each unique element.
         # Last occurrences = positions not pointed to as "previous" by any other.
         non_bnd_pos = positions[~boundary_mask]
-        if non_bnd_pos.size > 0:
-            prev_pos = non_bnd_pos - ar[~boundary_mask]
-            is_prev = np.zeros(n, dtype=bool)
-            is_prev[prev_pos] = True
-        else:
-            is_prev = np.zeros(n, dtype=bool)
+        prev_pos = non_bnd_pos - ar[~boundary_mask]
+        is_prev = np.zeros(n, dtype=bool)
+        is_prev[prev_pos] = True
         last_mask = ~is_prev
         trailing = n - positions[last_mask]
-        return np.concatenate((ar, trailing))
-    else:
-        # binding.end: leading intervals = first_pos + 1 for each unique element.
-        # First occurrences = positions not pointed to as "next" by any other.
-        non_bnd_pos = positions[~boundary_mask]
-        if non_bnd_pos.size > 0:
-            next_pos = non_bnd_pos + ar[~boundary_mask]
-            is_next = np.zeros(n, dtype=bool)
-            is_next[next_pos] = True
-        else:
-            is_next = np.zeros(n, dtype=bool)
-        first_mask = ~is_next
-        leading = positions[first_mask] + 1
-        return np.concatenate((ar, leading))
+
+        # if b == binding_cls.end:
+        #     trailing = trailing[::-1]
+
+        result[n:] = trailing
+
+    if b == binding_cls.end:
+        result = result[::-1]
+
+    return result

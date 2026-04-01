@@ -131,10 +131,11 @@ class TestIntervalsTuple(TestCase):
         # is_prev = [T, F, T, F, F]; last_mask = [F, T, F, T, T]; last_pos = [1, 3, 4]
         # trailing = 5 - [1, 3, 4] = [4, 2, 1]
         # result = [1, 2, 2, 4, 2, 4, 2, 1]
+        # [1, 2, 2, 4, 2] -> [1, 2, 2, 4, 2, 1, 4, 2]
         X = ["b", "a", "b", "c", "b"]
         chain = intervals_chain(X, binding.start, chain_mode.boundary)
         result = intervals_tuple(chain, tuple_mode.redundant)
-        assert_array_equal(result, np.array([1, 2, 2, 4, 2, 4, 2, 1], dtype=np.intp))
+        assert_array_equal(result, np.array([1, 2, 2, 4, 2, 1, 4, 2], dtype=np.intp))
 
     def test_redundant_boundary_end_mixed(self):
         # chain = [2, 4, 2, 2, 1]
@@ -142,10 +143,11 @@ class TestIntervalsTuple(TestCase):
         # is_next = [F, F, T, F, T]; first_mask = [T, T, F, T, F]; first_pos = [0, 1, 3]
         # leading = [1, 2, 4]
         # result = [2, 4, 2, 2, 1, 1, 2, 4]
+        # [2, 4, 2, 2, 1] -> [2, 4, 1, 2, 4, 2, 2, 1]
         X = ["b", "a", "b", "c", "b"]
         chain = intervals_chain(X, binding.end, chain_mode.boundary)
         result = intervals_tuple(chain, tuple_mode.redundant)
-        assert_array_equal(result, np.array([2, 4, 2, 2, 1, 1, 2, 4], dtype=np.intp))
+        assert_array_equal(result, np.array([2, 4, 1, 2, 4, 2, 2, 1], dtype=np.intp))
 
     def test_redundant_all_unique_start(self):
         # X = [1,2,3,4,5]; chain = [1,2,3,4,5]; all boundary; no non-boundary
