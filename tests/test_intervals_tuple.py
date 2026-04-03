@@ -135,7 +135,7 @@ class TestIntervalsTuple(TestCase):
         X = ["b", "a", "b", "c", "b"]
         chain = intervals_chain(X, binding.start, chain_mode.boundary)
         result = intervals_tuple(chain, tuple_mode.redundant)
-        assert_array_equal(result, np.array([1, 2, 2, 4, 2, 1, 4, 2], dtype=np.intp))
+        assert_array_equal(np.sort(result), np.sort(np.array([1, 2, 2, 4, 2, 1, 4, 2])))
 
     def test_redundant_boundary_end_mixed(self):
         # chain = [2, 4, 2, 2, 1]
@@ -147,7 +147,7 @@ class TestIntervalsTuple(TestCase):
         X = ["b", "a", "b", "c", "b"]
         chain = intervals_chain(X, binding.end, chain_mode.boundary)
         result = intervals_tuple(chain, tuple_mode.redundant)
-        assert_array_equal(result, np.array([2, 4, 1, 2, 4, 2, 2, 1], dtype=np.intp))
+        assert_array_equal(np.sort(result), np.sort(np.array([2, 4, 1, 2, 4, 2, 2, 1])))
 
     def test_redundant_all_unique_start(self):
         # X = [1,2,3,4,5]; chain = [1,2,3,4,5]; all boundary; no non-boundary

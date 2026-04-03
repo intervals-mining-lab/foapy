@@ -1,7 +1,7 @@
 import numpy as np
 from numpy import ndarray
 
-from foapy.core._binding import binding as binding_cls
+from foapy.core._binding import binding
 from foapy.core._tuple_mode import tuple_mode as tuple_mode_cls
 
 
@@ -73,6 +73,42 @@ def intervals_tuple(chain, tuple_mode: int) -> ndarray:
     # [1 2 2 4 2 4 2 1]
     ```
     """
+
+    def normal(ar):
+        return ar.copy()
+
+    def lossy(ar):
+        # Infer binding direction to choose correct boundary detection formula.
+        if binding(ar) == binding.end:
+            ar = ar[::-1]
+
+        positions = np.arange(ar.size, dtype=np.intp)
+
+        # First entrance interval at position i iff ar[i] > i
+        first = ar > positions
+
+        return ar[~first]
+
+    def redundant(ar):
+        # If the chain was created using binding.end, reverse it for correct handling.
+        if binding(ar) == binding.end:
+            ar = ar[::-1]
+
+        n = ar.size
+        positions = np.arange(n, dtype=np.intp)
+
+        # For each position, compute where its "previous occurrence" is.
+        prev_pos = positions - ar
+        # Build a mask to detect "last occurrences"
+        # (not referred to as previous by any other element).
+        last_mask = np.ones_like(positions, dtype=bool)
+        last_mask[prev_pos[prev_pos >= 0]] = False
+        # Trailing intervals are n - position for each detected "last occurrence".
+        trailing = n - positions[last_mask]
+
+        # Concatenate chain with its trailing intervals.
+        return np.concatenate((ar, trailing))
+
     valid_modes = {
         tuple_mode_cls.lossy,
         tuple_mode_cls.normal,
@@ -91,50 +127,10 @@ def intervals_tuple(chain, tuple_mode: int) -> ndarray:
         return np.array([], dtype=np.intp)
 
     if tuple_mode == tuple_mode_cls.normal:
-        return ar.copy()
-
-    n = ar.size
-    positions = np.arange(n, dtype=np.intp)
-
-    # Infer binding direction to choose correct boundary detection formula.
-    b = binding_cls(ar)
-
-    if b == binding_cls.end:
-        ar = ar[::-1]
-
-    # boundary interval at position i iff ar[i] > i
-    boundary_mask = ar > positions
-
-    delta = len(boundary_mask[boundary_mask])
+        return normal(ar)
 
     if tuple_mode == tuple_mode_cls.lossy:
-        delta = -delta
-
-    result_length = n + delta
-
-    result = np.empty(result_length, dtype=np.intp)
-
-    if tuple_mode == tuple_mode_cls.lossy:
-        result[:result_length] = ar[~boundary_mask]
-    else:
-        result[:n] = ar
+        return lossy(ar)
 
     if tuple_mode == tuple_mode_cls.redundant:
-        # Trailing intervals: n - last_pos for each unique element.
-        # Last occurrences = positions not pointed to as "previous" by any other.
-        non_bnd_pos = positions[~boundary_mask]
-        prev_pos = non_bnd_pos - ar[~boundary_mask]
-        is_prev = np.zeros(n, dtype=bool)
-        is_prev[prev_pos] = True
-        last_mask = ~is_prev
-        trailing = n - positions[last_mask]
-
-        # if b == binding_cls.end:
-        #     trailing = trailing[::-1]
-
-        result[n:] = trailing
-
-    if b == binding_cls.end:
-        result = result[::-1]
-
-    return result
+        return redundant(ar)

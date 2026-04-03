@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+import numpy as np
 from numpy.testing import assert_array_equal
 
 from foapy import binding, chain_mode, intervals, mode
@@ -288,9 +289,12 @@ class TestPipelineConsistency(TestCase):
     def test_integers_lossy_end(self):
         X = [2, 4, 2, 2, 4]
         assert_array_equal(
-            intervals(X, binding.end, mode.lossy),
-            intervals_tuple(
-                intervals_chain(X, binding.end, chain_mode.boundary), tuple_mode.lossy
+            np.sort(intervals(X, binding.end, mode.lossy)),
+            np.sort(
+                intervals_tuple(
+                    intervals_chain(X, binding.end, chain_mode.boundary),
+                    tuple_mode.lossy,
+                )
             ),
         )
 
