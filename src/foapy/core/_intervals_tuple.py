@@ -1,11 +1,11 @@
 import numpy as np
 from numpy import ndarray
 
-from foapy.core._binding import binding
+from foapy.core._binding import binding as binding_cls
 from foapy.core._tuple_mode import tuple_mode as tuple_mode_cls
 
 
-def intervals_tuple(chain, tuple_mode: int) -> ndarray:
+def intervals_tuple(chain, binding: int, tuple_mode: int) -> ndarray:
     """
     Apply a boundary handling strategy to a plain 1-D intervals chain.
 
@@ -79,7 +79,7 @@ def intervals_tuple(chain, tuple_mode: int) -> ndarray:
 
     def lossy(ar):
         # Infer binding direction to choose correct boundary detection formula.
-        if binding(ar) == binding.end:
+        if binding == binding_cls.end:
             ar = ar[::-1]
 
         positions = np.arange(ar.size, dtype=np.intp)
@@ -91,7 +91,7 @@ def intervals_tuple(chain, tuple_mode: int) -> ndarray:
 
     def redundant(ar):
         # If the chain was created using binding.end, reverse it for correct handling.
-        if binding(ar) == binding.end:
+        if binding == binding_cls.end:
             ar = ar[::-1]
 
         n = ar.size

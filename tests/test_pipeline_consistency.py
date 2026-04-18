@@ -30,6 +30,7 @@ class TestPipelineConsistency(TestCase):
             intervals(X, binding.start, mode.normal),
             intervals_tuple(
                 intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
                 tuple_mode.normal,
             ),
         )
@@ -39,7 +40,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.lossy),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.boundary), tuple_mode.lossy
+                intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
+                tuple_mode.lossy,
             ),
         )
 
@@ -48,7 +51,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.cycle),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.cycle), tuple_mode.normal
+                intervals_chain(X, binding.start, chain_mode.cycle),
+                binding.start,
+                tuple_mode.normal,
             ),
         )
 
@@ -62,6 +67,7 @@ class TestPipelineConsistency(TestCase):
             intervals(X, binding.start, mode.normal),
             intervals_tuple(
                 intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
                 tuple_mode.normal,
             ),
         )
@@ -71,7 +77,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.lossy),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.boundary), tuple_mode.lossy
+                intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
+                tuple_mode.lossy,
             ),
         )
 
@@ -80,7 +88,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.cycle),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.cycle), tuple_mode.normal
+                intervals_chain(X, binding.start, chain_mode.cycle),
+                binding.start,
+                tuple_mode.normal,
             ),
         )
 
@@ -89,7 +99,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.end, mode.normal),
             intervals_tuple(
-                intervals_chain(X, binding.end, chain_mode.boundary), tuple_mode.normal
+                intervals_chain(X, binding.end, chain_mode.boundary),
+                binding.end,
+                tuple_mode.normal,
             ),
         )
 
@@ -103,6 +115,7 @@ class TestPipelineConsistency(TestCase):
             intervals(X, binding.start, mode.normal),
             intervals_tuple(
                 intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.end,
                 tuple_mode.normal,
             ),
         )
@@ -112,7 +125,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.lossy),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.boundary), tuple_mode.lossy
+                intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
+                tuple_mode.lossy,
             ),
         )
 
@@ -121,7 +136,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.cycle),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.cycle), tuple_mode.normal
+                intervals_chain(X, binding.start, chain_mode.cycle),
+                binding.start,
+                tuple_mode.normal,
             ),
         )
 
@@ -130,7 +147,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.end, mode.normal),
             intervals_tuple(
-                intervals_chain(X, binding.end, chain_mode.boundary), tuple_mode.normal
+                intervals_chain(X, binding.end, chain_mode.boundary),
+                binding.end,
+                tuple_mode.normal,
             ),
         )
 
@@ -144,6 +163,7 @@ class TestPipelineConsistency(TestCase):
             intervals(X, binding.start, mode.normal),
             intervals_tuple(
                 intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
                 tuple_mode.normal,
             ),
         )
@@ -153,7 +173,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.lossy),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.boundary), tuple_mode.lossy
+                intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
+                tuple_mode.lossy,
             ),
         )
 
@@ -162,7 +184,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.cycle),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.cycle), tuple_mode.normal
+                intervals_chain(X, binding.start, chain_mode.cycle),
+                binding.start,
+                tuple_mode.normal,
             ),
         )
 
@@ -176,6 +200,7 @@ class TestPipelineConsistency(TestCase):
             intervals(X, binding.start, mode.normal),
             intervals_tuple(
                 intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
                 tuple_mode.normal,
             ),
         )
@@ -185,7 +210,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.end, mode.normal),
             intervals_tuple(
-                intervals_chain(X, binding.end, chain_mode.boundary), tuple_mode.normal
+                intervals_chain(X, binding.end, chain_mode.boundary),
+                binding.end,
+                tuple_mode.normal,
             ),
         )
 
@@ -198,7 +225,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.lossy),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.boundary), tuple_mode.lossy
+                intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
+                tuple_mode.lossy,
             ),
         )
 
@@ -207,7 +236,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.end, mode.lossy),
             intervals_tuple(
-                intervals_chain(X, binding.end, chain_mode.boundary), tuple_mode.lossy
+                intervals_chain(X, binding.end, chain_mode.boundary),
+                binding.end,
+                tuple_mode.lossy,
             ),
         )
 
@@ -220,7 +251,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.cycle),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.cycle), tuple_mode.normal
+                intervals_chain(X, binding.start, chain_mode.cycle),
+                binding.start,
+                tuple_mode.normal,
             ),
         )
 
@@ -229,7 +262,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.end, mode.cycle),
             intervals_tuple(
-                intervals_chain(X, binding.end, chain_mode.cycle), tuple_mode.normal
+                intervals_chain(X, binding.end, chain_mode.cycle),
+                binding.end,
+                tuple_mode.normal,
             ),
         )
 
@@ -243,7 +278,9 @@ class TestPipelineConsistency(TestCase):
         X = [1, 2, 3, 4, 5]
         expected = intervals(X, binding.start, mode.redundant)
         pipeline = intervals_tuple(
-            intervals_chain(X, binding.start, chain_mode.boundary), tuple_mode.redundant
+            intervals_chain(X, binding.start, chain_mode.boundary),
+            binding.start,
+            tuple_mode.redundant,
         )
         assert_array_equal(expected, pipeline)
 
@@ -264,6 +301,7 @@ class TestPipelineConsistency(TestCase):
             intervals(X, binding.start, mode.normal),
             intervals_tuple(
                 intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
                 tuple_mode.normal,
             ),
         )
@@ -273,7 +311,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.end, mode.normal),
             intervals_tuple(
-                intervals_chain(X, binding.end, chain_mode.boundary), tuple_mode.normal
+                intervals_chain(X, binding.end, chain_mode.boundary),
+                binding.end,
+                tuple_mode.normal,
             ),
         )
 
@@ -282,7 +322,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.lossy),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.boundary), tuple_mode.lossy
+                intervals_chain(X, binding.start, chain_mode.boundary),
+                binding.start,
+                tuple_mode.lossy,
             ),
         )
 
@@ -293,6 +335,7 @@ class TestPipelineConsistency(TestCase):
             np.sort(
                 intervals_tuple(
                     intervals_chain(X, binding.end, chain_mode.boundary),
+                    binding.end,
                     tuple_mode.lossy,
                 )
             ),
@@ -303,7 +346,9 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.start, mode.cycle),
             intervals_tuple(
-                intervals_chain(X, binding.start, chain_mode.cycle), tuple_mode.normal
+                intervals_chain(X, binding.start, chain_mode.cycle),
+                binding.start,
+                tuple_mode.normal,
             ),
         )
 
@@ -312,6 +357,8 @@ class TestPipelineConsistency(TestCase):
         assert_array_equal(
             intervals(X, binding.end, mode.cycle),
             intervals_tuple(
-                intervals_chain(X, binding.end, chain_mode.cycle), tuple_mode.normal
+                intervals_chain(X, binding.end, chain_mode.cycle),
+                binding.end,
+                tuple_mode.normal,
             ),
         )

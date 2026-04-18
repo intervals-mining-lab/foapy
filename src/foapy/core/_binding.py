@@ -88,7 +88,77 @@ class binding:
         if ar.size == 0:
             return cls.start
 
-        if ar[-1] == 1 and ar[0] != 1:
-            return cls.end
+        def end(ar):
+            n = ar.size
+            positions = np.arange(ar.size, dtype=np.intp)
+            is_valid = np.zeros_like(positions, dtype=bool)
+            is_end_valid = False
 
-        return cls.start
+            restore_indexes = ar + positions
+
+            cycle_mode = len(restore_indexes[restore_indexes > n]) > 0
+            normal_mode = (
+                len(restore_indexes[restore_indexes == n]) > 0 and not cycle_mode
+            )
+
+            if cycle_mode:
+                restore_indexes[restore_indexes >= n] = (
+                    restore_indexes[restore_indexes >= n] - n
+                )
+                if (
+                    np.all(restore_indexes < n)
+                    and np.all(restore_indexes >= 0)
+                    and np.all(positions != restore_indexes)
+                ):
+                    is_valid[restore_indexes] = True
+                    is_end_valid = np.all(is_valid)
+
+            if normal_mode:
+                if np.all(restore_indexes <= n) and np.all(restore_indexes >= 0):
+                    is_valid[restore_indexes == n] = True
+                    is_valid[restore_indexes < n] = True
+                    is_end_valid = is_end_valid = np.all(is_valid)
+
+            return is_end_valid
+
+        def start(ar):
+            n = ar.size
+            positions = np.arange(ar.size, dtype=np.intp)
+            is_valid = np.zeros_like(positions, dtype=bool)
+            is_end_valid = False
+
+            restore_indexes = positions - ar
+
+            cycle_mode = len(restore_indexes[restore_indexes < -1]) > 0
+            normal_mode = (
+                len(restore_indexes[restore_indexes == -1]) > 0 and not cycle_mode
+            )
+
+            if cycle_mode:
+                restore_indexes[restore_indexes < 0] = (
+                    restore_indexes[restore_indexes < 0] + n
+                )
+                if (
+                    np.all(restore_indexes < n)
+                    and np.all(restore_indexes >= 0)
+                    and np.all(positions != restore_indexes)
+                ):
+                    is_valid[restore_indexes] = True
+                    is_end_valid = np.all(is_valid)
+
+            if normal_mode:
+                if np.all(restore_indexes <= n) and np.all(restore_indexes >= -1):
+                    is_valid[restore_indexes == -1] = True
+                    is_valid[restore_indexes > -1] = True
+                    is_end_valid = is_end_valid = np.all(is_valid)
+
+            return is_end_valid
+
+        start_hypotesis = start(ar)
+        end_hypotesis = end(ar)
+
+        if start_hypotesis:
+            return cls.start
+
+        if end_hypotesis:
+            return cls.end

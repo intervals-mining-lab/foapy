@@ -1,8 +1,10 @@
-import numpy as np
 from numpy import ndarray
 
-from foapy.core import binding as constants_binding
 from foapy.core import mode as constants_mode
+from foapy.core._chain_mode import chain_mode
+from foapy.core._intervals_chain import intervals_chain
+from foapy.core._intervals_tuple import intervals_tuple
+from foapy.core._tuple_mode import tuple_mode
 
 
 def intervals(X, binding: int, mode: int) -> ndarray:
@@ -109,12 +111,6 @@ def intervals(X, binding: int, mode: int) -> ndarray:
     ```
     """  # noqa: E501
 
-    # Validate binding
-    if binding not in {constants_binding.start, constants_binding.end}:
-        raise ValueError(
-            {"message": "Invalid binding value. Use binding.start or binding.end."}
-        )
-
     # Validate mode
     valid_modes = [
         constants_mode.lossy,
@@ -127,49 +123,85 @@ def intervals(X, binding: int, mode: int) -> ndarray:
             {"message": "Invalid mode value. Use mode.lossy,normal,cycle or redundant."}
         )
 
-    ar = np.asanyarray(X)
+    if mode == constants_mode.normal:
+        return intervals_chain(X, binding, chain_mode.boundary)
 
-    if ar.shape == (0,):
-        return []
-
-    if binding == constants_binding.end:
-        ar = ar[::-1]
-
-    perm = ar.argsort(kind="mergesort")
-
-    mask_shape = ar.shape
-    mask = np.empty(mask_shape[0] + 1, dtype=bool)
-    mask[:1] = True
-    mask[1:-1] = ar[perm[1:]] != ar[perm[:-1]]
-    mask[-1:] = True  # or  mask[-1] = True
-
-    first_mask = mask[:-1]
-    last_mask = mask[1:]
-
-    intervals = np.empty(ar.shape, dtype=np.intp)
-    intervals[1:] = perm[1:] - perm[:-1]
-
-    delta = len(ar) - perm[last_mask] if mode == constants_mode.cycle else 1
-    intervals[first_mask] = perm[first_mask] + delta
-
-    inverse_perm = np.empty(ar.shape, dtype=np.intp)
-    inverse_perm[perm] = np.arange(ar.shape[0])
+    if mode == constants_mode.cycle:
+        return intervals_chain(X, binding, chain_mode.cycle)
 
     if mode == constants_mode.lossy:
-        intervals[first_mask] = 0
-        intervals = intervals[inverse_perm]
-        result = intervals[intervals != 0]
-    elif mode == constants_mode.normal:
-        result = intervals[inverse_perm]
-    elif mode == constants_mode.cycle:
-        result = intervals[inverse_perm]
-    elif mode == constants_mode.redundant:
-        result = intervals[inverse_perm]
-        redundant_intervals = len(ar) - perm[last_mask]
-        if binding == constants_binding.end:
-            redundant_intervals = redundant_intervals[::-1]
-        result = np.concatenate((result, redundant_intervals))
-    if binding == constants_binding.end:
-        result = result[::-1]
+        return intervals_tuple(
+            intervals_chain(X, binding, chain_mode.boundary), binding, tuple_mode.lossy
+        )
 
-    return result
+    if mode == constants_mode.redundant:
+        return intervals_tuple(
+            intervals_chain(X, binding, chain_mode.boundary),
+            binding,
+            tuple_mode.redundant,
+        )
+
+    # # Validate binding
+    # if binding not in {constants_binding.start, constants_binding.end}:
+    #     raise ValueError(
+    #         {"message": "Invalid binding value. Use binding.start or binding.end."}
+    #     )
+
+    # # Validate mode
+    # valid_modes = [
+    #     constants_mode.lossy,
+    #     constants_mode.normal,
+    #     constants_mode.cycle,
+    #     constants_mode.redundant,
+    # ]
+    # if mode not in valid_modes:
+    #     raise ValueError(
+    #       {"message": "Invalid mode value. Use mode.lossy,normal,cycle or redundant."}
+    #     )
+
+    # ar = np.asanyarray(X)
+
+    # if ar.shape == (0,):
+    #     return []
+
+    # if binding == constants_binding.end:
+    #     ar = ar[::-1]
+
+    # perm = ar.argsort(kind="mergesort")
+
+    # mask_shape = ar.shape
+    # mask = np.empty(mask_shape[0] + 1, dtype=bool)
+    # mask[:1] = True
+    # mask[1:-1] = ar[perm[1:]] != ar[perm[:-1]]
+    # mask[-1:] = True  # or  mask[-1] = True
+
+    # first_mask = mask[:-1]
+    # last_mask = mask[1:]
+
+    # intervals = np.empty(ar.shape, dtype=np.intp)
+    # intervals[1:] = perm[1:] - perm[:-1]
+
+    # delta = len(ar) - perm[last_mask] if mode == constants_mode.cycle else 1
+    # intervals[first_mask] = perm[first_mask] + delta
+
+    # inverse_perm = np.empty(ar.shape, dtype=np.intp)
+    # inverse_perm[perm] = np.arange(ar.shape[0])
+
+    # if mode == constants_mode.lossy:
+    #     intervals[first_mask] = 0
+    #     intervals = intervals[inverse_perm]
+    #     result = intervals[intervals != 0]
+    # elif mode == constants_mode.normal:
+    #     result = intervals[inverse_perm]
+    # elif mode == constants_mode.cycle:
+    #     result = intervals[inverse_perm]
+    # elif mode == constants_mode.redundant:
+    #     result = intervals[inverse_perm]
+    #     redundant_intervals = len(ar) - perm[last_mask]
+    #     if binding == constants_binding.end:
+    #         redundant_intervals = redundant_intervals[::-1]
+    #     result = np.concatenate((result, redundant_intervals))
+    # if binding == constants_binding.end:
+    #     result = result[::-1]
+
+    # return result

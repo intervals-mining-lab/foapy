@@ -71,6 +71,30 @@ class TestBindingCallable(TestCase):
         chain = intervals_chain(X, binding.end, chain_mode.boundary)
         self.assertEqual(binding(chain), binding.end)
 
+    def test_end_boundary_mixed_2(self):
+        X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
+        chain = intervals_chain(X, binding.end, chain_mode.cycle)
+        print(chain)
+        # n = 10
+        #              ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
+        #              [ 0,   1,   2,   3,   4,   5,   6,   7,   8,   9 ]
+        #              ["1", "2", "6", "2", "10","4", "1", "9", "4", "1"]
+        #              [ 0,   1,   2,   3,   4,   5,   8,   17,  13,  11]
+        #              ["1", "2", "6", "2",      "4", "1"               ]
+
+        # start
+        #              ["1", "2", "6", "2", "10","4", "1", "9", "4", "1"]
+        #              [ 0,   1,   2,   3,   4,   5,   6,   7,   8,   9 ]
+        #              ["-1","-1", "-4", "1","-6", "-1", "5", "2", "4", "8"]
+
+        # end
+        #              ["1", "2", "6", "2", "10","4", "1", "9", "4", "1"]
+        #              [ 0,   1,   2,   3,   4,   5,   6,   7,   8,   9 ]
+        #              ["2", "4", "9", "6", "15", "10", "8", "17", "13", "11"]
+        #              ["2", "4", "9", "6", "5", "0", "8", "7", "3", "1"]
+
+        self.assertEqual(binding(chain), binding.end)
+
     def test_end_boundary_integers(self):
         X = [2, 4, 2, 2, 4]
         chain = intervals_chain(X, binding.end, chain_mode.boundary)

@@ -47,6 +47,11 @@ class TestVolume(CharacteristicsTest):
 
     def test_dataset_2(self):
         X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
+        # n = 10
+        #              [ 0,   1,   2,   3,   4,   5,   6,   7,   8,   9 ]
+        #              ["1", "2", "6", "2", "10","4", "1", "9", "4", "1"]
+        #              [ 0,   1,   2,   3,   4,   5,   8,   17,  13,  11]
+        #              ["1", "2", "6", "2",      "4", "1"               ]
         dtype = None
         expected = {
             binding.start: {
