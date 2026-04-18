@@ -16,8 +16,8 @@
 
 **Purpose**: Verify baseline before making changes.
 
-- [ ] T001 Run `tox -e default` to capture current test baseline
-- [ ] T002 Run `pre-commit run --all-files` to capture lint baseline
+- [X] T001 Run `tox -e default` to capture current test baseline
+- [X] T002 Run `pre-commit run --all-files` to capture lint baseline
 
 **Checkpoint**: Baseline captured.
 
@@ -27,9 +27,9 @@
 
 **Purpose**: `chain_mode`, `tuple_mode`, and `binding` must be non-constructable named-constant namespaces before any pipeline functions validate them.
 
-- [ ] T003 Add TypeError-raising `__new__` to `binding` in `src/foapy/core/_binding.py`; remove callable-inference docstring; remove unused `numpy` import
-- [ ] T004 [P] Add TypeError-raising `__new__` to `chain_mode` in `src/foapy/core/_chain_mode.py`; remove callable-inference docstring; remove unused `numpy` import
-- [ ] T005 [P] Add TypeError-raising `__new__` to `tuple_mode` in `src/foapy/core/_tuple_mode.py`
+- [X] T003 Add TypeError-raising `__new__` to `binding` in `src/foapy/core/_binding.py`; remove callable-inference docstring; remove unused `numpy` import
+- [X] T004 [P] Add TypeError-raising `__new__` to `chain_mode` in `src/foapy/core/_chain_mode.py`; remove callable-inference docstring; remove unused `numpy` import
+- [X] T005 [P] Add TypeError-raising `__new__` to `tuple_mode` in `src/foapy/core/_tuple_mode.py`
 
 **Checkpoint**: `binding()`, `chain_mode()`, `tuple_mode()` all raise `TypeError`; class attributes (`binding.start`, `chain_mode.boundary`, etc.) remain accessible as integers.
 
@@ -43,7 +43,7 @@
 
 ### Implementation for User Story 4
 
-- [ ] T006 [US4] Replace `tests/test_binding_callable.py` with `TestEnumNamespaceNotConstructable`:
+- [X] T006 [US4] Replace `tests/test_binding_callable.py` with `TestEnumNamespaceNotConstructable`:
   - `test_binding_not_constructable` — `binding()` raises `TypeError`
   - `test_binding_not_constructable_with_chain` — `binding(np.array(...))` raises `TypeError`
   - `test_binding_not_constructable_with_int` — `binding(1)` raises `TypeError`
@@ -55,7 +55,7 @@
   - `test_chain_mode_constants_accessible` — `chain_mode.boundary == 1`, `chain_mode.cycle == 2`
   - `test_tuple_mode_constants_accessible` — `tuple_mode.lossy == 1`, `.normal == 2`, `.redundant == 3`
 
-- [ ] T007 [P] [US4] Replace `tests/test_chain_mode_callable.py` with `TestChainModeNotConstructable`:
+- [X] T007 [P] [US4] Replace `tests/test_chain_mode_callable.py` with `TestChainModeNotConstructable`:
   - `test_chain_mode_not_constructable` — `chain_mode()` raises `TypeError`
   - `test_chain_mode_not_constructable_with_chain` — `chain_mode(array)` raises `TypeError`
   - `test_chain_mode_not_constructable_with_string` — `chain_mode("boundary")` raises `TypeError`
@@ -65,7 +65,7 @@
   - `test_chain_mode_cycle_usable_in_intervals_chain` — `intervals_chain(X, binding.start, chain_mode.cycle)` succeeds
   - `test_cycle_chain_sum_divisible_by_n` — cycle chain sums to multiple of n
 
-- [ ] T008 [US4] Run `tox -e default -- tests/test_binding_callable.py tests/test_chain_mode_callable.py -v` — all 18 tests pass
+- [X] T008 [US4] Run `tox -e default -- tests/test_binding_callable.py tests/test_chain_mode_callable.py -v` — all 18 tests pass
 
 **Checkpoint**: SC-006 satisfied — all three enum types raise TypeError on construction; constants accessible.
 
@@ -79,25 +79,25 @@
 
 ### Implementation for User Story 2
 
-- [ ] T009 [US2] Update `src/foapy/core/_intervals_tuple.py`:
+- [X] T009 [US2] Update `src/foapy/core/_intervals_tuple.py`:
   - Add `binding: int` as 2nd positional parameter (between `chain` and `tuple_mode`)
   - Add validation: raise `ValueError` when `binding not in {binding_cls.start, binding_cls.end}`
   - Fix docstring: remove "inferred automatically" sentence; add `binding` to Parameters section
   - Use `binding` parameter to control lossy/redundant boundary detection direction
 
-- [ ] T010 [P] [US2] Update `src/foapy/ma/_intervals_tuple.py`:
+- [X] T010 [P] [US2] Update `src/foapy/ma/_intervals_tuple.py`:
   - Add `binding: int` as 2nd positional parameter
   - Update delegation call to `core_intervals_tuple(chain, binding, tuple_mode)`
 
-- [ ] T011 [P] [US2] Update `tests/test_intervals_tuple.py`:
+- [X] T011 [P] [US2] Update `tests/test_intervals_tuple.py`:
   - Update all `intervals_tuple(chain, ...)` calls to pass `binding` as 2nd argument
 
-- [ ] T012 [P] [US2] Update `tests/test_ma_intervals_tuple.py`:
+- [X] T012 [P] [US2] Update `tests/test_ma_intervals_tuple.py`:
   - Update all `intervals_tuple(chain, ...)` calls to pass `binding`; add `from foapy import binding` import
 
-- [ ] T013 [P] [US2] Update any pipeline-integration calls in `tests/test_intervals_distribution.py` to pass `binding` as 2nd argument
+- [X] T013 [P] [US2] Update any pipeline-integration calls in `tests/test_intervals_distribution.py` to pass `binding` as 2nd argument
 
-- [ ] T014 [US2] Run `tox -e default -- tests/test_intervals_tuple.py tests/test_ma_intervals_tuple.py -v` — all tests pass
+- [X] T014 [US2] Run `tox -e default -- tests/test_intervals_tuple.py tests/test_ma_intervals_tuple.py -v` — all tests pass
 
 **Checkpoint**: `intervals_tuple` has correct 3-arg signature; all callers updated.
 
@@ -111,14 +111,14 @@
 
 ### Gaps to fill in `tests/test_intervals_tuple.py`
 
-- [ ] T015 [P] [US2] Add `test_lossy_all_unique_end` — `X=[1,2,3,4,5]`, `binding.end`, `tuple_mode.lossy` → `[]`
-- [ ] T016 [P] [US2] Add `test_lossy_all_identical_end` — `X=["a","a","a"]`, `binding.end`, `tuple_mode.lossy` → `[1, 1]`
-- [ ] T017 [P] [US2] Add `test_lossy_boundary_end_integers` — `X=[2,4,2,2,4]`, `binding.end`, `tuple_mode.lossy` → `[1, 3, 2]`
-- [ ] T018 [P] [US2] Add `test_redundant_all_unique_end` — `X=[1,2,3,4,5]`, `binding.end`, `tuple_mode.redundant`
-- [ ] T019 [P] [US2] Add `test_redundant_all_identical_end` — `X=["a","a","a"]`, `binding.end`, `tuple_mode.redundant` → `[1,1,1,1]`
-- [ ] T020 [P] [US2] Add `test_empty_normal_end`, `test_empty_lossy_end`, `test_empty_redundant_end` — empty chain with `binding.end` → `[]` for each `tuple_mode`
-- [ ] T021 [P] [US2] Add `test_lossy_single_element_start` and `test_lossy_single_element_end` — `X=["a"]`, `tuple_mode.lossy` → `[]` for both bindings
-- [ ] T022 [US2] Run `tox -e default -- tests/test_intervals_tuple.py -v` — all tests pass
+- [X] T015 [P] [US2] Add `test_lossy_all_unique_end` — `X=[1,2,3,4,5]`, `binding.end`, `tuple_mode.lossy` → `[]`
+- [X] T016 [P] [US2] Add `test_lossy_all_identical_end` — `X=["a","a","a"]`, `binding.end`, `tuple_mode.lossy` → `[1, 1]`
+- [X] T017 [P] [US2] Add `test_lossy_boundary_end_integers` — `X=[2,4,2,2,4]`, `binding.end`, `tuple_mode.lossy` → `[1, 3, 2]`
+- [X] T018 [P] [US2] Add `test_redundant_all_unique_end` — `X=[1,2,3,4,5]`, `binding.end`, `tuple_mode.redundant`
+- [X] T019 [P] [US2] Add `test_redundant_all_identical_end` — `X=["a","a","a"]`, `binding.end`, `tuple_mode.redundant` → `[1,1,1,1]`
+- [X] T020 [P] [US2] Add `test_empty_normal_end`, `test_empty_lossy_end`, `test_empty_redundant_end` — empty chain with `binding.end` → `[]` for each `tuple_mode`
+- [X] T021 [P] [US2] Add `test_lossy_single_element_start` and `test_lossy_single_element_end` — `X=["a"]`, `tuple_mode.lossy` → `[]` for both bindings
+- [X] T022 [US2] Run `tox -e default -- tests/test_intervals_tuple.py -v` — all tests pass
 
 **Checkpoint**: FR-008 fully satisfied — every scenario × binding combination has a test.
 
@@ -132,7 +132,7 @@
 
 ### Implementation for User Story 1
 
-- [ ] T023 [US1] Verify `tests/test_pipeline_consistency.py` covers all four mode-mapping combinations:
+- [X] T023 [US1] Verify `tests/test_pipeline_consistency.py` covers all four mode-mapping combinations:
   - `mode.lossy` ↔ `chain_mode.boundary` + `tuple_mode.lossy`
   - `mode.normal` ↔ `chain_mode.boundary` + `tuple_mode.normal`
   - `mode.cycle` ↔ `chain_mode.cycle` + `tuple_mode.normal`
@@ -151,8 +151,8 @@
 
 ### Implementation for User Story 3
 
-- [ ] T024 [US3] Verify `tests/test_intervals_distribution.py` passes — covers known tuple → count array, empty input, uniform intervals
-- [ ] T025 [P] [US3] Verify `tests/test_ma_intervals_distribution.py` passes
+- [X] T024 [US3] Verify `tests/test_intervals_distribution.py` passes — covers known tuple → count array, empty input, uniform intervals
+- [X] T025 [P] [US3] Verify `tests/test_ma_intervals_distribution.py` passes
 
 **Checkpoint**: `intervals_distribution` independently verified.
 
@@ -162,8 +162,8 @@
 
 **Purpose**: Full suite and lint gate.
 
-- [ ] T026 Run `tox -e default` — full test suite must pass with zero failures
-- [ ] T027 Run `pre-commit run --all-files --show-diff-on-failure` — all black/isort/flake8 checks pass
+- [X] T026 Run `tox -e default` — full test suite must pass with zero failures
+- [X] T027 Run `pre-commit run --all-files --show-diff-on-failure` — all black/isort/flake8 checks pass
 
 ---
 

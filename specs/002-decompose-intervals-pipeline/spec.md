@@ -11,6 +11,11 @@
 
 - Q: Should `binding(chain)` and `chain_mode(chain)` raise an exception or return a default for an empty chain? → A: Return defaults — `binding.start` for `binding(chain)` and `chain_mode.cycle` for `chain_mode(chain)`.
 
+### Session 2026-04-18
+
+- Q: Should `intervals_tuple` require `binding` as an explicit parameter or infer it from chain structure? → A: Explicit parameter. `intervals_tuple(chain, binding, tuple_mode)` — binding is a required positional argument passed by the caller; the function never infers it from the chain.
+- Q: Should US5 (`binding(chain)` callable inference), US7 (`chain_mode(chain)` callable inference), and related FR-015, FR-016, SC-006, SC-007 remain in the spec? → A: Remove them. Callable inference is out of scope — `binding` and `chain_mode` are non-constructable named-constant namespaces; calling them raises `TypeError`.
+
 ### Session 2026-03-28 (first pass)
 
 - Q: Should `intervals_chain` return a plain ndarray (with structural detection of binding/chain_mode from values) or a metadata-carrying named tuple? → A: Plain ndarray. The separation of `chain_mode` into `cycle` and `boundary` makes structural detection **mathematically deterministic** — this is the reason for the separation. No named tuple or attached metadata is needed.
@@ -39,27 +44,27 @@ A library user working through the FOA pipeline wants to obtain the raw interval
 
 ### User Story 2 - Apply Tuple Mode via Intervals Tuple (Priority: P2)
 
-A library user wants to apply a tuple transformation mode (`lossy`, `normal`, or `redundant`) to an already-computed intervals chain to obtain the intervals tuple used as input to characteristics. The binding direction is inferred from the chain structure. They need `intervals_tuple` as a standalone callable that accepts only a raw chain and a `tuple_mode` — with no separate binding or chain_mode argument.
+A library user wants to apply a tuple transformation mode (`lossy`, `normal`, or `redundant`) to an already-computed intervals chain to obtain the intervals tuple used as input to characteristics. They need `intervals_tuple` as a standalone callable that accepts a raw chain, the binding direction used to produce it, and a `tuple_mode`.
 
-`tuple_mode` operates by detecting boundary intervals: for each position `i` and its interval value `v`, if `i - v` falls outside `[0, sequence_length]` the interval is a first/last-occurrence (boundary) interval. This detection is uniform and works identically on chains built with either `chain_mode.boundary` or `chain_mode.cycle`.
+`tuple_mode` operates by detecting boundary intervals using the explicit `binding` parameter: for `binding.start`, the first-occurrence interval at position `i` satisfies `i - v < 0`; for `binding.end`, the last-occurrence interval satisfies `i + v > n`. The detection is uniform and works identically on chains built with either `chain_mode.boundary` or `chain_mode.cycle`.
 
 - `tuple_mode.lossy`: drops all boundary intervals; interior intervals are kept as-is.
 - `tuple_mode.normal`: keeps all intervals as-is (boundary intervals remain in place).
 - `tuple_mode.redundant`: replaces each boundary interval with two intervals — the leading distance (from sequence start to first occurrence) and the trailing distance (from last occurrence to sequence end). Trailing intervals are appended to the end of the result in element-appearance order.
 
-**Why this priority**: Separating `tuple_mode` from `chain_mode` allows users to independently control how the chain is built (bounded vs cyclic) and how the resulting tuple is shaped. All six combinations of `chain_mode × tuple_mode` are valid.
+**Why this priority**: Explicit `binding` makes the contract of `intervals_tuple` unambiguous and eliminates a hidden dependency on chain structural properties. All six combinations of `chain_mode × tuple_mode` are valid.
 
-**Independent Test**: Can be fully tested by calling `intervals_tuple(chain, tuple_mode)` on a known chain and verifying the output matches expected per each tuple_mode's definition, without needing `intervals_distribution`.
+**Independent Test**: Can be fully tested by calling `intervals_tuple(chain, binding, tuple_mode)` on a known chain with matching `binding` and verifying the output matches expected per each tuple_mode's definition, without needing `intervals_distribution`.
 
 **Acceptance Scenarios**:
 
-1. **Given** an intervals chain and `tuple_mode.lossy`, **When** `intervals_tuple` is called, **Then** all boundary intervals (those whose back-reference `i - v` falls outside `[0, n]`) are excluded from the result; interior intervals are kept.
-2. **Given** an intervals chain and `tuple_mode.normal`, **When** `intervals_tuple` is called, **Then** all intervals (including boundary ones) are returned as-is with no modification.
-3. **Given** an intervals chain and `tuple_mode.redundant`, **When** `intervals_tuple` is called, **Then** each boundary interval is replaced by its leading component (distance to start) and a trailing component (distance to end) is appended at the result's tail in element-appearance order.
-4. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.boundary)`, **When** `intervals_tuple(chain, tuple_mode.normal)` is called, **Then** the result is identical to `intervals(X, binding.start, mode.normal)`.
-5. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.cycle)`, **When** `intervals_tuple(chain, tuple_mode.normal)` is called, **Then** the result is identical to `intervals(X, binding.start, mode.cycle)`.
-6. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.cycle)`, **When** `intervals_tuple(chain, tuple_mode.lossy)` is called, **Then** the cyclic boundary intervals are dropped (they satisfy `i - v < 0`) and only interior intervals remain — identical to `intervals(X, binding.start, mode.lossy)`.
-7. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.cycle)`, **When** `intervals_tuple(chain, tuple_mode.redundant)` is called, **Then** each cyclic interval is split into its leading and trailing components and trailing values are appended in element-appearance order.
+1. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.boundary)` and `tuple_mode.lossy`, **When** `intervals_tuple(chain, binding.start, tuple_mode.lossy)` is called, **Then** boundary (first-occurrence) intervals are excluded; interior intervals are kept.
+2. **Given** a chain produced by `intervals_chain(X, binding.end, chain_mode.boundary)` and `tuple_mode.lossy`, **When** `intervals_tuple(chain, binding.end, tuple_mode.lossy)` is called, **Then** boundary (last-occurrence) intervals are excluded; interior intervals are kept.
+3. **Given** an intervals chain and `tuple_mode.normal`, **When** `intervals_tuple(chain, binding, tuple_mode.normal)` is called with any `binding`, **Then** all intervals are returned as-is with no modification.
+4. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.boundary)`, **When** `intervals_tuple(chain, binding.start, tuple_mode.normal)` is called, **Then** the result is identical to `intervals(X, binding.start, mode.normal)`.
+5. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.cycle)`, **When** `intervals_tuple(chain, binding.start, tuple_mode.normal)` is called, **Then** the result is identical to `intervals(X, binding.start, mode.cycle)`.
+6. **Given** a chain produced by `intervals_chain(X, binding.start, chain_mode.cycle)`, **When** `intervals_tuple(chain, binding.start, tuple_mode.lossy)` is called, **Then** cyclic boundary intervals are dropped and only interior intervals remain.
+7. **Given** an invalid `binding` value, **When** `intervals_tuple` is called, **Then** a `ValueError` is raised with a descriptive message.
 
 ---
 
@@ -90,7 +95,7 @@ A library user who currently calls `intervals(sequence, binding, mode)` needs as
 
 **Why this priority**: Without consistency between the old and new paths, users cannot safely adopt the decomposed API, and existing code using `intervals()` plus characteristics could produce different results.
 
-**Independent Test**: Can be fully tested by comparing `intervals(X, b, m)` output with `intervals_tuple(intervals_chain(X, b, chain_mode), tuple_mode)` for all four mode mappings on the same input sequence.
+**Independent Test**: Can be fully tested by comparing `intervals(X, b, m)` output with `intervals_tuple(intervals_chain(X, b, chain_mode), b, tuple_mode)` for all four mode mappings on the same input sequence.
 
 **Acceptance Scenarios**:
 
@@ -186,7 +191,7 @@ A library user adopting the decomposed pipeline needs to understand what each fu
 ### Functional Requirements
 
 - **FR-001**: The library MUST expose `intervals_chain` as a publicly callable function that accepts any raw 1-D sequence (strings, integers, or any comparable elements — no pre-ordering required), a binding direction, and a `chain_mode` value (`cycle` or `boundary`) and returns the raw intervals chain as a **plain 1-D ndarray** (no metadata wrapper). The chain values alone are sufficient to determine binding and chain_mode via structural properties.
-- **FR-002**: The library MUST expose `intervals_tuple` as a publicly callable function that accepts a raw intervals chain (plain 1-D ndarray) and a `tuple_mode` value (`lossy`, `normal`, or `redundant`) — with no explicit binding or chain_mode argument. It MUST detect boundary intervals by checking whether `i - v` falls outside `[0, sequence_length]` for each position `i` and interval value `v`, applying the selected mode uniformly: `lossy` drops them, `normal` keeps them as-is, `redundant` expands each into leading and trailing components with trailing values appended in element-appearance order. All six `chain_mode × tuple_mode` combinations are valid.
+- **FR-002**: The library MUST expose `intervals_tuple` as a publicly callable function with signature `intervals_tuple(chain, binding, tuple_mode)`. `binding` MUST be an explicit positional parameter (`binding.start` or `binding.end`) matching the direction used to produce `chain`; the function MUST NOT infer binding from chain structure. It MUST apply `tuple_mode` using `binding` to detect boundary intervals: `lossy` drops them, `normal` keeps them as-is, `redundant` expands each into leading and trailing components with trailing values appended in element-appearance order. All six `chain_mode × tuple_mode` combinations are valid.
 - **FR-003**: The library MUST expose `intervals_distribution` as a publicly callable function that accepts an intervals tuple and returns the count distribution of interval lengths.
 - **FR-004**: The library MUST expose a `chain_mode` enum with two values: `boundary` (treats sequence as finite and bounded) and `cycle` (treats sequence as circular).
 - **FR-005**: The library MUST expose a `tuple_mode` enum with three values: `lossy` (drop boundary intervals), `normal` (keep one boundary interval per element), and `redundant` (include both leading and trailing boundary intervals).
@@ -196,7 +201,7 @@ A library user adopting the decomposed pipeline needs to understand what each fu
 - **FR-009**: The result of composing `intervals_chain(X, b, chain_mode.cycle)` → `intervals_tuple(chain, tuple_mode.normal)` MUST be identical to `intervals(X, b, mode.cycle)`.
 - **FR-010**: The result of composing `intervals_chain(X, b, chain_mode.boundary)` → `intervals_tuple(chain, tuple_mode.redundant)` MUST be identical to `intervals(X, b, mode.redundant)`.
 - **FR-011**: `intervals_chain` MUST raise `Not1DArrayException` when passed a non-1D array; MUST raise `ValueError` for invalid `binding` or `chain_mode` values.
-- **FR-012**: `intervals_tuple` MUST raise `ValueError` for invalid `tuple_mode` values.
+- **FR-012**: `intervals_tuple` MUST raise `ValueError` for invalid `tuple_mode` values and for `binding` values other than `binding.start` or `binding.end`.
 - **FR-013**: The existing `intervals()` function MUST remain available and continue to produce identical results to preserve backward compatibility.
 - **FR-014**: `intervals_chain`, `intervals_tuple`, and `intervals_distribution` MUST each have a masked-array equivalent in `foapy.ma` that mirrors the core API behaviour for sequences with missing values.
 - **FR-015**: The library MUST expose `binding` as a publicly callable function that accepts an intervals chain and returns the binding direction used to produce it; it MUST raise `ValueError` for invalid input; for empty chains it MUST return `binding.start` as the default.
