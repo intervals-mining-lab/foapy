@@ -23,3 +23,6 @@ class tuple_mode:
 
     redundant: int = 3
     """Expand boundary intervals into leading + trailing components."""
+
+    def __new__(cls, *args, **kwargs):
+        raise TypeError(cls.__name__ + " cannot be instantiated.")

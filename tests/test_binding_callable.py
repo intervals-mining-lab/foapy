@@ -3,128 +3,70 @@ from unittest import TestCase
 import numpy as np
 import pytest
 
-from foapy import binding, chain_mode
-from foapy.core import intervals_chain
+from foapy import binding, chain_mode, tuple_mode
 
 
-class TestBindingCallable(TestCase):
+class TestEnumNamespaceNotConstructable(TestCase):
     """
-    Test binding(chain) callable form.
+    Verify that binding, chain_mode, and tuple_mode cannot be instantiated.
 
-    Verifies that binding(chain) correctly identifies the binding direction
-    used to produce an intervals chain from its structural properties.
+    These types are named-constant namespaces. Calling them as constructors
+    must raise TypeError. Their class attributes remain accessible.
     """
 
     # -------------------------------------------------------------------------
-    # Empty chain — returns binding.start by default
+    # binding — not constructable
     # -------------------------------------------------------------------------
 
-    def test_empty_chain_returns_start(self):
-        chain = np.array([], dtype=np.intp)
-        result = binding(chain)
-        self.assertEqual(result, binding.start)
+    def test_binding_not_constructable(self):
+        with pytest.raises(TypeError):
+            binding()
 
-    def test_empty_list_returns_start(self):
-        result = binding([])
-        self.assertEqual(result, binding.start)
+    def test_binding_not_constructable_with_chain(self):
+        with pytest.raises(TypeError):
+            binding(np.array([1, 2, 2], dtype=np.intp))
 
-    # -------------------------------------------------------------------------
-    # Chains from binding.start
-    # -------------------------------------------------------------------------
-
-    def test_start_boundary_mixed(self):
-        X = ["b", "a", "b", "c", "b"]
-        chain = intervals_chain(X, binding.start, chain_mode.boundary)
-        self.assertEqual(binding(chain), binding.start)
-
-    def test_start_boundary_integers(self):
-        X = [2, 4, 2, 2, 4]
-        chain = intervals_chain(X, binding.start, chain_mode.boundary)
-        self.assertEqual(binding(chain), binding.start)
-
-    def test_start_boundary_all_unique(self):
-        X = [1, 2, 3, 4, 5]
-        chain = intervals_chain(X, binding.start, chain_mode.boundary)
-        self.assertEqual(binding(chain), binding.start)
-
-    def test_start_cycle_mixed(self):
-        X = ["b", "a", "b", "c", "b"]
-        chain = intervals_chain(X, binding.start, chain_mode.cycle)
-        self.assertEqual(binding(chain), binding.start)
-
-    def test_start_cycle_integers(self):
-        X = [2, 4, 2, 2, 4]
-        chain = intervals_chain(X, binding.start, chain_mode.cycle)
-        self.assertEqual(binding(chain), binding.start)
-
-    def test_start_single_element(self):
-        X = ["a"]
-        chain = intervals_chain(X, binding.start, chain_mode.boundary)
-        self.assertEqual(binding(chain), binding.start)
+    def test_binding_not_constructable_with_int(self):
+        with pytest.raises(TypeError):
+            binding(1)
 
     # -------------------------------------------------------------------------
-    # Chains from binding.end
+    # chain_mode — not constructable
     # -------------------------------------------------------------------------
 
-    def test_end_boundary_mixed(self):
-        X = ["b", "a", "b", "c", "b"]
-        chain = intervals_chain(X, binding.end, chain_mode.boundary)
-        self.assertEqual(binding(chain), binding.end)
+    def test_chain_mode_not_constructable(self):
+        with pytest.raises(TypeError):
+            chain_mode()
 
-    def test_end_boundary_mixed_2(self):
-        X = ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        chain = intervals_chain(X, binding.end, chain_mode.cycle)
-        print(chain)
-        # n = 10
-        #              ["C", "C", "A", "C", "G", "C", "T", "T", "A", "C"]
-        #              [ 0,   1,   2,   3,   4,   5,   6,   7,   8,   9 ]
-        #              ["1", "2", "6", "2", "10","4", "1", "9", "4", "1"]
-        #              [ 0,   1,   2,   3,   4,   5,   8,   17,  13,  11]
-        #              ["1", "2", "6", "2",      "4", "1"               ]
-
-        # start
-        #              ["1", "2", "6", "2", "10","4", "1", "9", "4", "1"]
-        #              [ 0,   1,   2,   3,   4,   5,   6,   7,   8,   9 ]
-        #              ["-1","-1", "-4", "1","-6", "-1", "5", "2", "4", "8"]
-
-        # end
-        #              ["1", "2", "6", "2", "10","4", "1", "9", "4", "1"]
-        #              [ 0,   1,   2,   3,   4,   5,   6,   7,   8,   9 ]
-        #              ["2", "4", "9", "6", "15", "10", "8", "17", "13", "11"]
-        #              ["2", "4", "9", "6", "5", "0", "8", "7", "3", "1"]
-
-        self.assertEqual(binding(chain), binding.end)
-
-    def test_end_boundary_integers(self):
-        X = [2, 4, 2, 2, 4]
-        chain = intervals_chain(X, binding.end, chain_mode.boundary)
-        self.assertEqual(binding(chain), binding.end)
-
-    def test_end_boundary_all_unique(self):
-        X = [1, 2, 3, 4, 5]
-        chain = intervals_chain(X, binding.end, chain_mode.boundary)
-        self.assertEqual(binding(chain), binding.end)
-
-    def test_end_cycle_mixed(self):
-        X = ["b", "a", "b", "c", "b"]
-        chain = intervals_chain(X, binding.end, chain_mode.cycle)
-        self.assertEqual(binding(chain), binding.end)
-
-    def test_end_cycle_integers(self):
-        # Use a sequence where X[-1] appears at position 0 in the original,
-        # giving a cyclic interval of 1 at chain[-1] and making binding detectable.
-        X = [2, 4, 2, 4, 2]  # X[0]==X[-1]==2, wraps around
-        chain = intervals_chain(X, binding.end, chain_mode.cycle)
-        self.assertEqual(binding(chain), binding.end)
+    def test_chain_mode_not_constructable_with_arg(self):
+        with pytest.raises(TypeError):
+            chain_mode("boundary")
 
     # -------------------------------------------------------------------------
-    # Invalid input
+    # tuple_mode — not constructable
     # -------------------------------------------------------------------------
 
-    def test_invalid_input_raises_value_error(self):
-        with pytest.raises(ValueError):
-            binding("not_a_chain")
+    def test_tuple_mode_not_constructable(self):
+        with pytest.raises(TypeError):
+            tuple_mode()
 
-    def test_invalid_2d_array_raises_value_error(self):
-        with pytest.raises(ValueError):
-            binding(np.array([[1, 2], [3, 4]]))
+    def test_tuple_mode_not_constructable_with_arg(self):
+        with pytest.raises(TypeError):
+            tuple_mode(1)
+
+    # -------------------------------------------------------------------------
+    # Named constants remain accessible
+    # -------------------------------------------------------------------------
+
+    def test_binding_constants_accessible(self):
+        self.assertEqual(binding.start, 1)
+        self.assertEqual(binding.end, 2)
+
+    def test_chain_mode_constants_accessible(self):
+        self.assertEqual(chain_mode.boundary, 1)
+        self.assertEqual(chain_mode.cycle, 2)
+
+    def test_tuple_mode_constants_accessible(self):
+        self.assertEqual(tuple_mode.lossy, 1)
+        self.assertEqual(tuple_mode.normal, 2)
+        self.assertEqual(tuple_mode.redundant, 3)

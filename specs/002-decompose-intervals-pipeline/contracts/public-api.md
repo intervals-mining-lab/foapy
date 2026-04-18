@@ -48,17 +48,17 @@ foapy.intervals_chain
 foapy.core.intervals_chain
 ```
 
-**Signature**: `intervals_chain(X, binding: int, chain_mode: int) -> IntervalChain`
+**Signature**: `intervals_chain(X, binding: int, chain_mode: int) -> ndarray`
 
 **Parameters**:
 
 | Name       | Type        | Description |
 |------------|-------------|-------------|
-| X          | array-like (1-D) | Input sequence (ordered or raw). Must be 1-dimensional. |
+| X          | array-like (1-D) | Input sequence. Must be 1-dimensional. |
 | binding    | int         | `binding.start` (left-to-right) or `binding.end` (right-to-left) |
 | chain_mode | int         | `chain_mode.boundary` or `chain_mode.cycle` |
 
-**Returns**: `IntervalChain` named tuple with fields `(values: ndarray[intp, 1-D], binding: int, chain_mode: int)`
+**Returns**: `ndarray[intp, 1-D]` — raw interval chain in original sequence order
 
 **Raises**:
 - `Not1DArrayException` — when `X` is not 1-dimensional
@@ -66,29 +66,31 @@ foapy.core.intervals_chain
 - `ValueError` — when `chain_mode` is not `chain_mode.boundary` or `chain_mode.cycle`
 
 **Edge cases**:
-- Empty `X` → returns `IntervalChain(values=array([]), binding=binding, chain_mode=chain_mode)`
+- Empty `X` → returns `array([], dtype=intp)`
 
 ---
 
-## `intervals_tuple(chain, tuple_mode)`
+## `intervals_tuple(chain, binding, tuple_mode)`
 
 ```
 foapy.intervals_tuple
 foapy.core.intervals_tuple
 ```
 
-**Signature**: `intervals_tuple(chain: IntervalChain, tuple_mode: int) -> ndarray`
+**Signature**: `intervals_tuple(chain: ndarray, binding: int, tuple_mode: int) -> ndarray`
 
 **Parameters**:
 
 | Name       | Type          | Description |
 |------------|---------------|-------------|
-| chain      | IntervalChain | Output of `intervals_chain`. Carries values, binding, and chain_mode internally. |
+| chain      | ndarray (1-D) | Output of `intervals_chain` — plain 1-D integer array. |
+| binding    | int           | `binding.start` or `binding.end` — must match the binding used to produce `chain`. |
 | tuple_mode | int           | `tuple_mode.lossy`, `tuple_mode.normal`, or `tuple_mode.redundant` |
 
 **Returns**: `ndarray[intp, 1-D]` — boundary-adjusted intervals tuple
 
 **Raises**:
+- `ValueError` — when `binding` is not `binding.start` or `binding.end`
 - `ValueError` — when `tuple_mode` is not a valid `tuple_mode` value
 
 **Edge cases**:
@@ -118,52 +120,6 @@ foapy.core.intervals_distribution
 
 ---
 
-## `binding(chain)`
-
-```
-foapy.binding  ← NOTE: this is a NEW overloaded meaning; existing `binding` is an enum class
-```
-
-**Resolution**: `binding` as a callable function and `binding` as an enum class are the same symbol. The callable form accepts an `IntervalChain` argument and returns an int.
-
-**Signature**: `binding(chain: IntervalChain) -> int`
-
-**Parameters**:
-
-| Name  | Type          | Description |
-|-------|---------------|-------------|
-| chain | IntervalChain | Output of `intervals_chain` |
-
-**Returns**: `int` — `binding.start` or `binding.end`
-
-**Raises**:
-- `ValueError` — when `chain` is not an `IntervalChain` instance (or valid equivalent)
-
----
-
-## `chain_mode(chain)` (function)
-
-```
-foapy.chain_mode  ← NOTE: dual role — also an enum class (see above)
-```
-
-**Resolution**: `chain_mode` serves both as an enum class (accessed via `.boundary`, `.cycle`) and as a callable function (called with an `IntervalChain` argument).
-
-**Signature**: `chain_mode(chain: IntervalChain) -> int`
-
-**Parameters**:
-
-| Name  | Type          | Description |
-|-------|---------------|-------------|
-| chain | IntervalChain | Output of `intervals_chain` |
-
-**Returns**: `int` — `chain_mode.boundary` or `chain_mode.cycle`
-
-**Raises**:
-- `ValueError` — when `chain` is not an `IntervalChain` instance
-
----
-
 ## `is_valid_intervals_chain(chain)`
 
 ```
@@ -177,42 +133,21 @@ foapy.core.is_valid_intervals_chain
 
 | Name  | Type | Description |
 |-------|------|-------------|
-| chain | any  | Any value to validate |
+| chain | any  | Any value to validate as an interval chain |
 
-**Returns**: `bool` — `True` if `chain` is an `IntervalChain` with structurally valid `values`; `False` otherwise. Never raises.
+**Returns**: `bool` — `True` if `chain` is a valid 1-D array of positive integers where every value ≤ len(chain); `False` otherwise. Never raises.
 
 **Structural validity criteria**:
-1. `chain` is an `IntervalChain` named tuple
-2. `chain.values` is a 1-D ndarray
-3. All values in `chain.values` are positive integers (≥ 1)
-4. All values in `chain.values` are ≤ len(chain.values)
+1. `chain` is a 1-D ndarray (or 1-D array-like convertible to one)
+2. All values are positive integers (≥ 1)
+3. All values are ≤ len(chain)
 
 ---
 
 ## `foapy.ma` variants
 
-The following `foapy.ma` equivalents mirror the core API signatures with identical parameter names and return shapes, differing only in accepting/returning masked arrays:
+The following `foapy.ma` equivalents mirror the core API signatures exactly, differing only in that `X` may be a masked array:
 
-- `foapy.ma.intervals_chain(X, binding, chain_mode)` → `IntervalChain` (values may be masked)
-- `foapy.ma.intervals_tuple(chain, tuple_mode)` → masked ndarray
-- `foapy.ma.intervals_distribution(tuple_result)` → masked ndarray
-
-`foapy.ma.binding` and `foapy.ma.chain_mode` (function) delegate to the core versions since `IntervalChain` metadata is not masked.
-
----
-
-## Naming collision note: `binding` and `chain_mode`
-
-Both `binding` and `chain_mode` have dual roles (enum class + callable function). The implementation resolves this by implementing `__call__` on the class itself:
-
-```python
-class binding:
-    start: int = 1
-    end: int = 2
-
-    def __new__(cls, chain):
-        # When called as binding(chain), return chain.binding
-        ...
-```
-
-This pattern allows `foapy.binding.start` (attribute access) and `foapy.binding(chain)` (callable) to coexist without a naming conflict or separate symbols.
+- `foapy.ma.intervals_chain(X, binding, chain_mode)` → `ndarray`
+- `foapy.ma.intervals_tuple(chain, binding, tuple_mode)` → `ndarray`
+- `foapy.ma.intervals_distribution(tuple_result)` → `ndarray`

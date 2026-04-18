@@ -1,17 +1,18 @@
 # Research: Decompose Intervals Pipeline
 
-**Branch**: `002-decompose-intervals-pipeline` | **Date**: 2026-03-28
+**Branch**: `002-decompose-intervals-pipeline` | **Date**: 2026-04-18 (updated)
 
-## Decision 1: How binding and chain_mode travel with the chain
+> **Note**: This document was updated to reflect the actual implementation, which diverged from the original plan. The `IntervalChain` named tuple was rejected in favour of plain ndarrays + explicit `binding` parameter.
 
-**Decision**: `intervals_chain` returns an `IntervalChain` named tuple `(values: ndarray, binding: int, chain_mode: int)` rather than a plain ndarray.
+## Decision 1: How binding travels from chain to tuple stage
 
-**Rationale**: The fundamentals documentation explicitly states that determining binding direction from chain values alone is an *open question* (`docs/fundamentals/order/intervals_chain/index.md`). A purely structural (value-based) detection is therefore mathematically unsound for the general case. Attaching binding and chain_mode as metadata on an immutable named tuple is the only reliable approach. Named tuples are immutable, require no import beyond `collections`, carry no mutable state, and satisfy the constitution's purity requirement. A numpy ndarray subclass was rejected because ndarray subclassing is fragile (view operations drop subclass attributes) and imposes numpy-version-dependent risks.
+**Decision**: `intervals_chain` returns a **plain 1-D ndarray**. `binding` is passed as an **explicit parameter** to `intervals_tuple(chain, binding, tuple_mode)`.
+
+**Rationale**: The original plan proposed an `IntervalChain` named tuple to carry `binding` metadata. During implementation it was found that passing `binding` explicitly is simpler (no wrapper type, no metadata unpacking), consistent with the constitution's simplicity principle (V), and keeps `intervals_tuple` a pure function. The named tuple approach was abandoned.
 
 **Alternatives considered**:
-- Plain ndarray with structural detection — rejected: detection is an open theoretical question and would be incorrect for symmetric chains or equal-length sequences.
-- `dataclasses.dataclass` — acceptable but a named tuple is simpler and lighter for a read-only container; no methods needed.
-- numpy structured array — rejected: adds dtype complexity with no benefit.
+- `IntervalChain` named tuple (original plan) — rejected: adds a container type for metadata that callers already have; violates YAGNI; `collections.namedtuple` usage would be a novelty in this codebase.
+- Structural detection of binding from chain values — rejected: mathematically unsound for symmetric chains; an open theoretical question per fundamentals documentation.
 
 ---
 

@@ -27,22 +27,22 @@
 
 ---
 
-### IntervalChain (named tuple)
+### Interval Chain (ndarray)
 
-The return type of `intervals_chain`. Carries the raw chain array plus the metadata needed by downstream functions.
+The return type of `intervals_chain`. A plain 1-D ndarray. `binding` and `chain_mode` are **not** embedded — callers must pass them explicitly to downstream functions.
 
-| Field      | Type   | Description |
-|------------|--------|-------------|
-| values     | ndarray (1-D, dtype=intp) | Raw interval values in original sequence order |
-| binding    | int    | The binding direction used to produce this chain (`binding.start` or `binding.end`) |
-| chain_mode | int    | The chain construction mode used (`chain_mode.boundary` or `chain_mode.cycle`) |
+| Property | Value |
+|----------|-------|
+| dtype    | intp (platform pointer-sized integer) |
+| shape    | (n,) where n = len(X) |
+| values   | Positive integers (≥ 1), each ≤ n |
 
-**Immutability**: Named tuple is immutable; no mutation after construction.
-
-**Structural constraints on `values`**:
+**Structural constraints**:
 - 1-D ndarray of positive integers (≥ 1)
 - Each value ≤ sequence length (n)
 - Length equals the original sequence length
+
+> **Note**: The `IntervalChain` named tuple (original plan) was rejected in favour of this simpler plain ndarray. `binding` travels explicitly as a parameter.
 
 ---
 
@@ -93,17 +93,13 @@ The return type of `intervals_distribution`. A plain 1-D ndarray.
 ```
 sequence (1-D array-like)
         │
-        ▼ intervals_chain(X, binding, chain_mode)
-IntervalChain(values, binding, chain_mode)
+        ▼ intervals_chain(X, binding, chain_mode) → ndarray
+        │   (binding is also passed through by caller)
+        ▼ intervals_tuple(chain, binding, tuple_mode) → ndarray
         │
-        ▼ intervals_tuple(chain, tuple_mode)
-ndarray (intervals tuple, 1-D)
+        ▼ intervals_distribution(tuple) → ndarray   [optional utility, not used by intervals()]
         │
-        ▼ intervals_distribution(tuple)
-ndarray (distribution, 1-D)
-        │
-        ▼ characteristics(distribution)
-scalar
+        ▼ characteristics(distribution) → scalar
 ```
 
-The `intervals()` legacy function composes steps 1 and 2 internally, returning the plain ndarray from step 2.
+The `intervals()` legacy function composes steps 1 and 2 internally, passing `binding` explicitly to both stages. It does not call `intervals_distribution`.

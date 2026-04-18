@@ -82,7 +82,7 @@ class TestIntervalsDistribution(TestCase):
         # The sum of distribution counts must equal the number of intervals
         X = ["b", "a", "b", "c", "b"]
         chain = intervals_chain(X, binding.start, chain_mode.boundary)
-        normal_result = intervals_tuple(chain, tuple_mode.normal)
+        normal_result = intervals_tuple(chain, binding.start, tuple_mode.normal)
         dist = intervals_distribution(normal_result)
         self.assertEqual(int(np.sum(dist)), len(normal_result))
 
@@ -90,6 +90,6 @@ class TestIntervalsDistribution(TestCase):
         # Lossy intervals [2, 2] for X=["b","a","b","c","b"] → distribution = [0, 2]
         X = ["b", "a", "b", "c", "b"]
         chain = intervals_chain(X, binding.start, chain_mode.boundary)
-        lossy = intervals_tuple(chain, tuple_mode.lossy)
+        lossy = intervals_tuple(chain, binding.start, tuple_mode.lossy)
         dist = intervals_distribution(lossy)
         assert_array_equal(dist, np.array([0, 2], dtype=np.intp))

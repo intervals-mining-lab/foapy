@@ -20,14 +20,15 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> ndarray:
       chains), so every element contributes both its start-side and end-side
       boundary interval.
 
-    The binding direction is inferred automatically from the chain structure
-    (see :class:`foapy.binding`).
-
     Parameters
     ----------
     chain : array_like
         A 1-D intervals chain produced by ``intervals_chain``.
         Must be a 1-D array of positive integers.
+    binding : int
+        ``binding.start`` (1) — chain was produced left-to-right.
+        ``binding.end`` (2) — chain was produced right-to-left.
+        Must match the binding used in the ``intervals_chain`` call.
     tuple_mode : int
         Boundary handling strategy.  Use one of the class attributes on
         :class:`foapy.core.tuple_mode`:
@@ -108,6 +109,11 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> ndarray:
 
         # Concatenate chain with its trailing intervals.
         return np.concatenate((ar, trailing))
+
+    if binding not in {binding_cls.start, binding_cls.end}:
+        raise ValueError(
+            {"message": "Invalid binding value. Use binding.start or binding.end."}
+        )
 
     valid_modes = {
         tuple_mode_cls.lossy,
