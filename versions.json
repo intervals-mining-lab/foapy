@@ -15,11 +15,6 @@
     "aliases": []
   },
   {
-    "version": "003-cleanup-intervals-pipeline",
-    "title": "003-cleanup-intervals-pipeline",
-    "aliases": []
-  },
-  {
     "version": "002-decompose-intervals-pipeline",
     "title": "002-decompose-intervals-pipeline",
     "aliases": []
