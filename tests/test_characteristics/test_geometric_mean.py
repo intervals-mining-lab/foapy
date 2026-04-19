@@ -1,7 +1,8 @@
 import numpy as np
+from helpers.intervals import intervals, mode
 from test_characteristics.characterisitcs_test import CharacteristicsTest
 
-from foapy import binding, intervals, mode, order
+from foapy import binding, order
 from foapy.characteristics import arithmetic_mean, geometric_mean
 
 

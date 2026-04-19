@@ -1,9 +1,10 @@
 import numpy as np
+from helpers.intervals import intervals, mode
+from helpers.ma_intervals import intervals as intervals_ma
 from test_characteristics.characterisitcs_test import CharacteristicsTest
 
-from foapy import binding, intervals, mode, order
+from foapy import binding, order
 from foapy.characteristics import average_remoteness, identifying_information
-from foapy.ma import intervals as intervals_ma
 from foapy.ma import order as order_ma
 
 

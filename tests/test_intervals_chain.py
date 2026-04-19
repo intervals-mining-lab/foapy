@@ -117,7 +117,7 @@ class TestIntervalsChain(TestCase):
 
     def test_mixed_start_boundary_consistent_with_intervals_normal(self):
         """Chain with boundary mode matches intervals() normal mode result."""
-        from foapy import intervals, mode
+        from helpers.intervals import intervals, mode
 
         X = ["a", "b", "a", "c", "a", "d"]
         chain = intervals_chain(X, binding.start, chain_mode.boundary)

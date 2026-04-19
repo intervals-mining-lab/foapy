@@ -30,10 +30,10 @@ class PipelineFullSuite:
 
     def time_pipeline_full(self, length, case):
         chain = intervals_chain(self.data, binding.start, chain_mode.boundary)
-        result = intervals_tuple(chain, tuple_mode.normal)
+        result = intervals_tuple(chain, binding.start, tuple_mode.normal)
         intervals_distribution(result)
 
     def peakmem_pipeline_full(self, length, case):
         chain = intervals_chain(self.data, binding.start, chain_mode.boundary)
-        result = intervals_tuple(chain, tuple_mode.normal)
+        result = intervals_tuple(chain, binding.start, tuple_mode.normal)
         return intervals_distribution(result)
