@@ -18,8 +18,8 @@
 
 **Purpose**: Create the `foapy.partials` package structure and wire it into `foapy`.
 
-- [ ] T001 Create `src/foapy/partials/` directory with empty `__init__.py` shell (exports: `order`, `alphabet`, `intervals_chain`, `intervals_tuple` — stubs filled in per story)
-- [ ] T002 Update `src/foapy/__init__.py`: add `'partials'` to `__foapy_submodules__` set and add `if attr == "partials": import foapy.partials as partials; return partials` branch in `__getattr__`
+- [X] T001 Create `src/foapy/partials/` directory with empty `__init__.py` shell (exports: `order`, `alphabet`, `intervals_chain`, `intervals_tuple` — stubs filled in per story)
+- [X] T002 Update `src/foapy/__init__.py`: add `'partials'` to `__foapy_submodules__` set and add `if attr == "partials": import foapy.partials as partials; return partials` branch in `__getattr__`
 
 **Checkpoint**: `import foapy.partials` must not raise `AttributeError`.
 
@@ -35,12 +35,12 @@
 
 > **Write these tests FIRST; ensure they FAIL before implementing `_order.py`**
 
-- [ ] T003 [P] [US1] Write tests for `partials.order` in `tests/test_partials_order.py` covering: empty array, single element, all-unique symbols, all-same symbol, realistic dataset, fully masked, partially masked, no-mask passthrough (result equals `foapy.core.order`), multi-dimensional input raises `Not1DArrayException`, `return_alphabet=True` returns correct alphabet
+- [X] T003 [P] [US1] Write tests for `partials.order` in `tests/test_partials_order.py` covering: empty array, single element, all-unique symbols, all-same symbol, realistic dataset, fully masked, partially masked, no-mask passthrough (result equals `foapy.core.order`), multi-dimensional input raises `Not1DArrayException`, `return_alphabet=True` returns correct alphabet
 
 ### Implementation for User Story 1
 
-- [ ] T004 [US1] Implement `src/foapy/partials/_order.py`: `ma.asarray` wrap, 1-D validation, `ar.compressed()` + `core.order()` + `result_data[~mask] = order_compressed` + `ma.masked_array(result_data, mask)`, `return_alphabet` branch
-- [ ] T005 [US1] Export `order` from `src/foapy/partials/__init__.py`
+- [X] T004 [US1] Implement `src/foapy/partials/_order.py`: `ma.asarray` wrap, 1-D validation, `ar.compressed()` + `core.order()` + `result_data[~mask] = order_compressed` + `ma.masked_array(result_data, mask)`, `return_alphabet` branch
+- [X] T005 [US1] Export `order` from `src/foapy/partials/__init__.py`
 
 **Checkpoint**: `tox -e default -- tests/test_partials_order.py -v` passes with zero failures.
 
@@ -56,12 +56,12 @@
 
 > **Write these tests FIRST; ensure they FAIL before implementing `_intervals_chain.py`**
 
-- [ ] T006 [P] [US2] Write tests for `partials.intervals_chain` in `tests/test_partials_intervals_chain.py` covering: empty array, single element, all-unique symbols, all-same symbol, realistic dataset with gaps, fully masked array, partially masked (gaps count toward distance), no-mask passthrough (equals `foapy.core.intervals_chain`), invalid binding raises `ValueError`, invalid chain_mode raises `ValueError`, multi-dimensional input raises `Not1DArrayException`, both `binding.start` and `binding.end`, both `chain_mode.boundary` and `chain_mode.cycle`
+- [X] T006 [P] [US2] Write tests for `partials.intervals_chain` in `tests/test_partials_intervals_chain.py` covering: empty array, single element, all-unique symbols, all-same symbol, realistic dataset with gaps, fully masked array, partially masked (gaps count toward distance), no-mask passthrough (equals `foapy.core.intervals_chain`), invalid binding raises `ValueError`, invalid chain_mode raises `ValueError`, multi-dimensional input raises `Not1DArrayException`, both `binding.start` and `binding.end`, both `chain_mode.boundary` and `chain_mode.cycle`
 
 ### Implementation for User Story 2
 
-- [ ] T007 [US2] Implement `src/foapy/partials/_intervals_chain.py`: `ma.asarray` wrap, parameter validation, `non_masked_idx = np.where(~full_mask)[0]`, binding.end reversal, stable argsort on `compressed_values`, group boundary detection (`first_mask`/`last_mask`), `chain_compressed[1:] = actual_pos[perm[1:]] - actual_pos[perm[:-1]]`, boundary intervals using `actual_pos[perm[first_mask]] + delta`, inverse permutation, `ma.masked_array(result_data, mask=full_mask)`
-- [ ] T008 [US2] Export `intervals_chain` from `src/foapy/partials/__init__.py`
+- [X] T007 [US2] Implement `src/foapy/partials/_intervals_chain.py`: `ma.asarray` wrap, parameter validation, `non_masked_idx = np.where(~full_mask)[0]`, binding.end reversal, stable argsort on `compressed_values`, group boundary detection (`first_mask`/`last_mask`), `chain_compressed[1:] = actual_pos[perm[1:]] - actual_pos[perm[:-1]]`, boundary intervals using `actual_pos[perm[first_mask]] + delta`, inverse permutation, `ma.masked_array(result_data, mask=full_mask)`
+- [X] T008 [US2] Export `intervals_chain` from `src/foapy/partials/__init__.py`
 
 **Checkpoint**: `tox -e default -- tests/test_partials_intervals_chain.py -v` passes with zero failures.
 
@@ -77,12 +77,12 @@
 
 > **Write these tests FIRST; ensure they FAIL before implementing `_intervals_tuple.py`**
 
-- [ ] T009 [P] [US3] Write tests for `partials.intervals_tuple` in `tests/test_partials_intervals_tuple.py` covering: `tuple_mode.normal` (mask unchanged, values unchanged), `tuple_mode.lossy` (boundary positions additionally masked, output length == input length), `tuple_mode.redundant` (trailing k intervals appended unmasked, output length == n+k), no-mask passthrough for normal/lossy (non-masked values equal `foapy.core.intervals_tuple` result), empty input, fully masked input, invalid binding raises `ValueError`, invalid tuple_mode raises `ValueError`
+- [X] T009 [P] [US3] Write tests for `partials.intervals_tuple` in `tests/test_partials_intervals_tuple.py` covering: `tuple_mode.normal` (mask unchanged, values unchanged), `tuple_mode.lossy` (boundary positions additionally masked, output length == input length), `tuple_mode.redundant` (trailing k intervals appended unmasked, output length == n+k), no-mask passthrough for normal/lossy (non-masked values equal `foapy.core.intervals_tuple` result), empty input, fully masked input, invalid binding raises `ValueError`, invalid tuple_mode raises `ValueError`
 
 ### Implementation for User Story 3
 
-- [ ] T010 [US3] Implement `src/foapy/partials/_intervals_tuple.py`: `ma.asarray` wrap, parameter validation, `normal` (copy), `lossy` (compress → `ar > positions` boundary detection → map boundary indices back to original positions → set `new_mask[boundary_original_idx] = True`), `redundant` (compress → `core.intervals_tuple` with redundant → split plain result at `len(compressed)` → `np.concatenate` with trailing; append unmasked)
-- [ ] T011 [US3] Export `intervals_tuple` from `src/foapy/partials/__init__.py`
+- [X] T010 [US3] Implement `src/foapy/partials/_intervals_tuple.py`: `ma.asarray` wrap, parameter validation, `normal` (copy), `lossy` (compress → `ar > positions` boundary detection → map boundary indices back to original positions → set `new_mask[boundary_original_idx] = True`), `redundant` (compress → `core.intervals_tuple` with redundant → split plain result at `len(compressed)` → `np.concatenate` with trailing; append unmasked)
+- [X] T011 [US3] Export `intervals_tuple` from `src/foapy/partials/__init__.py`
 
 **Checkpoint**: `tox -e default -- tests/test_partials_intervals_tuple.py -v` passes with zero failures.
 
@@ -98,12 +98,12 @@
 
 > **Write these tests FIRST; ensure they FAIL before implementing `_alphabet.py`**
 
-- [ ] T012 [P] [US4] Write tests for `partials.alphabet` in `tests/test_partials_alphabet.py` covering: empty array, single element, all-unique symbols, all-same symbol, realistic dataset, fully masked (returns empty array), partially masked (masked values excluded), no-mask passthrough (equals `foapy.core.alphabet`), multi-dimensional input raises `Not1DArrayException`
+- [X] T012 [P] [US4] Write tests for `partials.alphabet` in `tests/test_partials_alphabet.py` covering: empty array, single element, all-unique symbols, all-same symbol, realistic dataset, fully masked (returns empty array), partially masked (masked values excluded), no-mask passthrough (equals `foapy.core.alphabet`), multi-dimensional input raises `Not1DArrayException`
 
 ### Implementation for User Story 4
 
-- [ ] T013 [US4] Implement `src/foapy/partials/_alphabet.py`: `ma.asarray` wrap, 1-D validation, `_, alphabet = core.order(ar.compressed(), return_alphabet=True); return alphabet`
-- [ ] T014 [US4] Export `alphabet` from `src/foapy/partials/__init__.py`
+- [X] T013 [US4] Implement `src/foapy/partials/_alphabet.py`: `ma.asarray` wrap, 1-D validation, `_, alphabet = core.order(ar.compressed(), return_alphabet=True); return alphabet`
+- [X] T014 [US4] Export `alphabet` from `src/foapy/partials/__init__.py`
 
 **Checkpoint**: `tox -e default -- tests/test_partials_alphabet.py -v` passes with zero failures.
 
@@ -113,10 +113,10 @@
 
 **Purpose**: End-to-end verification, pipeline consistency, and code quality.
 
-- [ ] T015 Add pipeline consistency test in `tests/test_partials_pipeline_consistency.py`: for any plain (unmasked) input, verify `partials.order == core.order`, `partials.intervals_chain == core.intervals_chain`, and `partials.intervals_tuple == core.intervals_tuple` across all binding × chain_mode × tuple_mode combinations
-- [ ] T016 Run full test suite `tox -e default` and verify zero failures across all tests including existing `foapy.core` and `foapy.ma` tests (no regressions)
-- [ ] T017 [P] Run linting `pipx run pre-commit run --all-files --show-diff-on-failure` and fix any black/isort/flake8 violations in `src/foapy/partials/`
-- [ ] T018 [P] Validate quickstart examples from `specs/004-partials-package/quickstart.md` execute without error in a Python REPL
+- [X] T015 Add pipeline consistency test in `tests/test_partials_pipeline_consistency.py`: for any plain (unmasked) input, verify `partials.order == core.order`, `partials.intervals_chain == core.intervals_chain`, and `partials.intervals_tuple == core.intervals_tuple` across all binding × chain_mode × tuple_mode combinations
+- [X] T016 Run full test suite `tox -e default` and verify zero failures across all tests including existing `foapy.core` and `foapy.ma` tests (no regressions)
+- [X] T017 [P] Run linting `pipx run pre-commit run --all-files --show-diff-on-failure` and fix any black/isort/flake8 violations in `src/foapy/partials/`
+- [X] T018 [P] Validate quickstart examples from `specs/004-partials-package/quickstart.md` execute without error in a Python REPL
 
 ---
 
