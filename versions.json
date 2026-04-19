@@ -15,6 +15,11 @@
     "aliases": []
   },
   {
+    "version": "004-partials-package",
+    "title": "004-partials-package",
+    "aliases": []
+  },
+  {
     "version": "002-decompose-intervals-pipeline",
     "title": "002-decompose-intervals-pipeline",
     "aliases": []
