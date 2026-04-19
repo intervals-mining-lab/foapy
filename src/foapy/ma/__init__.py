@@ -11,7 +11,6 @@ if __FOAPY_SETUP__:
     sys.stderr.write("Running from numpy source directory.\n")
 else:
     from ._alphabet import alphabet  # noqa: F401
-    from ._intervals import intervals  # noqa: F401
     from ._intervals_chain import intervals_chain  # noqa: F401
     from ._intervals_distribution import intervals_distribution  # noqa: F401
     from ._intervals_tuple import intervals_tuple  # noqa: F401
@@ -20,7 +19,6 @@ else:
     __all__ = list(
         {
             "order",
-            "intervals",
             "alphabet",
             "intervals_chain",
             "intervals_tuple",

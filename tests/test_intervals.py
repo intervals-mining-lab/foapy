@@ -2,9 +2,10 @@ from unittest import TestCase
 
 import numpy as np
 import pytest
+from helpers.intervals import intervals, mode
 from numpy.testing import assert_array_equal
 
-from foapy import binding, intervals, mode
+from foapy import binding
 
 
 class TestIntervals(TestCase):

@@ -1,7 +1,8 @@
 import numpy as np
+from helpers.intervals import mode
 from test_characteristics.characterisitcs_test import CharacteristicsInfromationalTest
 
-from foapy import binding, mode
+from foapy import binding
 from foapy.characteristics import uniformity
 
 

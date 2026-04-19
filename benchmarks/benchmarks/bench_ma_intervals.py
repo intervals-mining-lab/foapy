@@ -2,12 +2,27 @@ import os
 
 from asv_runner.benchmarks.mark import skip_params_if
 
-from foapy.ma import intervals, order
+from foapy import chain_mode
+from foapy.core import tuple_mode
+from foapy.ma import intervals_chain, intervals_tuple, order
 
 from .ma_cases import best_case, dna_case, normal_case, worst_case
 
 length = [5, 50, 500]
-# , 5000, 50000, 500000, 5000000, 50000000
+
+_CHAIN_MODE = {
+    1: chain_mode.boundary,
+    2: chain_mode.boundary,
+    3: chain_mode.cycle,
+    4: chain_mode.boundary,
+}
+_TUPLE_MODE = {
+    1: tuple_mode.lossy,
+    2: tuple_mode.normal,
+    3: tuple_mode.normal,
+    4: tuple_mode.redundant,
+}
+
 skip = [
     (5000000, "Worst", 1, 1),
     (5000000, "DNA", 1, 1),
@@ -81,10 +96,11 @@ class MaIntervalsSuite:
     param_names = ["length", "case", "binding", "mode"]
 
     data = None
-    mode = None
-    binding = None
+    chain_mode_val = None
+    tuple_mode_val = None
+    binding_val = None
 
-    def setup(self, length, case, binding, mode):
+    def setup(self, length, case, binding_int, mode_int):
         if case == "Best":
             self.data = order(best_case(length))
         elif case == "DNA":
@@ -93,13 +109,22 @@ class MaIntervalsSuite:
             self.data = order(normal_case(length))
         elif case == "Worst":
             self.data = order(worst_case(length))
-        self.mode = mode
-        self.binding = binding
+        self.binding_val = binding_int
+        self.chain_mode_val = _CHAIN_MODE[mode_int]
+        self.tuple_mode_val = _TUPLE_MODE[mode_int]
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def time_intervals(self, length, case, binding, mode):
-        intervals(self.data, self.binding, self.mode)
+    def time_intervals(self, length, case, binding_int, mode_int):
+        intervals_tuple(
+            intervals_chain(self.data, self.binding_val, self.chain_mode_val),
+            self.binding_val,
+            self.tuple_mode_val,
+        )
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
-    def peakmem_intervals(self, length, case, binding, mode):
-        return intervals(self.data, self.binding, self.mode)
+    def peakmem_intervals(self, length, case, binding_int, mode_int):
+        return intervals_tuple(
+            intervals_chain(self.data, self.binding_val, self.chain_mode_val),
+            self.binding_val,
+            self.tuple_mode_val,
+        )
