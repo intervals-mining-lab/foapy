@@ -15,4 +15,3 @@
         show_root_toc_entry: false
         filters:
             - foapy.chain_mode
-
