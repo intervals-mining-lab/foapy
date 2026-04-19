@@ -1,37 +1,39 @@
 # Implementation Plan: Decompose Intervals Pipeline
 
-**Branch**: `002-decompose-intervals-pipeline` | **Date**: 2026-04-18 | **Spec**: [spec.md](../../.specify/features/002-decompose-intervals-pipeline/spec.md)
+**Branch**: `002-decompose-intervals-pipeline` | **Date**: 2026-04-19 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/002-decompose-intervals-pipeline/spec.md`
 
 ## Summary
 
-Decompose the monolithic `intervals()` function into three independently callable pipeline stages: `intervals_chain`, `intervals_tuple`, and `intervals_distribution`. The key change is that `intervals_tuple` now takes `binding` as an **explicit** positional parameter instead of inferring it from chain structure. The core implementation is already complete; the remaining work is updating `foapy.ma._intervals_tuple` to accept `binding`, fixing the `intervals_tuple` docstring, adding `binding` validation, and updating all tests to pass `binding` explicitly.
+Decompose the monolithic `intervals(X, binding, mode)` into three composable pipeline stages: `intervals_chain(X, binding, chain_mode)` → `intervals_tuple(chain, binding, tuple_mode)` → `intervals_distribution(tuple_result)`, plus the `is_valid_intervals_chain` validator and the `chain_mode`/`tuple_mode` enum namespaces. `intervals()` is preserved unchanged for backward compatibility.
+
+**Current state (2026-04-19)**: All core implementations, `foapy.ma` variants, test suites (440 passing), and benchmarks are in place. One open defect remains: `bench_intervals_tuple.py` and `bench_intervals_distribution.py` call `intervals_tuple` with the old 2-argument signature (missing `binding`). These benchmarks will fail at runtime.
 
 ## Technical Context
 
 **Language/Version**: Python 3.8+
-**Primary Dependencies**: numpy >= 1.20 (sole runtime dependency per constitution)
+**Primary Dependencies**: numpy >= 1.20 (sole runtime dependency)
 **Storage**: N/A
-**Testing**: tox -e default (pytest under the hood)
-**Target Platform**: Any platform supporting Python 3.8+ and numpy 1.20
-**Project Type**: Scientific Python library
-**Performance Goals**: Sequences up to length 10,000 in < 100 ms on a single CPU core (Constitution IV)
-**Constraints**: Pure vectorised numpy only — no Python loops over array elements; O(n) memory
-**Scale/Scope**: Core library primitive used by all characteristic computations
+**Testing**: tox -e default (pytest + coverage)
+**Target Platform**: Cross-platform (Linux, macOS, Windows)
+**Project Type**: Python library
+**Performance Goals**: Operations on sequences up to length 10,000 in < 100 ms on a single CPU core (Constitution IV)
+**Constraints**: No Python-level loops over array elements; all operations vectorized via numpy
+**Scale/Scope**: 1-D sequences up to 1,000,000 elements in benchmark suite
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-| Gate | Status | Notes |
-|------|--------|-------|
-| Lint (black, isort, flake8) | ✅ | No style violations expected; enforce via pre-commit |
-| Tests (tox -e default) | ⚠️ FAILING | Tests call `intervals_tuple(chain, tuple_mode.x)` — old 2-arg form. Must be updated to pass `binding`. |
-| Constitution check | ✅ | No open violations; changes are minimal and targeted |
-| API consistency | ⚠️ GAP | `foapy.ma._intervals_tuple` still uses old 2-arg signature; must mirror core |
-| Performance | ✅ | All operations are vectorised numpy; no loops introduced |
+| Principle | Status | Notes |
+|-----------|--------|-------|
+| I. Code Quality — pure functions, no extra deps, passes lint | ✅ PASS | All new functions are pure; no deps beyond numpy; pre-commit passes |
+| II. Testing Standards — tox, CharacteristicsTest, all binding×mode combos | ✅ PASS | 440 tests pass; pipeline functions use `assert_array_equal` (not float); all binding × chain_mode × tuple_mode combos covered in `test_pipeline_consistency.py` |
+| III. API Consistency — 1-D X first arg, binding/mode as enums, ma mirrors core, project exceptions | ✅ PASS | All signatures follow convention; `foapy.ma` variants mirror core; `Not1DArrayException` and `ValueError` used correctly |
+| IV. Performance — vectorized numpy, no Python loops, < 100 ms for n ≤ 10,000 | ✅ PASS | `argsort`, boolean masking, `bincount` used throughout; no Python loops |
+| V. Simplicity — YAGNI, no shared state, helpers extracted only at 3+ sites | ✅ PASS | No unnecessary abstractions; `binding`/`chain_mode` inference removed from scope |
 
-**No constitution violations to justify in Complexity Tracking.**
+**Post-design re-check**: No violations found. No entry in Complexity Tracking required.
 
 ## Project Structure
 
@@ -39,55 +41,64 @@ Decompose the monolithic `intervals()` function into three independently callabl
 
 ```text
 specs/002-decompose-intervals-pipeline/
-├── plan.md              # This file
-├── research.md          # Phase 0 output
-├── data-model.md        # Phase 1 output
-├── quickstart.md        # Phase 1 output
-├── contracts/           # Phase 1 output
-└── tasks.md             # Phase 2 output (/speckit.tasks — not created here)
+├── plan.md              ✅ This file
+├── research.md          ✅ Phase 0 complete (updated 2026-04-19)
+├── data-model.md        ✅ Phase 1 complete
+├── quickstart.md        ✅ Phase 1 complete
+├── contracts/
+│   └── public-api.md   ✅ Phase 1 complete
+└── tasks.md             (Phase 2 — /speckit.tasks command)
 ```
 
-### Source Code (affected files)
+### Source Code (repository root)
 
 ```text
 src/foapy/
+├── __init__.py                              ✅ exports all new symbols
 ├── core/
-│   ├── _intervals_tuple.py    # FIX: update docstring + add binding validation
-│   └── _intervals.py          # already delegates correctly — no changes needed
-├── ma/
-│   └── _intervals_tuple.py    # FIX: add binding param to match core signature
+│   ├── __init__.py                          ✅ exports all new symbols
+│   ├── _chain_mode.py                       ✅ enum namespace
+│   ├── _tuple_mode.py                       ✅ enum namespace
+│   ├── _intervals_chain.py                  ✅ implemented, 100% coverage
+│   ├── _intervals_tuple.py                  ✅ implemented, 94% coverage
+│   ├── _intervals_distribution.py           ✅ implemented, 100% coverage
+│   └── _is_valid_intervals_chain.py         ✅ implemented, 100% coverage
+└── ma/
+    ├── __init__.py                          ✅ exports intervals_chain/tuple/distribution
+    ├── _intervals_chain.py                  ✅ compresses masked array, delegates to core
+    ├── _intervals_tuple.py                  ✅ thin wrapper around core
+    └── _intervals_distribution.py           ✅ thin wrapper around core
 
 tests/
-├── test_intervals_tuple.py    # FIX: add binding arg to every intervals_tuple() call
-└── test_ma_intervals_tuple.py # FIX: add binding arg to every intervals_tuple() call
+├── test_chain_mode.py                       ✅
+├── test_tuple_mode.py                       ✅
+├── test_binding_callable.py                 ✅ verifies TypeError on construction
+├── test_chain_mode_callable.py              ✅ verifies TypeError on construction
+├── test_intervals_chain.py                  ✅
+├── test_intervals_tuple.py                  ✅
+├── test_intervals_distribution.py           ✅
+├── test_is_valid_intervals_chain.py         ✅
+├── test_pipeline_consistency.py             ✅ equivalence with intervals()
+├── test_ma_intervals_chain.py               ✅
+├── test_ma_intervals_tuple.py               ✅
+└── test_ma_intervals_distribution.py        ✅
+
+benchmarks/benchmarks/
+├── bench_intervals_chain.py                 ✅ correct 3-arg signature
+├── bench_intervals_tuple.py                 ⚠️ BUG: 2-arg intervals_tuple call
+└── bench_intervals_distribution.py          ⚠️ BUG: 2-arg intervals_tuple call in setup
 ```
 
-## Phase 0: Research
+**Structure Decision**: Single-project layout matching the existing `src/foapy/` layout. New files follow the `_<name>.py` private-module naming convention with public exports via `__init__.py`.
 
-No external unknowns. All decisions are resolved by existing code and constitution.
+## Open Defects
 
-### Decision Log
+| # | File | Line | Issue | Fix |
+|---|------|------|-------|-----|
+| 1 | `benchmarks/benchmarks/bench_intervals_tuple.py` | 27, 30 | `intervals_tuple(self.chain, self.tuple_mode)` — missing `binding` argument | Add `binding.start` as second argument |
+| 2 | `benchmarks/benchmarks/bench_intervals_distribution.py` | 29 | `intervals_tuple(chain, tuple_mode.normal)` — missing `binding` argument | Add `binding.start` as second argument |
 
-| Decision | Rationale | Alternatives Rejected |
-|----------|-----------|----------------------|
-| `binding` as 2nd positional arg (not keyword-only) | Matches `intervals_chain(X, binding, chain_mode)` contract; constitution §III requires uniform positional signature | keyword-only (`*`, binding) — inconsistent with chain |
-| Validate `binding` in `intervals_tuple` with ValueError | Constitution §III: raise ValueError for unrecognised enum values | Silent ignore — would hide caller bugs |
-| `ma.intervals_tuple` delegates to core with same args | Constitution §III: ma mirrors core signature exactly | Independent implementation — unnecessary complexity |
-| `intervals_distribution` is a frequency utility, not a pipeline stage | Current `intervals()` never calls it; it computes value-frequency counts, not per-symbol grouping | Renaming/rearchitecting out of scope; no behaviour change needed |
-
-## Phase 1: Design & Contracts
-
-### Data Model
-
-See [data-model.md](data-model.md).
-
-### Public API Contracts
-
-See [contracts/](contracts/).
-
-### Quickstart
-
-See [quickstart.md](quickstart.md).
+These benchmarks will raise `TypeError` at runtime. The fix is one line per file.
 
 ## Complexity Tracking
 

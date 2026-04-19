@@ -1,8 +1,8 @@
 # Research: Decompose Intervals Pipeline
 
-**Branch**: `002-decompose-intervals-pipeline` | **Date**: 2026-04-18 (updated)
+**Branch**: `002-decompose-intervals-pipeline` | **Date**: 2026-04-19 (updated)
 
-> **Note**: This document was updated to reflect the actual implementation, which diverged from the original plan. The `IntervalChain` named tuple was rejected in favour of plain ndarrays + explicit `binding` parameter.
+> **Note**: All implementation decisions have been resolved and the code is in place. Benchmark call-signature bugs in `bench_intervals_tuple.py` and `bench_intervals_distribution.py` remain (see Open Defects in plan.md).
 
 ## Decision 1: How binding travels from chain to tuple stage
 

@@ -75,12 +75,11 @@ result = intervals_tuple(chain, foapy.binding.end, tuple_mode.lossy)
 result = intervals_tuple(chain, foapy.binding.start, tuple_mode.lossy)
 ```
 
-## Remaining work on this branch
+## Open benchmark defects
 
-| Issue | File | Fix |
-|-------|------|-----|
-| `intervals_tuple` docstring says "inferred automatically" | `src/foapy/core/_intervals_tuple.py` | Remove stale text; document `binding` param |
-| `intervals_tuple` missing `binding` validation | `src/foapy/core/_intervals_tuple.py` | Add `ValueError` for invalid `binding` |
-| Tests use old 2-arg form | `tests/test_intervals_tuple.py` | Add `binding` arg to every call |
-| Tests use old 2-arg form | `tests/test_ma_intervals_tuple.py` | Add `binding` arg to every call |
-| `ma.intervals_tuple` has old 2-arg signature | `src/foapy/ma/_intervals_tuple.py` | Add `binding` param, delegate to core |
+Two benchmark files call `intervals_tuple` with the old 2-argument signature and will fail at runtime. See Open Defects in [plan.md](./plan.md).
+
+| File | Fix |
+|------|-----|
+| `benchmarks/benchmarks/bench_intervals_tuple.py` | Add `binding.start` as second argument |
+| `benchmarks/benchmarks/bench_intervals_distribution.py` | Add `binding.start` as second argument in setup |

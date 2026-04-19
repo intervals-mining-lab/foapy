@@ -26,7 +26,7 @@ class IntervalsDistributionSuite:
         else:
             data = worst_case(length)
         chain = intervals_chain(data, binding.start, chain_mode.boundary)
-        self.tuple_result = intervals_tuple(chain, tuple_mode.normal)
+        self.tuple_result = intervals_tuple(chain, binding.start, tuple_mode.normal)
 
     def time_intervals_distribution(self, length, case):
         intervals_distribution(self.tuple_result)

@@ -24,7 +24,7 @@ class IntervalsTupleSuite:
         self.tuple_mode = tm
 
     def time_intervals_tuple(self, length, case, tm):
-        intervals_tuple(self.chain, self.tuple_mode)
+        intervals_tuple(self.chain, binding.start, self.tuple_mode)
 
     def peakmem_intervals_tuple(self, length, case, tm):
-        return intervals_tuple(self.chain, self.tuple_mode)
+        return intervals_tuple(self.chain, binding.start, self.tuple_mode)
