@@ -79,8 +79,8 @@ nav:
   - "foapy.order": references/order.md
   - "foapy.binding": references/binding.md
   - "foapy.chain_mode": references/chain_mode.md
-  - "foapy.tuple_mode": references/tuple_mode.md
   - "foapy.intervals_chain": references/intervals_chain.md
+  - "foapy.tuple_mode": references/tuple_mode.md
   - "foapy.intervals_tuple": references/intervals_tuple.md
   - "foapy.intervals_distribution": references/intervals_distribution.md
   - "foapy.ma":
