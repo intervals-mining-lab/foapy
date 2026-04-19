@@ -16,4 +16,3 @@
         filters:
             - foapy.tuple_mode
 
-See also: [Lossy distribution](../fundamentals/order/intervals_distribution/lossy.md) · [Redundant distribution](../fundamentals/order/intervals_distribution/redundant.md)

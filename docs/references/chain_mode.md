@@ -16,4 +16,3 @@
         filters:
             - foapy.chain_mode
 
-See also: [Bounded intervals chain](../fundamentals/order/intervals_chain/bounded.md) · [Cycled intervals chain](../fundamentals/order/intervals_chain/cycled.md)
