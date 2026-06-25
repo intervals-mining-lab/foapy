@@ -28,9 +28,12 @@ if __FOAPY_SETUP__:
 else:
     from foapy.core import alphabet  # noqa: F401
     from foapy.core import binding  # noqa: F401
-    from foapy.core import intervals  # noqa: F401
-    from foapy.core import mode  # noqa: F401
+    from foapy.core import chain_mode  # noqa: F401
+    from foapy.core import intervals_chain  # noqa: F401
+    from foapy.core import intervals_distribution  # noqa: F401
+    from foapy.core import intervals_tuple  # noqa: F401
     from foapy.core import order  # noqa: F401
+    from foapy.core import tuple_mode  # noqa: F401
 
     # public submodules are imported lazily, therefore are accessible from
     # __getattr__. Note that `distutils` (deprecated) and `array_api`
@@ -40,7 +43,16 @@ else:
 
     __all__ = list(
         __foapy_submodules__
-        | {"order", "intervals", "alphabet", "binding", "mode"}
+        | {
+            "order",
+            "intervals_chain",
+            "intervals_distribution",
+            "intervals_tuple",
+            "alphabet",
+            "binding",
+            "chain_mode",
+            "tuple_mode",
+        }
         | {"__version__", "__array_namespace_info__"}
     )
 
@@ -71,12 +83,11 @@ else:
     def __dir__():
         public_symbols = globals().keys() | __foapy_submodules__
         public_symbols += {
-            "exceptions" "ma",
+            "exceptions",
+            "ma",
             "order",
-            "intervals",
             "alphabet",
             "binding",
-            "mode",
             "version",
         }
         return list(public_symbols)

@@ -3,10 +3,10 @@ from unittest import TestCase
 import numpy as np
 import numpy.ma as ma
 import pytest
+from helpers.ma_intervals import intervals
 from numpy.ma.testutils import assert_equal
 
 from foapy.exceptions import InconsistentOrderException, Not1DArrayException
-from foapy.ma import intervals
 
 
 class TestMaIntervals(TestCase):

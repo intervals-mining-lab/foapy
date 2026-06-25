@@ -1,169 +1,20 @@
+# Test-only helper. Not part of the public foapy API.
+# Contains the retired foapy.ma.intervals() function preserved
+# solely for pipeline equivalence tests.
 import numpy as np
+from helpers.intervals import mode as mode_enum
 from numpy import ma
 
 from foapy import binding as binding_enum
-from foapy import mode as mode_enum
 from foapy.exceptions import InconsistentOrderException, Not1DArrayException
 
 
 def intervals(X, binding, mode):
-    """
-    Finding array of array of intervals of the uniform
-    sequences in the given input sequence
-
-    Parameters
-    ----------
-    X: masked_array
-        Array to get intervals.
-
-    binding: int
-        binding.start = 1 - Intervals are extracted from left to right.
-        binding.end = 2 – Intervals are extracted from right to left.
-
-    mode: int
-        mode.lossy = 1 - Both interval from the start of the sequence
-        to the first element occurrence and interval from the
-        last element occurrence to the end of the sequence are not taken into account.
-
-        mode.normal = 2 - Interval from the start of the sequence to the
-        first occurrence of the element or interval from the last occurrence
-        of the element to the end of the sequence is taken into account.
-
-        mode.cycle = 3 - Interval from the start of the sequence to the first
-        element occurrence
-        and interval from the last element occurrence to the end of the
-        sequence are summed
-        into one interval (as if sequence was cyclic). Interval is
-        placed either in the
-        beginning of intervals array (in case of binding to the
-        beginning) or in the end.
-
-        mode.redundant = 4 - Both interval from start of the sequence
-        to the first element
-        occurrence and the interval from the last element occurrence
-        to the end of the
-        sequence are taken into account. Their placement in results
-        array is determined
-        by the binding.
-
-    Returns
-    -------
-    result: array or Exception.
-        Exception if not d1 array or wrong mask, array otherwise.
-
-    Examples
-    --------
-
-    ----1----
-    >>> import foapy.ma as ma
-    >>> a = [2, 4, 2, 2, 4]
-    >>> b = ma.intervals(X, binding.start, mode.lossy)
-    >>> b
-    [
-        [5],
-        [1, 4],
-        [],
-        []
-    ]
-
-    ----2----
-    >>> import foapy.ma as ma
-    >>> a = [2, 4, 2, 2, 4]
-    >>> b = ma.intervals(X, binding.end, mode.lossy)
-    >>> b
-    [
-        [5],
-        [1, 4],
-        [],
-        []
-    ]
-
-    ----3----
-    >>> import foapy.ma as ma
-    >>> a = [2, 4, 2, 2, 4]
-    >>> b = ma.intervals(X, binding.start, mode.normal)
-    >>> b
-    [
-        [1, 2, 1],
-        [2, 3]
-    ]
-
-    ----4----
-    >>> import foapy.ma as ma
-    >>> a = [2, 4, 2, 2, 4]
-    >>> b = ma.intervals(X, binding.end, mode.normal)
-    >>> b
-    [
-        [2, 1, 2],
-        [3, 1]
-    ]
-
-    ----5----
-    >>> import foapy.ma as ma
-    >>> a = [2, 4, 2, 2, 4]
-    >>> b = ma.intervals(X, binding.start, mode.cycle)
-    >>> b
-    [
-        [2, 2, 1],
-        [2, 3]
-    ]
-
-    ----6----
-    >>> import foapy.ma as ma
-    >>> a = [2, 4, 2, 2, 4]
-    >>> b = ma.intervals(X, binding.end, mode.cycle)
-    >>> b
-    [
-        [2, 1, 2],
-        [3, 2]
-    ]
-
-    ----7----
-    >>> import foapy.ma as ma
-    >>> a = [2, 4, 2, 2, 4]
-    >>> b = ma.intervals(X, binding.start, mode.redunant)
-    >>> b
-    [
-        [1, 2, 1, 2],
-        [2, 3, 1]
-    ]
-
-    ----8----
-    >>> import foapy.ma as ma
-    >>> a = [2, 4, 2, 2, 4]
-    >>> b = ma.intervals(X, binding.end, mode.redunant)
-    >>> b
-    [
-        [1, 2, 1, 2],
-        [2, 3, 1]
-    ]
-
-    ----9----
-    >>> import foapy.ma as ma
-    >>> a = ['a', 'b', 'c', 'a', 'b', 'c', 'c', 'c', 'b', 'a', 'c', 'b', 'c']
-    >>> mask = [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0]
-    >>> masked_a = ma.masked_array(a, mask)
-    >>> b = intervals(X, binding.end, mode.redunant)
-    >>> b
-    Exception
-
-    ----10----
-    >>> import foapy.ma as ma
-    >>> a = [[2, 2, 2], [2, 2, 2]]
-    >>> mask = [[0, 0, 0], [0, 0, 0]]
-    >>> masked_a = ma.masked_array(a, mask)
-    >>> b = ma.intervals(X, binding.end, mode.redunant)
-    >>> b
-    Exception
-    """
-
-    # Validate binding
     if binding not in {binding_enum.start, binding_enum.end}:
         raise ValueError(
             {"message": "Invalid binding value. Use binding.start or binding.end."}
         )
 
-    # Validate mode
     valid_modes = {
         mode_enum.lossy,
         mode_enum.normal,
@@ -174,8 +25,6 @@ def intervals(X, binding, mode):
         raise ValueError(
             {"message": "Invalid mode value. Use mode.lossy,normal,cycle or redundant."}
         )
-    # ex.:
-    # ar = ['a', 'c', 'c', 'e', 'd', 'a']
 
     power = X.shape[0]
     if power == 0:

@@ -1,9 +1,11 @@
 from unittest import TestCase
 
 import numpy as np
+from helpers.intervals import intervals, mode
+from helpers.ma_intervals import intervals as ma_intervals
 
 import foapy.ma as ma
-from foapy import binding, intervals, mode, order
+from foapy import binding, order
 
 
 class CharacteristicsTest(TestCase):
@@ -41,7 +43,7 @@ class CharacteristicsInfromationalTest(CharacteristicsTest):
     def AssertCase(self, X, binding, mode, expected, dtype=None):
         X = np.array(X)
         order_seq = ma.order(X)
-        intervals_seq = ma.intervals(order_seq, binding, mode)
+        intervals_seq = ma_intervals(order_seq, binding, mode)
         exists = self.target(intervals_seq, dtype)
 
         if expected < exists:
@@ -60,7 +62,7 @@ class MACharacteristicsTest(TestCase):
 
     def AssertCase(self, X, binding, mode, expected, dtype=None):
         order_seq = ma.order(X)
-        intervals_seq = ma.intervals(order_seq, binding, mode)
+        intervals_seq = ma_intervals(order_seq, binding, mode)
         expected = np.array(expected)
         exists = self.target(intervals_seq, dtype)
 
@@ -78,5 +80,5 @@ class MACharacteristicsTest(TestCase):
     def GetPrecision(self, length, dtype=None):
         alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
         X = np.random.choice(alphabet, length)
-        intervals_seq = ma.intervals(X, binding.start, mode.normal)
+        intervals_seq = ma_intervals(X, binding.start, mode.normal)
         return self.target(intervals_seq, dtype)

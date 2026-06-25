@@ -1,6 +1,6 @@
 class binding:
     """
-    Binding enumeration used to determinate the direction of interval extraction.
+    Binding enumeration used to determine the direction of interval extraction.
 
     Examples
     ----------
@@ -37,3 +37,6 @@ class binding:
     """
     To  sequence end (right-to-left direction).
     """
+
+    def __new__(cls, *args, **kwargs):
+        raise TypeError(cls.__name__ + " cannot be instantiated.")
