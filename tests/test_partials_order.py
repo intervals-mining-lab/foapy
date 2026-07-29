@@ -1,3 +1,4 @@
+import inspect
 from unittest import TestCase
 
 import numpy as np
@@ -19,6 +20,18 @@ class TestPartialsOrder(TestCase):
     Non-masked positions hold the element's 0-based alphabet index.
     Masked positions remain masked in the output.
     """
+
+    # -------------------------------------------------------------------------
+    # Interface metadata
+    # -------------------------------------------------------------------------
+
+    def test_signature_and_annotations(self):
+        signature = inspect.signature(order)
+        assert list(signature.parameters) == ["X", "return_alphabet"]
+        assert signature.parameters["return_alphabet"].default is False
+        assert order.__annotations__["X"] is not None
+        assert order.__annotations__["return_alphabet"] is bool
+        assert "return" in order.__annotations__
 
     # -------------------------------------------------------------------------
     # Empty input

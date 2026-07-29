@@ -1,13 +1,24 @@
+from typing import Tuple, Union
+
 import numpy as np
 import numpy.ma as ma
+from numpy.typing import ArrayLike
 
 from foapy.core._order import order as core_order
 from foapy.exceptions import Not1DArrayException
 
 
-def order(X, return_alphabet=False):
+def order(
+    X: ArrayLike,
+    return_alphabet: bool = False,
+) -> Union[ma.MaskedArray, Tuple[ma.MaskedArray, np.ndarray]]:
     """
     Map a partial sequence to its order, preserving gap positions.
+
+    Unlike :func:`foapy.order`, this function returns a masked array aligned
+    with the input. Masked positions are gaps: they are excluded from the
+    alphabet and remain masked in the result. Plain sequences are treated as
+    fully unmasked inputs.
 
     Parameters
     ----------
@@ -31,6 +42,48 @@ def order(X, return_alphabet=False):
     ------
     Not1DArrayException
         When X has more than one dimension.
+
+    Examples
+    --------
+    Get an order from a plain sequence. The result is a masked array even
+    though the input has no gaps.
+
+    ``` py linenums="1"
+    import foapy
+
+    source = ['a', 'b', 'a', 'c']
+    result = foapy.partials.order(source)
+    print(result)
+    # [0, 1, 0, 2]
+    ```
+
+    Preserve gaps while ordering the non-masked values.
+
+    ``` py linenums="1"
+    import numpy.ma as ma
+    import foapy
+
+    source = ma.masked_array(
+        ['a', 'x', 'b', 'a'], mask=[False, True, False, False]
+    )
+    result = foapy.partials.order(source)
+    print(result)
+    # [0 -- 1 0]
+    ```
+
+    Return the partial order and the alphabet of non-masked values.
+
+    ``` py linenums="1"
+    import numpy.ma as ma
+    import foapy
+
+    source = ma.masked_array(
+        ['a', 'x', 'b', 'a'], mask=[False, True, False, False]
+    )
+    result, alphabet = foapy.partials.order(source, return_alphabet=True)
+    print(result, alphabet)
+    # [0 -- 1 0] ['a' 'b']
+    ```
     """
     ar = ma.asarray(X)
 
