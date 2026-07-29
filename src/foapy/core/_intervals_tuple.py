@@ -64,13 +64,13 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> ndarray:
     chain = intervals_chain(X, foapy.binding.start, foapy.chain_mode.boundary)
     # chain = [1, 2, 2, 4, 2]
 
-    print(intervals_tuple(chain, foapy.tuple_mode.normal))
+    print(intervals_tuple(chain, foapy.binding.start, foapy.tuple_mode.normal))
     # [1 2 2 4 2]
 
-    print(intervals_tuple(chain, foapy.tuple_mode.lossy))
+    print(intervals_tuple(chain, foapy.binding.start, foapy.tuple_mode.lossy))
     # [2 2]
 
-    print(intervals_tuple(chain, foapy.tuple_mode.redundant))
+    print(intervals_tuple(chain, foapy.binding.start, foapy.tuple_mode.redundant))
     # [1 2 2 4 2 4 2 1]
     ```
     """
