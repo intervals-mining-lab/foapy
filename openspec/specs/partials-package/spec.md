@@ -5,7 +5,7 @@ Provide position-preserving FOA operations for partial masked sequences: gaps ar
 ## Requirements
 
 ### Requirement: Partial sequence ordering
-The system MUST provide `foapy.partials.order(X, return_alphabet=False)`, accepting a 1-D masked array or a plain sequence treated as fully unmasked, and returning a 1-D masked integer array aligned to `X`. Non-masked positions MUST contain zero-based alphabet indices in first-appearance order, and masked positions MUST remain masked.
+The system MUST provide `foapy.partials.order(X, return_alphabet=False)`, accepting a 1-D masked array or a plain sequence treated as fully unmasked, and returning a 1-D masked integer array aligned to `X`. Non-masked positions MUST contain zero-based alphabet indices in first-appearance order, and masked positions MUST remain masked. The public API documentation MUST expose the function, describe its mask-preserving semantics and return modes, and include runnable examples for plain and masked inputs. The function MUST expose annotations for its input, boolean flag, and documented return forms without changing its callable interface.
 
 #### Scenario: Order preserves gaps
 - **WHEN** `order()` receives `['a', --, 'b', 'a', --]`
@@ -22,6 +22,18 @@ The system MUST provide `foapy.partials.order(X, return_alphabet=False)`, accept
 #### Scenario: Multi-dimensional input is rejected
 - **WHEN** `order()` receives an input with more than one dimension
 - **THEN** it raises `Not1DArrayException`
+
+#### Scenario: Public documentation provides runnable examples
+- **WHEN** a user opens the generated reference for `foapy.partials.order`
+- **THEN** the reference includes examples for plain input, masked input with preserved gaps, and `return_alphabet=True`
+
+#### Scenario: Signature annotations describe the contract
+- **WHEN** a caller inspects `foapy.partials.order`
+- **THEN** annotations identify the accepted array-like input, boolean `return_alphabet` flag, and masked-array or tuple return forms without requiring different call syntax
+
+#### Scenario: ASV benchmark coverage exists
+- **WHEN** the ASV benchmark suite discovers partials benchmarks
+- **THEN** it includes time and peak-memory cases for `foapy.partials.order` across scalable input lengths and representative unmasked, partially masked, and fully masked data
 
 ### Requirement: Partial sequence alphabet extraction
 The system MUST provide `foapy.partials.alphabet(X)`, accepting a 1-D masked array or plain sequence and returning a plain 1-D `numpy.ndarray` of unique non-masked values in first-appearance order. Its public documentation MUST describe masked-value exclusion, empty and fully masked inputs, dimensionality errors, and runnable usage examples. The function MUST expose type annotations for its input and plain-array return value without changing its callable interface.
