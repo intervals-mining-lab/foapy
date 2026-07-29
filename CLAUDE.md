@@ -82,6 +82,7 @@ Numerical comparisons use epsilon tolerance — use `AssertCase`/`AssertBatch` r
 ## Active Technologies
 - Python 3.8+ + numpy >= 1.20 (sole runtime dependency per constitution) (002-decompose-intervals-pipeline)
 - Python 3.8+ + numpy >= 1.20 (sole runtime dependency) (002-decompose-intervals-pipeline)
+- Python 3.8+ + numpy >= 1.20 (sole runtime dependency; no additions) (004-partials-package)
 
 ## Recent Changes
 - 002-decompose-intervals-pipeline: Added Python 3.8+ + numpy >= 1.20 (sole runtime dependency per constitution)
