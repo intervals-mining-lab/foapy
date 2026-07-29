@@ -124,6 +124,29 @@ class TestPartialsOrder(TestCase):
         assert_array_equal(ma.getmaskarray(result), [0, 1, 0, 0, 1])
         assert_array_equal(result.compressed(), expected_data_at_non_masked)
 
+    def test_leading_and_trailing_masked_positions(self):
+        # X = [--, --, 'b', 'a', --]
+        X = ma.masked_array(["x", "y", "b", "a", "z"], mask=[1, 1, 0, 0, 1])
+        result, alphabet = order(X, return_alphabet=True)
+        expected = ma.masked_array([0, 0, 0, 1, 0], mask=[1, 1, 0, 0, 1])
+        assert_equal(result, expected)
+        assert_array_equal(alphabet, ["b", "a"])
+        assert_equal(alphabet[result], X)
+
+    def test_masked_gaps_between_repeated_values(self):
+        # X = [--, --, 'b', 'z', --, 'z', 'z', 'b']
+        X = ma.masked_array(
+            ["x", "y", "b", "z", "w", "z", "z", "b"],
+            mask=[1, 1, 0, 0, 1, 0, 0, 0],
+        )
+        result, alphabet = order(X, return_alphabet=True)
+        expected = ma.masked_array(
+            [0, 0, 0, 1, 0, 1, 1, 0], mask=[1, 1, 0, 0, 1, 0, 0, 0]
+        )
+        assert_equal(result, expected)
+        assert_array_equal(alphabet, ["b", "z"])
+        assert_equal(alphabet[result], X)
+
     def test_partial_mask_output_same_length_as_input(self):
         X = ma.masked_array(["a", "b", "a"], mask=[0, 1, 0])
         result = order(X)
