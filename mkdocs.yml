@@ -76,6 +76,8 @@ nav:
   #   - "Other applications": fundamentals/applications/other_applications.md
 - "References":
   - "foapy.alphabet": references/alphabet.md
+  - "foapy.partials":
+    - "alphabet": references/partials/alphabet.md
   - "foapy.order": references/order.md
   - "foapy.binding": references/binding.md
   - "foapy.chain_mode": references/chain_mode.md
