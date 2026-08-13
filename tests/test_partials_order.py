@@ -170,6 +170,14 @@ class TestPartialsOrder(TestCase):
         assert np.all(ma.getmaskarray(result))
         assert len(alph) == 0
 
+    def test_return_alphabet_empty_array(self):
+        # Empty input with return_alphabet=True must hit the same early-return
+        # branch as fully-masked, but for a genuinely empty X.
+        X = ma.masked_array([], mask=[])
+        result, alph = order(X, return_alphabet=True)
+        assert result.shape == (0,)
+        assert len(alph) == 0
+
     # -------------------------------------------------------------------------
     # Error handling
     # -------------------------------------------------------------------------

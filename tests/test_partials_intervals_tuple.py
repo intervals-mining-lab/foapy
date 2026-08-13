@@ -55,6 +55,14 @@ class TestPartialsIntervalsTuple(TestCase):
         assert result.shape == (4,)
         assert np.all(ma.getmaskarray(result))
 
+    def test_fully_masked_redundant(self):
+        # Same code path as empty, but for a genuinely fully-masked
+        # (non-empty) input rather than a zero-length one.
+        chain = ma.masked_array([2, 3, 2, 6], mask=[1, 1, 1, 1], dtype=np.intp)
+        result = intervals_tuple(chain, binding.start, tuple_mode.redundant)
+        assert result.shape == (4,)
+        assert np.all(ma.getmaskarray(result))
+
     # -------------------------------------------------------------------------
     # tuple_mode.normal — mask and values unchanged
     # -------------------------------------------------------------------------
@@ -175,6 +183,51 @@ class TestPartialsIntervalsTuple(TestCase):
             np.sort(partial_result.compressed()),
             np.sort(core_result),
         )
+
+    def test_lossy_binding_end_with_gaps_exact_positions(self):
+        # binding.end lossy with a real mask (gaps): checks the exact masked
+        # positions rather than the multiset comparison used above, since
+        # np.sort hides whether the position-mapping (boundary_compressed_idx
+        # non_masked_idx) is actually correct.
+        # chain produced from X = [A, --, A, B, A] with binding.end:
+        # values [2, --, 2, 2, 1] at positions [0,1,2,3,4]
+        chain = ma.masked_array([2, 0, 2, 2, 1], mask=[0, 1, 0, 0, 0], dtype=np.intp)
+        result = intervals_tuple(chain, binding.end, tuple_mode.lossy)
+        # boundary intervals at positions 3 and 4 get additionally masked;
+        # positions 0 and 2 remain unmasked
+        expected_mask = [0, 1, 0, 1, 1]
+        assert_array_equal(ma.getmaskarray(result), expected_mask)
+        assert_array_equal(result.compressed(), [2, 2])
+
+    def test_lossy_keeps_repeated_symbols_separated_by_gaps(self):
+        # The second A is an interior occurrence despite an intervening gap.
+        # Its interval is measured in full positions (4), not compressed
+        # positions (3), so it must not be treated as a boundary.
+        chain = ma.masked_array([1, 0, 3, 4, 4], mask=[0, 1, 0, 1, 0], dtype=np.intp)
+        result = intervals_tuple(chain, binding.start, tuple_mode.lossy)
+        assert_array_equal(ma.getmaskarray(result), [1, 1, 1, 1, 0])
+        assert_array_equal(result.compressed(), [4])
+
+    def test_redundant_binding_end_with_gaps(self):
+        # binding.end + redundant was completely untested — this exercises
+        # the (n_full - 1 - non_masked_idx)[::-1] reversal branch in
+        # _redundant with a real mask.
+        # chain produced from X = [A, --, B, A] with binding.end:
+        # values [3, --, 2, 1] at positions [0,1,2,3]
+        chain = ma.masked_array([3, 0, 2, 1], mask=[0, 1, 0, 0], dtype=np.intp)
+        result = intervals_tuple(chain, binding.end, tuple_mode.redundant)
+        # There are two distinct symbols (A and B), hence two complementary
+        # boundary intervals.  They are 3 for B and 1 for A.
+        assert_array_equal(result.data, [3, 0, 2, 1, 3, 1])
+        assert_array_equal(ma.getmaskarray(result), [0, 1, 0, 0, 0, 0])
+
+    def test_redundant_uses_full_positions_for_repeated_symbols(self):
+        chain = ma.masked_array([1, 0, 3, 0, 4], mask=[0, 1, 0, 1, 0], dtype=np.intp)
+        result = intervals_tuple(chain, binding.start, tuple_mode.redundant)
+        # A appears at positions 0 and 4, so its complementary interval is 1;
+        # B at position 2 contributes 3.
+        assert_array_equal(result.data, [1, 0, 3, 0, 4, 3, 1])
+        assert_array_equal(ma.getmaskarray(result), [0, 1, 0, 1, 0, 0, 0])
 
     def test_normal_binding_end_preserves_mask(self):
         chain = ma.masked_array([2, 0, 3, 2], mask=[0, 1, 0, 0], dtype=np.intp)

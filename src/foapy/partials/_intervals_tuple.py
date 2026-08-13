@@ -7,33 +7,127 @@ from foapy.core._tuple_mode import tuple_mode as tuple_mode_cls
 
 def intervals_tuple(chain, binding: int, tuple_mode: int) -> ma.MaskedArray:
     """
-    Apply a boundary handling strategy to a partial intervals chain.
+        Apply a boundary handling strategy to a partial intervals chain.
 
-    Parameters
-    ----------
-    chain : array_like or numpy.ma.MaskedArray
-        1-D intervals chain produced by ``partials.intervals_chain``.
-        Plain arrays are auto-wrapped (treated as fully unmasked).
-    binding : int
-        Must match the binding used to produce the chain.
-        ``binding.start`` (1) or ``binding.end`` (2).
-    tuple_mode : int
-        ``tuple_mode.normal`` (2) — return chain unchanged.
-        ``tuple_mode.lossy`` (1) — mask boundary (first-occurrence) intervals
-        in-place; output length equals input length.
-        ``tuple_mode.redundant`` (3) — append k trailing complementary
-        boundary intervals; output length = n + k.
+        Parameters
+        ----------
+        chain : array_like or numpy.ma.MaskedArray
+            1-D intervals chain produced by ``partials.intervals_chain``.
+            Plain arrays are auto-wrapped (treated as fully unmasked).
+        binding : int
+            Must match the binding used to produce the chain.
+            ``binding.start`` (1) or ``binding.end`` (2).
+        tuple_mode : int
+            ``tuple_mode.normal`` (2) — return chain unchanged.
+            ``tuple_mode.lossy`` (1) — mask boundary (first-occurrence) intervals
+            in-place; output length equals input length.
+            ``tuple_mode.redundant`` (3) — append k trailing complementary
+            boundary intervals; output length = n + k.
 
-    Returns
-    -------
-    numpy.ma.MaskedArray
-        ``normal`` / ``lossy``: shape (n,), dtype numpy.intp.
-        ``redundant``: shape (n + k,), dtype numpy.intp.
+        Returns
+        -------
+        numpy.ma.MaskedArray
+            ``normal`` / ``lossy``: shape (n,), dtype numpy.intp.
+            ``redundant``: shape (n + k,), dtype numpy.intp.
 
-    Raises
-    ------
-    ValueError
-        When ``binding`` or ``tuple_mode`` is invalid.
+        Raises
+        ------
+        ValueError
+            When ``binding`` or ``tuple_mode`` is invalid.
+
+        Examples
+        --------
+        ``tuple_mode.normal`` returns the chain unchanged:
+
+    ``` py linenums="1"
+        import numpy as np
+        import numpy.ma as ma
+        from foapy import binding, tuple_mode
+        from foapy.partials import intervals_tuple
+
+        chain = ma.masked_array(
+            [0, 2, 3, 2, 0, 6], mask=[1, 0, 0, 0, 1, 0], dtype=np.intp
+        )
+        result = intervals_tuple(chain, binding.start, tuple_mode.normal)
+        print(result)
+        # [-- 2 3 2 -- 6]
+    ```
+
+        ``tuple_mode.lossy`` additionally masks boundary (first-occurrence)
+        intervals, keeping the same length:
+
+    ``` py linenums="1"
+        import numpy as np
+        import numpy.ma as ma
+        from foapy import binding, tuple_mode
+        from foapy.partials import intervals_tuple
+
+        chain = ma.masked_array(
+            [0, 2, 3, 2, 0, 6], mask=[1, 0, 0, 0, 1, 0], dtype=np.intp
+        )
+        result = intervals_tuple(chain, binding.start, tuple_mode.lossy)
+        print(result)
+        # [-- -- -- 2 -- --]
+    ```
+
+        ``tuple_mode.redundant`` appends trailing complementary boundary
+        intervals, extending the length:
+
+    ``` py linenums="1"
+        import numpy as np
+        import numpy.ma as ma
+        from foapy import binding, tuple_mode
+        from foapy.partials import intervals_tuple
+
+        chain = ma.masked_array(
+            [0, 2, 3, 2, 0, 6], mask=[1, 0, 0, 0, 1, 0], dtype=np.intp
+        )
+        result = intervals_tuple(chain, binding.start, tuple_mode.redundant)
+        print(result)
+        # [-- 2 3 2 -- 6 4 3 1]
+    ```
+
+        An empty chain stays empty in every mode:
+
+    ``` py linenums="1"
+        import numpy as np
+        import numpy.ma as ma
+        from foapy import binding, tuple_mode
+        from foapy.partials import intervals_tuple
+
+        chain = ma.masked_array([], mask=[], dtype=np.intp)
+        result = intervals_tuple(chain, binding.start, tuple_mode.redundant)
+        print(result)
+        # []
+    ```
+
+        A fully masked chain stays fully masked:
+
+    ``` py linenums="1"
+        import numpy.ma as ma
+        from foapy import binding, tuple_mode
+        from foapy.partials import intervals_tuple
+
+        chain = ma.masked_array([2, 3, 2, 6], mask=[1, 1, 1, 1])
+        result = intervals_tuple(chain, binding.start, tuple_mode.lossy)
+        print(result)
+        # [-- -- -- --]
+    ```
+
+        With ``binding.end``, the same modes apply but boundaries are detected
+        right-to-left:
+
+    ``` py linenums="1"
+        import numpy as np
+        import numpy.ma as ma
+        from foapy import binding, tuple_mode
+        from foapy.partials import intervals_tuple
+
+        chain = ma.masked_array([2, 0, 3, 2], mask=[0, 1, 0, 0], dtype=np.intp)
+        result = intervals_tuple(chain, binding.end, tuple_mode.normal)
+        print(result)
+        # [2 -- 3 2]
+    ```
     """
     if binding not in {binding_cls.start, binding_cls.end}:
         raise ValueError(
@@ -75,14 +169,17 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> ma.MaskedArray:
 
 
 def _lossy(ar, chain_mask, non_masked_idx, compressed, binding):
-    # Identify boundary (first-occurrence) intervals by the same criterion as
-    # core.intervals_tuple.lossy: ar[i] > i in the compressed chain.
-    # For binding.end, reverse compressed first (matches core reversal).
+    # A boundary interval is larger than its distance from the boundary in
+    # the traversal direction. Compressed indices discard gap lengths, so
+    # comparisons must use positions in the original array.
     work = compressed[::-1] if binding == binding_cls.end else compressed
+    work_pos = (
+        (len(ar) - 1 - non_masked_idx)[::-1]
+        if binding == binding_cls.end
+        else non_masked_idx
+    )
+    first = work > work_pos
     m = len(work)
-
-    positions = np.arange(m, dtype=np.intp)
-    first = work > positions  # True = boundary interval
 
     if binding == binding_cls.end:
         # Indices in reversed compressed → map back to original compressed order.
@@ -108,14 +205,13 @@ def _redundant(ar, chain_mask, non_masked_idx, compressed, binding, n_full):
         work = compressed
         work_pos = non_masked_idx
 
-    m = len(work)
-    positions = np.arange(m, dtype=np.intp)
-    prev_pos = positions - work
-
-    last_mask_arr = np.ones(m, dtype=bool)
+    prev_pos = work_pos - work
+    last_mask_arr = np.ones(len(work), dtype=bool)
     valid_prev = prev_pos >= 0
     if np.any(valid_prev):
-        last_mask_arr[prev_pos[valid_prev]] = False
+        referred_pos = prev_pos[valid_prev]
+        referred_idx = np.searchsorted(work_pos, referred_pos)
+        last_mask_arr[referred_idx] = False
 
     trailing = n_full - work_pos[last_mask_arr]
 

@@ -8,39 +8,120 @@ from foapy.exceptions import Not1DArrayException
 
 def intervals_chain(X, binding: int, chain_mode: int) -> ma.MaskedArray:
     """
-    Compute the partial intervals chain from a sequence with gaps.
+        Compute the partial intervals chain from a sequence with gaps.
 
-    Unlike foapy.ma.intervals_chain, gap positions (masked values) are NOT
-    compressed out. Interval distances are measured using actual positional
-    indices in the full array, so gaps between two occurrences of the same
-    element increase the measured interval.
+        Unlike foapy.ma.intervals_chain, gap positions (masked values) are NOT
+        compressed out. Interval distances are measured using actual positional
+        indices in the full array, so gaps between two occurrences of the same
+        element increase the measured interval.
 
-    Parameters
-    ----------
-    X : array_like or numpy.ma.MaskedArray
-        1-D raw sequence (plain or masked). Pass the original sequence, not
-        the order output. Masked positions are treated as gaps.
-    binding : int
-        ``binding.start`` (1) — intervals extracted left-to-right.
-        ``binding.end`` (2) — intervals extracted right-to-left.
-    chain_mode : int
-        ``chain_mode.boundary`` (1) — finite sequence; boundary intervals are
-        distances from sequence edges to first/last occurrence.
-        ``chain_mode.cycle`` (2) — cyclic; wrap-around distance used.
+        Parameters
+        ----------
+        X : array_like or numpy.ma.MaskedArray
+            1-D raw sequence (plain or masked). Pass the original sequence, not
+            the order output. Masked positions are treated as gaps.
+        binding : int
+            ``binding.start`` (1) — intervals extracted left-to-right.
+            ``binding.end`` (2) — intervals extracted right-to-left.
+        chain_mode : int
+            ``chain_mode.boundary`` (1) — finite sequence; boundary intervals are
+            distances from sequence edges to first/last occurrence.
+            ``chain_mode.cycle`` (2) — cyclic; wrap-around distance used.
 
-    Returns
-    -------
-    numpy.ma.MaskedArray, shape (n,), dtype numpy.intp
-        Masked 1-D array of the same length as X. Non-masked positions hold
-        the interval distance (≥1). Masked positions are identical to the
-        input mask.
+        Returns
+        -------
+        numpy.ma.MaskedArray, shape (n,), dtype numpy.intp
+            Masked 1-D array of the same length as X. Non-masked positions hold
+            the interval distance (≥1). Masked positions are identical to the
+            input mask.
 
-    Raises
-    ------
-    Not1DArrayException
-        When X has more than one dimension.
-    ValueError
-        When ``binding`` or ``chain_mode`` is invalid.
+        Raises
+        ------
+        Not1DArrayException
+            When X has more than one dimension.
+        ValueError
+            When ``binding`` or ``chain_mode`` is invalid.
+
+        Examples
+        --------
+        Gaps (masked positions) are preserved and their positional distance
+        counts toward the interval of the next occurrence of the same element:
+
+    ``` py linenums="1"
+        import numpy.ma as ma
+        from foapy import binding, chain_mode
+        from foapy.partials import intervals_chain
+
+        X = ma.masked_array(['_', 'C', 'T', 'C', '_', 'G'], mask=[1, 0, 0, 0, 1, 0])
+        result = intervals_chain(X, binding.start, chain_mode.boundary)
+        print(result)
+        # [-- 2 3 2 -- 6]
+    ```
+
+        The intervals chain of an empty sequence is an empty masked array:
+
+    ``` py linenums="1"
+        import numpy.ma as ma
+        from foapy import binding, chain_mode
+        from foapy.partials import intervals_chain
+
+        X = ma.masked_array([], mask=[])
+        result = intervals_chain(X, binding.start, chain_mode.boundary)
+        print(result)
+        # []
+    ```
+
+        If all positions are masked, every position in the result stays masked:
+
+    ``` py linenums="1"
+        import numpy.ma as ma
+        from foapy import binding, chain_mode
+        from foapy.partials import intervals_chain
+
+        X = ma.masked_array(['a', 'b', 'c'], mask=[1, 1, 1])
+        result = intervals_chain(X, binding.start, chain_mode.boundary)
+        print(result)
+        # [-- -- --]
+    ```
+
+        A plain list or ndarray without a mask matches foapy.intervals_chain:
+
+    ``` py linenums="1"
+        from foapy import binding, chain_mode
+        from foapy.partials import intervals_chain
+
+        X = ['b', 'a', 'b', 'c', 'b']
+        result = intervals_chain(X, binding.start, chain_mode.boundary)
+        print(result)
+        # [1 2 2 4 2]
+    ```
+
+        With ``binding.end``, intervals are measured right-to-left:
+
+    ``` py linenums="1"
+        import numpy.ma as ma
+        from foapy import binding, chain_mode
+        from foapy.partials import intervals_chain
+
+        X = ma.masked_array(['A', 'x', 'B', 'A'], mask=[0, 1, 0, 0])
+        result = intervals_chain(X, binding.end, chain_mode.boundary)
+        print(result)
+        # [3 -- 2 1]
+    ```
+
+        With ``chain_mode.cycle``, the first occurrence's interval wraps around
+        from the last occurrence instead of measuring from the sequence edge:
+
+    ``` py linenums="1"
+        import numpy.ma as ma
+        from foapy import binding, chain_mode
+        from foapy.partials import intervals_chain
+
+        X = ma.masked_array(['A', 'x', 'A'], mask=[0, 1, 0])
+        result = intervals_chain(X, binding.start, chain_mode.cycle)
+        print(result)
+        # [1 -- 2]
+    ```
     """
     if binding not in {binding_cls.start, binding_cls.end}:
         raise ValueError(
