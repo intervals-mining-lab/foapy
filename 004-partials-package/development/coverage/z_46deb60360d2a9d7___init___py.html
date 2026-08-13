@@ -66,8 +66,8 @@
             <a id="indexLink" class="nav" href="covindex.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_46deb60360d2a9d7_inconsistent_order_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.2">coverage.py v7.15.2</a>,
-            created at 2026-07-29 20:36 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
+            created at 2026-08-13 10:44 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -84,7 +84,7 @@
 <main id="source">
     <p class="run"><span class="n"><a id="t1" href="#t1">1</a></span><span class="t"><span class="key">import</span> <span class="nam">sys</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2" href="#t2">2</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="com"># We first need to detect if we're being called as part of the numpy setup</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="com"># We first need to detect if we&#x27;re being called as part of the numpy setup</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t"><span class="com"># procedure itself in a reliable manner.</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t"><span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t">    <span class="nam">__FOAPY_SETUP__</span>&nbsp;</span><span class="r"></span></p>
@@ -92,12 +92,12 @@
     <p class="run"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t">    <span class="nam">__FOAPY_SETUP__</span> <span class="op">=</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="par run show_par"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t"><span class="key">if</span> <span class="nam">__FOAPY_SETUP__</span><span class="op">:</span>&nbsp;</span><span class="r"><span class="annotate short">10&#x202F;&#x219B;&#x202F;11</span><span class="annotate long">line 10 didn't jump to line 11 because the condition on line 10 was never true</span></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">    <span class="nam">sys</span><span class="op">.</span><span class="nam">stderr</span><span class="op">.</span><span class="nam">write</span><span class="op">(</span><span class="str">"Running from foapy.exceptions source directory.\n"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">    <span class="nam">sys</span><span class="op">.</span><span class="nam">stderr</span><span class="op">.</span><span class="nam">write</span><span class="op">(</span><span class="str">&quot;Running from foapy.exceptions source directory.\n&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t"><span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t">    <span class="key">from</span> <span class="op">.</span><span class="nam">inconsistent_order</span> <span class="key">import</span> <span class="nam">InconsistentOrderException</span>  <span class="com"># noqa: F401</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t">    <span class="key">from</span> <span class="op">.</span><span class="nam">not_1d_array</span> <span class="key">import</span> <span class="nam">Not1DArrayException</span>  <span class="com"># noqa: F401</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">    <span class="nam">__all__</span> <span class="op">=</span> <span class="nam">list</span><span class="op">(</span><span class="op">{</span><span class="str">"InconsistentOrderException"</span><span class="op">,</span> <span class="str">"Not1DArrayException"</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">    <span class="nam">__all__</span> <span class="op">=</span> <span class="nam">list</span><span class="op">(</span><span class="op">{</span><span class="str">&quot;InconsistentOrderException&quot;</span><span class="op">,</span> <span class="str">&quot;Not1DArrayException&quot;</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -106,8 +106,8 @@
             <a class="nav" href="covindex.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_46deb60360d2a9d7_inconsistent_order_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.2">coverage.py v7.15.2</a>,
-            created at 2026-07-29 20:36 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
+            created at 2026-08-13 10:44 +0000
         </p>
     </div>
 </footer>
