@@ -59,7 +59,6 @@ jobs:
     strategy:
       matrix:
         python:
-        - "3.9" # oldest Python supported by PSF
         - "3.11"  # newest Python that is stable
         platform:
         - ubuntu-latest
@@ -234,6 +233,13 @@ jobs:
             pull_request:
               branch: ${{ github.event.pull_request.head.ref }}
 
+      - name: Sanitize docs version
+        id: version
+        run: |
+          # mike/mkdocs versions can't contain "/", but branch names can
+          # (e.g. "goruha/sync-openspec-specs"), so slugify it here.
+          echo "docs-version=$(echo '${{ steps.context.outputs.branch }}' | tr '/' '-')" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v4
         with: {fetch-depth: 0}  # deep clone for setuptools-scm
 
@@ -259,12 +265,12 @@ jobs:
       - name: Build package distribution files
         run: |
           pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs
-          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-deploy -- ${{ steps.context.outputs.branch }}
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-deploy -- ${{ steps.version.outputs.docs-version }}
 
       - name: Set default documentation branch
         if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
         run: |
-          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-default -- ${{ steps.context.outputs.branch }}
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-default -- ${{ steps.version.outputs.docs-version }}
 
 
   publish:

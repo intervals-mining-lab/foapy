@@ -1,11 +1,12 @@
 import numpy as np
 import numpy.ma as ma
+from helpers.intervals import mode as mode_constant
+from helpers.ma_intervals import intervals
 from test_characteristics.characterisitcs_test import MACharacteristicsTest
 
 from foapy import binding as binding_constant
-from foapy import mode as mode_constant
 from foapy.characteristics.ma import average_remoteness, identifying_information
-from foapy.ma import intervals, order
+from foapy.ma import order
 
 
 class TestMaAverageRemoteness(MACharacteristicsTest):

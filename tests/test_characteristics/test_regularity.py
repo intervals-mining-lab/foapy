@@ -1,9 +1,11 @@
 import numpy as np
+from helpers.intervals import mode
+from helpers.ma_intervals import intervals
 from test_characteristics.characterisitcs_test import CharacteristicsInfromationalTest
 
-from foapy import binding, mode
+from foapy import binding
 from foapy.characteristics import regularity
-from foapy.ma import intervals, order
+from foapy.ma import order
 
 
 class Test_regularity(CharacteristicsInfromationalTest):
