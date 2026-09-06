@@ -2,7 +2,7 @@ import numpy as np
 import numpy.ma as ma
 from numpy.typing import ArrayLike
 
-from foapy.core._order import order as core_order
+from foapy.core._alphabet import alphabet as core_alphabet
 from foapy.exceptions import Not1DArrayException
 
 
@@ -104,5 +104,4 @@ def alphabet(X: ArrayLike) -> np.ndarray:
     if len(compressed) == 0:
         return np.array([], dtype=ar.dtype)
 
-    _, alphabet_values = core_order(compressed, return_alphabet=True)
-    return alphabet_values
+    return core_alphabet(compressed)
