@@ -104,7 +104,7 @@ def intervals_chain(X, binding: int, chain_mode: int) -> ma.MaskedArray:
     compressed_values = ar.compressed()
     m = len(compressed_values)
 
-    result_data = np.zeros(n, dtype=np.intp)
+    result_data = np.full(n, -1, dtype=np.intp)
 
     if m == 0:
         return ma.masked_array(result_data, mask=full_mask)
@@ -118,7 +118,7 @@ def intervals_chain(X, binding: int, chain_mode: int) -> ma.MaskedArray:
         work_pos = orig_non_masked_idx
 
     # Stable sort by value — same element group detection as core.
-    perm = np.argsort(work_values, kind="mergesort")
+    perm = work_values.argsort(kind="mergesort")
 
     # Detect group boundaries (first and last occurrence per unique value).
     group_boundary = np.empty(m + 1, dtype=bool)
