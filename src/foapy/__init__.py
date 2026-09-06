@@ -39,7 +39,7 @@ else:
     # __getattr__. Note that `distutils` (deprecated) and `array_api`
     # (experimental label) are not added here, because `from foapy import *`
     # must not raise any warnings - that's too disruptive.
-    __foapy_submodules__ = {"ma", "exceptions", "core", "characteristics"}
+    __foapy_submodules__ = {"ma", "exceptions", "core", "characteristics", "partials"}
 
     __all__ = list(
         __foapy_submodules__
@@ -75,6 +75,11 @@ else:
             import foapy.ma as ma
 
             return ma
+
+        if attr == "partials":
+            import foapy.partials as partials
+
+            return partials
 
         raise AttributeError(
             "module {!r} has no attribute " "{!r}".format(__name__, attr)

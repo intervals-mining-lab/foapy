@@ -20,3 +20,21 @@ Define _Alphabet of partial sequence_ function
 $$alphabet_p : \big\{\{1,...,l\} \longrightarrow X_{-} \big\} \longrightarrow \big\{\{1,...,m\} \longrightarrow X \big\}$$
 
 $$alphabet_p(S_p) = \big<S_p(i) \big| i \in \{1,...,l\}, \forall k < i, S_p(i) \notin \{-\} \land S_p(i) \neq S_p(k) \big>$$
+
+## Python Example
+
+The public function is available as `foapy.partials.alphabet`. It accepts
+plain sequences and masked arrays. Masked positions are ignored, and the
+result contains each value in first unmasked appearance order:
+
+``` py
+import numpy.ma as ma
+import foapy
+
+source = ma.masked_array(["a", "a", "b", "a"], mask=[1, 0, 0, 0])
+print(foapy.partials.alphabet(source))
+# ["a", "b"]
+```
+
+For the complete parameter, return-value, exception, and example reference,
+see [`foapy.partials.alphabet`](../../../references/partials/alphabet.md).
