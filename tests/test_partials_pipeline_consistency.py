@@ -5,7 +5,6 @@ when input has no masked positions (SC-003).
 
 from unittest import TestCase
 
-import numpy as np
 import numpy.ma as ma
 from numpy.testing import assert_array_equal
 
@@ -109,10 +108,7 @@ class TestPartialsCoreConsistency(TestCase):
                         partial_result = partials_intervals_tuple(
                             masked_chain, b, tuple_mode.normal
                         )
-                        assert_array_equal(
-                            partial_result.compressed(),
-                            core_result,
-                        )
+                        assert_array_equal(partial_result, core_result)
 
     def test_intervals_tuple_lossy_matches_core(self):
         for data in _DATASETS:
@@ -125,13 +121,9 @@ class TestPartialsCoreConsistency(TestCase):
                         partial_result = partials_intervals_tuple(
                             masked_chain, b, tuple_mode.lossy
                         )
-                        # For binding.end, partials preserves positional order
-                        # (left-to-right) while core returns values in reversed
-                        # order — compare as multisets.
-                        assert_array_equal(
-                            np.sort(partial_result.compressed()),
-                            np.sort(core_result),
-                        )
+                        # For binding.end, partials now follows core's own
+                        # reversed-frame order exactly — compare directly.
+                        assert_array_equal(partial_result, core_result)
 
     def test_intervals_tuple_redundant_matches_core(self):
         for data in _DATASETS:
@@ -146,15 +138,7 @@ class TestPartialsCoreConsistency(TestCase):
                         partial_result = partials_intervals_tuple(
                             masked_chain, b, tuple_mode.redundant
                         )
-                        n = len(chain)
-                        # Original portion: for binding.end, positional order differs —
-                        # compare as multisets.
-                        assert_array_equal(
-                            np.sort(partial_result.data[:n]),
-                            np.sort(core_result[:n]),
-                        )
-                        # Trailing intervals must match exactly regardless of binding.
-                        assert_array_equal(
-                            partial_result.data[n:],
-                            core_result[n:],
-                        )
+                        # For binding.end, partials now follows core's own
+                        # reversed-frame order exactly — compare directly,
+                        # both the compressed portion and the trailing one.
+                        assert_array_equal(partial_result, core_result)
