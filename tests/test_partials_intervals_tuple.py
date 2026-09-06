@@ -59,7 +59,9 @@ class TestPartialsIntervalsTuple(TestCase):
         assert_array_equal(result, np.array([], dtype=np.intp))
 
     def test_fully_masked_redundant(self):
-        chain = ma.masked_array([2, 3, 2, 6], mask=[1, 1, 1, 1])
+        # Same code path as empty, but for a genuinely fully-masked
+        # (non-empty) input rather than a zero-length one.
+        chain = ma.masked_array([2, 3, 2, 6], mask=[1, 1, 1, 1], dtype=np.intp)
         result = intervals_tuple(chain, binding.start, tuple_mode.redundant)
         assert_array_equal(result, np.array([], dtype=np.intp))
 
@@ -92,13 +94,22 @@ class TestPartialsIntervalsTuple(TestCase):
     # -------------------------------------------------------------------------
 
     def test_lossy_drops_boundary_and_gap_values(self):
-        # compressed = [2, 3, 2, 6]; boundary: compressed[i] > i
-        # 2>0=T, 3>1=T, 2>2=F, 6>3=T -> only compressed index 2 (value 2) survives
+        # compressed = [2, 3, 2, 6] at real positions [1,2,3,5]; boundary
+        # test uses real positions: 2>1=T, 3>2=T, 2>3=F, 6>5=T -> only the
+        # value at real position 3 (the second C) survives.
         chain = ma.masked_array(
             [0, 2, 3, 2, 0, 6], mask=[1, 0, 0, 0, 1, 0], dtype=np.intp
         )
         result = intervals_tuple(chain, binding.start, tuple_mode.lossy)
         assert_array_equal(result, [2])
+
+    def test_lossy_keeps_repeated_symbols_separated_by_gaps(self):
+        # The second occurrence's interval (4) is measured against its real
+        # source position (4), not its compressed local index (2) — using
+        # local index here would wrongly flag it as a boundary and drop it.
+        chain = ma.masked_array([1, 0, 3, 4, 4], mask=[0, 1, 0, 1, 0], dtype=np.intp)
+        result = intervals_tuple(chain, binding.start, tuple_mode.lossy)
+        assert_array_equal(result, [4])
 
     def test_lossy_no_mask_matches_core(self):
         plain_chain = np.array([1, 2, 2, 4, 2], dtype=np.intp)
@@ -116,6 +127,13 @@ class TestPartialsIntervalsTuple(TestCase):
         partial_result = intervals_tuple(masked_chain, binding.end, tuple_mode.lossy)
         assert_array_equal(partial_result, core_result)
 
+    def test_lossy_binding_end_with_gaps(self):
+        # binding.end + gaps: exercises the reversed-frame real-position
+        # test, not just the multiset/no-gap parity checks above.
+        chain = ma.masked_array([2, 0, 2, 2, 1], mask=[0, 1, 0, 0, 0], dtype=np.intp)
+        result = intervals_tuple(chain, binding.end, tuple_mode.lossy)
+        assert_array_equal(result, [2, 2])
+
     # -------------------------------------------------------------------------
     # tuple_mode.redundant — trailing intervals appended, gap-aware
     # -------------------------------------------------------------------------
@@ -126,6 +144,34 @@ class TestPartialsIntervalsTuple(TestCase):
         )
         result = intervals_tuple(chain, binding.start, tuple_mode.redundant)
         assert len(result) > len(chain.compressed())
+
+    def test_redundant_trailing_is_gap_aware(self):
+        # X = [_, C, T, C, _, G] -> chain (start, boundary) = [_, 2, 3, 2, _, 6]
+        # n_full = 6 (gaps count toward the trailing distance).
+        # Naive compressed-length-based math (core's own local formula, m=4)
+        # would give trailing [3, 2, 1]; the gap-aware answer is [4, 3, 1].
+        chain = ma.masked_array(
+            [0, 2, 3, 2, 0, 6], mask=[1, 0, 0, 0, 1, 0], dtype=np.intp
+        )
+        result = intervals_tuple(chain, binding.start, tuple_mode.redundant)
+        assert_array_equal(result, [2, 3, 2, 6, 4, 3, 1])
+
+    def test_redundant_uses_full_positions_for_repeated_symbols(self):
+        # A appears at real positions 0 and 4 (its complementary interval is
+        # 1); B at real position 2 (its complementary interval is 3). Using
+        # compressed local index instead of real positions would mismatch
+        # which occurrence each trailing value belongs to.
+        chain = ma.masked_array([1, 0, 3, 0, 4], mask=[0, 1, 0, 1, 0], dtype=np.intp)
+        result = intervals_tuple(chain, binding.start, tuple_mode.redundant)
+        assert_array_equal(result, [1, 3, 4, 3, 1])
+
+    def test_redundant_binding_end_with_gaps(self):
+        # binding.end + redundant + gaps: exercises the
+        # (n_full - 1 - non_masked_idx)[::-1] reversal branch together with
+        # real-position "previous occurrence" resolution.
+        chain = ma.masked_array([3, 0, 2, 1], mask=[0, 1, 0, 0], dtype=np.intp)
+        result = intervals_tuple(chain, binding.end, tuple_mode.redundant)
+        assert_array_equal(result, [1, 2, 3, 3, 1])
 
     def test_redundant_no_mask_matches_core_values(self):
         plain_chain = np.array([1, 2, 2, 4, 2], dtype=np.intp)
@@ -148,27 +194,6 @@ class TestPartialsIntervalsTuple(TestCase):
             masked_chain, binding.end, tuple_mode.redundant
         )
         assert_array_equal(partial_result, core_result)
-
-    def test_redundant_trailing_is_gap_aware(self):
-        # X = [_, C, T, C, _, G] -> chain (start, boundary) = [_, 2, 3, 2, _, 6]
-        # n_full = 6 (gaps count toward the trailing distance).
-        # Naive compressed-length-based math (core's own local formula, m=4)
-        # would give trailing [3, 2, 1]; the gap-aware answer is [4, 3, 1].
-        chain = ma.masked_array(
-            [0, 2, 3, 2, 0, 6], mask=[1, 0, 0, 0, 1, 0], dtype=np.intp
-        )
-        result = intervals_tuple(chain, binding.start, tuple_mode.redundant)
-        assert_array_equal(result, [2, 3, 2, 6, 4, 3, 1])
-
-    def test_redundant_binding_end_consistent_order_with_gaps(self):
-        # Same chain as above, binding.end: both the compressed portion and
-        # the trailing portion must share the same (reversed) frame.
-        chain = ma.masked_array(
-            [0, 2, 3, 2, 0, 6], mask=[1, 0, 0, 0, 1, 0], dtype=np.intp
-        )
-        result = intervals_tuple(chain, binding.end, tuple_mode.redundant)
-        # compressed reversed = [6, 2, 3, 2]; trailing computed in that frame.
-        assert_array_equal(result[:4], [6, 2, 3, 2])
 
     # -------------------------------------------------------------------------
     # Error handling

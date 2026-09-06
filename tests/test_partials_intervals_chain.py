@@ -111,6 +111,21 @@ class TestPartialsIntervalsChain(TestCase):
         result = intervals_chain(X, binding.start, chain_mode.boundary)
         assert_array_equal(result.compressed(), [1, 3])
 
+    def test_gaps_with_multiple_distinct_symbols(self):
+        # X = [A, --, B, C, A, --, B] — previous gap tests only used a single
+        # repeated symbol or a pair; this exercises perm/group_boundary with
+        # several distinct groups of different sizes while gaps are present.
+        X = ma.masked_array(
+            ["A", "x", "B", "C", "A", "y", "B"],
+            mask=[0, 1, 0, 0, 0, 1, 0],
+        )
+        result = intervals_chain(X, binding.start, chain_mode.boundary)
+        assert_array_equal(ma.getmaskarray(result), [0, 1, 0, 0, 0, 1, 0])
+        # A: first=0+1=1, second=4-0=4
+        # B: first=2+1=3, second=6-2=4
+        # C: first=3+1=4
+        assert_array_equal(result.compressed(), [1, 3, 4, 4, 4])
+
     # -------------------------------------------------------------------------
     # Fully masked
     # -------------------------------------------------------------------------
@@ -164,6 +179,15 @@ class TestPartialsIntervalsChain(TestCase):
         assert result.shape == (4,)
         assert_array_equal(ma.getmaskarray(result), [0, 1, 0, 0])
 
+    def test_binding_end_with_gaps_values(self):
+        # Same input as test_binding_end_with_gaps, but checking actual
+        # values, not just shape/mask — verifies the position-reversal
+        # arithmetic (n - 1 - orig_non_masked_idx) is correct with gaps.
+        X = ma.masked_array(["A", "x", "B", "A"], mask=[0, 1, 0, 0])
+        result = intervals_chain(X, binding.end, chain_mode.boundary)
+        assert_array_equal(ma.getmaskarray(result), [0, 1, 0, 0])
+        assert_array_equal(result.compressed(), [3, 2, 1])
+
     # -------------------------------------------------------------------------
     # chain_mode.cycle with gaps
     # -------------------------------------------------------------------------
@@ -177,6 +201,15 @@ class TestPartialsIntervalsChain(TestCase):
         # first (cycle): pos[0] + (n - pos[last]) = 0 + (3 - 2) = 1
         # second: pos[2] - pos[0] = 2
         assert_array_equal(result.compressed(), [1, 2])
+
+    def test_binding_end_cycle_with_gaps(self):
+        # binding.end + chain_mode.cycle combined with gaps was previously
+        # untested — this exercises both reversal branches at once.
+        X = ma.masked_array(["A", "x", "A"], mask=[0, 1, 0])
+        result = intervals_chain(X, binding.end, chain_mode.cycle)
+        assert result.shape == (3,)
+        assert_array_equal(ma.getmaskarray(result), [0, 1, 0])
+        assert_array_equal(result.compressed(), [2, 1])
 
     # -------------------------------------------------------------------------
     # Output mask identical to input mask

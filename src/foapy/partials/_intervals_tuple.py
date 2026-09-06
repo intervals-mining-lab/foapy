@@ -2,7 +2,6 @@ import numpy as np
 import numpy.ma as ma
 
 from foapy.core._binding import binding as binding_cls
-from foapy.core._intervals_tuple import intervals_tuple as core_intervals_tuple
 from foapy.core._tuple_mode import tuple_mode as tuple_mode_cls
 
 
@@ -109,19 +108,23 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> np.ndarray:
     if compressed.size == 0:
         return np.array([], dtype=np.intp)
 
-    if tuple_mode == tuple_mode_cls.lossy:
-        return core_intervals_tuple(compressed, binding, tuple_mode_cls.lossy)
-
     non_masked_idx = np.where(~chain_mask)[0]
-    return _redundant(compressed, non_masked_idx, binding, len(ar))
+    n_full = len(ar)
+
+    if tuple_mode == tuple_mode_cls.lossy:
+        return _lossy(compressed, non_masked_idx, binding, n_full)
+
+    return _redundant(compressed, non_masked_idx, binding, n_full)
 
 
-def _redundant(compressed, non_masked_idx, binding, n_full):
-    # Mirrors core.intervals_tuple's redundant algorithm, but trailing
-    # distances are measured against the true source domain length
-    # (n_full, gaps included) via real source positions, not the compressed
-    # array's own length/local index — gaps between a last occurrence and
-    # the domain edge must count toward the trailing distance.
+def _lossy(compressed, non_masked_idx, binding, n_full):
+    # A boundary interval's value always exceeds its own real source
+    # position (chain_mode.boundary sets it to position + 1; an interior
+    # interval is a real distance from an earlier real position, so it can
+    # never exceed its own position). Gaps make real positions diverge from
+    # the compressed array's local index, so the test must use real
+    # positions, not local index — unlike core, which can use local index
+    # because its input never has gaps.
     if binding == binding_cls.end:
         work = compressed[::-1]
         work_pos = (n_full - 1 - non_masked_idx)[::-1]
@@ -129,14 +132,31 @@ def _redundant(compressed, non_masked_idx, binding, n_full):
         work = compressed
         work_pos = non_masked_idx
 
-    m = len(work)
-    positions = np.arange(m, dtype=np.intp)
-    prev_pos = positions - work
+    first = work > work_pos
+    return work[~first]
 
-    last_mask_arr = np.ones(m, dtype=bool)
+
+def _redundant(compressed, non_masked_idx, binding, n_full):
+    # Mirrors core.intervals_tuple's redundant algorithm, but "previous
+    # occurrence" is resolved via real source positions (searchsorted into
+    # work_pos) rather than local index arithmetic, and trailing distances
+    # are measured against the true source domain length (n_full, gaps
+    # included) — gaps between a last occurrence and the domain edge, or
+    # between two occurrences of the same symbol, must count.
+    if binding == binding_cls.end:
+        work = compressed[::-1]
+        work_pos = (n_full - 1 - non_masked_idx)[::-1]
+    else:
+        work = compressed
+        work_pos = non_masked_idx
+
+    prev_pos = work_pos - work
+    last_mask_arr = np.ones(len(work), dtype=bool)
     valid_prev = prev_pos >= 0
     if np.any(valid_prev):
-        last_mask_arr[prev_pos[valid_prev]] = False
+        referred_pos = prev_pos[valid_prev]
+        referred_idx = np.searchsorted(work_pos, referred_pos)
+        last_mask_arr[referred_idx] = False
 
     trailing = n_full - work_pos[last_mask_arr]
 
