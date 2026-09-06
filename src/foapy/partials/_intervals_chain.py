@@ -38,9 +38,43 @@ def intervals_chain(X, binding: int, chain_mode: int) -> ma.MaskedArray:
     Raises
     ------
     Not1DArrayException
-        When X has more than one dimension.
+        When X is not a 1-dimensional array.
     ValueError
         When ``binding`` or ``chain_mode`` is invalid.
+
+    Examples
+    --------
+
+    ``` py linenums="1"
+    import numpy.ma as ma
+    import foapy
+    from foapy.partials import intervals_chain
+
+    X = ma.masked_array(
+        ["_", "C", "T", "C", "_", "G"],
+        mask=[True, False, False, False, True, False],
+    )
+    chain = intervals_chain(X, foapy.binding.start, foapy.chain_mode.boundary)
+    print(chain.compressed())  # [2 3 2 6]
+    print(chain.mask)  # [ True False False False True False]
+    ```
+
+    Dense input uses the same interface for either binding and chain mode:
+
+    ``` py linenums="1"
+    import foapy
+    from foapy.partials import intervals_chain
+
+    chain = intervals_chain(
+        ["b", "a", "b", "c", "b"],
+        foapy.binding.end,
+        foapy.chain_mode.cycle,
+    )
+    print(chain)  # [2 5 2 5 1]
+    ```
+
+    With no masked positions, the non-masked values match
+    :func:`foapy.intervals_chain` for the same binding and chain mode.
     """
     if binding not in {binding_cls.start, binding_cls.end}:
         raise ValueError(
@@ -59,7 +93,7 @@ def intervals_chain(X, binding: int, chain_mode: int) -> ma.MaskedArray:
 
     ar = ma.asarray(X)
 
-    if ar.ndim > 1:
+    if ar.ndim != 1:
         raise Not1DArrayException(
             {"message": f"Incorrect array form. Expected d1 array, exists {ar.ndim}"}
         )

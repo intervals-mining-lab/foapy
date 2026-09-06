@@ -79,6 +79,7 @@ nav:
   - "foapy.partials":
     - "alphabet": references/partials/alphabet.md
     - "order": references/partials/order.md
+    - "intervals_chain": references/partials/intervals_chain.md
   - "foapy.order": references/order.md
   - "foapy.binding": references/binding.md
   - "foapy.chain_mode": references/chain_mode.md
