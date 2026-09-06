@@ -105,7 +105,7 @@ def order(
 
     order_compressed, alphabet_values = core_order(compressed, return_alphabet=True)
 
-    result_data = np.zeros(n, dtype=np.intp)
+    result_data = np.full(n, -1, dtype=np.intp)
     result_data[~full_mask] = order_compressed
     result = ma.masked_array(result_data, mask=full_mask)
 
