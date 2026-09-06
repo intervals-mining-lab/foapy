@@ -26,7 +26,7 @@ import numpy.ma as ma
 # Text "INTELLIGENCE" with only letters I, T, G, N kept; others are gaps
 X = ma.masked_array(
     list("INTELLIGENCE"),
-    mask=[False, True, False, True, True, True, True, True, False, True, False, True]
+    mask=[False, True, False, True, True, True, True, False, True, False, True, True]
 )
 # Non-masked positions: I(0), T(2), G(8), N(10)
 ```

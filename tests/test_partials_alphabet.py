@@ -1,3 +1,4 @@
+import inspect
 from unittest import TestCase
 
 import numpy as np
@@ -98,6 +99,16 @@ class TestPartialsAlphabet(TestCase):
         result = alphabet(X)
         assert_equal(result, ["a", "b"])
 
+    def test_first_element_masked(self):
+        X = ma.masked_array(["x", "b", "a"], mask=[1, 0, 0])
+        result = alphabet(X)
+        assert_equal(result, ["b", "a"])
+
+    def test_first_occurrence_masked_later_unmasked(self):
+        X = ma.masked_array(["a", "a", "b", "a"], mask=[1, 0, 0, 0])
+        result = alphabet(X)
+        assert_equal(result, ["a", "b"])
+
     # -------------------------------------------------------------------------
     # No-mask passthrough — must equal core.alphabet
     # -------------------------------------------------------------------------
@@ -129,6 +140,12 @@ class TestPartialsAlphabet(TestCase):
         X = ma.masked_array(["a", "b"], mask=[0, 1])
         result = alphabet(X)
         assert not isinstance(result, ma.MaskedArray)
+        assert isinstance(result, np.ndarray)
+
+    def test_signature_has_input_and_return_annotations(self):
+        signature = inspect.signature(alphabet)
+        assert signature.parameters["X"].annotation is not inspect.Parameter.empty
+        assert signature.return_annotation is not inspect.Signature.empty
 
     # -------------------------------------------------------------------------
     # Error handling

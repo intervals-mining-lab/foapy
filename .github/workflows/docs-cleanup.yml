@@ -25,6 +25,13 @@ jobs:
       GIT_COMMITTER_NAME: ci-bot
       GIT_COMMITTER_EMAIL: ci-bot@example.com
     steps:
+      - name: Sanitize docs version
+        id: version
+        run: |
+          # mike/mkdocs versions can't contain "/", but branch names can
+          # (e.g. "goruha/sync-openspec-specs"), so slugify it here.
+          echo "docs-version=$(echo '${{ github.event.pull_request.head.ref }}' | tr '/' '-')" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v4
         with: {fetch-depth: 0}  # deep clone for setuptools-scm
 
@@ -37,4 +44,4 @@ jobs:
 
       - name: Build package distribution files
         run: |
-          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-destroy -- ${{ github.event.pull_request.head.ref }}
+          pipx run --python '${{ steps.setup-python.outputs.python-path }}' tox -e docs-destroy -- ${{ steps.version.outputs.docs-version }}

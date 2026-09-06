@@ -248,3 +248,8 @@ class TestPartialsIntervalsChain(TestCase):
         X = ma.masked_array([[1, 2], [3, 4]])
         with pytest.raises(Not1DArrayException):
             intervals_chain(X, binding.start, chain_mode.boundary)
+
+    def test_0d_array_raises_not1d(self):
+        X = ma.asarray(1)
+        with pytest.raises(Not1DArrayException):
+            intervals_chain(X, binding.start, chain_mode.boundary)

@@ -1,115 +1,88 @@
+from typing import Tuple, Union
+
 import numpy as np
 import numpy.ma as ma
+from numpy.typing import ArrayLike
 
 from foapy.core._order import order as core_order
 from foapy.exceptions import Not1DArrayException
 
 
-def order(X, return_alphabet=False):
+def order(
+    X: ArrayLike,
+    return_alphabet: bool = False,
+) -> Union[ma.MaskedArray, Tuple[ma.MaskedArray, np.ndarray]]:
     """
-        Map a partial sequence to its order, preserving gap positions.
+    Map a partial sequence to its order, preserving gap positions.
 
-        Parameters
-        ----------
-        X : array_like or numpy.ma.MaskedArray
-            1-D sequence (plain or masked). Masked positions are treated as gaps
-            and are preserved in the output.
-        return_alphabet : bool, optional
-            If True, also return the alphabet of non-masked unique values.
+    Unlike :func:`foapy.order`, this function returns a masked array aligned
+    with the input. Masked positions are gaps: they are excluded from the
+    alphabet and remain masked in the result. Plain sequences are treated as
+    fully unmasked inputs.
 
-        Returns
-        -------
-        result : numpy.ma.MaskedArray, shape (n,), dtype numpy.intp
-            Masked 1-D array of the same length as X. Non-masked positions hold
-            the element's 0-based alphabet index (first-appearance order).
-            Masked positions are identical to the input mask.
-        alphabet : numpy.ndarray, shape (p,)
-            Only returned when return_alphabet=True. Unique non-masked values in
-            first-appearance order. p = number of unique non-masked values.
+    Parameters
+    ----------
+    X : array_like or numpy.ma.MaskedArray
+        1-D sequence (plain or masked). Masked positions are treated as gaps
+        and are preserved in the output.
+    return_alphabet : bool, optional
+        If True, also return the alphabet of non-masked unique values.
 
-        Raises
-        ------
-        Not1DArrayException
-            When X has more than one dimension.
+    Returns
+    -------
+    result : numpy.ma.MaskedArray, shape (n,), dtype numpy.intp
+        Masked 1-D array of the same length as X. Non-masked positions hold
+        the element's 0-based alphabet index (first-appearance order).
+        Masked positions are identical to the input mask.
+    alphabet : numpy.ndarray, shape (p,)
+        Only returned when return_alphabet=True. Unique non-masked values in
+        first-appearance order. p = number of unique non-masked values.
 
-        Examples
-        --------
-        Map a partial sequence to its order. Masked positions (gaps) keep their
-        position in the output but stay masked; the index count only advances
-        over non-masked values:
+    Raises
+    ------
+    Not1DArrayException
+        When X has more than one dimension.
+
+    Examples
+    --------
+    Get an order from a plain sequence. The result is a masked array even
+    though the input has no gaps.
 
     ``` py linenums="1"
-        import numpy.ma as ma
-        from foapy.partials import order
+    import foapy
 
-        X = ma.masked_array(['a', 'x', 'b', 'a', 'y'], mask=[0, 1, 0, 0, 1])
-        result = order(X)
-        print(result)
-        # [0 -- 1 0 --]
+    source = ['a', 'b', 'a', 'c']
+    result = foapy.partials.order(source)
+    print(result)
+    # [0, 1, 0, 2]
     ```
 
-        The order of an empty sequence is an empty masked array:
+    Preserve gaps while ordering the non-masked values.
 
     ``` py linenums="1"
-        import numpy.ma as ma
-        from foapy.partials import order
+    import numpy.ma as ma
+    import foapy
 
-        X = ma.masked_array([], mask=[])
-        result = order(X)
-        print(result)
-        # []
+    source = ma.masked_array(
+        ['a', 'x', 'b', 'a'], mask=[False, True, False, False]
+    )
+    result = foapy.partials.order(source)
+    print(result)
+    # [0 -- 1 0]
     ```
 
-        If all positions are masked, every position in the result stays masked:
+    Return the partial order and the alphabet of non-masked values.
 
     ``` py linenums="1"
-        import numpy.ma as ma
-        from foapy.partials import order
+    import numpy.ma as ma
+    import foapy
 
-        X = ma.masked_array(['a', 'b', 'c'], mask=[1, 1, 1])
-        result = order(X)
-        print(result)
-        # [-- -- --]
-    ```
-
-        A plain list or ndarray without a mask works the same as foapy.order:
-
-    ``` py linenums="1"
-        from foapy.partials import order
-
-        X = ['a', 'b', 'a', 'c']
-        result = order(X)
-        print(result)
-        # [0 1 0 2]
-    ```
-
-        Masking doesn't just skip a value — it removes the position entirely,
-        so a value can "reappear" as first occurrence if its earlier occurrence
-        is masked:
-
-    ``` py linenums="1"
-        import numpy.ma as ma
-        from foapy.partials import order
-
-        X = ma.masked_array(['a', 'x', 'b', 'a', 'b'], mask=[0, 1, 0, 0, 0])
-        result = order(X)
-        print(result)
-        # [0 -- 1 0 1]
-    ```
-
-        With ``return_alphabet=True``, also get the unique non-masked values in
-        first-appearance order:
-
-    ``` py linenums="1"
-        import numpy.ma as ma
-        from foapy.partials import order
-
-        X = ma.masked_array(['a', 'x', 'b', 'a', 'y'], mask=[0, 1, 0, 0, 1])
-        result, alphabet = order(X, return_alphabet=True)
-        print(result)
-        # [0 -- 1 0 --]
-        print(alphabet)
-        # ['a' 'b']
+    source = ma.masked_array(
+        ['a', 'x', 'b', 'a'], mask=[False, True, False, False]
+    )
+    result, alphabet = foapy.partials.order(source, return_alphabet=True)
+    print(result, alphabet)
+    # [0 -- 1 0] ['a' 'b']
     ```
     """
     ar = ma.asarray(X)
@@ -132,7 +105,7 @@ def order(X, return_alphabet=False):
 
     order_compressed, alphabet_values = core_order(compressed, return_alphabet=True)
 
-    result_data = np.zeros(n, dtype=np.intp)
+    result_data = np.full(n, -1, dtype=np.intp)
     result_data[~full_mask] = order_compressed
     result = ma.masked_array(result_data, mask=full_mask)
 
