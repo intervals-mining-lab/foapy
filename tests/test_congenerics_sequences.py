@@ -37,7 +37,7 @@ class TestCongenericsSequences(TestCase):
     def test_rows_ordered_by_first_appearance(self):
         X = ["c", "a", "b", "a"]
         result = sequences(X)
-        alph = congenerics_alphabet(X)
+        alph = congenerics_alphabet(result)
         assert_array_equal(alph, ["c", "a", "b"])
         assert result.shape == (3, 4)
 

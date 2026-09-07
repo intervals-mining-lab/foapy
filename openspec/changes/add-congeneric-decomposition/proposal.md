@@ -6,12 +6,12 @@ FOA's documented theory (`docs/fundamentals/congeneric_decomposition/`, `docs/fu
 
 - Add a new `foapy.congenerics` package implementing the forward decomposition and the full analysis pipeline over it:
   - `sequences(S)` — decomposes `S` into `CS`, an `(m, l)` masked matrix; row `j` holds the `j`-th alphabet symbol (first-appearance order) at its original positions, `-` (masked) elsewhere.
-  - `alphabet(S)` — the `(m,)` array of row labels (equivalent to `foapy.partials.alphabet(S)`).
-  - `order(S)` — `(m, l)` masked matrix; row `j` is the congeneric order of `CS[j]` (non-empty positions are `1`, per the Congeneric Order definition).
+  - `alphabet(CS)` — the `(m,)` array of row labels: row `j`'s single non-masked value, per the Alphabet of Congeneric sequences definition. Takes `CS` (the output of `sequences`) directly, not `S`.
+  - `order(CS)` — `(m, l)` masked matrix; every non-masked position is `0`, per the Congeneric Order definition. Takes `CS` directly, not `S` — the result is fully determined by `CS`'s mask alone.
   - `intervals_chains(S, binding, chain_mode)` — `(m, l)` masked matrix; row `j` is `foapy.partials.intervals_chain(CS[j], binding, chain_mode)`.
   - `intervals_tuples(S, binding, chain_mode, tuple_mode)` — `(m, x)` ndarray; row `j` is `foapy.partials.intervals_tuple` on the `j`-th chain (built with `chain_mode`), right-padded with `0` to `x = max` tuple length across rows. `chain_mode` is required alongside `tuple_mode` because they are independent axes in `foapy.partials` (`intervals_chain` takes `chain_mode`; `intervals_tuple` takes an already-built chain plus `tuple_mode`) — `tuple_mode` alone cannot select a chain.
   - `intervals_distributions(S, binding, chain_mode, tuple_mode)` — `(m, y)` ndarray; row `j` is `foapy.partials.intervals_distribution` on the `j`-th tuple, right-padded with `0` to `y = max` interval value across **all** rows (shared width, so columns are comparable across rows).
-- Every function takes the original 1-D sequence `S` as input (not another `congenerics.*` function's output), deriving `CS = sequences(S)` internally — matching the existing `foapy.core`/`foapy.partials` convention where each stage is called independently on the source sequence.
+- The public API is intentionally split by input: `sequences`, `alphabet`, `order` operate on/from `CS`; `intervals_chains`, `intervals_tuples`, `intervals_distributions` take the original 1-D sequence `S` and derive `CS = sequences(S)` internally — matching the existing `foapy.core`/`foapy.partials` convention where each interval stage is called independently on the source sequence.
 - Inverse reconstruction (`CS` → `S`) is explicitly **out of scope** for this change; it will be proposed separately.
 
 ## Capabilities

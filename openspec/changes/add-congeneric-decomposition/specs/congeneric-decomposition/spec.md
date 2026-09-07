@@ -20,18 +20,22 @@ The system MUST provide `foapy.congenerics.sequences(S)`, accepting a 1-D masked
 - **THEN** it raises `Not1DArrayException`
 
 ### Requirement: Congeneric decomposition alphabet
-The system MUST provide `foapy.congenerics.alphabet(S)`, returning the same `(m,)` plain `numpy.ndarray` as `foapy.partials.alphabet(S)` — the row labels of `foapy.congenerics.sequences(S)`, in first-appearance order.
+The system MUST provide `foapy.congenerics.alphabet(CS)`, taking `CS` (the output of `foapy.congenerics.sequences`) directly — not the original sequence — and returning an `(m,)` plain `numpy.ndarray` of row labels, per the Alphabet of Congeneric sequences definition: `alphabet(CS)[j]` is row `j`'s single non-masked value.
 
 #### Scenario: Alphabet matches row order
-- **WHEN** `alphabet(S)` and `sequences(S)` are called on the same `S`
-- **THEN** `alphabet(S)[j]` is the unique non-empty value found in row `j` of `sequences(S)`, for every `j`
+- **WHEN** `alphabet(CS)` is called where `CS = sequences(S)`
+- **THEN** `alphabet(CS)[j]` is the unique non-empty value found in row `j` of `CS`, for every `j`
+
+#### Scenario: Empty decomposition
+- **WHEN** `alphabet(CS)` is called where `CS` has `m = 0` rows
+- **THEN** it returns an empty array
 
 ### Requirement: Congeneric order per row
-The system MUST provide `foapy.congenerics.order(S)`, returning a `numpy.ma.MaskedArray` of shape `(m, l)` where row `j` is `foapy.partials.order(CS[j])` and `CS = foapy.congenerics.sequences(S)`. Per the Congeneric Order definition, every non-masked value in every row MUST be `0` (the sole alphabet index of a single-symbol row).
+The system MUST provide `foapy.congenerics.order(CS)`, taking `CS` (the output of `foapy.congenerics.sequences`) directly — not the original sequence — and returning a `numpy.ma.MaskedArray` of shape `(m, l)` whose mask matches `CS`'s mask exactly. Per the Congeneric Order definition, every non-masked value MUST be `0` (the sole alphabet index of a single-symbol row).
 
 #### Scenario: Every row's order is degenerate
-- **WHEN** `order(S)` is called on any input
-- **THEN** every non-masked entry in the result equals `0`, and the mask matches `sequences(S)`'s mask row-for-row
+- **WHEN** `order(CS)` is called where `CS = sequences(S)` for any `S`
+- **THEN** every non-masked entry in the result equals `0`, and the mask matches `CS`'s mask exactly
 
 ### Requirement: Congeneric interval chains per row
 The system MUST provide `foapy.congenerics.intervals_chains(S, binding, chain_mode)`, returning a `numpy.ma.MaskedArray` of shape `(m, l)` where row `j` equals `foapy.partials.intervals_chain(CS[j], binding, chain_mode)` and `CS = foapy.congenerics.sequences(S)`. Invalid `binding` or `chain_mode` values MUST raise `ValueError`, matching `foapy.partials.intervals_chain`.

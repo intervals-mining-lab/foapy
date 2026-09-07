@@ -8,7 +8,7 @@ Key structural fact from the math (`docs/fundamentals/congeneric_decomposition/s
 
 **Goals:**
 - Implement `foapy.congenerics.sequences`, `alphabet`, `order`, `intervals_chains`, `intervals_tuples`, `intervals_distributions`.
-- Keep every function's public contract independent: each takes the original sequence `S`, not another `congenerics.*` call's output — matching `foapy.core`/`foapy.partials` convention.
+- Keep `intervals_chains`/`intervals_tuples`/`intervals_distributions` independent: each takes the original sequence `S`, not another `congenerics.*` call's output — matching `foapy.core`/`foapy.partials` convention (see D2). `alphabet`/`order` instead take `CS` directly (see D2.1) — they're pure functions of the decomposition itself, per the math's own `alphabet_c(CS)`/Congeneric Order notation.
 - Preserve correctness parity: row `j`'s result for any stage MUST equal calling the corresponding `foapy.partials`/`foapy.core` function directly on that row in isolation.
 
 **Non-Goals:**
@@ -30,11 +30,21 @@ Key structural fact from the math (`docs/fundamentals/congeneric_decomposition/s
 
 **Alternative considered**: accept a precomputed `CS` matrix to avoid recomputation across chained calls. Rejected per explicit user decision — independent-input consistency with the existing pipeline convention was preferred over the reuse optimization. Callers who need to avoid recomputation can call `sequences()` once and process rows with `foapy.partials.*` directly instead of the `congenerics.*` wrappers.
 
+### D2.1: `alphabet`/`order` are carved out of D2 — they take `CS` directly
+
+Reversing part of D2 per explicit user decision: `alphabet(CS)` and `order(CS)` take the decomposition matrix itself, not `S`. Both are pure functions of `CS`'s shape/mask alone (`alphabet` reads each row's one non-masked value; `order` reads `CS`'s mask directly) — computing them from `S` was equivalent to `alphabet_or_order(sequences(S))` in every case anyway, just with the `sequences()` call hidden inside the function instead of made explicit by the caller. Taking `CS` directly:
+- matches the math's own notation (`alphabet_c(CS)`, Congeneric Order defined over `CS`'s rows, not over `S`), and
+- avoids a wasted `sequences(S)` recomputation when a caller already has `CS` (e.g., from a prior `sequences()`/`intervals_chains()` call) and only wants its labels or trivial order.
+
+`intervals_chains`/`intervals_tuples`/`intervals_distributions` keep D2's original "takes raw `S`" contract — unlike `alphabet`/`order`, they still delegate to `foapy.partials.intervals_chain`/`intervals_tuple`'s existing "pass the raw sequence, not derived output" contract, so following that same convention here remains the right call for consistency with the rest of the pipeline.
+
+**Result**: the public API is intentionally split — `sequences`, `alphabet`, `order` operate on/from `CS`; `intervals_chains`, `intervals_tuples`, `intervals_distributions` operate on `S`. A caller building the full pipeline naturally computes `CS = sequences(S)` once, uses it for `alphabet(CS)`/`order(CS)`, and separately calls the interval stages on `S`.
+
 ### D3: Fully vectorized `(m, l)`-native implementation — no per-row Python loop
 
 Superseded an earlier version of this decision (originally: loop over `foapy.partials`/`foapy.core` primitives per row). Every stage is now a batched numpy computation across all `m` rows at once:
 
-- `order(S)`: no computation at all — every non-masked value is `0` by the Congeneric Order definition, so the result is `ma.masked_array(np.zeros(CS.shape), mask=CS.mask)`.
+- `order(CS)`: no computation at all — every non-masked value is `0` by the Congeneric Order definition, so the result is `ma.masked_array(np.zeros(CS.shape), mask=CS.mask)` (see D2.1 for why this takes `CS` rather than `S`).
 - `intervals_chains(S, binding, chain_mode)`: a congeneric row has exactly one non-empty symbol, so its interval chain reduces to "distance to the previous non-masked column in this row" — computed for every row at once via a shifted running maximum along columns (`numpy.maximum.accumulate(shifted, axis=1)`) instead of calling `foapy.partials.intervals_chain` per row. A private helper `_chain_work_frame` computes this in "work frame" column order (natural for `binding.start`, column-reversed for `binding.end`, matching `foapy.partials`' internal processing frame) and is shared with the tuple/distribution stages below.
 - `intervals_tuples(S, binding, chain_mode, tuple_mode)`: reuses `_chain_work_frame`'s per-row boundary flags (`is_first_work`) directly — a position is "boundary" iff it's a row's first occurrence in work-frame order, which is exactly what `foapy.partials.intervals_tuple`'s lossy-mode check (`work value > work position`) detects. Ragged per-row results (variable count of kept entries before padding) are packed left and zero-padded via a single vectorized cumulative-count scatter (`_pack_rows`: `numpy.cumsum` for destination columns, then one fancy-indexed assignment) rather than building per-row Python lists.
 - `intervals_distributions(S, binding, chain_mode, tuple_mode)`: a single vectorized scatter-add (`numpy.add.at` over every row's real tuple entries at once) computes all `m` row-histograms simultaneously, instead of one `foapy.core.intervals_distribution` call per row.

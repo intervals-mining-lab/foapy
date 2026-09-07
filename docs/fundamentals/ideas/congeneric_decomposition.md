@@ -140,7 +140,7 @@ import foapy
 
 source = list("INTELLIGENCE")
 CS = foapy.congenerics.sequences(source)
-print(foapy.congenerics.alphabet(source))
+print(foapy.congenerics.alphabet(CS))
 # ['I' 'N' 'T' 'E' 'L' 'G' 'C']
 print(CS)
 # [['I' -- -- -- -- -- 'I' -- -- -- -- --]
@@ -152,10 +152,12 @@ print(CS)
 #  [-- -- -- -- -- -- -- -- -- -- 'C' --]]
 ```
 
-Row `j` of `CS` is the congeneric sequence for `foapy.congenerics.alphabet(source)[j]`; every non-empty
+Row `j` of `CS` is the congeneric sequence for `foapy.congenerics.alphabet(CS)[j]`; every non-empty
 position across rows reconstructs `source` exactly once. The rest of the FOA pipeline
 (`order`, `intervals_chain`, `intervals_tuple`, `intervals_distribution`) can be run across every row at once
 via `foapy.congenerics.order`, `intervals_chains`, `intervals_tuples`, and `intervals_distributions`.
+`alphabet` and `order` take `CS` itself as input; `intervals_chains`/`intervals_tuples`/`intervals_distributions`
+take the original `source` and derive `CS` internally.
 
 <style>
 .md-typeset table:not([class]) th {

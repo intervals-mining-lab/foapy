@@ -1,31 +1,25 @@
 import numpy as np
-from numpy.typing import ArrayLike
-
-from foapy.partials import alphabet as partials_alphabet
+import numpy.ma as ma
 
 
-def alphabet(X: ArrayLike) -> np.ndarray:
+def alphabet(CS: ma.MaskedArray) -> np.ndarray:
     """
-    Extract the row labels of the congeneric decomposition of a sequence.
+    Extract the row labels of a congeneric decomposition.
 
-    Equivalent to :func:`foapy.partials.alphabet`: unique non-masked values
-    of X in first-appearance order. Row j of :func:`foapy.congenerics.sequences`
-    holds the symbol ``alphabet(X)[j]``.
+    Per the Alphabet of Congeneric sequences definition, row j's label is
+    its single non-masked value: ``alphabet(CS)[j] == CS[j].compressed()[0]``.
 
     Parameters
     ----------
-    X : array_like or numpy.ma.MaskedArray
-        1-D sequence (plain or masked). Masked positions are excluded.
+    CS : numpy.ma.MaskedArray, shape (m, l)
+        Output of :func:`foapy.congenerics.sequences`. Each row must have at
+        least one non-masked position (guaranteed when CS was produced by
+        `sequences`).
 
     Returns
     -------
     numpy.ndarray, shape (m,)
-        Unique non-masked values in first-appearance order.
-
-    Raises
-    ------
-    Not1DArrayException
-        When X has more than one dimension.
+        Row labels, in row order.
 
     Examples
     --------
@@ -34,9 +28,15 @@ def alphabet(X: ArrayLike) -> np.ndarray:
     import foapy
 
     source = ['a', 'b', 'a', 'c']
-    result = foapy.congenerics.alphabet(source)
+    CS = foapy.congenerics.sequences(source)
+    result = foapy.congenerics.alphabet(CS)
     print(result)
     # ['a' 'b' 'c']
     ```
     """
-    return partials_alphabet(X)
+    m = CS.shape[0]
+    if m == 0:
+        return np.array([], dtype=CS.dtype)
+
+    first_valid_col = (~ma.getmaskarray(CS)).argmax(axis=1)
+    return CS.data[np.arange(m), first_valid_col]

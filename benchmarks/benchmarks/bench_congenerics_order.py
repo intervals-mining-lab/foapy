@@ -2,7 +2,7 @@ import os
 
 from asv_runner.benchmarks.mark import skip_params_if
 
-from foapy.congenerics import order
+from foapy.congenerics import order, sequences
 
 from .cases import best_case, dna_case, normal_case, worst_case
 
@@ -22,13 +22,15 @@ class CongenericsOrderSuite:
 
     def setup(self, length, case):
         if case == "Best":
-            self.data = best_case(length)
+            source = best_case(length)
         elif case == "DNA":
-            self.data = dna_case(length)
+            source = dna_case(length)
         elif case == "Normal":
-            self.data = normal_case(length)
+            source = normal_case(length)
         else:
-            self.data = worst_case(length)
+            source = worst_case(length)
+        # order(CS) takes the decomposition itself, not the raw source.
+        self.data = sequences(source)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def time_order(self, length, case):

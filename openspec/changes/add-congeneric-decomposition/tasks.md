@@ -59,3 +59,11 @@
 - [x] 10.6 Fix test assertions that compared masked arrays' raw `.data` (including masked filler, which changed from `-1` to `0` and was never part of the public contract) instead of mask-aware comparison
 - [x] 10.7 Broaden `intervals_tuples`/`intervals_distributions` test coverage to exercise `tuple_mode.lossy` and `tuple_mode.redundant` (previously only `tuple_mode.normal` was tested — a pre-existing gap the rewrite's coverage report surfaced)
 - [x] 10.8 Re-run `tox -e default` and lint (`black`/`isort`/`flake8`) after the rewrite; confirm 100% coverage on every `src/foapy/congenerics/*.py` module
+
+## 11. `alphabet`/`order` take `CS` instead of `S` (D2.1)
+
+- [x] 11.1 Change `_alphabet.py`: `alphabet(CS)` reads each row's single non-masked value directly from `CS` (via `argmax` on `~mask` per row) instead of delegating to `foapy.partials.alphabet(S)`
+- [x] 11.2 Change `_order.py`: `order(CS)` reads `CS`'s own mask directly instead of calling `sequences(S)` internally
+- [x] 11.3 Update `tests/test_congenerics_alphabet.py`/`test_congenerics_order.py` to compute `CS = sequences(X)` first and pass `CS`; update `test_congenerics_sequences.py`'s cross-check accordingly
+- [x] 11.4 Update the docs example (`docs/fundamentals/ideas/congeneric_decomposition.md`) and `benchmarks/benchmarks/bench_congenerics_order.py` to call `alphabet(CS)`/`order(CS)` instead of the raw source
+- [x] 11.5 Re-run `tox -e default` and lint; confirm 100% coverage on `_alphabet.py`/`_order.py` under the new contract

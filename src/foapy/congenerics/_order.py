@@ -1,34 +1,25 @@
 import numpy as np
 import numpy.ma as ma
-from numpy.typing import ArrayLike
-
-from ._sequences import sequences
 
 
-def order(X: ArrayLike) -> ma.MaskedArray:
+def order(CS: ma.MaskedArray) -> ma.MaskedArray:
     """
-    Compute the congeneric order of each row of the congeneric decomposition.
+    Compute the congeneric order of each row of a congeneric decomposition.
 
     Per the Congeneric Order definition, every non-masked value in every row
     is 0 (the sole alphabet index of a single-symbol row) — so no per-row
-    computation is needed: the mask of :func:`foapy.congenerics.sequences`
-    already determines the result entirely.
+    computation is needed: CS's own mask already determines the result.
 
     Parameters
     ----------
-    X : array_like or numpy.ma.MaskedArray
-        1-D sequence (plain or masked). Masked positions are gaps.
+    CS : numpy.ma.MaskedArray, shape (m, l)
+        Output of :func:`foapy.congenerics.sequences`.
 
     Returns
     -------
     numpy.ma.MaskedArray, shape (m, l)
-        Row j is masked wherever `sequences(X)[j]` is masked; non-masked
-        positions hold 0.
-
-    Raises
-    ------
-    Not1DArrayException
-        When X has more than one dimension.
+        Row j is masked wherever `CS[j]` is masked; non-masked positions
+        hold 0.
 
     Examples
     --------
@@ -37,13 +28,13 @@ def order(X: ArrayLike) -> ma.MaskedArray:
     import foapy
 
     source = ['a', 'b', 'a', 'c']
-    result = foapy.congenerics.order(source)
+    CS = foapy.congenerics.sequences(source)
+    result = foapy.congenerics.order(CS)
     print(result)
     # [[0 -- 0 --]
     #  [-- 0 -- --]
     #  [-- -- -- 0]]
     ```
     """
-    CS = sequences(X)
     data = np.zeros(CS.shape, dtype=np.intp)
     return ma.masked_array(data, mask=ma.getmaskarray(CS))
