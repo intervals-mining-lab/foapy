@@ -42,6 +42,7 @@
 - `src/foapy/congenerics/` — gains `characteristics/` subpackage
 - `src/foapy/__init__.py` — removes `ma` from `__foapy_submodules__`
 - `tests/test_ma_*.py` — deleted (congenerics already tested)
+- `benchmarks/benchmarks/bench_ma_*.py`, `benchmarks/benchmarks/ma_cases.py` — deleted
 - `tests/test_characteristics/test_ma_*.py` — replaced with `test_congenerics_characteristics/test_*s.py` (plural names)
 - `tests/test_characteristics/test_descriptive_information.py`, `test_identifying_information.py`, `test_regularity.py`, `test_uniformity.py` — moved to `test_congenerics_characteristics/`
 - Docs: all `foapy.ma` and `foapy.characteristics.ma` references updated

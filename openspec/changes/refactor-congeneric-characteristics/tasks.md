@@ -82,3 +82,10 @@
 - [x] 11.3 Verify `import foapy.ma` raises `ModuleNotFoundError` ✓
 - [x] 11.4 Verify `from foapy.characteristics import descriptive_information` raises `ImportError` ✓
 - [x] 11.5 Verify `import foapy.congenerics.characteristics` succeeds and all 12 functions are accessible ✓
+
+## 12. Remove foapy.ma benchmarks
+
+- [x] 12.1 Delete `benchmarks/benchmarks/bench_ma_alphabet.py`
+- [x] 12.2 Delete `benchmarks/benchmarks/bench_ma_intervals.py`
+- [x] 12.3 Delete `benchmarks/benchmarks/bench_ma_order.py`
+- [x] 12.4 Delete `benchmarks/benchmarks/ma_cases.py`
