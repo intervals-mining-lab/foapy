@@ -157,120 +157,160 @@ The system MUST provide the following functions in `foapy.congenerics.characteri
 
 ``` py linenums="1"
 import foapy
+import numpy as np
 
-X = []
-X.append([1, 1, 4, 4])
-X.append([3, 1, 3])
-X.append([5, 3, 1])
+source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+CS = foapy.congenerics.sequences(source)
+chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+intervals = [row[row != 0] for row in tuples]
 
-result = foapy.congenerics.characteristics.volumes(X)
+print(intervals)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+result = foapy.congenerics.characteristics.volumes(intervals)
 print(result)
-# [16  9 15]
+# [4 2 4 6]
 ```
 
 #### Scenario: arithmetic_means returns per-symbol arithmetic mean array
 
 ``` py linenums="1"
 import foapy
+import numpy as np
 
-X = []
-X.append([1, 1, 4, 4])
-X.append([3, 1, 3])
-X.append([5, 3, 1])
+source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+CS = foapy.congenerics.sequences(source)
+chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+intervals = [row[row != 0] for row in tuples]
 
-result = foapy.congenerics.characteristics.arithmetic_means(X)
+print(intervals)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+result = foapy.congenerics.characteristics.arithmetic_means(intervals)
 print(result)
-# [2.5 2.333 3]
+# [1.66666667 2.         4.         6.        ]
 ```
 
 #### Scenario: identifying_informations returns per-symbol log2-of-mean array
 
 ``` py linenums="1"
 import foapy
+import numpy as np
 
-X = []
-X.append([1, 1, 4, 4])
-X.append([3, 1, 3])
-X.append([5, 3, 1])
+source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+CS = foapy.congenerics.sequences(source)
+chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+intervals = [row[row != 0] for row in tuples]
 
-result = foapy.congenerics.characteristics.identifying_informations(X)
+print(intervals)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+result = foapy.congenerics.characteristics.identifying_informations(intervals)
 print(result)
-# [1.32192809 1.22239242 1.5849625 ]
+# [0.73696559 1.         2.         2.5849625 ]
 ```
 
 #### Scenario: periodicities returns per-symbol geometric/arithmetic mean ratio array
 
 ``` py linenums="1"
 import foapy
+import numpy as np
 
-X = []
-X.append([1, 1, 4, 4])
-X.append([3, 1, 3])
-X.append([5, 3, 1])
+source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+CS = foapy.congenerics.sequences(source)
+chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+intervals = [row[row != 0] for row in tuples]
 
-result = foapy.congenerics.characteristics.periodicities(X)
+print(intervals)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+result = foapy.congenerics.characteristics.periodicities(intervals)
 print(result)
-# [0.8        0.8914645  0.82207069]
+# [0.95244121 1.         1.         1.        ]
 ```
 
 #### Scenario: depths returns per-symbol sum-of-log2 array
 
 ``` py linenums="1"
 import foapy
+import numpy as np
 
-X = []
-X.append([1, 1, 4, 4])
-X.append([3, 1, 3])
-X.append([5, 3, 1])
+source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+CS = foapy.congenerics.sequences(source)
+chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+intervals = [row[row != 0] for row in tuples]
 
-result = foapy.congenerics.characteristics.depths(X)
+print(intervals)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+result = foapy.congenerics.characteristics.depths(intervals)
 print(result)
-# [4.        3.169925  3.9068906]
+# [2.        1.        2.        2.5849625]
 ```
 
 #### Scenario: average_remotenesses returns per-symbol mean-of-log2 array
 
 ``` py linenums="1"
 import foapy
+import numpy as np
 
-X = []
-X.append([1, 1, 4, 4])
-X.append([3, 1, 3])
-X.append([5, 3, 1])
+source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+CS = foapy.congenerics.sequences(source)
+chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+intervals = [row[row != 0] for row in tuples]
 
-result = foapy.congenerics.characteristics.average_remotenesses(X)
+print(intervals)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+result = foapy.congenerics.characteristics.average_remotenesses(intervals)
 print(result)
-# [1.         1.05664167 1.30229687]
+# [0.66666667 1.         2.         2.5849625 ]
 ```
 
 #### Scenario: geometric_means returns per-symbol geometric mean array
 
 ``` py linenums="1"
 import foapy
+import numpy as np
 
-X = []
-X.append([1, 1, 4, 4])
-X.append([3, 1, 3])
-X.append([5, 3, 1])
+source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+CS = foapy.congenerics.sequences(source)
+chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+intervals = [row[row != 0] for row in tuples]
 
-result = foapy.congenerics.characteristics.geometric_means(X)
+print(intervals)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+result = foapy.congenerics.characteristics.geometric_means(intervals)
 print(result)
-# [2.         2.08008382 2.46621207]
+# [1.58740105 2.         4.         6.        ]
 ```
 
 #### Scenario: uniformities returns per-symbol identifying_information minus average_remoteness array
 
 ``` py linenums="1"
 import foapy
+import numpy as np
 
-X = []
-X.append([1, 1, 4, 4])
-X.append([3, 1, 3])
-X.append([5, 3, 1])
+source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+CS = foapy.congenerics.sequences(source)
+chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+intervals = [row[row != 0] for row in tuples]
 
-result = foapy.congenerics.characteristics.uniformities(X)
+print(intervals)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+result = foapy.congenerics.characteristics.uniformities(intervals)
 print(result)
-# [0.32192809 0.16575075 0.28266564]
+# [0.07030559 0.         0.         0.        ]
 ```
 
 #### Scenario: Per-symbol array has one entry per congeneric group

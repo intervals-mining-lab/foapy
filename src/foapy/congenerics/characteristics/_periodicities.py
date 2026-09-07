@@ -37,17 +37,22 @@ def periodicities(intervals, dtype=None):
 
     ``` py linenums="1"
     import foapy
+    import numpy as np
 
-    X = []
-    X.append([1, 1, 4, 4])
-    X.append([3, 1, 3])
-    X.append([5, 3, 1])
+    source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+    CS = foapy.congenerics.sequences(source)
+    chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+    tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+    intervals = [row[row != 0] for row in tuples]
 
-    result = foapy.congenerics.characteristics.periodicities(X)
+    print(intervals)
+    # [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+    result = foapy.congenerics.characteristics.periodicities(intervals)
     print(result)
-    # [0.8        0.8914645  0.82207069]
+    # [0.95244121 1.         1.         1.        ]
     ```
-    """  # noqa: W605
+    """  # noqa: W605, E501
 
     from foapy.congenerics.characteristics import arithmetic_means, geometric_means
 

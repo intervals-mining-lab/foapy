@@ -34,17 +34,22 @@ def depths(intervals, dtype=None):
 
     ``` py linenums="1"
     import foapy
+    import numpy as np
 
-    X = []
-    X.append([1, 1, 4, 4])
-    X.append([3, 1, 3])
-    X.append([5, 3, 1])
+    source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+    CS = foapy.congenerics.sequences(source)
+    chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+    tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+    intervals = [row[row != 0] for row in tuples]
 
-    result = foapy.congenerics.characteristics.depths(X)
+    print(intervals)
+    # [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+    result = foapy.congenerics.characteristics.depths(intervals)
     print(result)
-    # [4.        3.169925  3.9068906]
+    # [2.        1.        2.        2.5849625]
     ```
-    """  # noqa: W605
+    """  # noqa: W605, E501
     return np.asanyarray(
         [np.sum(np.log2(line, dtype=dtype), dtype=dtype) for line in intervals]
     )

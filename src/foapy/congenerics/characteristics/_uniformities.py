@@ -37,17 +37,22 @@ def uniformities(intervals, dtype=None):
 
     ``` py linenums="1"
     import foapy
+    import numpy as np
 
-    X = []
-    X.append([1, 1, 4, 4])
-    X.append([3, 1, 3])
-    X.append([5, 3, 1])
+    source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
+    CS = foapy.congenerics.sequences(source)
+    chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+    tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
+    intervals = [row[row != 0] for row in tuples]
 
-    result = foapy.congenerics.characteristics.uniformities(X)
+    print(intervals)
+    # [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+    result = foapy.congenerics.characteristics.uniformities(intervals)
     print(result)
-    # [0.32192809 0.16575075 0.28266564]
+    # [0.07030559 0.         0.         0.        ]
     ```
-    """  # noqa: W605
+    """  # noqa: W605, E501
 
     from foapy.congenerics.characteristics import (
         average_remotenesses,
