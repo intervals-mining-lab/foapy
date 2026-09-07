@@ -2,7 +2,7 @@ import os
 
 from asv_runner.benchmarks.mark import skip_params_if
 
-from foapy.congenerics import intervals_chains
+from foapy.congenerics import intervals_chains, sequences
 
 from .cases import best_case, dna_case, normal_case, worst_case
 
@@ -38,13 +38,14 @@ class CongenericsIntervalsChainsSuite:
             self.data = normal_case(length)
         else:
             self.data = worst_case(length)
+        self.CS = sequences(self.data)
         self.binding = binding
         self.chain_mode = chain_mode
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def time_intervals_chains(self, length, case, binding, chain_mode):
-        intervals_chains(self.data, self.binding, self.chain_mode)
+        intervals_chains(self.CS, self.binding, self.chain_mode)
 
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def peakmem_intervals_chains(self, length, case, binding, chain_mode):
-        return intervals_chains(self.data, self.binding, self.chain_mode)
+        return intervals_chains(self.CS, self.binding, self.chain_mode)

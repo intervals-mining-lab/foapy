@@ -1,11 +1,13 @@
 import numpy as np
-from numpy.typing import ArrayLike
+import numpy.ma as ma
 
 from foapy.core._tuple_mode import tuple_mode as tuple_mode_cls
 
-from ._intervals_chains import _chain_work_frame, _from_work_frame
-from ._intervals_chains import _validate as _validate_chain_args
-from ._sequences import sequences
+from ._intervals_chains import (
+    _from_work_frame,
+    _occurrence_positions,
+    _validate_binding,
+)
 
 
 def _validate_tuple_mode(tuple_mode: int) -> None:
@@ -54,26 +56,23 @@ def _pack_rows(
 
 
 def intervals_tuples(
-    X: ArrayLike, binding: int, chain_mode: int, tuple_mode: int
+    chains: ma.MaskedArray, binding: int, tuple_mode: int
 ) -> np.ndarray:
     """
     Compute the congeneric interval tuples for each row of the decomposition,
     padded to a common width.
 
     Row j (before padding) is `foapy.partials.intervals_tuple` applied to row
-    j of :func:`foapy.congenerics.intervals_chains`. ``chain_mode`` and
-    ``tuple_mode`` are independent parameters: ``chain_mode`` selects how the
-    chain is built, ``tuple_mode`` selects the boundary strategy applied to
-    it, matching ``foapy.partials.intervals_chain``/``intervals_tuple``.
+    j of `chains`. ``binding`` must match the binding used to produce
+    `chains`.
 
     Parameters
     ----------
-    X : array_like or numpy.ma.MaskedArray
-        1-D sequence (plain or masked). Masked positions are gaps.
+    chains : numpy.ma.MaskedArray, shape (m, l)
+        Output of :func:`foapy.congenerics.intervals_chains`.
     binding : int
-        ``binding.start`` or ``binding.end``.
-    chain_mode : int
-        ``chain_mode.boundary`` or ``chain_mode.cycle``.
+        ``binding.start`` or ``binding.end``. Must match the binding used to
+        produce `chains`.
     tuple_mode : int
         ``tuple_mode.lossy``, ``tuple_mode.normal``, or ``tuple_mode.redundant``.
 
@@ -85,10 +84,8 @@ def intervals_tuples(
 
     Raises
     ------
-    Not1DArrayException
-        When X has more than one dimension.
     ValueError
-        When ``binding``, ``chain_mode``, or ``tuple_mode`` is invalid.
+        When ``binding`` or ``tuple_mode`` is invalid.
 
     Examples
     --------
@@ -97,10 +94,13 @@ def intervals_tuples(
     import foapy
 
     source = ['a', 'b', 'a', 'c']
+    CS = foapy.congenerics.sequences(source)
+    chains = foapy.congenerics.intervals_chains(
+        CS, foapy.binding.start, foapy.chain_mode.boundary
+    )
     result = foapy.congenerics.intervals_tuples(
-        source,
+        chains,
         foapy.binding.start,
-        foapy.chain_mode.boundary,
         foapy.tuple_mode.normal,
     )
     print(result)
@@ -109,20 +109,21 @@ def intervals_tuples(
     #  [4 0]]
     ```
     """
-    _validate_chain_args(binding, chain_mode)
+    _validate_binding(binding)
     _validate_tuple_mode(tuple_mode)
 
-    CS = sequences(X)
-    chain_work, valid_work, is_first_work, last_valid_per_row, length = (
-        _chain_work_frame(CS, binding, chain_mode)
-    )
+    valid_final = ~ma.getmaskarray(chains)
+    data_final = np.asarray(ma.filled(chains, 0))
+    length = chains.shape[1]
 
     if tuple_mode == tuple_mode_cls.normal:
         # Normal mode always uses natural (un-flipped) column order,
         # regardless of binding — unlike lossy/redundant below.
-        values = _from_work_frame(chain_work, binding)
-        keep = _from_work_frame(valid_work, binding)
-        return _pack_rows(values, keep)
+        return _pack_rows(data_final, valid_final)
+
+    valid_work = _from_work_frame(valid_final, binding)
+    chain_work = _from_work_frame(data_final, binding)
+    _, is_first_work, last_valid_per_row = _occurrence_positions(valid_work)
 
     if tuple_mode == tuple_mode_cls.lossy:
         keep = valid_work & ~is_first_work

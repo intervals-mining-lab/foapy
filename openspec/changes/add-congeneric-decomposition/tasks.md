@@ -67,3 +67,14 @@
 - [x] 11.3 Update `tests/test_congenerics_alphabet.py`/`test_congenerics_order.py` to compute `CS = sequences(X)` first and pass `CS`; update `test_congenerics_sequences.py`'s cross-check accordingly
 - [x] 11.4 Update the docs example (`docs/fundamentals/ideas/congeneric_decomposition.md`) and `benchmarks/benchmarks/bench_congenerics_order.py` to call `alphabet(CS)`/`order(CS)` instead of the raw source
 - [x] 11.5 Re-run `tox -e default` and lint; confirm 100% coverage on `_alphabet.py`/`_order.py` under the new contract
+
+## 12. `order` gains `return_alphabet`; `intervals_chains`/`intervals_tuples` converge on the D2.1 pattern (D2.2)
+
+- [x] 12.1 Change `_order.py`: `order(CS, return_alphabet=False)` returns `(order, alphabet)` via `foapy.congenerics.alphabet(CS)` when `True`, mirroring `foapy.core.order`/`foapy.partials.order`'s convention; add a docstring example reconstructing `CS` from `(order, alphabet)`
+- [x] 12.2 Change `_intervals_chains.py`: `intervals_chains(CS, binding, chain_mode)` takes `CS` directly instead of `S`/recomputing `sequences(S)` internally — only `CS`'s mask is read, so `sequences()`'s or `order()`'s output both work
+- [x] 12.3 Change `_intervals_tuples.py`: `intervals_tuples(chains, binding, tuple_mode)` takes `intervals_chains()`'s output directly, dropping `chain_mode` (already baked into `chains`'s values); factor `_chain_work_frame`'s mask-only bookkeeping into a shared `_occurrence_positions` helper reused by both modules; add `_validate_binding` for the now binding-only validation `intervals_tuples` needs
+- [x] 12.4 Change `_intervals_distributions.py`: `intervals_distributions(CS, binding, chain_mode, tuple_mode)` takes `CS` and composes `intervals_chains(CS, binding, chain_mode)` then `intervals_tuples(chains, binding, tuple_mode)` internally; signature parameter count unchanged, but `S` semantics replaced by `CS`
+- [x] 12.5 Update `tests/test_congenerics_intervals_chains.py`, `test_congenerics_intervals_tuples.py`, `test_congenerics_intervals_distributions.py`, and `test_congenerics_order.py` for the new signatures; add coverage for `order`'s `return_alphabet` and for `intervals_chains` accepting `order()`'s output
+- [x] 12.6 Update `benchmarks/benchmarks/bench_congenerics_intervals_chains.py` to precompute `CS` in `setup()` instead of passing raw source data
+- [ ] 12.7 Update `docs/fundamentals/ideas/congeneric_decomposition.md`'s API-shape note (currently still says "`intervals_chains`/`intervals_tuples`/`intervals_distributions` take the original `source` and derive `CS` internally") to describe the final chained-input contract — attempted once, explicitly rolled back by the user pending a separate pass
+- [x] 12.8 Re-run `tox -e default`; confirm all suites pass under the new contract

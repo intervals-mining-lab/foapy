@@ -31,25 +31,37 @@ The system MUST provide `foapy.congenerics.alphabet(CS)`, taking `CS` (the outpu
 - **THEN** it returns an empty array
 
 ### Requirement: Congeneric order per row
-The system MUST provide `foapy.congenerics.order(CS)`, taking `CS` (the output of `foapy.congenerics.sequences`) directly — not the original sequence — and returning a `numpy.ma.MaskedArray` of shape `(m, l)` whose mask matches `CS`'s mask exactly. Per the Congeneric Order definition, every non-masked value MUST be `0` (the sole alphabet index of a single-symbol row).
+The system MUST provide `foapy.congenerics.order(CS, return_alphabet=False)`, taking `CS` (the output of `foapy.congenerics.sequences`) directly — not the original sequence — and returning a `numpy.ma.MaskedArray` of shape `(m, l)` whose mask matches `CS`'s mask exactly. Per the Congeneric Order definition, every non-masked value MUST be `0` (the sole alphabet index of a single-symbol row). When `return_alphabet=True`, it MUST additionally return `foapy.congenerics.alphabet(CS)`, matching `foapy.core.order`/`foapy.partials.order`'s `return_alphabet` convention.
 
 #### Scenario: Every row's order is degenerate
 - **WHEN** `order(CS)` is called where `CS = sequences(S)` for any `S`
 - **THEN** every non-masked entry in the result equals `0`, and the mask matches `CS`'s mask exactly
 
+#### Scenario: return_alphabet returns the row labels alongside the order
+- **WHEN** `order(CS, True)` is called
+- **THEN** it returns a `(order, alphabet)` tuple where `order` is identical to `order(CS, False)` and `alphabet` equals `foapy.congenerics.alphabet(CS)`
+
+#### Scenario: CS is reconstructible from order and alphabet
+- **WHEN** `order, alphabet = order(CS, True)` for some `CS`
+- **THEN** broadcasting `alphabet[j]` across row `j` and keeping only the positions where `order` (equivalently `CS`) is non-masked reproduces `CS` exactly
+
 ### Requirement: Congeneric interval chains per row
-The system MUST provide `foapy.congenerics.intervals_chains(S, binding, chain_mode)`, returning a `numpy.ma.MaskedArray` of shape `(m, l)` where row `j` equals `foapy.partials.intervals_chain(CS[j], binding, chain_mode)` and `CS = foapy.congenerics.sequences(S)`. Invalid `binding` or `chain_mode` values MUST raise `ValueError`, matching `foapy.partials.intervals_chain`.
+The system MUST provide `foapy.congenerics.intervals_chains(CS, binding, chain_mode)`, taking `CS` directly — not the original sequence — and returning a `numpy.ma.MaskedArray` of shape `(m, l)` where row `j` equals `foapy.partials.intervals_chain(CS[j], binding, chain_mode)`. Only `CS`'s mask MUST matter to the result, so `CS` MAY be either `foapy.congenerics.sequences()`'s or `foapy.congenerics.order()`'s output. Invalid `binding` or `chain_mode` values MUST raise `ValueError`, matching `foapy.partials.intervals_chain`.
 
 #### Scenario: Row-wise parity with partials.intervals_chain
-- **WHEN** `intervals_chains(S, binding, chain_mode)` is called
-- **THEN** row `j` of the result equals `foapy.partials.intervals_chain(foapy.congenerics.sequences(S)[j], binding, chain_mode)` for every `j`
+- **WHEN** `intervals_chains(CS, binding, chain_mode)` is called where `CS = foapy.congenerics.sequences(S)`
+- **THEN** row `j` of the result equals `foapy.partials.intervals_chain(CS[j], binding, chain_mode)` for every `j`
+
+#### Scenario: order()'s output is an equally valid input
+- **WHEN** `intervals_chains(CS, binding, chain_mode)` and `intervals_chains(foapy.congenerics.order(CS), binding, chain_mode)` are both called for the same `CS`
+- **THEN** the two results are identical
 
 #### Scenario: Invalid binding or chain mode
 - **WHEN** `intervals_chains()` receives an unsupported `binding` or `chain_mode`
 - **THEN** it raises `ValueError`
 
 ### Requirement: Congeneric interval tuples, padded to a common width
-The system MUST provide `foapy.congenerics.intervals_tuples(S, binding, chain_mode, tuple_mode)`, returning a plain `numpy.ndarray` of shape `(m, x)` and dtype `numpy.intp`, where `x` is the maximum length across the `m` per-row calls to `foapy.partials.intervals_tuple` on `foapy.congenerics.intervals_chains(S, binding, chain_mode)`'s rows. `chain_mode` and `tuple_mode` MUST be accepted as independent parameters — matching `foapy.partials`, where `intervals_chain` takes `chain_mode` and `intervals_tuple` takes an already-built chain plus `tuple_mode`, so neither parameter can be inferred from the other. Rows shorter than `x` MUST be right-padded with `0`.
+The system MUST provide `foapy.congenerics.intervals_tuples(chains, binding, tuple_mode)`, taking `chains` — the output of `foapy.congenerics.intervals_chains` — directly, and returning a plain `numpy.ndarray` of shape `(m, x)` and dtype `numpy.intp`, where `x` is the maximum length across the `m` per-row calls to `foapy.partials.intervals_tuple` on `chains`'s rows. `binding` MUST match the binding used to produce `chains`. Rows shorter than `x` MUST be right-padded with `0`.
 
 #### Scenario: Rows are padded to the widest row
 - **WHEN** `intervals_tuples()` produces per-row tuples of differing lengths
@@ -57,18 +69,18 @@ The system MUST provide `foapy.congenerics.intervals_tuples(S, binding, chain_mo
 
 #### Scenario: Row content matches partials.intervals_tuple before padding
 - **WHEN** row `j`'s unpadded tuple has length `k`
-- **THEN** the first `k` values of row `j` in the result equal `foapy.partials.intervals_tuple` applied to that row's chain (built with the given `chain_mode`), and the remaining `x - k` values are `0`
+- **THEN** the first `k` values of row `j` in the result equal `foapy.partials.intervals_tuple` applied to `chains[j]`, and the remaining `x - k` values are `0`
 
-#### Scenario: Chain mode changes the result independently of tuple mode
-- **WHEN** `intervals_tuples()` is called with the same `binding` and `tuple_mode` but different `chain_mode` values
-- **THEN** the underlying per-row chains differ accordingly and the results MAY differ, matching `foapy.partials.intervals_chain`'s `chain_mode` semantics
+#### Scenario: Chain mode changes the result via chains, not via a separate parameter
+- **WHEN** `intervals_tuples()` is called with the same `binding` and `tuple_mode` but on `chains` built from different `chain_mode` values
+- **THEN** the results MAY differ, matching `foapy.partials.intervals_chain`'s `chain_mode` semantics, with `chain_mode` never passed to `intervals_tuples()` directly
 
-#### Scenario: Invalid binding, chain mode, or tuple mode
-- **WHEN** `intervals_tuples()` receives an unsupported `binding`, `chain_mode`, or `tuple_mode`
+#### Scenario: Invalid binding or tuple mode
+- **WHEN** `intervals_tuples()` receives an unsupported `binding` or `tuple_mode`
 - **THEN** it raises `ValueError`
 
 ### Requirement: Congeneric interval distributions, padded to a shared global width
-The system MUST provide `foapy.congenerics.intervals_distributions(S, binding, chain_mode, tuple_mode)`, returning a plain `numpy.ndarray` of shape `(m, y)` and dtype `numpy.intp`, where `y` is the maximum interval value found across **all** rows of `foapy.congenerics.intervals_tuples(S, binding, chain_mode, tuple_mode)` (a single shared width, not a per-row maximum). Row `j` MUST equal `foapy.core.intervals_distribution` applied to row `j`'s unpadded tuple, right-padded with `0` to width `y`.
+The system MUST provide `foapy.congenerics.intervals_distributions(CS, binding, chain_mode, tuple_mode)`, taking `CS` directly — not the original sequence — and returning a plain `numpy.ndarray` of shape `(m, y)` and dtype `numpy.intp`, where `y` is the maximum interval value found across **all** rows of `foapy.congenerics.intervals_tuples(foapy.congenerics.intervals_chains(CS, binding, chain_mode), binding, tuple_mode)` (a single shared width, not a per-row maximum). Row `j` MUST equal `foapy.core.intervals_distribution` applied to row `j`'s unpadded tuple, right-padded with `0` to width `y`.
 
 #### Scenario: Width is shared across all rows
 - **WHEN** two different rows have different maximum interval values
