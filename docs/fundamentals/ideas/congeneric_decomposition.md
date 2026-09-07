@@ -135,7 +135,30 @@ could be a part of multiple symbol sequences that have the same order of `E` ele
 
 While keeping the main idea, the congeneric decomposition could be applied, with a flavor, to any type of special case symbolic sequences, such as Order.
 
-<!-- TODO: Add example of congeneric decomposition code -->
+``` py linenums="1"
+import foapy
+
+source = list("INTELLIGENCE")
+CS = foapy.congenerics.sequences(source)
+print(foapy.congenerics.alphabet(CS))
+# ['I' 'N' 'T' 'E' 'L' 'G' 'C']
+print(CS)
+# [['I' -- -- -- -- -- 'I' -- -- -- -- --]
+#  [-- 'N' -- -- -- -- -- -- -- 'N' -- --]
+#  [-- -- 'T' -- -- -- -- -- -- -- -- --]
+#  [-- -- -- 'E' -- -- -- -- 'E' -- -- 'E']
+#  [-- -- -- -- 'L' 'L' -- -- -- -- -- --]
+#  [-- -- -- -- -- -- -- 'G' -- -- -- --]
+#  [-- -- -- -- -- -- -- -- -- -- 'C' --]]
+```
+
+Row `j` of `CS` is the congeneric sequence for `foapy.congenerics.alphabet(CS)[j]`; every non-empty
+position across rows reconstructs `source` exactly once. The rest of the FOA pipeline
+(`order`, `intervals_chain`, `intervals_tuple`, `intervals_distribution`) can be run across every row at once
+via `foapy.congenerics.order`, `intervals_chains`, `intervals_tuples`, and `intervals_distributions`.
+Only `sequences` takes the original `source`. `alphabet`, `order`, and `intervals_chains` take `CS`;
+`intervals_tuples` takes the output of `intervals_chains`; and `intervals_distributions` takes the output
+of `intervals_tuples`.
 
 <style>
 .md-typeset table:not([class]) th {
