@@ -103,15 +103,19 @@ The system MUST provide `foapy.congenerics.intervals_distributions(tuples)`, tak
 - **THEN** `intervals_distributions(tuples)` returns an `(m, 0)` array of dtype `numpy.intp`
 
 ### Requirement: Package boundary
-The system MUST expose exactly `sequences`, `alphabet`, `order`, `intervals_chains`, `intervals_tuples`, and `intervals_distributions` from `foapy.congenerics`. It MUST NOT expose an inverse/reconstruction function in this change, and MUST NOT modify `foapy.core`, `foapy.ma`, or `foapy.partials` behavior.
+The system MUST expose exactly `sequences`, `alphabet`, `order`, `intervals_chains`, `intervals_tuples`, `intervals_distributions`, and `characteristics` from `foapy.congenerics`. The `characteristics` entry MUST be the `foapy.congenerics.characteristics` subpackage. `foapy.congenerics` MUST NOT expose an inverse/reconstruction function. `foapy.ma` is removed and MUST NOT be referenced.
 
 #### Scenario: Submodule-only access
 - **WHEN** a caller imports `foapy.congenerics`
-- **THEN** exactly the six functions above are available from that submodule and are not added as top-level `foapy` functions
+- **THEN** exactly the six pipeline functions plus the `characteristics` subpackage are available, and no individual characteristic functions are added to the `foapy.congenerics` top-level namespace
 
 #### Scenario: No inverse function is present
 - **WHEN** a caller inspects `foapy.congenerics`'s public API
 - **THEN** no reconstruction/inverse function exists in this module
+
+#### Scenario: characteristics subpackage is accessible
+- **WHEN** a caller runs `import foapy.congenerics.characteristics`
+- **THEN** the import succeeds and `foapy.congenerics.characteristics` is the congeneric characteristics subpackage
 
 ### Requirement: Benchmark coverage for the decomposition and order/chain stages
 The benchmark suite MUST measure `foapy.congenerics.sequences`, `foapy.congenerics.order`, and `foapy.congenerics.intervals_chains` for time and peak memory, across multiple input lengths and dataset shapes (at minimum: a single-symbol case, a small fixed alphabet case, and a case where alphabet size scales with input length). Dataset shapes whose row count `m` scales with length MUST be excluded at the largest benchmarked length to keep the suite's memory use bounded.
