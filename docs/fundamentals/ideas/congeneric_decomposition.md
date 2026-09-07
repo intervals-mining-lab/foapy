@@ -156,8 +156,9 @@ Row `j` of `CS` is the congeneric sequence for `foapy.congenerics.alphabet(CS)[j
 position across rows reconstructs `source` exactly once. The rest of the FOA pipeline
 (`order`, `intervals_chain`, `intervals_tuple`, `intervals_distribution`) can be run across every row at once
 via `foapy.congenerics.order`, `intervals_chains`, `intervals_tuples`, and `intervals_distributions`.
-`alphabet` and `order` take `CS` itself as input; `intervals_chains`/`intervals_tuples`/`intervals_distributions`
-take the original `source` and derive `CS` internally.
+Only `sequences` takes the original `source`. `alphabet`, `order`, and `intervals_chains` take `CS`;
+`intervals_tuples` takes the output of `intervals_chains`; and `intervals_distributions` takes `CS`,
+composing the chain and tuple stages internally.
 
 <style>
 .md-typeset table:not([class]) th {
