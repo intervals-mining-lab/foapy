@@ -43,6 +43,16 @@ def regularity(intervals_grouped, dtype=None):
     tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
     intervals_grouped = [row[row != 0] for row in tuples]
 
+    print(intervals_grouped)
+    # [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+    # m = 4
+    # n_0 = 3
+    # n_1 = 1
+    # n_2 = 1
+    # n_3 = 1
+    # n = 6
+
     result = foapy.congenerics.characteristics.regularity(intervals_grouped)
     print(result)
     # 0.9759306487558016

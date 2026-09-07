@@ -34,6 +34,16 @@ chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain
 tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
 intervals_grouped = [row[row != 0] for row in tuples]
 
+print(intervals_grouped)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+# m = 4
+# n_0 = 3
+# n_1 = 1
+# n_2 = 1
+# n_3 = 1
+# n = 6
+
 result = foapy.congenerics.characteristics.identifying_information(intervals_grouped)
 print(result)
 # 1.299309880536629
@@ -54,6 +64,16 @@ CS = foapy.congenerics.sequences(source)
 chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
 tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
 intervals_grouped = [row[row != 0] for row in tuples]
+
+print(intervals_grouped)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+# m = 4
+# n_0 = 3
+# n_1 = 1
+# n_2 = 1
+# n_3 = 1
+# n = 6
 
 result = foapy.congenerics.characteristics.descriptive_information(intervals_grouped)
 print(result)
@@ -76,6 +96,16 @@ chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain
 tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
 intervals_grouped = [row[row != 0] for row in tuples]
 
+print(intervals_grouped)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+# m = 4
+# n_0 = 3
+# n_1 = 1
+# n_2 = 1
+# n_3 = 1
+# n = 6
+
 result = foapy.congenerics.characteristics.regularity(intervals_grouped)
 print(result)
 # 0.9759306487558016
@@ -96,6 +126,16 @@ CS = foapy.congenerics.sequences(source)
 chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
 tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
 intervals_grouped = [row[row != 0] for row in tuples]
+
+print(intervals_grouped)
+# [array([1, 2, 2]), array([2]), array([4]), array([6])]
+
+# m = 4
+# n_0 = 3
+# n_1 = 1
+# n_2 = 1
+# n_3 = 1
+# n = 6
 
 result = foapy.congenerics.characteristics.uniformity(intervals_grouped)
 print(result)
