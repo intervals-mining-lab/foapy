@@ -157,8 +157,8 @@ position across rows reconstructs `source` exactly once. The rest of the FOA pip
 (`order`, `intervals_chain`, `intervals_tuple`, `intervals_distribution`) can be run across every row at once
 via `foapy.congenerics.order`, `intervals_chains`, `intervals_tuples`, and `intervals_distributions`.
 Only `sequences` takes the original `source`. `alphabet`, `order`, and `intervals_chains` take `CS`;
-`intervals_tuples` takes the output of `intervals_chains`; and `intervals_distributions` takes `CS`,
-composing the chain and tuple stages internally.
+`intervals_tuples` takes the output of `intervals_chains`; and `intervals_distributions` takes the output
+of `intervals_tuples`.
 
 <style>
 .md-typeset table:not([class]) th {

@@ -1,7 +1,6 @@
 from unittest import TestCase
 
 import numpy as np
-import pytest
 
 from foapy import binding, chain_mode, tuple_mode
 from foapy.congenerics import intervals_chains as congenerics_intervals_chains
@@ -13,11 +12,11 @@ from foapy.core import intervals_distribution as core_intervals_distribution
 
 class TestCongenericsIntervalsDistributions(TestCase):
     """
-    Test foapy.congenerics.intervals_distributions(CS, binding, chain_mode,
-    tuple_mode).
+    Test foapy.congenerics.intervals_distributions(tuples).
 
-    CS is the output of foapy.congenerics.sequences(X). Width is shared
-    across all rows: the maximum interval value found in any row. Rows whose
+    tuples is the output of foapy.congenerics.intervals_tuples(chains,
+    binding, tuple_mode). Width is shared across all rows: the maximum
+    interval value found in any row. Input padding is ignored, and rows whose
     own maximum is smaller are right-padded with 0.
     """
 
@@ -39,9 +38,9 @@ class TestCongenericsIntervalsDistributions(TestCase):
                             data=data, binding=b, chain_mode=cm, tuple_mode=tm
                         ):
                             CS = congenerics_sequences(data)
-                            result = intervals_distributions(CS, b, cm, tm)
                             chains = congenerics_intervals_chains(CS, b, cm)
                             tuples = congenerics_intervals_tuples(chains, b, tm)
+                            result = intervals_distributions(tuples)
                             rows = [row[row != 0] for row in tuples]
                             expected_dists = [
                                 core_intervals_distribution(row) for row in rows
@@ -60,30 +59,29 @@ class TestCongenericsIntervalsDistributions(TestCase):
         # 'a' occurs with interval spread 1..2, 'c' is a singleton
         # (max interval much larger) — 'a' row must be zero-padded to match.
         CS = congenerics_sequences(["a", "b", "a", "c"])
-        result = intervals_distributions(
-            CS, binding.start, chain_mode.boundary, tuple_mode.normal
-        )
+        chains = congenerics_intervals_chains(CS, binding.start, chain_mode.boundary)
+        tuples = congenerics_intervals_tuples(chains, binding.start, tuple_mode.normal)
+        result = intervals_distributions(tuples)
         row_a = result[0]
         assert row_a[-1] == 0
 
-    def test_invalid_binding_raises(self):
-        CS = congenerics_sequences(["a", "b"])
-        with pytest.raises(ValueError):
-            intervals_distributions(CS, 999, chain_mode.boundary, tuple_mode.normal)
-
-    def test_invalid_chain_mode_raises(self):
-        CS = congenerics_sequences(["a", "b"])
-        with pytest.raises(ValueError):
-            intervals_distributions(CS, binding.start, 999, tuple_mode.normal)
-
-    def test_invalid_tuple_mode_raises(self):
-        CS = congenerics_sequences(["a", "b"])
-        with pytest.raises(ValueError):
-            intervals_distributions(CS, binding.start, chain_mode.boundary, 999)
+    def test_input_padding_is_ignored(self):
+        tuples = np.array([[1, 2, 0], [3, 0, 0]], dtype=np.intp)
+        result = intervals_distributions(tuples)
+        np.testing.assert_array_equal(
+            result,
+            np.array([[1, 1, 0], [0, 0, 1]], dtype=np.intp),
+        )
 
     def test_empty_input(self):
         CS = congenerics_sequences([])
-        result = intervals_distributions(
-            CS, binding.start, chain_mode.boundary, tuple_mode.normal
-        )
+        chains = congenerics_intervals_chains(CS, binding.start, chain_mode.boundary)
+        tuples = congenerics_intervals_tuples(chains, binding.start, tuple_mode.normal)
+        result = intervals_distributions(tuples)
         assert result.shape == (0, 0)
+
+    def test_rows_with_only_padding_have_zero_width(self):
+        tuples = np.zeros((2, 3), dtype=np.intp)
+        result = intervals_distributions(tuples)
+        assert result.shape == (2, 0)
+        assert result.dtype == np.intp

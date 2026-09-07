@@ -78,3 +78,10 @@
 - [x] 12.6 Update `benchmarks/benchmarks/bench_congenerics_intervals_chains.py` to precompute `CS` in `setup()` instead of passing raw source data
 - [x] 12.7 Update `docs/fundamentals/ideas/congeneric_decomposition.md`'s API-shape note (currently still says "`intervals_chains`/`intervals_tuples`/`intervals_distributions` take the original `source` and derive `CS` internally") to describe the final chained-input contract — attempted once, explicitly rolled back by the user pending a separate pass
 - [x] 12.8 Re-run `tox -e default`; confirm all suites pass under the new contract
+
+## 13. `intervals_distributions` takes `intervals_tuples` output directly (D2.2 finalization)
+
+- [x] 13.1 Change `src/foapy/congenerics/_intervals_distributions.py` to `intervals_distributions(tuples)`: remove internal chain/tuple construction, treat `0` as structural padding, and compute the shared-width row histograms from nonzero tuple entries while preserving `(m, 0)` for input with no real interval values
+- [x] 13.2 Update `tests/test_congenerics_intervals_distributions.py` to build the explicit `CS → chains → tuples → distributions` pipeline and cover direct tuple-stage input, shared global width, ignored input padding, output zero-count semantics, and empty input
+- [x] 13.3 Update `intervals_distributions`'s inline docstring and runnable example, plus `docs/fundamentals/ideas/congeneric_decomposition.md`'s API-shape note, to show `intervals_distributions(tuples)` with `tuples` produced by `foapy.congenerics.intervals_tuples()`
+- [x] 13.4 Run the full test suite (`tox -e default`), lint (`black`/`isort`/`flake8`), and documentation build (`tox -e docs`) under the final chained-input contract
