@@ -88,6 +88,20 @@ nav:
     - "intervals_chains": references/congenerics/intervals_chains.md
     - "intervals_tuples": references/congenerics/intervals_tuples.md
     - "intervals_distributions": references/congenerics/intervals_distributions.md
+    - "characteristics":
+      - references/congenerics/characteristics/index.md
+      - "arithmetic_means": references/congenerics/characteristics/arithmetic_means.md
+      - "average_remotenesses": references/congenerics/characteristics/average_remotenesses.md
+      - "depths": references/congenerics/characteristics/depths.md
+      - "descriptive_information": references/congenerics/characteristics/descriptive_information.md
+      - "geometric_means": references/congenerics/characteristics/geometric_means.md
+      - "identifying_information": references/congenerics/characteristics/identifying_information.md
+      - "identifying_informations": references/congenerics/characteristics/identifying_informations.md
+      - "periodicities": references/congenerics/characteristics/periodicities.md
+      - "regularity": references/congenerics/characteristics/regularity.md
+      - "uniformities": references/congenerics/characteristics/uniformities.md
+      - "uniformity": references/congenerics/characteristics/uniformity.md
+      - "volumes": references/congenerics/characteristics/volumes.md
   - "foapy.order": references/order.md
   - "foapy.binding": references/binding.md
   - "foapy.chain_mode": references/chain_mode.md
@@ -95,34 +109,13 @@ nav:
   - "foapy.intervals_chain": references/intervals_chain.md
   - "foapy.intervals_tuple": references/intervals_tuple.md
   - "foapy.intervals_distribution": references/intervals_distribution.md
-  - "foapy.ma":
-    - references/ma/index.md
-    - "alphabet": references/ma/alphabet.md
-    - "order": references/ma/order.md
-    - "intervals_chain": references/ma/intervals_chain.md
-    - "intervals_tuple": references/ma/intervals_tuple.md
-    - "intervals_distribution": references/ma/intervals_distribution.md
   - "foapy.characteristics":
     - references/characteristics/index.md
     - "arithmetic_mean": references/characteristics/arithmetic_mean.md
     - "average_remoteness": references/characteristics/average_remoteness.md
     - "depth": references/characteristics/depth.md
-    - "descriptive_information": references/characteristics/descriptive_information.md
     - "geometric_mean": references/characteristics/geometric_mean.md
-    - "identifying_information": references/characteristics/identifying_information.md
-    - "regularity": references/characteristics/regularity.md
-    - "uniformity": references/characteristics/uniformity.md
     - "volume": references/characteristics/volume.md
-    - "ma":
-      - references/characteristics/ma/index.md
-      - "arithmetic_mean": references/characteristics/ma/arithmetic_mean.md
-      - "average_remoteness": references/characteristics/ma/average_remoteness.md
-      - "depth": references/characteristics/ma/depth.md
-      - "geometric_mean": references/characteristics/ma/geometric_mean.md
-      - "identifying_information": references/characteristics/ma/identifying_information.md
-      - "periodicity": references/characteristics/ma/periodicity.md
-      - "uniformity": references/characteristics/ma/uniformity.md
-      - "volume": references/characteristics/ma/volume.md
   - "foapy.exceptions":
     - references/exceptions/index.md
     - "InconsistentOrderException": references/exceptions/inconsistent_order.md

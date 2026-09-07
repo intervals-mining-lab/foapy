@@ -4,7 +4,7 @@ import numpy as np
 from helpers.intervals import intervals, mode
 from helpers.ma_intervals import intervals as ma_intervals
 
-import foapy.ma as ma
+import foapy.congenerics as congenerics
 from foapy import binding, order
 
 
@@ -42,7 +42,7 @@ class CharacteristicsInfromationalTest(CharacteristicsTest):
 
     def AssertCase(self, X, binding, mode, expected, dtype=None):
         X = np.array(X)
-        order_seq = ma.order(X)
+        order_seq = congenerics.sequences(X)
         intervals_seq = ma_intervals(order_seq, binding, mode)
         exists = self.target(intervals_seq, dtype)
 
@@ -61,7 +61,7 @@ class MACharacteristicsTest(TestCase):
         pass
 
     def AssertCase(self, X, binding, mode, expected, dtype=None):
-        order_seq = ma.order(X)
+        order_seq = congenerics.sequences(X)
         intervals_seq = ma_intervals(order_seq, binding, mode)
         expected = np.array(expected)
         exists = self.target(intervals_seq, dtype)
@@ -80,5 +80,6 @@ class MACharacteristicsTest(TestCase):
     def GetPrecision(self, length, dtype=None):
         alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
         X = np.random.choice(alphabet, length)
-        intervals_seq = ma_intervals(X, binding.start, mode.normal)
+        order_seq = congenerics.sequences(X)
+        intervals_seq = ma_intervals(order_seq, binding.start, mode.normal)
         return self.target(intervals_seq, dtype)

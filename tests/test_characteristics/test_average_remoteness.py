@@ -3,9 +3,10 @@ from helpers.intervals import intervals, mode
 from helpers.ma_intervals import intervals as intervals_ma
 from test_characteristics.characterisitcs_test import CharacteristicsTest
 
+import foapy.congenerics as congenerics
 from foapy import binding, order
-from foapy.characteristics import average_remoteness, identifying_information
-from foapy.ma import order as order_ma
+from foapy.characteristics import average_remoteness
+from foapy.congenerics.characteristics import identifying_information
 
 
 class Test_average_remoteness(CharacteristicsTest):
@@ -177,7 +178,7 @@ class Test_average_remoteness(CharacteristicsTest):
 
     def AssertInEquality(self, X):
         order_seq = order(X)
-        ma_order_seq = order_ma(X)
+        ma_order_seq = congenerics.sequences(X)
 
         for b in [binding.start, binding.end]:
             for m in [mode.lossy, mode.normal, mode.redundant, mode.cycle]:

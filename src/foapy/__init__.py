@@ -40,7 +40,6 @@ else:
     # (experimental label) are not added here, because `from foapy import *`
     # must not raise any warnings - that's too disruptive.
     __foapy_submodules__ = {
-        "ma",
         "exceptions",
         "core",
         "characteristics",
@@ -60,7 +59,7 @@ else:
             "chain_mode",
             "tuple_mode",
         }
-        | {"__version__", "__array_namespace_info__"}
+        | {"__version__"}
     )
 
     def __getattr__(attr):
@@ -78,11 +77,6 @@ else:
             import foapy.exceptions as exceptions
 
             return exceptions
-        if attr == "ma":
-            import foapy.ma as ma
-
-            return ma
-
         if attr == "partials":
             import foapy.partials as partials
 
@@ -101,7 +95,6 @@ else:
         public_symbols = globals().keys() | __foapy_submodules__
         public_symbols += {
             "exceptions",
-            "ma",
             "order",
             "alphabet",
             "binding",
