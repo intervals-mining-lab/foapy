@@ -32,3 +32,23 @@ class TestCongenericsOrder(TestCase):
         CS = congenerics_sequences([])
         result = order(CS)
         assert result.shape == (0, 0)
+
+    def test_return_alphabet_false_by_default(self):
+        X = ["a", "b", "a", "c"]
+        CS = congenerics_sequences(X)
+        result = order(CS)
+        assert not isinstance(result, tuple)
+
+    def test_return_alphabet_true(self):
+        X = ["a", "b", "a", "c"]
+        CS = congenerics_sequences(X)
+        result, alphabet = order(CS, True)
+        assert_array_equal(ma.getmaskarray(result), ma.getmaskarray(CS))
+        assert (result.compressed() == 0).all()
+        assert_array_equal(alphabet, ["a", "b", "c"])
+
+    def test_return_alphabet_empty_input(self):
+        CS = congenerics_sequences([])
+        result, alphabet = order(CS, True)
+        assert result.shape == (0, 0)
+        assert_array_equal(alphabet, [])

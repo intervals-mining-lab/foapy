@@ -43,6 +43,9 @@ def sequences(X: ArrayLike) -> ma.MaskedArray:
     #  [-- 'b' -- --]
     #  [-- -- -- 'c']]
     ```
+
+    See :func:`foapy.congenerics.order` for how to restore this result from
+    `foapy.congenerics.order(CS, True)`'s `order` and `alphabet` outputs.
     """
     ar = ma.asarray(X)
 
