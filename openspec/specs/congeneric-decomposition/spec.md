@@ -84,19 +84,23 @@ The system MUST provide `foapy.congenerics.intervals_tuples(chains, binding, tup
 - **THEN** it raises `ValueError`
 
 ### Requirement: Congeneric interval distributions, padded to a shared global width
-The system MUST provide `foapy.congenerics.intervals_distributions(CS, binding, chain_mode, tuple_mode)`, taking `CS` directly — not the original sequence — and returning a plain `numpy.ndarray` of shape `(m, y)` and dtype `numpy.intp`, where `y` is the maximum interval value found across **all** rows of `foapy.congenerics.intervals_tuples(foapy.congenerics.intervals_chains(CS, binding, chain_mode), binding, tuple_mode)` (a single shared width, not a per-row maximum). Row `j` MUST equal `foapy.core.intervals_distribution` applied to row `j`'s unpadded tuple, right-padded with `0` to width `y`.
+The system MUST provide `foapy.congenerics.intervals_distributions(tuples)`, taking `tuples` — the zero-padded output of `foapy.congenerics.intervals_tuples` — directly and returning a plain `numpy.ndarray` of shape `(m, y)` and dtype `numpy.intp`, where `y` is the maximum nonzero interval value found across **all** rows of `tuples` (a single shared width, not a per-row maximum). Row `j` MUST equal `foapy.core.intervals_distribution` applied to the nonzero values in `tuples[j]`, right-padded with `0` to width `y`. The input's `0` padding MUST be excluded from frequency counts.
+
+#### Scenario: Tuple-stage output is consumed directly
+- **WHEN** `tuples = foapy.congenerics.intervals_tuples(chains, binding, tuple_mode)`
+- **THEN** `intervals_distributions(tuples)` computes every row's interval distribution without separate `binding`, `chain_mode`, or `tuple_mode` parameters
 
 #### Scenario: Width is shared across all rows
 - **WHEN** two different rows have different maximum interval values
 - **THEN** both rows of the result share the same width `y`, equal to the largest interval value found in any row
 
-#### Scenario: Padding value means zero occurrences
-- **WHEN** row `j`'s own maximum interval value is smaller than `y`
-- **THEN** the trailing columns of row `j` are `0`, correctly representing zero occurrences of those interval values in that row
+#### Scenario: Input padding is ignored and output padding means zero occurrences
+- **WHEN** `tuples[j]` contains right-padding `0`s and row `j`'s own maximum interval value is smaller than `y`
+- **THEN** input padding creates no frequency bin, and the trailing columns of output row `j` are `0`, correctly representing zero occurrences of those interval values
 
-#### Scenario: Invalid binding, chain mode, or tuple mode
-- **WHEN** `intervals_distributions()` receives an unsupported `binding`, `chain_mode`, or `tuple_mode`
-- **THEN** it raises `ValueError`
+#### Scenario: No real interval values
+- **WHEN** `tuples` has `m` rows but contains no nonzero interval values
+- **THEN** `intervals_distributions(tuples)` returns an `(m, 0)` array of dtype `numpy.intp`
 
 ### Requirement: Package boundary
 The system MUST expose exactly `sequences`, `alphabet`, `order`, `intervals_chains`, `intervals_tuples`, and `intervals_distributions` from `foapy.congenerics`. It MUST NOT expose an inverse/reconstruction function in this change, and MUST NOT modify `foapy.core`, `foapy.ma`, or `foapy.partials` behavior.
