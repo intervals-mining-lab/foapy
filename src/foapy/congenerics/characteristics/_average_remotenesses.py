@@ -51,6 +51,21 @@ def average_remotenesses(intervals, dtype=None):
     print(result)
     # [0.66666667 1.         2.         2.5849625 ]
     ```
+
+    Calculate the average remotenesses of congeneric intervals of a sequence.
+
+    ``` py linenums="1"
+    import foapy
+
+    X = []
+    X.append([1, 1, 4, 4])
+    X.append([3, 1, 3])
+    X.append([5, 3, 1])
+
+    result = foapy.congenerics.characteristics.average_remotenesses(X)
+    print(result)
+    # [1.         1.05664167 1.30229687]
+    ```
     """  # noqa: W605, E501
 
     from foapy.congenerics.characteristics import depths

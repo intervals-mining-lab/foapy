@@ -44,7 +44,12 @@ def regularity(intervals_grouped, dtype=None):
     intervals_grouped = [row[row != 0] for row in tuples]
 
     print(intervals_grouped)
-    # [array([1, 2, 2]), array([2]), array([4]), array([6])]
+    # [
+    #    array([1, 2, 2]),
+    #    array([2]),
+    #    array([4]),
+    #    array([6])
+    # ]
 
     # m = 4
     # n_0 = 3

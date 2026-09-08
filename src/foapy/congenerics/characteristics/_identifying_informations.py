@@ -52,6 +52,21 @@ def identifying_informations(intervals, dtype=None):
     print(result)
     # [0.73696559 1.         2.         2.5849625 ]
     ```
+
+    Calculate the identifying informations of congeneric intervals of a sequence.
+
+    ``` py linenums="1"
+    import foapy
+
+    X = []
+    X.append([1, 1, 4, 4])
+    X.append([3, 1, 3])
+    X.append([5, 3, 1])
+
+    result = foapy.congenerics.characteristics.identifying_informations(X)
+    print(result)
+    # [1.32192809 1.22239242 1.5849625 ]
+    ```
     """  # noqa: W605, E501
 
     return np.asanyarray(

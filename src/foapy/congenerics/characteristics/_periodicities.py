@@ -52,6 +52,21 @@ def periodicities(intervals, dtype=None):
     print(result)
     # [0.95244121 1.         1.         1.        ]
     ```
+
+    Calculate the periodicities of congeneric intervals of a sequence.
+
+    ``` py linenums="1"
+    import foapy
+
+    X = []
+    X.append([1, 1, 4, 4])
+    X.append([3, 1, 3])
+    X.append([5, 3, 1])
+
+    result = foapy.congenerics.characteristics.periodicities(X)
+    print(result)
+    # [0.8        0.8914645  0.82207069]
+    ```
     """  # noqa: W605, E501
 
     from foapy.congenerics.characteristics import arithmetic_means, geometric_means

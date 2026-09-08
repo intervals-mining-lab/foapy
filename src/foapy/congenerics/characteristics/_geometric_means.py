@@ -51,6 +51,21 @@ def geometric_means(intervals, dtype=None):
     print(result)
     # [1.58740105 2.         4.         6.        ]
     ```
+
+    Calculate the geometric means of congeneric intervals of a sequence.
+
+    ``` py linenums="1"
+    import foapy
+
+    X = []
+    X.append([1, 1, 4, 4])
+    X.append([3, 1, 3])
+    X.append([5, 3, 1])
+
+    result = foapy.congenerics.characteristics.geometric_means(X)
+    print(result)
+    # [2.         2.08008382 2.46621207]
+    ```
     """  # noqa: W605, E501
     return np.asanyarray(
         [

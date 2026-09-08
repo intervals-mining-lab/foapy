@@ -50,6 +50,21 @@ def arithmetic_means(intervals, dtype=None):
     print(result)
     # [1.66666667 2.         4.         6.        ]
     ```
+
+    Calculate the arithmetic means of congeneric intervals of a sequence.
+
+    ``` py linenums="1"
+    import foapy
+
+    X = []
+    X.append([1, 1, 4, 4])
+    X.append([3, 1, 3])
+    X.append([5, 3, 1])
+
+    result = foapy.congenerics.characteristics.arithmetic_means(X)
+    print(result)
+    # [2.5 2.333 3]
+    ```
     """  # noqa: W605, E501
 
     return np.asanyarray(

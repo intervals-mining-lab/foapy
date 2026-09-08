@@ -49,6 +49,21 @@ def depths(intervals, dtype=None):
     print(result)
     # [2.        1.        2.        2.5849625]
     ```
+
+    Calculate the depths of congeneric intervals of a sequence.
+
+    ``` py linenums="1"
+    import foapy
+
+    X = []
+    X.append([1, 1, 4, 4])
+    X.append([3, 1, 3])
+    X.append([5, 3, 1])
+
+    result = foapy.congenerics.characteristics.depths(X)
+    print(result)
+    # [4.        3.169925  3.9068906]
+    ```
     """  # noqa: W605, E501
     return np.asanyarray(
         [np.sum(np.log2(line, dtype=dtype), dtype=dtype) for line in intervals]

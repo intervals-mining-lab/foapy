@@ -51,6 +51,21 @@ def volumes(intervals, dtype=None):
     print(result)
     # [4 2 4 6]
     ```
+
+    Calculate the volumes of congeneric intervals of a sequence.
+
+    ``` py linenums="1"
+    import foapy
+
+    X = []
+    X.append([1, 1, 4, 4])
+    X.append([3, 1, 3])
+    X.append([5, 3, 1])
+
+    result = foapy.congenerics.characteristics.volumes(X)
+    print(result)
+    # [16  9 15]
+    ```
     """  # noqa: W605, E501
 
     return np.asanyarray([np.prod(line, dtype=dtype) for line in intervals])
