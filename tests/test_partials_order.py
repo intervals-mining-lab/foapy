@@ -27,10 +27,13 @@ class TestPartialsOrder(TestCase):
 
     def test_signature_and_annotations(self):
         signature = inspect.signature(order)
-        assert list(signature.parameters) == ["X", "return_alphabet"]
+        assert list(signature.parameters) == ["X", "return_alphabet", "axis"]
         assert signature.parameters["return_alphabet"].default is False
+        assert signature.parameters["axis"].default is None
+        assert signature.parameters["axis"].kind is inspect.Parameter.KEYWORD_ONLY
         assert order.__annotations__["X"] is not None
         assert order.__annotations__["return_alphabet"] is bool
+        assert "axis" in order.__annotations__
         assert "return" in order.__annotations__
 
     # -------------------------------------------------------------------------

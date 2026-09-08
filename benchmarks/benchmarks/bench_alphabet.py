@@ -4,7 +4,7 @@ from asv_runner.benchmarks.mark import skip_params_if
 
 from foapy import alphabet
 
-from .cases import best_case, dna_case, normal_case, worst_case
+from .cases import best_case, dna_case, normal_case, records_case, worst_case
 
 length = [5, 50, 500, 5000, 50000, 500000, 5000000, 50000000]
 skip = [
@@ -42,3 +42,19 @@ class AlphabetSuite:
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def peakmem_alphabet(self, length, case):
         return alphabet(self.data)
+
+
+class AxisAlphabetSuite:
+    params = ([5, 50, 500, 5000, 50000], [2, 8], [0, 1])
+    param_names = ["length", "record_width", "axis"]
+
+    data = None
+
+    def setup(self, length, record_width, axis):
+        self.data = records_case(length, record_width, axis)
+
+    def time_alphabet(self, length, record_width, axis):
+        alphabet(self.data, axis=axis)
+
+    def peakmem_alphabet(self, length, record_width, axis):
+        return alphabet(self.data, axis=axis)

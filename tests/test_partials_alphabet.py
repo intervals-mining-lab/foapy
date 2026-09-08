@@ -145,6 +145,8 @@ class TestPartialsAlphabet(TestCase):
     def test_signature_has_input_and_return_annotations(self):
         signature = inspect.signature(alphabet)
         assert signature.parameters["X"].annotation is not inspect.Parameter.empty
+        assert signature.parameters["axis"].default is None
+        assert signature.parameters["axis"].kind is inspect.Parameter.KEYWORD_ONLY
         assert signature.return_annotation is not inspect.Signature.empty
 
     # -------------------------------------------------------------------------

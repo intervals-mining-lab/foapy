@@ -1,12 +1,14 @@
-import numpy as np
+from typing import Optional
+
 from numpy import ndarray
+from numpy.typing import ArrayLike
 
-from foapy.exceptions import Not1DArrayException
+from foapy.core._factorize import stable_factorize
 
 
-def alphabet(X) -> ndarray:
+def alphabet(X: ArrayLike, *, axis: Optional[int] = None) -> ndarray:
     """
-    Get an alphabet - a list of unique values from an array in order of their first appearance.
+    Get unique sequence elements in order of their first appearance.
 
     The alphabet is constructed by scanning the input array from left to right and adding each new
     unique value encountered. This preserves the order of the first appearance of each element, which
@@ -22,17 +24,24 @@ def alphabet(X) -> ndarray:
     Parameters
     ----------
     X : array_like
-        Array to extract an alphabet from. Must be a 1-dimensional array.
+        Sequence to factorize. With an explicit ``axis``, each complete
+        orthogonal slice indexed along that axis is one sequence element.
+    axis : int, optional
+        Sequence axis. If omitted, ``X`` must be 1-dimensional. Negative
+        axes follow NumPy conventions.
 
     Returns
     -------
     : ndarray
-        Alphabet of X - array of unique values in order of their first appearance
+        Unique elements in first-appearance order. For an explicit axis, the
+        result has the same rank as ``X`` and only that axis changes length.
 
     Raises
     -------
     Not1DArrayException
-        When X parameter is not a 1-dimensional array
+        When ``X`` is scalar, or is multidimensional without an explicit axis.
+    numpy.exceptions.AxisError
+        When an explicit axis is out of range.
 
     Examples
     --------
@@ -57,30 +66,38 @@ def alphabet(X) -> ndarray:
     # []
     ```
 
-    Getting an alphabet from an array with more than 1 dimension is not allowed:
+    Rows can be treated as complete elements by selecting axis 0:
 
     ``` py linenums="1"
+    import numpy as np
     import foapy
-    source = [[[1], [3]], [[6], [9]], [[6], [3]]]
-    alphabet = foapy.alphabet(source)
-    # Not1DArrayException: {'message': 'Incorrect array form. Expected d1 array, exists 3'}
+    source = np.array([[2, 1], [3, 4], [2, 1]])
+    result = foapy.alphabet(source, axis=0)
+    print(result)
+    # [[2 1]
+    #  [3 4]]
     ```
+
+    For a 3-dimensional input, selecting axis 1 treats ``source[:, i, :]``
+    as element ``i``. Equivalent negative axes are accepted:
+
+    ``` py linenums="1"
+    import numpy as np
+    import foapy
+
+    source = np.array(
+        [
+            [[1, 2], [3, 4], [1, 2]],
+            [[5, 6], [7, 8], [5, 6]],
+        ]
+    )
+    result = foapy.alphabet(source, axis=-2)
+    print(result.shape)
+    # (2, 2, 2)
+    ```
+
+    See :func:`foapy.order` for reconstruction with ``numpy.take``.
     """  # noqa: E501
 
-    data = np.asanyarray(X)
-    if data.ndim > 1:  # Checking for d1 array
-        raise Not1DArrayException(
-            {"message": f"Incorrect array form. Expected d1 array, exists {data.ndim}"}
-        )
-
-    perm = data.argsort(kind="mergesort")
-
-    mask_shape = data.shape
-    unique_mask = np.empty(mask_shape, dtype=bool)
-    unique_mask[:1] = True
-    unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
-
-    result_mask = np.full_like(unique_mask, False)
-    result_mask[:1] = True
-    result_mask[perm[unique_mask]] = True
-    return data[result_mask]
+    _, result = stable_factorize(X, axis=axis)
+    return result
