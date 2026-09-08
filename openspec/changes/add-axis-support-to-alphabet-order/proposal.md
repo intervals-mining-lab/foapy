@@ -27,4 +27,6 @@
 - Implementation: core stable-uniqueness and inverse-mapping logic must compare complete slices and preserve the selected axis in alphabet output; partials must derive a one-dimensional positional mask from slice masks.
 - Tests and benchmarks: existing one-dimensional coverage remains, with new multidimensional, axis-validation, reconstruction, and masked-slice cases.
 - Documentation: core and partials API references will describe slice-as-element semantics, shapes, axis placement, and reconstruction.
-- Dependencies: no new runtime dependency is expected; the implementation remains based on NumPy.
+- Dependencies: `xxhash>=2.0.0` is added for compiled XXH3-128 candidate
+  digests; NumPy still provides axis handling, sorting, exact verification, and
+  remapping.

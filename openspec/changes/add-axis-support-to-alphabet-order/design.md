@@ -56,6 +56,12 @@ The routine will move the selected axis to the front for comparison, flatten onl
 
 Using `numpy.apply_along_axis` was rejected because it expresses independent sequences rather than slice elements. Returning `numpy.unique(..., axis=axis)` directly was rejected because its alphabet is sorted rather than ordered by first appearance; it may still inform or support the internal grouping algorithm if its indices and inverse are remapped to stable order without narrowing supported dtypes.
 
+### Hashes identify candidate groups, never element identity
+
+For multidimensional elements, compute an XXH3-128 digest of each contiguous flattened slice and factorize the fixed-width digests. NumPy's `apply_along_axis` dispatches the compiled `xxhash.xxh3_128_digest` implementation over the byte-record rows, avoiding an explicit Python record loop in the factorizer. Equal digest groups are checked against adjacent original slices in one vectorized operation. If a group contains unequal slices, fall back to the exact record-based factorizer for the complete input; a digest collision therefore cannot change public results. Dtypes whose equality cannot be represented safely by the byte normalization also use the exact path directly.
+
+Floating-point signed zeros are normalized before hashing because NumPy considers positive and negative zero equal although their byte representations differ. NaNs remain subject to exact slice comparison and therefore retain the existing record-factorization behavior. The experiment uses digests only as compact candidate indices, not as cryptographic guarantees or equality definitions. Sorting, remapping, and collision verification remain vectorized NumPy operations. Hash dispatch uses `apply_along_axis`, whose internal iteration invokes one compiled XXH3 call per record; this trades Python call overhead for a mature, well-distributed non-cryptographic hash and avoids the large per-position weight arrays used by the previous `einsum` prototype.
+
 ### Axis is keyword-only and omission preserves the legacy contract
 
 Use these signatures:

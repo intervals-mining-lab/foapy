@@ -25,8 +25,8 @@ def test_1d_calls_do_not_use_multidimensional_factorizer(monkeypatch, axis):
     def fail(*args, **kwargs):
         pytest.fail("one-dimensional input entered multidimensional factorization")
 
-    monkeypatch.setattr(alphabet_module, "stable_partial_factorize", fail)
-    monkeypatch.setattr(order_module, "stable_partial_factorize", fail)
+    monkeypatch.setattr(alphabet_module, "_stable_partial_factorize", fail)
+    monkeypatch.setattr(order_module, "_stable_partial_factorize", fail)
 
     source = ma.masked_array(["b", "x", "a", "b"], mask=[False, True, False, False])
     assert_array_equal(alphabet(source, axis=axis), ["b", "a"])

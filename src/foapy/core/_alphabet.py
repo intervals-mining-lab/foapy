@@ -4,7 +4,7 @@ import numpy as np
 from numpy import ndarray
 from numpy.typing import ArrayLike
 
-from foapy.core._factorize import _normalize_sequence_axis, stable_factorize
+from foapy.core._factorize import _normalize_sequence_axis, _stable_factorize
 
 
 def alphabet(X: ArrayLike, *, axis: Optional[int] = None) -> ndarray:
@@ -103,7 +103,7 @@ def alphabet(X: ArrayLike, *, axis: Optional[int] = None) -> ndarray:
     data = np.asanyarray(X)
 
     if data.ndim != 1:
-        _, result = stable_factorize(data, axis=axis)
+        _, result = _stable_factorize(data, axis=axis)
         return result
 
     if axis is not None:

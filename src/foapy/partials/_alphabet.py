@@ -6,7 +6,7 @@ from numpy.typing import ArrayLike
 
 from foapy.core._alphabet import alphabet as core_alphabet
 from foapy.core._factorize import _normalize_sequence_axis
-from foapy.partials._factorize import stable_partial_factorize
+from foapy.partials._factorize import _stable_partial_factorize
 
 
 def alphabet(X: ArrayLike, *, axis: Optional[int] = None) -> np.ndarray:
@@ -89,7 +89,7 @@ def alphabet(X: ArrayLike, *, axis: Optional[int] = None) -> np.ndarray:
     data = ma.asarray(X)
 
     if data.ndim != 1:
-        _, result = stable_partial_factorize(data, axis=axis)
+        _, result = _stable_partial_factorize(data, axis=axis)
         return result
 
     if axis is not None:

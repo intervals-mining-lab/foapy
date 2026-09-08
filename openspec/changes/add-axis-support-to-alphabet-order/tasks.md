@@ -30,3 +30,19 @@
 - [x] 5.1 Restore dedicated core one-dimensional paths so `alphabet` does not compute order and `order(..., return_alphabet=False)` does not materialize an alphabet.
 - [x] 5.2 Restore dedicated partial one-dimensional paths, including the empty/fully-masked fast path, without invoking multidimensional slice-mask processing.
 - [x] 5.3 Add dispatch regression tests and compare representative one-dimensional timings with the pre-axis implementations.
+
+## 6. Experimental Hash Factorization
+
+- [x] 6.1 Replace multidimensional record uniqueness with vectorized 128-bit candidate grouping while retaining exact slice comparison and a collision fallback.
+- [x] 6.2 Add equality-semantic and forced-collision tests for the hash factorizer, including signed zero and NaN behavior.
+- [x] 6.3 Run the complete tests and compare time and peak allocations against the current axis implementation across element widths and cardinalities.
+
+## 7. XXH3 Hash Experiment
+
+- [x] 7.1 Replace the custom `einsum` fingerprint with XXH3-128 dispatched through `numpy.apply_along_axis`, add the runtime dependency, and preserve exact collision verification.
+- [x] 7.2 Run focused and complete correctness checks, then compare time and peak memory against exact record factorization across element widths and cardinalities.
+
+## 8. Internal Factorizer Clarity
+
+- [x] 8.1 Rename the shared helper to `_stable_factorize`, update its private call sites, and document how equal-digest groups are exactly verified before factorization.
+- [x] 8.2 Rename the partial shared helper to `_stable_partial_factorize` and update all private call sites and dispatch tests.

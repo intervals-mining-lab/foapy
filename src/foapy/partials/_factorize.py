@@ -4,10 +4,10 @@ import numpy as np
 import numpy.ma as ma
 from numpy.typing import ArrayLike
 
-from foapy.core._factorize import _normalize_sequence_axis, stable_factorize
+from foapy.core._factorize import _normalize_sequence_axis, _stable_factorize
 
 
-def stable_partial_factorize(
+def _stable_partial_factorize(
     X: ArrayLike, axis: Optional[int] = None
 ) -> Tuple[ma.MaskedArray, np.ndarray]:
     """Factorize present slices and preserve whole-slice gaps in the order."""
@@ -39,7 +39,7 @@ def stable_partial_factorize(
 
     present = ~gap_mask
     present_data = np.compress(present, data.data, axis=normalized_axis)
-    present_order, alphabet = stable_factorize(present_data, axis=normalized_axis)
+    present_order, alphabet = _stable_factorize(present_data, axis=normalized_axis)
 
     result_data = np.zeros(sequence_length, dtype=np.intp)
     result_data[present] = present_order

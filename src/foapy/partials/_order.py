@@ -6,7 +6,7 @@ from numpy.typing import ArrayLike
 
 from foapy.core._factorize import _normalize_sequence_axis
 from foapy.core._order import order as core_order
-from foapy.partials._factorize import stable_partial_factorize
+from foapy.partials._factorize import _stable_partial_factorize
 
 
 def order(
@@ -109,7 +109,7 @@ def order(
     data = ma.asarray(X)
 
     if data.ndim != 1:
-        result, alphabet = stable_partial_factorize(data, axis=axis)
+        result, alphabet = _stable_partial_factorize(data, axis=axis)
 
         if return_alphabet:
             return result, alphabet

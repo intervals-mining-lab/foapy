@@ -4,7 +4,7 @@ import numpy as np
 from numpy import ndarray
 from numpy.typing import ArrayLike
 
-from foapy.core._factorize import _normalize_sequence_axis, stable_factorize
+from foapy.core._factorize import _normalize_sequence_axis, _stable_factorize
 
 
 def order(
@@ -131,7 +131,7 @@ def order(
     data = np.asanyarray(X)
 
     if data.ndim != 1:
-        result, alphabet = stable_factorize(data, axis=axis)
+        result, alphabet = _stable_factorize(data, axis=axis)
 
         if return_alphabet:
             return result, alphabet
