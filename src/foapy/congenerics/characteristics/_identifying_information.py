@@ -36,6 +36,13 @@ def identifying_information(intervals_grouped, dtype=None):
 
     source = np.array(['a', 'b', 'a', 'c', 'a', 'd'])
     CS = foapy.congenerics.sequences(source)
+    print(CS)
+
+    # [['a' -- 'a' -- 'a' --]
+    #  [-- 'b' -- -- -- --]
+    #  [-- -- -- 'c' -- --]
+    #  [-- -- -- -- -- 'd']]
+
     chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
     tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.normal)
     intervals_grouped = [row[row != 0] for row in tuples]

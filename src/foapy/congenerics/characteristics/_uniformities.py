@@ -50,7 +50,7 @@ def uniformities(intervals, dtype=None):
 
     result = foapy.congenerics.characteristics.uniformities(intervals)
     print(result)
-    # [0.07030559 0.         0.         0.        ]
+    # [0.07029893 0.         0.         0.        ]
     ```
 
     Calculate the uniformities of congeneric intervals of a sequence.
