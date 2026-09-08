@@ -1,0 +1,17 @@
+.stAppHeader {
+    display: none;
+}
+
+.stMainBlockContainer {
+    padding-top: 0;
+}
+
+.stElementContainer .stMarkdown div p span {
+    border-radius: 0 !important;
+    min-width: 35px;
+    text-align: center;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    border: 1px solid black !important;
+    color: black !important;
+}
