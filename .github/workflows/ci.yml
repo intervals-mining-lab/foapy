@@ -172,12 +172,13 @@ jobs:
           asv run ALL --skip-existing --append-samples --machine gh-runner || true
           asv publish
 
-          REPORT=$(asv compare --machine gh-runner ${{ steps.context.outputs.base }} HEAD --split --only-changed)
-          echo "${REPORT}" >> $GITHUB_STEP_SUMMARY
-          REPORT="${REPORT}"
-          echo 'REPORT_RESULT<<EOF' >> $GITHUB_ENV
-          echo "${REPORT}" >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+          asv compare --machine gh-runner ${{ steps.context.outputs.base }} HEAD --split --only-changed > ./benchmark_report.md || true
+          cat ./benchmark_report.md >> $GITHUB_STEP_SUMMARY
+          if [ -s ./benchmark_report.md ]; then
+            echo "has_report=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_report=false" >> $GITHUB_OUTPUT
+          fi
 
           cd ./results
           git pull
@@ -204,10 +205,9 @@ jobs:
           directory: benchmarks/results
 
       - uses: mshick/add-pr-comment@v2
-        if: ${{ env.REPORT_RESULT != '' }}
+        if: ${{ steps.benchmark.outputs.has_report == 'true' }}
         with:
-          message: |-
-            ${{ env.REPORT_RESULT }}
+          message-path: benchmarks/benchmark_report.md
 
       - name: Save benchmark report
         uses: actions/upload-artifact@v4

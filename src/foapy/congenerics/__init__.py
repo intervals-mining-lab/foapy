@@ -23,5 +23,14 @@ else:
             "intervals_chains",
             "intervals_tuples",
             "intervals_distributions",
+            "characteristics",
         }
     )
+
+    def __getattr__(attr):
+        if attr == "characteristics":
+            import foapy.congenerics.characteristics as characteristics
+
+            return characteristics
+
+        raise AttributeError("module {!r} has no attribute {!r}".format(__name__, attr))

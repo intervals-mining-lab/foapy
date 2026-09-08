@@ -288,7 +288,7 @@ Where's the peck of pickled peppers Peter Piper picked"""
 order, alphabet = foapy.order(
   sequence, return_alphabet=True
 )
-orderCongeneric = foapy.ma.order(np.asarray(sequence))
+CS = foapy.congenerics.sequences(np.asarray(sequence))
 
 colors = palette(alphabet)
 
@@ -304,9 +304,9 @@ show(order, colors)
 intervals = foapy.intervals(
   order, foapy.binding.start, foapy.mode.cycle
 )
-intervalsCongeneric = foapy.ma.intervals(
-  orderCongeneric, foapy.binding.start, foapy.mode.cycle
-)
+chains = foapy.congenerics.intervals_chains(CS, foapy.binding.start, foapy.chain_mode.boundary)
+tuples = foapy.congenerics.intervals_tuples(chains, foapy.binding.start, foapy.tuple_mode.cycle)
+intervalsCongeneric = [row[row != 0] for row in tuples]
 
 measures = {
   "img": array2image(order, colors),
@@ -315,10 +315,10 @@ measures = {
   "geometric mean": foapy.characteristics.geometric_mean(intervals),
   "average remotness": foapy.characteristics.average_remoteness(intervals),
   "depth": foapy.characteristics.depth(intervals),
-  "identifying information": foapy.characteristics.identifying_information(intervalsCongeneric),
-  "descriptive information": foapy.characteristics.descriptive_information(intervalsCongeneric),
-  "regularity": foapy.characteristics.regularity(intervalsCongeneric),
-  "uniformity": foapy.characteristics.uniformity(intervalsCongeneric),
+  "identifying information": foapy.congenerics.characteristics.identifying_information(intervalsCongeneric),
+  "descriptive information": foapy.congenerics.characteristics.descriptive_information(intervalsCongeneric),
+  "regularity": foapy.congenerics.characteristics.regularity(intervalsCongeneric),
+  "uniformity": foapy.congenerics.characteristics.uniformity(intervalsCongeneric),
 }
 
 draw_chart(measures)
