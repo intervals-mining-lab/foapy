@@ -50,7 +50,7 @@ def periodicities(intervals, dtype=None):
 
     result = foapy.congenerics.characteristics.periodicities(intervals)
     print(result)
-    # [0.95244121 1.         1.         1.        ]
+    # [0.95244063 1.         1.         1.        ]
     ```
 
     Calculate the periodicities of congeneric intervals of a sequence.
