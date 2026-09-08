@@ -1,9 +1,10 @@
 from typing import Optional
 
+import numpy as np
 from numpy import ndarray
 from numpy.typing import ArrayLike
 
-from foapy.core._factorize import stable_factorize
+from foapy.core._factorize import _normalize_sequence_axis, stable_factorize
 
 
 def alphabet(X: ArrayLike, *, axis: Optional[int] = None) -> ndarray:
@@ -99,5 +100,24 @@ def alphabet(X: ArrayLike, *, axis: Optional[int] = None) -> ndarray:
     See :func:`foapy.order` for reconstruction with ``numpy.take``.
     """  # noqa: E501
 
-    _, result = stable_factorize(X, axis=axis)
-    return result
+    data = np.asanyarray(X)
+
+    if data.ndim != 1:
+        _, result = stable_factorize(data, axis=axis)
+        return result
+
+    if axis is not None:
+        _normalize_sequence_axis(data, axis)
+
+    # Keep the legacy scalar-element path independent from order: computing
+    # an inverse mapping roughly doubled its work and memory use.
+    perm = data.argsort(kind="mergesort")
+
+    unique_mask = np.empty(data.shape, dtype=bool)
+    unique_mask[:1] = True
+    unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
+
+    result_mask = np.full_like(unique_mask, False)
+    result_mask[:1] = True
+    result_mask[perm[unique_mask]] = True
+    return data[result_mask]

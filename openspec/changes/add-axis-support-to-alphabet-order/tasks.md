@@ -24,3 +24,9 @@
 - [x] 4.1 Run the focused core and partials alphabet/order test suites and resolve all regressions.
 - [x] 4.2 Run the complete test suite, documentation build/checks, linting, and relevant benchmark discovery or smoke cases.
 - [x] 4.3 Verify the final public signatures, legacy positional `return_alphabet` compatibility, public exports, and every dense/partial reconstruction example from the specifications.
+
+## 5. One-Dimensional Performance Restoration
+
+- [x] 5.1 Restore dedicated core one-dimensional paths so `alphabet` does not compute order and `order(..., return_alphabet=False)` does not materialize an alphabet.
+- [x] 5.2 Restore dedicated partial one-dimensional paths, including the empty/fully-masked fast path, without invoking multidimensional slice-mask processing.
+- [x] 5.3 Add dispatch regression tests and compare representative one-dimensional timings with the pre-axis implementations.

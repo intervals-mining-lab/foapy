@@ -46,9 +46,11 @@ elements = np.moveaxis(X, axis, 0)
 
 This follows NumPy's record-axis model used by `numpy.unique(..., axis=axis)` and directly supports the reconstruction invariant. The rejected alternative was apply-along-axis semantics, which would produce one order per orthogonal coordinate and ragged alphabets requiring padding.
 
-### A shared private factorization primitive drives both public functions
+### A shared private factorization primitive drives multidimensional calls
 
-Implement one internal routine that returns both the one-dimensional inverse order and the stable alphabet. `core.alphabet` selects the alphabet result; `core.order` selects the order and optionally returns the same alphabet. This prevents differences in equality, stable ordering, empty handling, dtype, or axis placement between the coupled APIs.
+Implement one internal routine that returns both the one-dimensional inverse order and the stable alphabet for multidimensional slice elements. `core.alphabet` selects the alphabet result; `core.order` selects the order and optionally returns the same alphabet. This prevents differences in equality, stable ordering, empty handling, dtype, or axis placement between the coupled multidimensional APIs.
+
+Legacy one-dimensional calls retain their dedicated algorithms. `alphabet` computes only its stable unique values, while `order` materializes the alphabet only when `return_alphabet=True`. Partials likewise retain direct one-dimensional compression and scattering, including an early return for empty or fully masked inputs. This avoids imposing multidimensional bookkeeping or an eagerly computed companion result on the established hot paths. Tests enforce that 1-D inputs, including explicit `axis=0` and `axis=-1`, do not enter the multidimensional helpers.
 
 The routine will move the selected axis to the front for comparison, flatten only the orthogonal dimensions into record fields, group equal records with stable first-occurrence bookkeeping, select original slices for the alphabet, and move the alphabet axis back to its original position. Sorting/grouping must not leak sorted order into the public alphabet.
 
@@ -104,7 +106,7 @@ The documentation will provide a helper-sized example rather than claim that bar
 
 ## Migration Plan
 
-1. Introduce the shared private dense factorization primitive and route existing one-dimensional core calls through it while retaining their tests.
+1. Introduce the shared private dense factorization primitive for multidimensional calls while retaining dedicated one-dimensional paths and their tests.
 2. Add explicit-axis behavior and reconstruction tests to core alphabet/order.
 3. Extend partials mask validation, compression, scattering, and alphabet-axis restoration.
 4. Update API documentation and benchmarks.

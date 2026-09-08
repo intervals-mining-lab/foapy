@@ -1,3 +1,5 @@
+import importlib
+
 import numpy as np
 import numpy.ma as ma
 import pytest
@@ -13,6 +15,24 @@ try:
     from numpy.exceptions import AxisError
 except ImportError:  # NumPy < 1.25
     from numpy import AxisError
+
+
+@pytest.mark.parametrize("axis", [None, 0, -1])
+def test_1d_calls_do_not_use_multidimensional_factorizer(monkeypatch, axis):
+    alphabet_module = importlib.import_module("foapy.partials._alphabet")
+    order_module = importlib.import_module("foapy.partials._order")
+
+    def fail(*args, **kwargs):
+        pytest.fail("one-dimensional input entered multidimensional factorization")
+
+    monkeypatch.setattr(alphabet_module, "stable_partial_factorize", fail)
+    monkeypatch.setattr(order_module, "stable_partial_factorize", fail)
+
+    source = ma.masked_array(["b", "x", "a", "b"], mask=[False, True, False, False])
+    assert_array_equal(alphabet(source, axis=axis), ["b", "a"])
+    result, result_alphabet = order(source, True, axis=axis)
+    assert_equal(result, ma.masked_array([0, 0, 1, 0], mask=source.mask))
+    assert_array_equal(result_alphabet, ["b", "a"])
 
 
 @pytest.mark.parametrize("axis", [0, 1])

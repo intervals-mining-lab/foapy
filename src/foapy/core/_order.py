@@ -1,9 +1,10 @@
 from typing import Optional, Tuple, Union
 
+import numpy as np
 from numpy import ndarray
 from numpy.typing import ArrayLike
 
-from foapy.core._factorize import stable_factorize
+from foapy.core._factorize import _normalize_sequence_axis, stable_factorize
 
 
 def order(
@@ -127,8 +128,41 @@ def order(
     ```
     """  # noqa: E501
 
-    result, alphabet = stable_factorize(X, axis=axis)
+    data = np.asanyarray(X)
+
+    if data.ndim != 1:
+        result, alphabet = stable_factorize(data, axis=axis)
+
+        if return_alphabet:
+            return result, alphabet
+        return result
+
+    if axis is not None:
+        _normalize_sequence_axis(data, axis)
+
+    # This is the original scalar-element algorithm. In particular, the
+    # alphabet selection remains conditional on return_alphabet.
+    perm = data.argsort(kind="mergesort")
+
+    unique_mask = np.empty(data.shape, dtype=bool)
+    unique_mask[:1] = True
+    unique_mask[1:] = data[perm[1:]] != data[perm[:-1]]
+
+    result_mask = np.zeros_like(unique_mask)
+    result_mask[:1] = True
+    result_mask[perm[unique_mask]] = True
+
+    power = np.count_nonzero(unique_mask)
+
+    inverse_perm = np.empty(data.shape, dtype=np.intp)
+    inverse_perm[perm] = np.arange(data.shape[0])
+
+    result = np.cumsum(unique_mask) - 1
+    inverse_alphabet_perm = np.empty(power, dtype=np.intp)
+    inverse_alphabet_perm[result[inverse_perm][result_mask]] = np.arange(power)
+
+    result = inverse_alphabet_perm[result][inverse_perm]
 
     if return_alphabet:
-        return result, alphabet
+        return result, data[result_mask]
     return result

@@ -1,8 +1,11 @@
 from typing import Optional
 
 import numpy as np
+import numpy.ma as ma
 from numpy.typing import ArrayLike
 
+from foapy.core._alphabet import alphabet as core_alphabet
+from foapy.core._factorize import _normalize_sequence_axis
 from foapy.partials._factorize import stable_partial_factorize
 
 
@@ -83,5 +86,17 @@ def alphabet(X: ArrayLike, *, axis: Optional[int] = None) -> np.ndarray:
     A plain or fully unmasked multidimensional input produces the same
     alphabet as :func:`foapy.core.alphabet` for the same axis.
     """
-    _, result = stable_partial_factorize(X, axis=axis)
-    return result
+    data = ma.asarray(X)
+
+    if data.ndim != 1:
+        _, result = stable_partial_factorize(data, axis=axis)
+        return result
+
+    if axis is not None:
+        _normalize_sequence_axis(data, axis)
+
+    compressed = data.compressed()
+    if len(compressed) == 0:
+        return np.array([], dtype=data.dtype)
+
+    return core_alphabet(compressed)

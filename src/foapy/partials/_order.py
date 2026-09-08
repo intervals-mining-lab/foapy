@@ -4,6 +4,8 @@ import numpy as np
 import numpy.ma as ma
 from numpy.typing import ArrayLike
 
+from foapy.core._factorize import _normalize_sequence_axis
+from foapy.core._order import order as core_order
 from foapy.partials._factorize import stable_partial_factorize
 
 
@@ -104,7 +106,37 @@ def order(
     partial sequence. Plain or fully unmasked inputs have the same alphabet
     and non-masked order values as their :mod:`foapy.core` counterparts.
     """
-    result, alphabet = stable_partial_factorize(X, axis=axis)
+    data = ma.asarray(X)
+
+    if data.ndim != 1:
+        result, alphabet = stable_partial_factorize(data, axis=axis)
+
+        if return_alphabet:
+            return result, alphabet
+        return result
+
+    if axis is not None:
+        _normalize_sequence_axis(data, axis)
+
+    sequence_length = len(data)
+    full_mask = ma.getmaskarray(data)
+    compressed = data.compressed()
+
+    if len(compressed) == 0:
+        result_data = np.zeros(sequence_length, dtype=np.intp)
+        result = ma.masked_array(result_data, mask=full_mask)
+        if return_alphabet:
+            return result, np.array([], dtype=data.dtype)
+        return result
+
+    if return_alphabet:
+        compressed_order, alphabet = core_order(compressed, return_alphabet=True)
+    else:
+        compressed_order = core_order(compressed)
+
+    result_data = np.full(sequence_length, -1, dtype=np.intp)
+    result_data[~full_mask] = compressed_order
+    result = ma.masked_array(result_data, mask=full_mask)
 
     if return_alphabet:
         return result, alphabet

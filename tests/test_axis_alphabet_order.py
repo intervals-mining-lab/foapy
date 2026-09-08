@@ -1,3 +1,5 @@
+import importlib
+
 import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
@@ -16,6 +18,24 @@ def test_explicit_axis_preserves_stable_scalar_factorization():
 
     assert_array_equal(alphabet(source, axis=0), ["b", "a", "c"])
     assert_array_equal(order(source, axis=-1), [0, 1, 0, 2])
+
+
+@pytest.mark.parametrize("axis", [None, 0, -1])
+def test_1d_calls_do_not_use_multidimensional_factorizer(monkeypatch, axis):
+    alphabet_module = importlib.import_module("foapy.core._alphabet")
+    order_module = importlib.import_module("foapy.core._order")
+
+    def fail(*args, **kwargs):
+        pytest.fail("one-dimensional input entered multidimensional factorization")
+
+    monkeypatch.setattr(alphabet_module, "stable_factorize", fail)
+    monkeypatch.setattr(order_module, "stable_factorize", fail)
+
+    source = np.array(["b", "a", "b", "c"])
+    assert_array_equal(alphabet(source, axis=axis), ["b", "a", "c"])
+    result, result_alphabet = order(source, True, axis=axis)
+    assert_array_equal(result, [0, 1, 0, 2])
+    assert_array_equal(result_alphabet, ["b", "a", "c"])
 
 
 @pytest.mark.parametrize(
