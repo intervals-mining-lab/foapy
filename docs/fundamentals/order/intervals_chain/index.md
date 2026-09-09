@@ -7,6 +7,36 @@ that restores by _intervals chain_ a sequence with the same with the original se
 
 The idea of _intervals chain_ is easy to explain by a concrete example:
 
+## Slice elements along an axis
+
+For a multidimensional array, an explicit `axis` makes each complete
+orthogonal slice on that axis one sequence element. The intervals chain has
+one scalar value per selected-axis position, so it is always one-dimensional
+and can be passed directly to `foapy.intervals_tuple`.
+
+``` py linenums="1"
+import numpy as np
+import foapy
+
+source = np.array([[1, 2], [3, 4], [1, 2], [5, 6], [1, 2]])
+chain = foapy.intervals_chain(
+    source,
+    foapy.binding.start,
+    foapy.chain_mode.boundary,
+    axis=0,
+)
+print(chain)  # [1 2 2 4 2]
+
+intervals = foapy.intervals_tuple(
+    chain, foapy.binding.start, foapy.tuple_mode.normal
+)
+print(intervals)  # [1 2 2 4 2]
+```
+
+Here the five rows form the sequence. Selecting columns with `axis=1`
+applies the same rule in the column coordinate system. Multidimensional input
+without an explicit axis remains invalid.
+
 
 === "From a sequence"
 

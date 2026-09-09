@@ -4,6 +4,40 @@ _Partial Intervals Chain_ is an [_Intervals chain_](../../order/intervals_chain/
 
 The idea of _partial intervals chain_ is easy to explain by a concrete example:
 
+## Slice elements and gaps along an axis
+
+An explicit `axis` treats each complete orthogonal slice as one sequence
+element, matching partial alphabet and order. Every slice must be wholly
+present or wholly masked. A wholly masked slice is a gap: it remains masked in
+the one-dimensional chain and still counts as a position when distances are
+measured.
+
+``` py linenums="1"
+import numpy.ma as ma
+import foapy
+
+source = ma.masked_array(
+    [[1, 2], [9, 9], [3, 4], [1, 2]],
+    mask=[[0, 0], [1, 1], [0, 0], [0, 0]],
+)
+chain = foapy.partials.intervals_chain(
+    source,
+    foapy.binding.start,
+    foapy.chain_mode.boundary,
+    axis=0,
+)
+print(chain)  # [1 -- 3 3]
+
+intervals = foapy.partials.intervals_tuple(
+    chain, foapy.binding.start, foapy.tuple_mode.normal
+)
+print(intervals)  # [1 3 3]
+```
+
+The masked second row separates the two equal rows by three selected-axis
+positions. `intervals_tuple` remains axis-free because it consumes this flat
+chain rather than the original multidimensional sequence.
+
 
 === "From a partial sequence"
 

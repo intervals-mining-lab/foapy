@@ -1,12 +1,22 @@
+from typing import Optional
+
 import numpy as np
 import numpy.ma as ma
+from numpy.typing import ArrayLike
 
 from foapy.core._binding import binding as binding_cls
 from foapy.core._chain_mode import chain_mode as chain_mode_cls
-from foapy.exceptions import Not1DArrayException
+from foapy.core._factorize import _normalize_sequence_axis
+from foapy.partials._order import order as partial_order
 
 
-def intervals_chain(X, binding: int, chain_mode: int) -> ma.MaskedArray:
+def intervals_chain(
+    X: ArrayLike,
+    binding: int,
+    chain_mode: int,
+    *,
+    axis: Optional[int] = None,
+) -> ma.MaskedArray:
     """
     Compute the partial intervals chain from a sequence with gaps.
 
@@ -18,8 +28,10 @@ def intervals_chain(X, binding: int, chain_mode: int) -> ma.MaskedArray:
     Parameters
     ----------
     X : array_like or numpy.ma.MaskedArray
-        1-D raw sequence (plain or masked). Pass the original sequence, not
-        the order output. Masked positions are treated as gaps.
+        Raw sequence (plain or masked). Pass the original sequence, not the
+        order output. With an explicit ``axis``, each complete orthogonal
+        slice is one element. A slice must be wholly present or wholly masked;
+        wholly masked slices are positional gaps.
     binding : int
         ``binding.start`` (1) — intervals extracted left-to-right.
         ``binding.end`` (2) — intervals extracted right-to-left.
@@ -27,20 +39,26 @@ def intervals_chain(X, binding: int, chain_mode: int) -> ma.MaskedArray:
         ``chain_mode.boundary`` (1) — finite sequence; boundary intervals are
         distances from sequence edges to first/last occurrence.
         ``chain_mode.cycle`` (2) — cyclic; wrap-around distance used.
+    axis : int, optional
+        Sequence axis. If omitted, ``X`` must be one-dimensional. Negative
+        axes follow NumPy conventions.
 
     Returns
     -------
     numpy.ma.MaskedArray, shape (n,), dtype numpy.intp
-        Masked 1-D array of the same length as X. Non-masked positions hold
-        the interval distance (≥1). Masked positions are identical to the
-        input mask.
+        Masked one-dimensional array where ``n`` is the selected-axis length.
+        Present positions hold interval distances (≥1), and wholly masked
+        slices remain masked. Gap positions count toward every distance.
 
     Raises
     ------
     Not1DArrayException
-        When X is not a 1-dimensional array.
+        When ``X`` is scalar, or is multidimensional without an explicit axis.
+    numpy.exceptions.AxisError
+        When an explicit axis is out of range.
     ValueError
-        When ``binding`` or ``chain_mode`` is invalid.
+        When ``binding`` or ``chain_mode`` is invalid, or a selected-axis
+        slice is only partially masked.
 
     Examples
     --------
@@ -75,6 +93,26 @@ def intervals_chain(X, binding: int, chain_mode: int) -> ma.MaskedArray:
 
     With no masked positions, the non-masked values match
     :func:`foapy.intervals_chain` for the same binding and chain mode.
+
+    A wholly masked row is a gap that remains in the selected-axis coordinate
+    system and therefore counts toward interval distances:
+
+    ``` py linenums="1"
+    import numpy.ma as ma
+    import foapy
+
+    source = ma.masked_array(
+        [[1, 2], [9, 9], [3, 4], [1, 2]],
+        mask=[[0, 0], [1, 1], [0, 0], [0, 0]],
+    )
+    chain = foapy.partials.intervals_chain(
+        source,
+        foapy.binding.start,
+        foapy.chain_mode.boundary,
+        axis=0,
+    )
+    print(chain)  # [1 -- 3 3]
+    ```
     """
     if binding not in {binding_cls.start, binding_cls.end}:
         raise ValueError(
@@ -91,12 +129,22 @@ def intervals_chain(X, binding: int, chain_mode: int) -> ma.MaskedArray:
             }
         )
 
-    ar = ma.asarray(X)
+    data = ma.asarray(X)
 
-    if ar.ndim != 1:
-        raise Not1DArrayException(
-            {"message": f"Incorrect array form. Expected d1 array, exists {ar.ndim}"}
-        )
+    if data.ndim != 1:
+        sequence_order = partial_order(data, axis=axis)
+        return _intervals_chain_1d(sequence_order, binding, chain_mode)
+
+    if axis is not None:
+        _normalize_sequence_axis(data, axis)
+
+    return _intervals_chain_1d(data, binding, chain_mode)
+
+
+def _intervals_chain_1d(
+    ar: ma.MaskedArray, binding: int, chain_mode: int
+) -> ma.MaskedArray:
+    """Compute an interval chain for an already validated 1-D partial sequence."""
 
     n = len(ar)
     full_mask = ma.getmaskarray(ar)
