@@ -1,26 +1,37 @@
+from typing import Optional, Union
+
 import numpy as np
 import numpy.ma as ma
+from numpy import ndarray
+from numpy.typing import ArrayLike
 
+from foapy.core._axis_transform import _apply_to_axis_lanes
 from foapy.core._binding import binding as binding_cls
+from foapy.core._factorize import _normalize_sequence_axis
 from foapy.core._tuple_mode import tuple_mode as tuple_mode_cls
 
 
-def intervals_tuple(chain, binding: int, tuple_mode: int) -> np.ndarray:
+def intervals_tuple(
+    chain: ArrayLike,
+    binding: int,
+    tuple_mode: int,
+    *,
+    axis: Optional[int] = None,
+) -> Union[ndarray, ma.MaskedArray]:
     """
-    Apply a boundary handling strategy to a partial intervals chain, dropping
-    gaps and returning the final flat tuple of interval values.
+    Apply a boundary strategy to one or more partial interval-chain lanes.
 
-    Unlike ``partials.intervals_chain`` (position-preserving, aligned to the
-    source sequence), ``intervals_tuple`` returns a plain array: gap (masked)
-    positions carry no positional meaning once a boundary strategy has been
-    applied, so they are excluded from the result rather than masked within
-    it — matching ``foapy.core.intervals_tuple``'s return type.
+    Within each lane, masked positions remain source-coordinate gaps while the
+    tuple strategy is calculated, then are excluded from the lane result.
+    With multidimensional input, ``axis`` selects independent one-dimensional
+    lanes in the style of :func:`numpy.apply_along_axis`. Unequal result
+    lengths are packed from index zero and trailing positions are masked.
 
     Parameters
     ----------
     chain : array_like or numpy.ma.MaskedArray
-        1-D intervals chain produced by ``partials.intervals_chain``.
-        Plain arrays are auto-wrapped (treated as fully unmasked).
+        One partial intervals chain, or a multidimensional collection of
+        chains. Plain arrays are treated as fully unmasked.
     binding : int
         Must match the binding used to produce the chain.
         ``binding.start`` (1) or ``binding.end`` (2).
@@ -32,19 +43,29 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> np.ndarray:
         ``tuple_mode.redundant`` (3) — append one trailing complementary
         boundary interval per inferred unique symbol, measured against the
         true source domain length (gaps included).
+    axis : int, optional
+        Axis containing each independent interval chain. If omitted, ``chain``
+        must be one-dimensional. Negative axes follow NumPy conventions.
 
     Returns
     -------
-    numpy.ndarray
-        1-D array, dtype ``numpy.intp``, with all gap positions excluded.
-        For ``binding.end``, element order follows
-        ``foapy.core.intervals_tuple``'s own (reversed-frame) convention
-        rather than the source sequence's left-to-right order.
+    numpy.ndarray or numpy.ma.MaskedArray
+        One-dimensional input returns a plain ``numpy.intp`` array with gaps
+        excluded. Multidimensional input always returns a masked
+        ``numpy.intp`` array whose selected axis has the longest lane result;
+        masks in this output are structural trailing padding, not source
+        gaps. For ``binding.end``, each lane follows
+        :func:`foapy.core.intervals_tuple`'s reversed processing frame.
 
     Raises
     ------
     ValueError
         When ``binding`` or ``tuple_mode`` is invalid.
+    Not1DArrayException
+        When input is scalar, or is multidimensional without an explicit
+        axis.
+    numpy.exceptions.AxisError
+        When an explicit axis is out of range.
 
     Examples
     --------
@@ -66,16 +87,49 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> np.ndarray:
     # [2 3 2 6 4 3 1]
     ```
 
-    Dense input (no gaps) matches :func:`foapy.core.intervals_tuple` exactly,
-    including element order for ``binding.end``:
+    Process two partial chains independently. The first lossy tuple has one
+    value, so its second packed position is structurally masked:
 
     ``` py linenums="1"
+    import numpy.ma as ma
     import foapy
-    from foapy.partials import intervals_tuple
 
-    chain = [1, 2, 2, 4, 2]
-    print(intervals_tuple(chain, foapy.binding.end, foapy.tuple_mode.lossy))
-    # [2 2 1]
+    chains = ma.masked_array(
+        [[1, 0, 3, 3, 0, 6], [0, 2, 1, 4, 2, 0]],
+        mask=[[0, 1, 0, 0, 1, 0], [1, 0, 0, 0, 0, 1]],
+    )
+    tuples = foapy.partials.intervals_tuple(
+        chains,
+        foapy.binding.start,
+        foapy.tuple_mode.lossy,
+        axis=1,
+    )
+    print(tuples)
+    # [[3 --]
+    #  [1 2]]
+
+    print(foapy.intervals_distribution(tuples, axis=1))
+    # [[0 0 1]
+    #  [1 1 --]]
+    ```
+
+    The selected result dimension replaces the input axis. For shape
+    ``(A, B, C)``, axes 0, 1, and 2 therefore produce ``(L, B, C)``,
+    ``(A, L, C)``, and ``(A, B, L)`` respectively, where ``L`` is the longest
+    lane result:
+
+    ``` py linenums="1"
+    import numpy.ma as ma
+    import foapy
+
+    batch = ma.stack([chains.T, chains.T])  # shape (2, 6, 2)
+    result = foapy.partials.intervals_tuple(
+        batch,
+        foapy.binding.start,
+        foapy.tuple_mode.lossy,
+        axis=1,
+    )
+    print(result.shape)  # (2, 2, 2)
     ```
     """
     if binding not in {binding_cls.start, binding_cls.end}:
@@ -98,7 +152,22 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> np.ndarray:
             }
         )
 
-    ar = ma.asarray(chain)
+    data = ma.asarray(chain)
+
+    if data.ndim == 1:
+        if axis is not None:
+            _normalize_sequence_axis(data, axis)
+        return _intervals_tuple_1d(data, binding, tuple_mode)
+
+    return _apply_to_axis_lanes(
+        data,
+        axis,
+        lambda lane: _intervals_tuple_1d(lane, binding, tuple_mode),
+    )
+
+
+def _intervals_tuple_1d(ar: ma.MaskedArray, binding: int, tuple_mode: int) -> ndarray:
+    """Transform one partial interval-chain lane while retaining gap positions."""
     chain_mask = ma.getmaskarray(ar)
     compressed = ar.compressed().astype(np.intp)
 

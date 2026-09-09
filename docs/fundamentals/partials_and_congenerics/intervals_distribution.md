@@ -2,6 +2,36 @@
 
 A _Partial intervals distribution_ is an [_Interval distribution_](../order/intervals_distribution/index.md) produced from [_Partial intervals chain_](./intervals_chain/index.md) by counting all _non-empty_ elements (intervals) in distribution
 
+Use the existing `foapy.intervals_distribution` function for both core and
+partial tuples; there is no separate partials distribution API. It accepts
+masked arrays, ignores masked positions, and processes independent lanes
+along the same `axis` used for a multidimensional partial tuple:
+
+``` py linenums="1"
+import numpy.ma as ma
+import foapy
+
+chains = ma.masked_array(
+    [[1, 0, 3, 3, 0, 6], [0, 2, 1, 4, 2, 0]],
+    mask=[[0, 1, 0, 0, 1, 0], [1, 0, 0, 0, 0, 1]],
+)
+tuples = foapy.partials.intervals_tuple(
+    chains,
+    foapy.binding.start,
+    foapy.tuple_mode.lossy,
+    axis=1,
+)
+distribution = foapy.intervals_distribution(tuples, axis=1)
+print(distribution)
+# [[0 0 1]
+#  [1 1 --]]
+```
+
+The mask in `tuples` is structural padding added after each source lane's gaps
+have been removed. It contributes no counts. An unmasked zero within a
+distribution remains a real zero-frequency bin; only bins beyond a shorter
+lane's maximum are masked.
+
 
 === "From a partial interval chain"
 

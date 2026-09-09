@@ -37,6 +37,45 @@ Here the five rows form the sequence. Selecting columns with `axis=1`
 applies the same rule in the column coordinate system. Multidimensional input
 without an explicit axis remains invalid.
 
+## Transform collections of interval chains
+
+`intervals_chain` always returns one chain, but several chains can also be
+stored in a multidimensional array. For `intervals_tuple`, `axis` identifies
+the one-dimensional chain lanes and every coordinate on the other dimensions
+is processed independently, like `numpy.apply_along_axis`.
+
+``` py linenums="1"
+import numpy as np
+import foapy
+
+chains = np.array([[1, 1, 1, 1], [1, 2, 3, 4]])
+result = foapy.intervals_tuple(
+    chains,
+    foapy.binding.start,
+    foapy.tuple_mode.lossy,
+    axis=1,
+)
+print(result)
+# [[1 1 1]
+#  [-- -- --]]
+```
+
+Tuple modes can produce different lengths for different lanes. A
+multidimensional call therefore returns a masked array whose selected axis is
+long enough for the longest result. Each result starts at index zero and its
+unused trailing positions are masked. These masks are structural padding,
+not gaps in a partial sequence. One-dimensional calls continue to return a
+plain array.
+
+For input shape `(A, B, C)`, the result dimension `L` replaces the selected
+axis:
+
+| Selection | Processed lanes | Result shape |
+|---|---|---|
+| `axis=0` | `chains[:, b, c]` | `(L, B, C)` |
+| `axis=1` | `chains[a, :, c]` | `(A, L, C)` |
+| `axis=2` | `chains[a, b, :]` | `(A, B, L)` |
+
 
 === "From a sequence"
 

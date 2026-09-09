@@ -1,16 +1,31 @@
-import numpy as np
-from numpy import ndarray
+from typing import Optional, Union
 
+import numpy as np
+import numpy.ma as ma
+from numpy import ndarray
+from numpy.typing import ArrayLike
+
+from foapy.core._axis_transform import _apply_to_axis_lanes
 from foapy.core._binding import binding as binding_cls
+from foapy.core._factorize import _normalize_sequence_axis
+from foapy.core._intervals_chain_validation import is_valid_intervals_chain
 from foapy.core._tuple_mode import tuple_mode as tuple_mode_cls
 
 
-def intervals_tuple(chain, binding: int, tuple_mode: int) -> ndarray:
+def intervals_tuple(
+    chain: ArrayLike,
+    binding: int,
+    tuple_mode: int,
+    *,
+    axis: Optional[int] = None,
+) -> Union[ndarray, ma.MaskedArray]:
     """
-    Apply a boundary handling strategy to a plain 1-D intervals chain.
+    Apply a boundary strategy to interval-chain lanes.
 
-    Takes a chain produced by ``intervals_chain`` and transforms it according
-    to the requested ``tuple_mode``:
+    A one-dimensional input is transformed directly. For multidimensional
+    input, ``axis`` selects independent one-dimensional chains in the style
+    of :func:`numpy.apply_along_axis`; every combination of coordinates on
+    the other dimensions is processed separately.
 
     - ``tuple_mode.normal``: return the chain unchanged.
     - ``tuple_mode.lossy``: remove boundary (first-/last-occurrence) intervals,
@@ -23,8 +38,9 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> ndarray:
     Parameters
     ----------
     chain : array_like
-        A 1-D intervals chain produced by ``intervals_chain``.
-        Must be a 1-D array of positive integers.
+        One intervals chain, or a multidimensional collection of chains.
+        Each selected-axis lane must be a one-dimensional chain produced by
+        :func:`foapy.intervals_chain`.
     binding : int
         ``binding.start`` (1) — chain was produced left-to-right.
         ``binding.end`` (2) — chain was produced right-to-left.
@@ -39,19 +55,30 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> ndarray:
 
         ``tuple_mode.redundant`` = 3 – include both boundary intervals for
         every element.
+    axis : int, optional
+        Axis containing each independent chain. If omitted, ``chain`` must be
+        one-dimensional. Negative axes follow NumPy conventions.
 
     Returns
     -------
-    ndarray
-        1-D integer array of intervals.  Length equals ``n`` for *normal*,
-        ``n - k`` for *lossy*, and ``n + k`` for *redundant*, where ``n`` is
-        the chain length and ``k`` is the number of unique elements inferred
-        from the chain.
+    numpy.ndarray or numpy.ma.MaskedArray
+        One-dimensional input returns a plain ``numpy.intp`` array. Its
+        length is ``n`` for *normal*, ``n - k`` for *lossy*, and ``n + k``
+        for *redundant*, where ``k`` is the inferred number of elements.
+        Multidimensional input returns a masked ``numpy.intp`` array. The
+        selected axis is replaced by the longest lane result; shorter lane
+        results are packed from index zero and trailing positions are masked.
 
     Raises
     ------
+    Not1DArrayException
+        When input is scalar, or is multidimensional without an explicit
+        axis.
+    numpy.exceptions.AxisError
+        When an explicit axis is out of range.
     ValueError
-        When ``tuple_mode`` is not a recognised value.
+        When ``binding`` or ``tuple_mode`` is invalid, or internal interval-
+        chain validation fails.
 
     Examples
     --------
@@ -73,42 +100,42 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> ndarray:
     print(intervals_tuple(chain, foapy.binding.start, foapy.tuple_mode.redundant))
     # [1 2 2 4 2 4 2 1]
     ```
+
+    Process independent row chains and preserve unequal lossy lengths with
+    trailing masks:
+
+    ``` py linenums="1"
+    import numpy as np
+    import foapy
+
+    chains = np.array([[1, 1, 1, 1], [1, 2, 3, 4]])
+    result = foapy.intervals_tuple(
+        chains,
+        foapy.binding.start,
+        foapy.tuple_mode.lossy,
+        axis=1,
+    )
+    print(result)
+    # [[1 1 1]
+    #  [-- -- --]]
+    ```
+
+    Three-dimensional lane processing follows the same rule:
+
+    ``` py linenums="1"
+    batch = np.stack((chains.T, chains.T))  # shape (2, 4, 2)
+    result = foapy.intervals_tuple(
+        batch,
+        foapy.binding.start,
+        foapy.tuple_mode.lossy,
+        axis=1,
+    )
+    print(result.shape)  # (2, 3, 2)
+    ```
+
+    In general, for shape ``(A, B, C)``, selecting axes 0, 1, or 2 produces
+    ``(L, B, C)``, ``(A, L, C)``, or ``(A, B, L)`` respectively.
     """
-
-    def normal(ar):
-        return ar.copy()
-
-    def lossy(ar):
-        # Infer binding direction to choose correct boundary detection formula.
-        if binding == binding_cls.end:
-            ar = ar[::-1]
-
-        positions = np.arange(ar.size, dtype=np.intp)
-
-        # First entrance interval at position i iff ar[i] > i
-        first = ar > positions
-
-        return ar[~first]
-
-    def redundant(ar):
-        # If the chain was created using binding.end, reverse it for correct handling.
-        if binding == binding_cls.end:
-            ar = ar[::-1]
-
-        n = ar.size
-        positions = np.arange(n, dtype=np.intp)
-
-        # For each position, compute where its "previous occurrence" is.
-        prev_pos = positions - ar
-        # Build a mask to detect "last occurrences"
-        # (not referred to as previous by any other element).
-        last_mask = np.ones_like(positions, dtype=bool)
-        last_mask[prev_pos[prev_pos >= 0]] = False
-        # Trailing intervals are n - position for each detected "last occurrence".
-        trailing = n - positions[last_mask]
-
-        # Concatenate chain with its trailing intervals.
-        return np.concatenate((ar, trailing))
 
     if binding not in {binding_cls.start, binding_cls.end}:
         raise ValueError(
@@ -127,16 +154,59 @@ def intervals_tuple(chain, binding: int, tuple_mode: int) -> ndarray:
             }
         )
 
-    ar = np.asanyarray(chain, dtype=np.intp)
+    data = np.asanyarray(chain)
+    if not is_valid_intervals_chain(data, axis=axis):
+        raise ValueError({"message": "Invalid intervals chain."})
+
+    if data.ndim == 1:
+        if axis is not None:
+            _normalize_sequence_axis(data, axis)
+        return _intervals_tuple_1d(
+            np.asanyarray(data, dtype=np.intp), binding, tuple_mode
+        )
+
+    return _apply_to_axis_lanes(
+        data,
+        axis,
+        lambda lane: _intervals_tuple_1d(
+            np.asanyarray(lane, dtype=np.intp), binding, tuple_mode
+        ),
+        preserve_input_length_without_lanes=tuple_mode == tuple_mode_cls.normal,
+    )
+
+
+def _intervals_tuple_1d(ar: ndarray, binding: int, tuple_mode: int) -> ndarray:
+    """Apply a tuple mode to one already validated interval chain."""
 
     if ar.size == 0:
         return np.array([], dtype=np.intp)
 
     if tuple_mode == tuple_mode_cls.normal:
-        return normal(ar)
+        return ar.copy()
 
     if tuple_mode == tuple_mode_cls.lossy:
-        return lossy(ar)
+        return _lossy(ar, binding)
 
-    if tuple_mode == tuple_mode_cls.redundant:
-        return redundant(ar)
+    return _redundant(ar, binding)
+
+
+def _lossy(ar: ndarray, binding: int) -> ndarray:
+    if binding == binding_cls.end:
+        ar = ar[::-1]
+
+    positions = np.arange(ar.size, dtype=np.intp)
+    first = ar > positions
+    return ar[~first]
+
+
+def _redundant(ar: ndarray, binding: int) -> ndarray:
+    if binding == binding_cls.end:
+        ar = ar[::-1]
+
+    n = ar.size
+    positions = np.arange(n, dtype=np.intp)
+    prev_pos = positions - ar
+    last_mask = np.ones_like(positions, dtype=bool)
+    last_mask[prev_pos[prev_pos >= 0]] = False
+    trailing = n - positions[last_mask]
+    return np.concatenate((ar, trailing))

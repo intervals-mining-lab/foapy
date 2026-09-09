@@ -35,8 +35,52 @@ print(intervals)  # [1 3 3]
 ```
 
 The masked second row separates the two equal rows by three selected-axis
-positions. `intervals_tuple` remains axis-free because it consumes this flat
-chain rather than the original multidimensional sequence.
+positions. This call produces one flat chain, because
+`partials.intervals_chain` treats complete orthogonal slices as sequence
+elements.
+
+## Collections of partial interval chains
+
+When an array already contains several partial interval chains, the `axis`
+of `foapy.partials.intervals_tuple` selects the one-dimensional chain
+direction. All orthogonal coordinates identify independent lanes, like
+`numpy.apply_along_axis`:
+
+``` py linenums="1"
+import numpy.ma as ma
+import foapy
+
+chains = ma.masked_array(
+    [[1, 0, 3, 3, 0, 6], [0, 2, 1, 4, 2, 0]],
+    mask=[[0, 1, 0, 0, 1, 0], [1, 0, 0, 0, 0, 1]],
+)
+tuples = foapy.partials.intervals_tuple(
+    chains,
+    foapy.binding.start,
+    foapy.tuple_mode.lossy,
+    axis=1,
+)
+print(tuples)
+# [[3 --]
+#  [1 2]]
+```
+
+Each input mask is a source gap while its lane is calculated. It still counts
+toward real positions and the full lane length used by lossy and redundant
+modes. The tuple operation then removes source gaps. Masks in the
+multidimensional result above mean only that a shorter lane was padded; they
+are not aligned source gaps.
+
+The output dimension replaces the selected input axis. For shape
+`(A, B, C)` and longest result length `L`, axes 0, 1, and 2 produce
+`(L, B, C)`, `(A, L, C)`, and `(A, B, L)`. Even when every lane has the
+same result length, multidimensional output is a masked array with a false
+mask. One-dimensional input continues to return a plain array.
+
+With no gaps, partial tuple values and masks match
+`foapy.core.intervals_tuple`. With gaps, the partial function differs only
+because it retains the original source coordinates during its lane
+calculation.
 
 
 === "From a partial sequence"

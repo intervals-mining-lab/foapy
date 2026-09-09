@@ -2,6 +2,53 @@
 
 An _intervals distribution_ is an n-tuple of natural numbers where the index represents the interval length and the value is a count of its appearances in the _interval chain_.
 
+## Distribute tuple lanes along an axis
+
+For a multidimensional collection of interval tuples, `axis` identifies each
+independent one-dimensional lane. The distribution dimension replaces that
+axis using the same placement rule as `numpy.apply_along_axis`.
+
+``` py linenums="1"
+import numpy as np
+import foapy
+
+tuples = np.array([[1, 1, 3, 1], [1, 2, 1, 3]])
+result = foapy.intervals_distribution(tuples, axis=1)
+print(result)
+# [[3 0 1]
+#  [2 1 1]]
+```
+
+Different lanes can have different maximum interval values and therefore
+different distribution lengths. Multidimensional calls return a masked array
+sized to the longest distribution. Shorter distributions receive trailing
+masks, while a zero between observed interval values remains an ordinary,
+unmasked zero-frequency count.
+
+Masked tuple padding is ignored, so axis-aware operations compose directly:
+
+``` py linenums="1"
+import numpy as np
+import foapy
+
+chains = np.array([[1, 1, 1, 1], [1, 2, 3, 4]])
+tuples = foapy.intervals_tuple(
+    chains,
+    foapy.binding.start,
+    foapy.tuple_mode.lossy,
+    axis=1,
+)
+distributions = foapy.intervals_distribution(tuples, axis=1)
+print(distributions)
+# [[3]
+#  [--]]
+```
+
+For a three-dimensional input `(A, B, C)`, axes 0, 1, and 2 produce
+distribution shapes `(L, B, C)`, `(A, L, C)`, and `(A, B, L)`. A
+one-dimensional input still returns a plain array; only multidimensional
+calls return masked arrays.
+
 
 === "From an interval chain"
 
