@@ -31,9 +31,9 @@ jobs:
     outputs:
       wheel-distribution: ${{ steps.wheel-distribution.outputs.path }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with: {fetch-depth: 0}  # deep clone for setuptools-scm
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         id: setup-python
         with: {python-version: "3.11"}
       - name: Run static analysis and format checkers
@@ -48,7 +48,7 @@ jobs:
       - name: Store the distribution files for use in other stages
         # `tests` and `publish` will use the same pre-built distributions,
         # so we make sure to release the exact same package that was tested
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: python-distribution-files
           path: dist/
@@ -66,13 +66,13 @@ jobs:
         - windows-latest
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         id: setup-python
         with:
           python-version: ${{ matrix.python }}
       - name: Retrieve pre-built distribution files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with: {name: python-distribution-files, path: dist/}
       - name: Run tests
         run: >-
@@ -91,7 +91,7 @@ jobs:
           parallel: true
       - name: Save coverage report
         if: ${{ matrix.platform == 'ubuntu-latest' && matrix.python == '3.11' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage
           path: htmlcov
@@ -110,7 +110,7 @@ jobs:
     needs: finalize
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v3
         id: github-app-checkout
         with:
           app-id: ${{ secrets.BOT_GITHUB_APP_ID }}
@@ -119,11 +119,11 @@ jobs:
           repositories: |
             foapy-asv-results
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: intervals-mining-lab/foapy-asv-results
           path: benchmarks/results
@@ -131,7 +131,7 @@ jobs:
           token: ${{ steps.github-app-checkout.outputs.token }}
           persist-credentials: false
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         id: setup-python
         with: {python-version: "3.11"}
 
@@ -171,20 +171,71 @@ jobs:
           asv setup -v || true
           # Measure both revisions on this runner so the comparison does not
           # mix results from different ephemeral GitHub-hosted machines.
-          asv continuous \
+          printf '%s\n' \
+            '${{ steps.context.outputs.base }}' \
+            '${{ steps.context.outputs.head }}' \
+            > ./comparison_commits.txt
+          asv run \
+            HASHFILE:comparison_commits.txt \
+            --interleave-rounds \
+            --machine gh-runner || true
+          asv publish
+
+          asv compare \
             --machine gh-runner \
             --split \
             --only-changed \
             '${{ steps.context.outputs.base }}' \
             '${{ steps.context.outputs.head }}' \
             > ./benchmark_report.md || true
-          asv publish
 
-          cat ./benchmark_report.md >> $GITHUB_STEP_SUMMARY
           if [ -s ./benchmark_report.md ]; then
-            echo "has_report=true" >> $GITHUB_OUTPUT
+            python - <<'PY'
+          import os
+          from pathlib import Path
+
+          report = Path("benchmark_report.md").read_text(encoding="utf-8")
+          run_url = (
+              f"{os.environ['GITHUB_SERVER_URL']}/"
+              f"{os.environ['GITHUB_REPOSITORY']}/actions/runs/"
+              f"{os.environ['GITHUB_RUN_ID']}"
+          )
+          suffix = (
+              "\n\n_Report truncated. "
+              f"[Open the workflow run]({run_url}) or download the "
+              "`benchmark-report` artifact for the complete comparison._\n"
+          )
+
+
+          def excerpt(prefix, byte_limit):
+              complete = prefix + report
+              if len(complete.encode("utf-8")) <= byte_limit:
+                  return complete
+
+              budget = byte_limit - len((prefix + suffix).encode("utf-8"))
+              lines = []
+              size = 0
+              for line in report.splitlines(keepends=True):
+                  line_size = len(line.encode("utf-8"))
+                  if size + line_size > budget:
+                      break
+                  lines.append(line)
+                  size += line_size
+              return prefix + "".join(lines) + suffix
+
+
+          Path("benchmark_summary.md").write_text(
+              excerpt("", 900_000), encoding="utf-8"
+          )
+          Path("benchmark_comment.md").write_text(
+              excerpt("<!-- add-pr-comment:add-pr-comment -->\n\n", 60_000),
+              encoding="utf-8",
+          )
+          PY
+            cat ./benchmark_summary.md >> "$GITHUB_STEP_SUMMARY"
+            echo "has_report=true" >> "$GITHUB_OUTPUT"
           else
-            echo "has_report=false" >> $GITHUB_OUTPUT
+            echo "has_report=false" >> "$GITHUB_OUTPUT"
           fi
 
           cd ./results
@@ -194,7 +245,7 @@ jobs:
           git add .
           git commit -m "Update benchmark results" || true
 
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v3
         id: github-app-push
         with:
           app-id: ${{ secrets.BOT_GITHUB_APP_ID }}
@@ -211,16 +262,40 @@ jobs:
           branch: ${{ steps.context.outputs.branch }}
           directory: benchmarks/results
 
-      - uses: mshick/add-pr-comment@v2
-        if: ${{ steps.benchmark.outputs.has_report == 'true' }}
-        with:
-          message-path: benchmarks/benchmark_report.md
+      - name: Update benchmark PR comment
+        if: ${{ github.event_name == 'pull_request' && steps.benchmark.outputs.has_report == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |-
+          comment_id="$(
+            gh api \
+              "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments?per_page=100" \
+              --jq '[.[] | select(.body | startswith("<!-- add-pr-comment:add-pr-comment -->"))][-1].id // empty'
+          )"
+          if [ -n "$comment_id" ]; then
+            gh api \
+              --method PATCH \
+              "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" \
+              -F body=@benchmarks/benchmark_comment.md
+          else
+            gh api \
+              --method POST \
+              "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+              -F body=@benchmarks/benchmark_comment.md
+          fi
 
-      - name: Save benchmark report
-        uses: actions/upload-artifact@v4
+      - name: Save benchmark website
+        uses: actions/upload-artifact@v7
         with:
           name: benchmark
           path: benchmarks/html
+
+      - name: Save benchmark comparison
+        uses: actions/upload-artifact@v7
+        with:
+          name: benchmark-report
+          path: benchmarks/benchmark_report.md
 
   docs:
     needs: benchmark
@@ -247,27 +322,27 @@ jobs:
           # (e.g. "goruha/sync-openspec-specs"), so slugify it here.
           echo "docs-version=$(echo '${{ steps.context.outputs.branch }}' | tr '/' '-')" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with: {fetch-depth: 0}  # deep clone for setuptools-scm
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         id: setup-python
         with: {python-version: "3.11"}
 
       - name: Retrieve coverage report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: coverage
           path: htmlcov
 
       - name: Retrieve benchmark report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: benchmark
           path: benchmarks/html
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Build package distribution files
         run: |
@@ -289,11 +364,11 @@ jobs:
       id-token: write
       contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with: {python-version: "3.11"}
       - name: Retrieve pre-built distribution files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with: {name: python-distribution-files, path: dist/}
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
