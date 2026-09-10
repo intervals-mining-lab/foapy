@@ -169,10 +169,17 @@ jobs:
           cd ./benchmarks
           asv machine --machine gh-runner --yes || true
           asv setup -v || true
-          asv run ALL --skip-existing --append-samples --machine gh-runner || true
+          # Measure both revisions on this runner so the comparison does not
+          # mix results from different ephemeral GitHub-hosted machines.
+          asv continuous \
+            --machine gh-runner \
+            --split \
+            --only-changed \
+            '${{ steps.context.outputs.base }}' \
+            '${{ steps.context.outputs.head }}' \
+            > ./benchmark_report.md || true
           asv publish
 
-          asv compare --machine gh-runner ${{ steps.context.outputs.base }} HEAD --split --only-changed > ./benchmark_report.md || true
           cat ./benchmark_report.md >> $GITHUB_STEP_SUMMARY
           if [ -s ./benchmark_report.md ]; then
             echo "has_report=true" >> $GITHUB_OUTPUT
