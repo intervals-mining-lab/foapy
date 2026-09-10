@@ -33,7 +33,7 @@ class CharacteristicsTest(TestCase):
 
     def GetPrecision(self, length, dtype=None):
         alphabet = np.arange(0, np.fix(length * 0.2), dtype=int)
-        X = np.random.choice(alphabet, length)
+        X = np.resize(alphabet, length)
         intervals_seq = intervals(X, binding.start, mode.normal)
         return self.target(intervals_seq, dtype)
 
