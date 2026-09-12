@@ -6,7 +6,14 @@ from asv_runner.benchmarks.mark import skip_params_if
 
 from foapy.partials import intervals_chain
 
-from .cases import best_case, dna_case, normal_case, worst_case
+from .cases import (
+    best_case,
+    dna_case,
+    normal_case,
+    records_case,
+    whole_slice_mask,
+    worst_case,
+)
 
 length = [100, 10_000, 1_000_000]
 cases = ["Dense", "PartialDNA", "PartialNormal", "FullyMasked"]
@@ -50,3 +57,47 @@ class PartialsIntervalsChainSuite:
     @skip_params_if(skip, os.getenv("QUICK_BENCHMARK") == "true")
     def peakmem_intervals_chain(self, length, case, binding, chain_mode):
         return intervals_chain(self.data, self.binding, self.chain_mode)
+
+
+axis_length = [100, 10_000, 1_000_000]
+axis_cases = ["Unmasked", "Gapped", "FullyMasked"]
+axis_skip = [
+    (1_000_000, width, axis, case, binding, chain_mode)
+    for width in (2, 8)
+    for axis in (0, 1)
+    for case in axis_cases
+    for binding in (1, 2)
+    for chain_mode in (1, 2)
+]
+
+
+class PartialsAxisIntervalsChainSuite:
+    params = (axis_length, [2, 8], [0, 1], axis_cases, [1, 2], [1, 2])
+    param_names = [
+        "length",
+        "record_width",
+        "axis",
+        "case",
+        "binding",
+        "chain_mode",
+    ]
+    timeout = 600
+
+    def setup(self, length, record_width, axis, case, binding, chain_mode):
+        source = records_case(length, record_width, axis)
+        mask = whole_slice_mask(length, record_width, axis, case)
+        self.data = ma.masked_array(source, mask=mask)
+        self.binding = binding
+        self.chain_mode = chain_mode
+
+    @skip_params_if(axis_skip, os.getenv("QUICK_BENCHMARK") == "true")
+    def time_intervals_chain(
+        self, length, record_width, axis, case, binding, chain_mode
+    ):
+        intervals_chain(self.data, self.binding, self.chain_mode, axis=axis)
+
+    @skip_params_if(axis_skip, os.getenv("QUICK_BENCHMARK") == "true")
+    def peakmem_intervals_chain(
+        self, length, record_width, axis, case, binding, chain_mode
+    ):
+        return intervals_chain(self.data, self.binding, self.chain_mode, axis=axis)

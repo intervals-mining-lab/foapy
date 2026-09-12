@@ -1,36 +1,46 @@
+from typing import Optional
+
 import numpy as np
 import numpy.ma as ma
 from numpy.typing import ArrayLike
 
 from foapy.core._alphabet import alphabet as core_alphabet
-from foapy.exceptions import Not1DArrayException
+from foapy.core._factorize import _normalize_sequence_axis
+from foapy.partials._factorize import _stable_partial_factorize
 
 
-def alphabet(X: ArrayLike) -> np.ndarray:
+def alphabet(X: ArrayLike, *, axis: Optional[int] = None) -> np.ndarray:
     """
-    Extract the alphabet of a partial sequence.
+    Extract the alphabet of a dense or partial sequence.
 
-    Unique unmasked values are returned in the order of their first
-    unmasked appearance. Masked positions are ignored, so a value that is
-    masked at its first occurrence is introduced when it is encountered
-    later in an unmasked position.
+    Unique present elements are returned in first-appearance order. With an
+    explicit ``axis``, each complete orthogonal slice is one element. A slice
+    must be wholly present or wholly masked; wholly masked slices are gaps and
+    are excluded.
 
     Parameters
     ----------
     X : array_like or numpy.ma.MaskedArray
-        1-D sequence (plain or masked). Masked positions are excluded.
+        Sequence (plain or masked). If ``axis`` is omitted it must be 1-D.
+    axis : int, optional
+        Sequence axis. Negative axes follow NumPy conventions. The returned
+        alphabet retains this axis in the same position.
 
     Returns
     -------
-    alphabet : numpy.ndarray, shape (p,)
-        Unique non-masked values in first-appearance order.
-        p = number of unique non-masked values. Empty array when all positions
-        are masked or input is empty.
+    alphabet : numpy.ndarray
+        Plain array of unique non-gap elements in first-appearance order. For
+        an explicit axis, the input rank and all orthogonal dimensions are
+        preserved while the selected axis has alphabet length.
 
     Raises
     ------
     Not1DArrayException
-        When X has more than one dimension.
+        When ``X`` is scalar, or is multidimensional without an explicit axis.
+    ValueError
+        When a slice along an explicit axis is only partially masked.
+    numpy.exceptions.AxisError
+        When an explicit axis is out of range.
 
     Examples
     --------
@@ -40,68 +50,53 @@ def alphabet(X: ArrayLike) -> np.ndarray:
     import foapy
 
     source = ['a', 'c', 'c', 'e', 'd', 'a']
-    alphabet = foapy.partials.alphabet(source)
-    print(alphabet)
-    # ['a', 'c', 'e', 'd']
+    result = foapy.partials.alphabet(source)
+    print(result)
+    # ['a' 'c' 'e' 'd']
     ```
 
-    Masked positions are excluded from the alphabet:
+    Masked scalar positions are excluded:
 
     ``` py linenums="1"
     import numpy.ma as ma
     import foapy
 
     source = ma.masked_array(['a', 'x', 'b', 'a'], mask=[0, 1, 0, 0])
-    alphabet = foapy.partials.alphabet(source)
-    print(alphabet)
-    # ['a', 'b']
+    result = foapy.partials.alphabet(source)
+    print(result)
+    # ['a' 'b']
     ```
 
-    If the first occurrence of a value is masked, a later unmasked
-    occurrence determines its position in the alphabet:
+    Fully masked rows are excluded when rows are selected as elements:
 
     ``` py linenums="1"
     import numpy.ma as ma
     import foapy
 
-    source = ma.masked_array(['a', 'a', 'b', 'a'], mask=[1, 0, 0, 0])
-    alphabet = foapy.partials.alphabet(source)
-    print(alphabet)
-    # ['a', 'b']
+    source = ma.masked_array(
+        [[1, 2], [9, 9], [3, 4], [1, 2]],
+        mask=[[0, 0], [1, 1], [0, 0], [0, 0]],
+    )
+    result = foapy.partials.alphabet(source, axis=0)
+    print(result)
+    # [[1 2]
+    #  [3 4]]
     ```
 
-    An empty or fully masked sequence has an empty alphabet:
-
-    ``` py linenums="1"
-    import numpy.ma as ma
-    import foapy
-
-    source = ma.masked_array(['a', 'b'], mask=[1, 1])
-    alphabet = foapy.partials.alphabet(source)
-    print(alphabet)
-    # []
-    ```
-
-    Inputs with more than one dimension are rejected:
-
-    ``` py linenums="1"
-    import foapy
-
-    source = [[1, 2], [3, 4]]
-    alphabet = foapy.partials.alphabet(source)
-    # Not1DArrayException:
-    # {'message': 'Incorrect array form. Expected d1 array, exists 2'}
-    ```
+    A plain or fully unmasked multidimensional input produces the same
+    alphabet as :func:`foapy.core.alphabet` for the same axis.
     """
-    ar = ma.asarray(X)
+    data = ma.asarray(X)
 
-    if ar.ndim > 1:
-        raise Not1DArrayException(
-            {"message": f"Incorrect array form. Expected d1 array, exists {ar.ndim}"}
-        )
+    if data.ndim != 1:
+        _, result = _stable_partial_factorize(data, axis=axis)
+        return result
 
-    compressed = ar.compressed()
+    if axis is not None:
+        _normalize_sequence_axis(data, axis)
+
+    compressed = data.compressed()
     if len(compressed) == 0:
-        return np.array([], dtype=ar.dtype)
+        return np.array([], dtype=data.dtype)
 
     return core_alphabet(compressed)

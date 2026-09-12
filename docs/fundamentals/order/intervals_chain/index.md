@@ -7,6 +7,75 @@ that restores by _intervals chain_ a sequence with the same with the original se
 
 The idea of _intervals chain_ is easy to explain by a concrete example:
 
+## Slice elements along an axis
+
+For a multidimensional array, an explicit `axis` makes each complete
+orthogonal slice on that axis one sequence element. The intervals chain has
+one scalar value per selected-axis position, so it is always one-dimensional
+and can be passed directly to `foapy.intervals_tuple`.
+
+``` py linenums="1"
+import numpy as np
+import foapy
+
+source = np.array([[1, 2], [3, 4], [1, 2], [5, 6], [1, 2]])
+chain = foapy.intervals_chain(
+    source,
+    foapy.binding.start,
+    foapy.chain_mode.boundary,
+    axis=0,
+)
+print(chain)  # [1 2 2 4 2]
+
+intervals = foapy.intervals_tuple(
+    chain, foapy.binding.start, foapy.tuple_mode.normal
+)
+print(intervals)  # [1 2 2 4 2]
+```
+
+Here the five rows form the sequence. Selecting columns with `axis=1`
+applies the same rule in the column coordinate system. Multidimensional input
+without an explicit axis remains invalid.
+
+## Transform collections of interval chains
+
+`intervals_chain` always returns one chain, but several chains can also be
+stored in a multidimensional array. For `intervals_tuple`, `axis` identifies
+the one-dimensional chain lanes and every coordinate on the other dimensions
+is processed independently, like `numpy.apply_along_axis`.
+
+``` py linenums="1"
+import numpy as np
+import foapy
+
+chains = np.array([[1, 1, 1, 1], [1, 2, 3, 4]])
+result = foapy.intervals_tuple(
+    chains,
+    foapy.binding.start,
+    foapy.tuple_mode.lossy,
+    axis=1,
+)
+print(result)
+# [[1 1 1]
+#  [-- -- --]]
+```
+
+Tuple modes can produce different lengths for different lanes. A
+multidimensional call therefore returns a masked array whose selected axis is
+long enough for the longest result. Each result starts at index zero and its
+unused trailing positions are masked. These masks are structural padding,
+not gaps in a partial sequence. One-dimensional calls continue to return a
+plain array.
+
+For input shape `(A, B, C)`, the result dimension `L` replaces the selected
+axis:
+
+| Selection | Processed lanes | Result shape |
+|---|---|---|
+| `axis=0` | `chains[:, b, c]` | `(L, B, C)` |
+| `axis=1` | `chains[a, :, c]` | `(A, L, C)` |
+| `axis=2` | `chains[a, b, :]` | `(A, B, L)` |
+
 
 === "From a sequence"
 

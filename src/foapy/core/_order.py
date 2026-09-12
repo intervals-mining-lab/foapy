@@ -1,13 +1,21 @@
+from typing import Optional, Tuple, Union
+
 import numpy as np
 from numpy import ndarray
+from numpy.typing import ArrayLike
 
-from foapy.exceptions import Not1DArrayException
+from foapy.core._factorize import _normalize_sequence_axis, _stable_factorize
 
 
-def order(X, return_alphabet: bool = False) -> ndarray:
+def order(
+    X: ArrayLike,
+    return_alphabet: bool = False,
+    *,
+    axis: Optional[int] = None,
+) -> Union[ndarray, Tuple[ndarray, ndarray]]:
     """
 
-    Decompose an array into an order and an alphabet.
+    Decompose a sequence into its one-dimensional order and alphabet.
 
     Alphabet is a list of all unique values from the input array in order of their first appearance.
     Order is an array of indices that maps each element in the input array to its position
@@ -22,24 +30,32 @@ def order(X, return_alphabet: bool = False) -> ndarray:
 
     Parameters
     ----------
-    X : np.array_like
-        Array to decompose into an order and an alphabet. Must be a 1-dimensional array.
+    X : array_like
+        Sequence to factorize. With an explicit ``axis``, each complete
+        orthogonal slice indexed along that axis is one sequence element.
 
     return_alphabet : bool, optional
         If True also return array's alphabet
+    axis : int, optional
+        Sequence axis. If omitted, ``X`` must be 1-dimensional. Negative
+        axes follow NumPy conventions.
 
     Returns
     -------
     order : ndarray
-        Order of X
+        One-dimensional order of length ``X.shape[axis]`` for an explicit
+        axis, or ``len(X)`` for the legacy one-dimensional call.
 
     alphabet : ndarray
-        Alphabet of X. Only provided if `return_alphabet` is True.
+        Alphabet of X. Only provided if ``return_alphabet`` is True. For an
+        explicit axis it retains the input rank and axis placement.
 
     Raises
     -------
     Not1DArrayException
-        When X parameter is not d1 array
+        When ``X`` is scalar, or is multidimensional without an explicit axis.
+    numpy.exceptions.AxisError
+        When an explicit axis is out of range.
 
     Examples
     --------
@@ -77,22 +93,55 @@ def order(X, return_alphabet: bool = False) -> ndarray:
     # []
     ```
 
-    Getting an order of an array with more than 1 dimension is not allowed
+    Treat complete rows as elements and reconstruct the source:
 
     ``` py linenums="1"
+    import numpy as np
     import foapy
-    source = [[[1], [3]], [[6], [9]], [[6], [3]]]
-    order = foapy.order(source)
-    # Not1DArrayException: {'message': 'Incorrect array form. Expected d1 array, exists 3'}
+    source = np.array([[2, 1], [3, 4], [2, 1]])
+    result, alphabet = foapy.order(source, True, axis=0)
+    print(result)
+    # [0 1 0]
+    restored = np.take(alphabet, result, axis=0)
+    print(np.array_equal(restored, source))
+    # True
+    ```
+
+    The same rule applies to an interior axis of a 3-dimensional input:
+
+    ``` py linenums="1"
+    import numpy as np
+    import foapy
+
+    source = np.array(
+        [
+            [[1, 2], [3, 4], [1, 2]],
+            [[5, 6], [7, 8], [5, 6]],
+        ]
+    )
+    result, alphabet = foapy.order(source, True, axis=-2)
+    print(result)
+    # [0 1 0]
+    restored = np.take(alphabet, result, axis=-2)
+    print(np.array_equal(restored, source))
+    # True
     ```
     """  # noqa: E501
 
     data = np.asanyarray(X)
-    if data.ndim > 1:  # Checking for d1 array
-        raise Not1DArrayException(
-            {"message": f"Incorrect array form. Expected d1 array, exists {data.ndim}"}
-        )
 
+    if data.ndim != 1:
+        result, alphabet = _stable_factorize(data, axis=axis)
+
+        if return_alphabet:
+            return result, alphabet
+        return result
+
+    if axis is not None:
+        _normalize_sequence_axis(data, axis)
+
+    # This is the original scalar-element algorithm. In particular, the
+    # alphabet selection remains conditional on return_alphabet.
     perm = data.argsort(kind="mergesort")
 
     unique_mask = np.empty(data.shape, dtype=bool)

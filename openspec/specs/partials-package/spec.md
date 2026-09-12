@@ -5,103 +5,155 @@ Provide position-preserving FOA operations for partial masked sequences: gaps ar
 ## Requirements
 
 ### Requirement: Partial sequence ordering
-The system MUST provide `foapy.partials.order(X, return_alphabet=False)`, accepting a 1-D masked array or a plain sequence treated as fully unmasked, and returning a 1-D masked integer array aligned to `X`. Non-masked positions MUST contain zero-based alphabet indices in first-appearance order, and masked positions MUST remain masked. The public API documentation MUST expose the function, describe its mask-preserving semantics and return modes, and include runnable examples for plain and masked inputs. The function MUST expose annotations for its input, boolean flag, and documented return forms without changing its callable interface.
+The system MUST provide `foapy.partials.order(X, return_alphabet=False, *, axis=None)`, accepting a masked array or a plain sequence treated as fully unmasked. With no axis, it MUST retain its existing one-dimensional behavior. With an explicit axis, each complete orthogonal slice MUST be one sequence element, a fully masked slice MUST be a gap, and every slice MUST be either wholly masked or wholly unmasked. The result MUST be a one-dimensional masked integer array of length `X.shape[axis]`; non-gap positions MUST contain zero-based alphabet indices in first-appearance order and gap positions MUST remain masked. When requested, the alphabet MUST be a plain array of the unique non-gap slices, retain the selected axis, and equal `foapy.partials.alphabet(X, axis=axis)`. The public API documentation and annotations MUST describe both call modes, shapes, return forms, mask rules, and reconstruction of observed slices.
 
-#### Scenario: Order preserves gaps
+#### Scenario: One-dimensional order preserves gaps
 - **WHEN** `order()` receives `['a', --, 'b', 'a', --]`
 - **THEN** it returns `[0, --, 1, 0, --]` with the same length and mask
 
-#### Scenario: Order returns an alphabet when requested
-- **WHEN** `order()` is called with `return_alphabet=True`
-- **THEN** it returns the masked order array and a plain alphabet array containing only non-masked unique values in first-appearance order
+#### Scenario: Whole masked slices are gaps
+- **WHEN** a multidimensional partial input contains slice `S0`, a wholly masked slice, `S1`, and `S0` along the selected axis
+- **THEN** order returns `[0, --, 1, 0]`
+
+#### Scenario: Order returns an axis-preserving alphabet when requested
+- **WHEN** multidimensional `order()` is called with `return_alphabet=True` and an explicit axis
+- **THEN** it returns the one-dimensional masked order and a plain alphabet array containing only unique non-gap slices in first-appearance order, with the alphabet dimension at the selected axis
+
+#### Scenario: Observed slices can be reconstructed
+- **WHEN** the returned alphabet is indexed along the selected axis by the unmasked order values
+- **THEN** every non-gap source slice is reconstructed exactly and broadcasting the order mask across the orthogonal dimensions restores the source gap mask
 
 #### Scenario: Empty or fully masked input
-- **WHEN** `order()` receives an empty or fully masked 1-D input
-- **THEN** it returns a same-length fully masked order array, and an empty alphabet when requested
+- **WHEN** `order()` receives an empty or fully masked input with a valid sequence axis
+- **THEN** it returns a same-axis-length fully masked order array and an axis-preserving empty alphabet when requested
 
-#### Scenario: Multi-dimensional input is rejected
-- **WHEN** `order()` receives an input with more than one dimension
+#### Scenario: Mixed mask inside one slice is rejected
+- **WHEN** any slice along the selected axis contains both masked and unmasked scalar components
+- **THEN** `order()` raises `ValueError` because the slice does not define one present or absent sequence element
+
+#### Scenario: Multidimensional input without axis is rejected
+- **WHEN** `order()` receives an input with more than one dimension and no explicit axis
 - **THEN** it raises `Not1DArrayException`
 
 #### Scenario: Public documentation provides runnable examples
 - **WHEN** a user opens the generated reference for `foapy.partials.order`
-- **THEN** the reference includes examples for plain input, masked input with preserved gaps, and `return_alphabet=True`
+- **THEN** the reference includes runnable examples for plain input, one-dimensional gaps, multidimensional whole-slice gaps, `return_alphabet=True`, and reconstruction
 
 #### Scenario: Signature annotations describe the contract
 - **WHEN** a caller inspects `foapy.partials.order`
-- **THEN** annotations identify the accepted array-like input, boolean `return_alphabet` flag, and masked-array or tuple return forms without requiring different call syntax
+- **THEN** annotations identify the accepted array-like input, boolean `return_alphabet` flag, optional integer axis, and masked-array or tuple return forms
 
 #### Scenario: ASV benchmark coverage exists
 - **WHEN** the ASV benchmark suite discovers partials benchmarks
-- **THEN** it includes time and peak-memory cases for `foapy.partials.order` across scalable input lengths and representative unmasked, partially masked, and fully masked data
+- **THEN** it includes time and peak-memory cases for `foapy.partials.order` across scalable sequence-axis lengths and representative one-dimensional, multidimensional, unmasked, partially gapped, and fully gapped data
 
 ### Requirement: Partial sequence alphabet extraction
-The system MUST provide `foapy.partials.alphabet(X)`, accepting a 1-D masked array or plain sequence and returning a plain 1-D `numpy.ndarray` of unique non-masked values in first-appearance order. Its public documentation MUST describe masked-value exclusion, empty and fully masked inputs, dimensionality errors, and runnable usage examples. The function MUST expose type annotations for its input and plain-array return value without changing its callable interface.
+The system MUST provide `foapy.partials.alphabet(X, *, axis=None)`, accepting a masked array or plain sequence. With no axis, it MUST retain its existing one-dimensional behavior. With an explicit axis, each complete orthogonal slice MUST be one sequence element, fully masked slices MUST be excluded as gaps, and every slice MUST be either wholly masked or wholly unmasked. The function MUST return a plain `numpy.ndarray` containing unique non-gap slices in first-appearance order, preserving the input rank and replacing only the selected axis length with the alphabet size. Its public documentation and annotations MUST describe masked-slice exclusion, axis and shape behavior, empty and fully masked inputs, validation errors, and runnable examples.
 
-#### Scenario: Masked values are excluded
+#### Scenario: One-dimensional masked values are excluded
 - **WHEN** `alphabet()` receives `['a', --, 'b', 'a', --]`
-- **THEN** it returns `['a', 'b']` as a plain 1-D array
+- **THEN** it returns `['a', 'b']` as a plain one-dimensional array
 
-#### Scenario: First element is masked
-- **WHEN** `alphabet()` receives `[--, 'b', 'a']`
-- **THEN** it returns `['b', 'a']` and does not treat the masked first position as an alphabet value
+#### Scenario: Fully masked multidimensional slices are excluded
+- **WHEN** slices along the selected axis are `S0`, a wholly masked slice, `S1`, and `S0`
+- **THEN** `alphabet()` returns `S0`, `S1` as a plain array with the selected axis reduced to length two
+
+#### Scenario: First slice is masked
+- **WHEN** the first slice is wholly masked and later non-gap slices are `S1`, `S0`
+- **THEN** the alphabet is `S1`, `S0` and the masked first position does not affect first-appearance order
 
 #### Scenario: First occurrence is masked and later occurrence is unmasked
-- **WHEN** `alphabet()` receives `[--, 'a', 'b', 'a']` where the first `a` position is masked
-- **THEN** it returns `['b', 'a']`, ordering values by their first unmasked occurrence
+- **WHEN** data under a wholly masked slice equals a later non-gap slice
+- **THEN** only the later non-gap occurrence introduces that slice into the alphabet
 
 #### Scenario: Fully masked or empty input
-- **WHEN** `alphabet()` receives a fully masked or empty 1-D input
-- **THEN** it returns an empty plain array
+- **WHEN** `alphabet()` receives a fully masked input or an input whose selected axis is empty
+- **THEN** it returns a plain array with length zero on the selected axis and all orthogonal dimensions preserved
 
-#### Scenario: Multi-dimensional input is rejected
-- **WHEN** `alphabet()` receives an input with more than one dimension
+#### Scenario: Mixed mask inside one slice is rejected
+- **WHEN** any slice along the selected axis contains both masked and unmasked scalar components
+- **THEN** `alphabet()` raises `ValueError`
+
+#### Scenario: Multidimensional input without axis is rejected
+- **WHEN** `alphabet()` receives a multidimensional input without an explicit axis
 - **THEN** it raises `Not1DArrayException`
 
 ### Requirement: Position-preserving partial interval chains
-The system MUST provide `foapy.partials.intervals_chain(X, binding, chain_mode)`, accepting the raw 1-D masked sequence (or a plain fully unmasked sequence), and returning a same-length masked integer array. Non-masked values MUST contain interval distances calculated from actual source indices; masked positions MUST remain masked. Inputs whose normalized array dimensionality is not exactly one MUST raise `Not1DArrayException`.
+The system MUST provide `foapy.partials.intervals_chain(X, binding, chain_mode, *, axis=None)`, accepting a masked array or a plain sequence treated as fully unmasked. With no axis, it MUST retain its existing one-dimensional behavior. With an explicit axis, each complete orthogonal slice MUST be one sequence element, a fully masked slice MUST be a gap, and every slice MUST be either wholly masked or wholly unmasked. The result MUST be a one-dimensional masked `numpy.intp` array of length `X.shape[axis]`; non-gap positions MUST contain interval distances calculated from actual selected-axis indices and gap positions MUST remain masked. Gaps MUST count toward occurrence, boundary, and cyclic distances because they remain positions in the selected-axis coordinate system.
 
-#### Scenario: Gaps count toward distance
+#### Scenario: One-dimensional gaps count toward distance
 - **WHEN** `intervals_chain()` receives `[--, C, T, C, --, G]` with start binding and boundary mode
 - **THEN** it returns `[--, 2, 3, 2, --, 6]`
 
+#### Scenario: Whole masked slices are positional gaps
+- **WHEN** multidimensional slices along the selected axis are `S0`, a wholly masked slice, `S1`, and `S0` with start binding and boundary mode
+- **THEN** the function returns `[1, --, 3, 3]`
+
+#### Scenario: Cycle mode includes whole-slice gaps
+- **WHEN** multidimensional slices along the selected axis are `S0`, a wholly masked slice, `S1`, and `S0` with start binding and cycle mode
+- **THEN** the function returns `[1, --, 4, 3]`, using the full selected-axis length of four
+
 #### Scenario: Dense input matches core
-- **WHEN** `intervals_chain()` receives a 1-D input with no masked positions
-- **THEN** its non-masked result equals `foapy.core.intervals_chain()` for the same input and modes
+- **WHEN** `intervals_chain()` receives a plain or fully unmasked input with any valid explicit axis
+- **THEN** its non-masked values equal `foapy.core.intervals_chain()` for the same input, binding, chain mode, and axis
 
 #### Scenario: Fully masked input
-- **WHEN** `intervals_chain()` receives a fully masked input
-- **THEN** it returns a fully masked array of the same length
+- **WHEN** every slice along a nonempty selected axis is wholly masked
+- **THEN** the function returns a fully masked one-dimensional array with the selected-axis length
 
-#### Scenario: Scalar input is rejected consistently
-- **WHEN** `intervals_chain()` receives a scalar or other 0-D input
-- **THEN** it raises `Not1DArrayException`, matching `foapy.core.intervals_chain()`
+#### Scenario: Empty sequence axis
+- **WHEN** the selected input axis has length zero
+- **THEN** the function returns an empty one-dimensional masked `numpy.intp` array
 
-#### Scenario: Multidimensional input or invalid modes are rejected
-- **WHEN** `intervals_chain()` receives a multi-dimensional input or an unsupported binding or chain mode
-- **THEN** it raises `Not1DArrayException` for the dimensionality error or `ValueError` for the invalid mode
+#### Scenario: Mixed mask inside one slice is rejected
+- **WHEN** any slice along the selected axis contains both masked and unmasked scalar components
+- **THEN** `intervals_chain()` raises `ValueError` because the slice does not define one present or absent sequence element
+
+#### Scenario: Multidimensional input without axis is rejected
+- **WHEN** `intervals_chain()` receives a multidimensional input without an explicit axis
+- **THEN** it raises `Not1DArrayException`
+
+#### Scenario: Negative axis is equivalent
+- **WHEN** a negative and equivalent positive axis select the same dimension
+- **THEN** both calls return interval chains with identical data and masks
+
+#### Scenario: Invalid axis or scalar input is rejected consistently
+- **WHEN** the explicit axis is out of range or the input is zero-dimensional
+- **THEN** the function raises NumPy's axis error for the invalid axis or `Not1DArrayException` for the scalar
+
+#### Scenario: Invalid modes are rejected
+- **WHEN** `intervals_chain()` receives an unsupported binding or chain mode
+- **THEN** it raises `ValueError`
 
 ### Requirement: Published partial intervals-chain reference
-The documentation MUST publish an API reference for `foapy.partials.intervals_chain` under the `foapy.partials` reference navigation. The reference MUST describe its shared signature, masked-array return type, mask preservation, source-position gap semantics, errors, and at least one runnable dense or masked example.
+The documentation MUST publish an API reference for `foapy.partials.intervals_chain` under the `foapy.partials` reference navigation. The reference MUST describe its keyword-only axis, slice-as-element behavior, one-dimensional masked return shape, whole-slice mask rules, source-position gap semantics, errors, and runnable one-dimensional and multidimensional examples.
 
 #### Scenario: Partials API page is discoverable
 - **WHEN** a user browses the generated documentation's `foapy.partials` reference section
 - **THEN** an `intervals_chain` entry links to the API reference page
 
-#### Scenario: Reference explains the semantic difference
+#### Scenario: Reference explains gap and axis semantics
 - **WHEN** a user reads the partials intervals-chain reference
-- **THEN** it explains that masked positions remain in the output and count toward distances, and distinguishes this from the dense/core and compressed `foapy.ma` behavior
+- **THEN** it explains that wholly masked slices remain masked positions, count toward distances along the selected axis, and differ from compressed semantics
+
+#### Scenario: Reference includes a multidimensional example
+- **WHEN** a user reads the partial intervals-chain reference
+- **THEN** it includes a runnable example with whole-slice gaps and an explicit axis
 
 ### Requirement: Partials intervals-chain benchmark coverage
-The benchmark suite MUST measure `foapy.partials.intervals_chain` execution time and peak memory for representative input lengths of 100, 10,000, and 1,000,000, with both bindings and both chain modes. At least one benchmark input MUST contain masked gaps.
+The benchmark suite MUST measure `foapy.partials.intervals_chain` execution time and peak memory for representative one-dimensional lengths and for deterministic multidimensional records across multiple sequence-axis lengths, slice widths, axis placements, and whole-slice mask states. The matrix MUST retain both bindings and both chain modes, and at least one axis-aware benchmark input MUST contain whole-slice gaps.
 
-#### Scenario: Benchmark suite covers the parameter matrix
+#### Scenario: Benchmark suite covers the legacy parameter matrix
 - **WHEN** the partials intervals-chain benchmark suite is collected
-- **THEN** it exposes length, dataset, binding, and chain-mode parameters covering the required sizes and both enum values
+- **THEN** it retains length, dataset, binding, and chain-mode parameters covering the required one-dimensional sizes and both enum values
 
-#### Scenario: Benchmark exercises masked semantics
-- **WHEN** the benchmark invokes the partials intervals-chain methods on a gapped dataset
-- **THEN** it passes a masked input and measures the function call rather than silently benchmarking the core or compressed implementation
+#### Scenario: Benchmark suite covers axis inputs
+- **WHEN** the partials intervals-chain benchmark suite is collected
+- **THEN** it includes time and peak-memory cases parameterized by sequence-axis length, record width, axis placement, whole-slice mask state, binding, and chain mode
+
+#### Scenario: Benchmark exercises whole-slice gap semantics
+- **WHEN** an axis-aware partial benchmark invokes `intervals_chain`
+- **THEN** at least one case passes a masked multidimensional input with wholly masked slices rather than compressing or preprocessing it outside the timed call
 
 ### Requirement: Partial interval tuple strategies
 The system MUST provide `foapy.partials.intervals_tuple(chain, binding, tuple_mode)`, accepting a 1-D masked interval chain (as produced by `foapy.partials.intervals_chain`) or a plain fully unmasked chain, and returning a plain 1-D `numpy.ndarray` of dtype `numpy.intp` with masked (gap) positions excluded entirely. The function MUST NOT return a `numpy.ma.MaskedArray`. For `binding.end`, the returned order MUST match `foapy.core.intervals_tuple`'s own ordering convention (the reversed processing frame), not the source array's left-to-right order.
@@ -133,16 +185,24 @@ The system MUST provide `foapy.partials.intervals_tuple(chain, binding, tuple_mo
 - **THEN** it raises `ValueError`
 
 ### Requirement: Package boundary and dense parity
-The system MUST expose exactly `order`, `alphabet`, `intervals_chain`, and `intervals_tuple` from `foapy.partials`, preserve masks through all positional operations, and leave `foapy.core` and `foapy.ma` behavior unchanged.
+The system MUST expose exactly `order`, `alphabet`, `intervals_chain`, and `intervals_tuple` from `foapy.partials`. For one-dimensional inputs and for wholly present slice elements along an explicit axis, partial alphabet, order, and interval-chain results MUST match their corresponding core results, subject to the documented masked-array representation. Existing partial interval behavior and top-level package exports MUST remain unchanged.
 
 #### Scenario: Submodule-only access
 - **WHEN** a caller imports `foapy.partials`
 - **THEN** the four partials functions are available from that submodule and are not added as top-level `foapy` functions
 
-#### Scenario: Zero-gap parity across the pipeline
-- **WHEN** a caller uses an unmasked input and valid combinations of binding, chain mode, and tuple mode
+#### Scenario: Zero-gap parity for alphabet and order
+- **WHEN** a caller uses a plain or fully unmasked input with any valid explicit axis
+- **THEN** the partial alphabet equals the core alphabet and the non-masked values of the partial order equal the core order
+
+#### Scenario: Zero-gap parity for interval chains
+- **WHEN** a caller uses a plain or fully unmasked input with any valid explicit axis, binding, and chain mode
+- **THEN** the partial interval-chain mask is empty and its values equal the core interval chain
+
+#### Scenario: Existing one-dimensional pipeline parity
+- **WHEN** a caller uses an unmasked one-dimensional input and valid combinations of binding, chain mode, and tuple mode
 - **THEN** partials results match the corresponding core results, subject to the documented masked-array representation
 
-#### Scenario: Gap masks survive the pipeline
-- **WHEN** a caller passes a partially masked sequence through ordering, interval-chain, and tuple operations
-- **THEN** every source gap remains masked in each positional output
+#### Scenario: Existing interval gap behavior remains unchanged
+- **WHEN** a caller passes a one-dimensional partial sequence through ordering, interval-chain, and tuple operations
+- **THEN** every source gap retains the behavior documented by the partial interval requirements
