@@ -7,6 +7,7 @@ from numpy.typing import ArrayLike
 from foapy.core._binding import binding as binding_cls
 from foapy.core._chain_mode import chain_mode as chain_mode_cls
 from foapy.core._factorize import _normalize_sequence_axis
+from foapy.core._intervals_chain import _intervals_chain_1d as _core_intervals_chain_1d
 from foapy.partials._order import order as partial_order
 
 
@@ -128,6 +129,15 @@ def intervals_chain(
                 )
             }
         )
+
+    if not ma.isMaskedArray(X):
+        dense_data = np.asanyarray(X)
+
+        if dense_data.ndim == 1:
+            if axis is not None:
+                _normalize_sequence_axis(dense_data, axis)
+
+            return ma.asarray(_core_intervals_chain_1d(dense_data, binding, chain_mode))
 
     data = ma.asarray(X)
 

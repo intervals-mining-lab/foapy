@@ -14,6 +14,7 @@ Axis-aware interval chains can represent multidimensional source slices, but cor
 - Add an internal, non-public `is_valid_intervals_chain(..., axis=None)` hook used by `intervals_tuple`; its provisional one-dimensional validity check always returns `True` so stronger validation can be introduced later without changing the tuple API. Reuse prepared arrays and normalized axes, and validate a complete multidimensional lane batch once before invoking its vectorized tuple kernel.
 - Implement multidimensional validation, tuple transformation, distribution counting, and variable-length packing with C-backed NumPy batch operations and no Python iteration in production code.
 - Teach axis-aware distributions to ignore masked padding while retaining meaningful zero-frequency bins.
+- Keep dense one-dimensional partial interval-chain calls off mask extraction and compression by reusing the equivalent core kernel while preserving the masked-array return contract.
 - Add tests, documentation, and ASV time and peak-memory coverage for core and partial one-, two-, and three-dimensional inputs and variable-length lane results.
 
 ## Capabilities

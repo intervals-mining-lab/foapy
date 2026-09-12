@@ -144,6 +144,34 @@ def test_1d_calls_use_legacy_direct_path(monkeypatch, axis):
     assert_equal(result, ma.masked_array([1, 0, 2], mask=[False, True, False]))
 
 
+@pytest.mark.parametrize("axis", [None, 0, -1])
+@pytest.mark.parametrize("binding_value", [binding.start, binding.end])
+@pytest.mark.parametrize("chain_mode_value", [chain_mode.boundary, chain_mode.cycle])
+def test_plain_1d_calls_use_core_kernel(
+    monkeypatch, axis, binding_value, chain_mode_value
+):
+    module = importlib.import_module("foapy.partials._intervals_chain")
+    source = np.array([2, 1, 2, 3, 2])
+    expected = core_intervals_chain(source, binding_value, chain_mode_value)
+
+    def fail(*args, **kwargs):
+        pytest.fail("plain one-dimensional input entered the partial kernel")
+
+    monkeypatch.setattr(module, "_intervals_chain_1d", fail)
+
+    result = intervals_chain(
+        source,
+        binding_value,
+        chain_mode_value,
+        axis=axis,
+    )
+
+    assert isinstance(result, ma.MaskedArray)
+    assert result.dtype == np.dtype(np.intp)
+    assert not np.any(ma.getmaskarray(result))
+    assert_array_equal(result.data, expected)
+
+
 def test_multidimensional_input_without_axis_is_rejected():
     with pytest.raises(Not1DArrayException):
         intervals_chain(

@@ -1,5 +1,20 @@
 ## MODIFIED Requirements
 
+### Requirement: Dense partial interval chains avoid gap-processing overhead
+The system MUST return a `numpy.ma.MaskedArray` from `foapy.partials.intervals_chain()` for plain one-dimensional input, and its values, dtype, binding behavior, and chain-mode behavior MUST equal `foapy.core.intervals_chain()`. Plain one-dimensional input with omitted axis, `axis=0`, or `axis=-1` MUST reuse the core one-dimensional interval-chain calculation without extracting, compressing, or scattering a mask. Masked input MUST retain the existing gap-aware partial calculation.
+
+#### Scenario: Dense one-dimensional input uses core-equivalent calculation
+- **WHEN** a plain one-dimensional array is passed for any binding and chain mode
+- **THEN** the returned masked array has no masked positions and contains the same `numpy.intp` values as the core interval chain
+
+#### Scenario: Explicit sole axis retains the dense fast path
+- **WHEN** plain one-dimensional input is passed with `axis=0` or `axis=-1`
+- **THEN** axis validation succeeds and the same core-equivalent calculation is used
+
+#### Scenario: Gapped input retains partial semantics
+- **WHEN** a masked one-dimensional input contains gaps
+- **THEN** the gaps remain masked and count toward interval distances through the partial interval-chain calculation
+
 ### Requirement: Partial interval tuple strategies
 The system MUST provide `foapy.partials.intervals_tuple(chain, binding, tuple_mode, *, axis=None)`, accepting a one-dimensional masked interval chain (as produced by `foapy.partials.intervals_chain`), a plain fully unmasked chain, or a multidimensional collection of such chains. One-dimensional input with omitted axis, `axis=0`, or `axis=-1` MUST return a plain one-dimensional `numpy.ndarray` of dtype `numpy.intp` with masked gap positions excluded entirely.
 

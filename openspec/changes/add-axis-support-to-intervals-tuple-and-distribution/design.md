@@ -88,6 +88,12 @@ Tests will use explicit valid core and partial chains to verify row and column p
 
 Benchmarks will retain existing one-dimensional matrices and add deterministic multidimensional core and partial tuple lane matrices for time and peak memory. Documentation will show the apply-along-axis shape rule, partial gap semantics, existing distribution composition, and masked variable-length examples.
 
+### 10. Dense one-dimensional partial chains reuse the core kernel
+
+A plain one-dimensional input has no gap coordinates to preserve, so its partial interval chain is numerically identical to the core interval chain for every binding and chain mode. After the public partial function validates its arguments and any explicit sole axis, it delegates that dense case to the private core one-dimensional kernel and wraps the result as a fully unmasked `numpy.ma.MaskedArray`.
+
+Masked inputs continue to use the partial kernel even when their current mask contains no gaps. Inspecting a full mask merely to select a faster implementation would add another linear pass and weaken the benefit for the common plain-array benchmark path. Duplicating the core algorithm was rejected because it would leave two dense implementations to maintain.
+
 ## Risks / Trade-offs
 
 - **[Vectorized packing allocates lane-wide index arrays]** → Keep all intermediate arrays linear in the lane matrix size and benchmark representative lane counts and lengths.
@@ -98,6 +104,7 @@ Benchmarks will retain existing one-dimensional matrices and add deterministic m
 - **[Batch validation reports only aggregate failure]** → Preserve the existing Boolean validation seam and fail before invoking the batch kernel; richer diagnostics remain a future validator concern.
 - **[Future substantive validation can again dominate short tuple operations]** → Reuse prepared lane data and fuse validation with values already calculated by tuple kernels where practical.
 - **[Empty orthogonal dimensions provide no result shape sample]** → Define deterministic mode-specific empty shapes and cover them with tests.
+- **[The dense fast path changes the internal representation of an all-false mask]** → Require the public masked-array type and `numpy.ma.getmaskarray()` semantics, not a particular scalar-versus-array mask storage detail.
 
 ## Migration Plan
 

@@ -112,3 +112,9 @@
 - [x] 14.4 Add vectorized multidimensional partial interval-tuple kernels that preserve gap coordinates, binding order, variable lengths, and structural masks.
 - [x] 14.5 Update dispatch tests for batch validation and add an AST regression test prohibiting Python iteration and disguised loop wrappers in the affected production modules.
 - [x] 14.6 Run focused axis and pipeline tests, the complete pytest suite, ASV tuple benchmarks, formatting and lint checks, `git diff --check`, and strict OpenSpec validation.
+
+## 15. Dense Partial Interval-Chain Performance Follow-Up
+
+- [x] 15.1 Route plain one-dimensional partial interval-chain inputs through the core one-dimensional kernel while preserving argument validation, explicit sole-axis behavior, `numpy.intp` values, and the masked-array return contract.
+- [x] 15.2 Add dispatch and parity tests for omitted, positive, and negative sole-axis calls while retaining masked gap-aware coverage.
+- [x] 15.3 Re-run the focused partial interval-chain suites and the 10,000-element dense benchmark, then run the complete pytest suite, formatting and lint checks, `git diff --check`, and strict OpenSpec validation.
