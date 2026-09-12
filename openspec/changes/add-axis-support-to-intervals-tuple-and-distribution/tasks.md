@@ -1,6 +1,6 @@
 ## 1. Shared Axis Infrastructure and Validation
 
-- [x] 1.1 Add or extract a private lane-application helper that normalizes an axis, iterates one-dimensional lanes, packs variable-length `numpy.intp` results from index zero, masks trailing positions, and restores the result dimension at the selected axis.
+- [x] 1.1 Add or extract a private lane-application helper that normalizes an axis, presents all one-dimensional lanes as one batch, packs variable-length `numpy.intp` results from index zero, masks trailing positions, and restores the result dimension at the selected axis.
 - [x] 1.2 Define deterministic behavior for empty selected axes and absent lanes caused by structurally empty orthogonal dimensions.
 - [x] 1.3 Add the internal non-exported `is_valid_intervals_chain(chain, *, axis=None)` helper with an always-true one-dimensional content check and aggregate multidimensional lane validation.
 - [x] 1.4 Verify the validator's scalar, missing-axis, negative-axis, and invalid-axis behavior uses the shared normalization contract.
@@ -94,3 +94,21 @@
 - [x] 12.2 Run the new partial axis suite and complete pytest suite and resolve regressions.
 - [x] 12.3 Run Black, isort, flake8, and `git diff --check` on the completed delta.
 - [x] 12.4 Run strict OpenSpec validation after the deferred `partials-package` delta spec is generated, and confirm every partial requirement is represented by implementation and verification tasks.
+
+## 13. Validation-Path Performance Follow-Up
+
+- [x] 13.1 Add a fast path to `is_valid_intervals_chain()` for already prepared one-dimensional ndarrays with omitted axis while preserving direct ArrayLike conversion and all scalar, missing-axis, negative-axis, and invalid-axis behavior.
+- [x] 13.2 Refactor core `intervals_tuple()` to prepare its input once, normalize any explicit one-dimensional axis once, consult the validation hook, and reuse the prepared array in the one-dimensional tuple kernel.
+- [x] 13.3 Remove duplicate multidimensional input preparation and axis normalization from validation while preserving `ValueError` behavior and preventing partial results from escaping.
+- [x] 13.4 Extend validator integration and dispatch tests to verify the one-dimensional fast path, validation-before-transformation order, false-result rejection, and absence of duplicate multidimensional preparation.
+- [x] 13.5 Re-run the affected legacy one-dimensional and multidimensional ASV tuple benchmarks and confirm validation dispatch no longer creates a material regression against the pre-axis implementation.
+- [x] 13.6 Run the focused tuple tests, complete pytest suite, Black, isort, flake8, `git diff --check`, and strict OpenSpec validation.
+
+## 14. Vectorized Lane Processing Follow-Up
+
+- [x] 14.1 Amend mandatory repository guidance to prohibit Python loops, comprehensions, generator expressions, and disguised loop wrappers in production while allowing loops in tests and benchmark setup.
+- [x] 14.2 Replace the shared per-lane callback and packing loops with one vectorized batch-dispatch call and NumPy indexed masked packing.
+- [x] 14.3 Add vectorized multidimensional kernels for core interval tuples and interval distributions, including aggregate pre-transform validation without duplicate axis normalization.
+- [x] 14.4 Add vectorized multidimensional partial interval-tuple kernels that preserve gap coordinates, binding order, variable lengths, and structural masks.
+- [x] 14.5 Update dispatch tests for batch validation and add an AST regression test prohibiting Python iteration and disguised loop wrappers in the affected production modules.
+- [x] 14.6 Run focused axis and pipeline tests, the complete pytest suite, ASV tuple benchmarks, formatting and lint checks, `git diff --check`, and strict OpenSpec validation.

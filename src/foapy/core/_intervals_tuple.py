@@ -5,7 +5,7 @@ import numpy.ma as ma
 from numpy import ndarray
 from numpy.typing import ArrayLike
 
-from foapy.core._axis_transform import _apply_to_axis_lanes
+from foapy.core._axis_transform import _apply_to_axis_lanes, _pack_axis_lane_values
 from foapy.core._binding import binding as binding_cls
 from foapy.core._factorize import _normalize_sequence_axis
 from foapy.core._intervals_chain_validation import is_valid_intervals_chain
@@ -154,24 +154,62 @@ def intervals_tuple(
             }
         )
 
-    data = np.asanyarray(chain)
-    if not is_valid_intervals_chain(data, axis=axis):
-        raise ValueError({"message": "Invalid intervals chain."})
+    data = chain if isinstance(chain, np.ndarray) else np.asanyarray(chain)
 
     if data.ndim == 1:
         if axis is not None:
             _normalize_sequence_axis(data, axis)
-        return _intervals_tuple_1d(
-            np.asanyarray(data, dtype=np.intp), binding, tuple_mode
-        )
+        prepared = data if data.dtype == np.intp else np.asanyarray(data, dtype=np.intp)
+        if not is_valid_intervals_chain(prepared):
+            raise ValueError({"message": "Invalid intervals chain."})
+        return _intervals_tuple_1d(prepared, binding, tuple_mode)
+
+    prepared = data if data.dtype == np.intp else np.asanyarray(data, dtype=np.intp)
 
     return _apply_to_axis_lanes(
-        data,
+        prepared,
         axis,
-        lambda lane: _intervals_tuple_1d(
-            np.asanyarray(lane, dtype=np.intp), binding, tuple_mode
-        ),
-        preserve_input_length_without_lanes=tuple_mode == tuple_mode_cls.normal,
+        lambda lanes: _validated_intervals_tuple_lanes(lanes, binding, tuple_mode),
+    )
+
+
+def _validated_intervals_tuple_lanes(
+    lanes: ndarray, binding: int, tuple_mode: int
+) -> ma.MaskedArray:
+    """Validate and transform a prepared interval-chain lane batch."""
+    if not is_valid_intervals_chain(lanes, axis=1):
+        raise ValueError({"message": "Invalid intervals chain."})
+    return _intervals_tuple_lanes(lanes, binding, tuple_mode)
+
+
+def _intervals_tuple_lanes(
+    lanes: ndarray, binding: int, tuple_mode: int
+) -> ma.MaskedArray:
+    """Apply one tuple mode to a complete prepared lane batch."""
+    if tuple_mode == tuple_mode_cls.normal:
+        return ma.masked_array(lanes.copy(), mask=np.zeros(lanes.shape, dtype=bool))
+
+    work = lanes[:, ::-1] if binding == binding_cls.end else lanes
+    positions = np.broadcast_to(
+        np.arange(work.shape[1], dtype=np.intp)[None, :], work.shape
+    )
+
+    if tuple_mode == tuple_mode_cls.lossy:
+        return _pack_axis_lane_values(work, work <= positions)
+
+    prev_pos = positions - work
+    last = np.ones(work.shape, dtype=bool)
+    valid_prev = prev_pos >= 0
+    lane_indices = np.broadcast_to(
+        np.arange(work.shape[0], dtype=np.intp)[:, None], work.shape
+    )
+    last[lane_indices[valid_prev], prev_pos[valid_prev]] = False
+    trailing = work.shape[1] - np.arange(work.shape[1], dtype=np.intp)[None, :]
+    prefix_width = work.shape[1] * min(work.shape[0], 1)
+    return _pack_axis_lane_values(
+        trailing,
+        last,
+        prefix=work[:, :prefix_width],
     )
 
 

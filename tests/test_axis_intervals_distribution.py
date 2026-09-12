@@ -128,6 +128,18 @@ def test_1d_masked_tuple_excludes_masked_positions():
     assert not ma.isMaskedArray(result)
 
 
+def test_prepared_1d_plain_array_skips_conversion(monkeypatch):
+    module = importlib.import_module("foapy.core._intervals_distribution")
+    prepared = np.array([1, 1, 3, 1], dtype=np.intp)
+
+    def fail_conversion(*args, **kwargs):
+        raise AssertionError("prepared ndarray was converted again")
+
+    monkeypatch.setattr(module.np, "asanyarray", fail_conversion)
+
+    assert module.intervals_distribution(prepared).tolist() == [3, 0, 1]
+
+
 @pytest.mark.parametrize("axis", [None, 0, -1])
 def test_1d_calls_use_direct_plain_array_path(monkeypatch, axis):
     module = importlib.import_module("foapy.core._intervals_distribution")

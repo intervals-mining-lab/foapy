@@ -31,7 +31,9 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] Every production array computation is designed as C-backed NumPy batch operations.
+- [ ] No production `for`, `while`, comprehension, generator expression, `numpy.vectorize`, or `numpy.apply_along_axis` is planned.
+- [ ] Tests and benchmarks cover correctness and performance of the vectorized design.
 
 ## Project Structure
 

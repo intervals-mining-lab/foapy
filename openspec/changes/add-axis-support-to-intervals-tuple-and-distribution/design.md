@@ -16,6 +16,8 @@ The existing tuple modes can produce different result lengths for equal-length i
 - Preserve variable lane lengths using trailing masks rather than broadcasting, object arrays, or sentinel values.
 - Preserve the direct plain-array behavior of all one-dimensional calls.
 - Establish a non-public, axis-aware interval-chain validation hook before defining full semantic validity rules.
+- Keep provisional validation off duplicate input-preparation and multidimensional traversal paths.
+- Use only C-backed NumPy batch operations in production; Python loops, comprehensions, generator expressions, and disguised loop wrappers are prohibited.
 - Cover the behavior in tests, documentation, and deterministic ASV benchmarks.
 
 **Non-Goals:**
@@ -42,23 +44,23 @@ Multidimensional calls always return a masked array, including normal tuple mode
 
 When there are no lanes because an orthogonal dimension is zero, normal tuple mode retains its known selected-axis length; variable-length tuple modes and distribution use selected-axis result length zero because no lane result exists from which to derive a maximum.
 
-### 3. Use shared axis dispatch around private one-dimensional kernels
+### 3. Use vectorized shared axis dispatch around batch kernels
 
-The existing core tuple and distribution bodies and the partial tuple body will remain authoritative private one-dimensional kernels. A shared internal lane application helper will normalize the axis, move it to a convenient position, reshape orthogonal coordinates into a lane matrix, invoke the selected kernel once per lane, allocate a fully masked packed result at the greatest observed length, and move the result dimension back to the original axis position. It must preserve masked-array lanes so the partial tuple kernel can distinguish gaps from present interval values.
+The existing one-dimensional kernels remain authoritative for direct calls. Multidimensional calls use vectorized batch kernels instead: a shared helper normalizes the axis once, moves it last, reshapes all orthogonal coordinates into a two-dimensional lane matrix, invokes one batch kernel, reshapes its fixed rectangular masked result, and restores the selected-axis position. The helper preserves masked-array lanes so partial tuple calculations can distinguish gaps from present interval values.
 
-A Python-level lane loop is intentional because output lengths vary. Direct use of `numpy.apply_along_axis` was rejected: it allocates from the first return shape, cannot represent ragged results, and may unexpectedly broadcast a length-one return instead of detecting the mismatch.
+Variable-length packing uses vectorized selection counts, cumulative destination indices, and NumPy advanced assignment into a masked rectangular output. Core and partial tuple modes compute selection masks and complementary values across the complete lane matrix. Distribution uses indexed NumPy accumulation across all valid lane values. Python loops, comprehensions, generator expressions, `numpy.vectorize`, and `numpy.apply_along_axis` were rejected because they execute lane callbacks in Python rather than processing the batch in compiled NumPy operations.
 
 ### 4. Preserve the one-dimensional fast and compatibility path
 
-After validating binding and mode values, each core or partial public function normalizes its input dimensionality and axis. A one-dimensional input with omitted axis, axis 0, or axis -1 calls the applicable private one-dimensional kernel directly and returns its legacy plain result. Multidimensional input without axis and scalar input raise `Not1DArrayException`; invalid axes use NumPy's axis error through the shared normalization helper.
+After validating binding and mode values, each core or partial public function prepares its input dimensionality and axis once. A one-dimensional input with omitted axis, axis 0, or axis -1 calls the applicable private one-dimensional kernel directly and returns its legacy plain result. The core tuple path consults its validation hook using that prepared one-dimensional array and does not repeat conversion or axis normalization. Multidimensional input without axis and scalar input raise `Not1DArrayException`; invalid axes use NumPy's axis error through the shared normalization helper.
 
 This avoids masked allocation and iteration overhead for existing callers and gives the currently documented one-dimensional-only contracts explicit multidimensional validation.
 
 ### 5. Add an internal axis-aware validation seam
 
-A function named `is_valid_intervals_chain(chain, *, axis=None)` will live in a private core module and will not be imported by `foapy.core` or top-level `foapy`. Its private one-dimensional content check returns the Python Boolean `True` in this change. With a multidimensional input and explicit axis, it applies that leaf check to every lane and returns `all(...)` as one Boolean. Structural dimensionality and axis errors follow the shared normalization rules.
+A function named `is_valid_intervals_chain(chain, *, axis=None)` will live in a private core module and will not be imported by `foapy.core` or top-level `foapy`. Its private one-dimensional content check returns the Python Boolean `True` in this change. When called directly with a multidimensional input and explicit axis, it applies that leaf check to every lane and returns `all(...)` as one Boolean. Structural dimensionality and axis errors follow the shared normalization rules. An already prepared one-dimensional ndarray with omitted axis takes a fast path that does not reconvert the input or invoke the general axis normalizer.
 
-`intervals_tuple` calls the validator before transforming the input and raises `ValueError` if it reports false. Although the provisional implementation accepts all structurally valid lanes, this seam permits later checks for positive integer values, bounds, predecessor relationships, binding, and chain modes without changing the public tuple signature. Exporting the helper now was rejected because its long-term semantic contract is deliberately unfinished.
+`intervals_tuple` calls the validator before transforming a one-dimensional input and raises `ValueError` if it reports false. For multidimensional input, the dispatcher calls the same hook once on the prepared two-dimensional lane batch before invoking the vectorized tuple kernel. A false aggregate result raises `ValueError` before transformation begins. Although the provisional implementation accepts all structurally valid lanes, future checks must evaluate the complete batch with vectorized NumPy operations. Exporting the helper now was rejected because its long-term semantic contract is deliberately unfinished.
 
 ### 6. Distributions consume masked tuple padding without losing real zeros
 
@@ -82,17 +84,19 @@ For dense inputs, the partial tuple-to-distribution pipeline matches the core pi
 
 ### 9. Test shapes, masks, dispatch, and composition
 
-Tests will use explicit valid core and partial chains to verify row and column processing, every axis of three-dimensional inputs, negative axes, every tuple mode, varying and uniform result lengths, mask placement, empty lanes, and one-dimensional direct dispatch. Partial tests will include gaps at different lane positions and verify that redundant results use the full selected-axis domain independently per lane. Distribution tests will distinguish real internal zero counts from masked trailing bins and verify that the existing distribution API directly consumes core and partial axis-aware tuple results. Monkeypatch dispatch tests will prove one-dimensional calls do not enter multidimensional packing and core tuple calls consult the internal validator.
+Tests will use explicit valid core and partial chains to verify row and column processing, every axis of three-dimensional inputs, negative axes, every tuple mode, varying and uniform result lengths, mask placement, empty lanes, and one-dimensional direct dispatch. Partial tests will include gaps at different lane positions and verify that redundant results use the full selected-axis domain independently per lane. Distribution tests will distinguish real internal zero counts from masked trailing bins and verify that the existing distribution API directly consumes core and partial axis-aware tuple results. Monkeypatch dispatch tests will prove one-dimensional calls do not enter multidimensional packing and multidimensional core tuple calls validate one prepared lane batch before invoking one batch kernel. An AST regression test will reject Python iteration constructs and disguised loop wrappers in the axis transformation production modules.
 
 Benchmarks will retain existing one-dimensional matrices and add deterministic multidimensional core and partial tuple lane matrices for time and peak memory. Documentation will show the apply-along-axis shape rule, partial gap semantics, existing distribution composition, and masked variable-length examples.
 
 ## Risks / Trade-offs
 
-- **[Python iteration can be slower for many short lanes]** → Centralize dispatch so a future vectorized implementation can replace it, and benchmark representative lane counts and lengths.
+- **[Vectorized packing allocates lane-wide index arrays]** → Keep all intermediate arrays linear in the lane matrix size and benchmark representative lane counts and lengths.
 - **[Masked outputs add allocation cost even for uniform multidimensional results]** → Accept the predictable return contract and preserve an allocation-free direct one-dimensional path.
 - **[Masked padding may be mistaken for partial-sequence gaps]** → Document that masks in core multidimensional tuple/distribution outputs are structural trailing padding, not source positions.
 - **[Partial tuple input gaps and output padding use the same mask representation]** → Keep masks on input lanes until the partial kernel completes, then document that masks on packed tuple results are structural padding only.
 - **[Future validation can reject inputs accepted by the provisional hook]** → Keep the function non-public and describe the current always-true leaf behavior explicitly.
+- **[Batch validation reports only aggregate failure]** → Preserve the existing Boolean validation seam and fail before invoking the batch kernel; richer diagnostics remain a future validator concern.
+- **[Future substantive validation can again dominate short tuple operations]** → Reuse prepared lane data and fuse validation with values already calculated by tuple kernels where practical.
 - **[Empty orthogonal dimensions provide no result shape sample]** → Define deterministic mode-specific empty shapes and cover them with tests.
 
 ## Migration Plan

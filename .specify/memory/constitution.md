@@ -1,19 +1,18 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: [unversioned template] → 1.0.0
-Modified principles: N/A (initial ratification)
+Version change: 1.0.0 → 1.1.0
+Modified principles:
+  - IV. Performance Requirements — prohibit every Python iteration construct in production code
 Added sections:
-  - Core Principles (I–V)
-  - Development Workflow
-  - Quality Gates
-  - Governance
-Removed sections: N/A
+  - Root AGENTS.md enforcement context
+Removed sections:
+  - Documented production-loop exception
 Templates requiring updates:
-  ✅ .specify/templates/plan-template.md — Constitution Check section already present; gates now concrete
-  ✅ .specify/templates/spec-template.md — Success Criteria / Performance Goals align with Principles IV and V
-  ✅ .specify/templates/tasks-template.md — Polish phase tasks align with Principles I–IV
-  ✅ .specify/templates/constitution-template.md — source template; no changes needed
+  ✅ .specify/templates/plan-template.md — vectorization gate made explicit
+  ✅ .specify/templates/tasks-template.md — production-loop audit added to final tasks
+  ✅ .specify/templates/spec-template.md — no change required
+  ✅ .specify/templates/constitution-template.md — no change required
 Deferred TODOs: none
 -->
 
@@ -72,18 +71,20 @@ signatures force defensive branching in caller code and break the substitution p
 
 ### IV. Performance Requirements
 
-All computations on sequences MUST use vectorized numpy operations; Python-level loops over array
-elements are prohibited.
+All production computations MUST use C-backed vectorized NumPy operations. Python iteration
+constructs (`for`, `while`, comprehensions, and generator expressions) are prohibited throughout
+`src/foapy/`; loops are permitted only in tests and benchmark setup code.
 
 - Operations on sequences up to length 10 000 MUST complete in < 100 ms on a single CPU core (no GPU
   assumption).
 - Memory allocation MUST be O(n) or better in sequence length; hidden quadratic allocations MUST be
   eliminated before merge.
 - Performance-sensitive paths (interval extraction, characteristic computation) MUST avoid
-  `numpy.vectorize` (which is a disguised Python loop) and MUST prefer `numpy.where`, boolean indexing,
-  `numpy.diff`, `numpy.unique`, or equivalent C-backed ufuncs.
-- If a vectorized solution genuinely cannot express a required algorithm, a fallback loop MUST be
-  documented with a complexity note and flagged in the Complexity Tracking table.
+  `numpy.vectorize`, `numpy.apply_along_axis`, and similar disguised Python loops, and MUST prefer
+  `numpy.where`, boolean indexing, `numpy.diff`, `numpy.unique`, indexed ufunc updates, or equivalent
+  C-backed operations over complete arrays or batches.
+- A feature that cannot yet be expressed without production Python iteration MUST remain unimplemented
+  until a vectorized design is available; a complexity note does not waive this rule.
 
 **Rationale**: FoaPy targets research workflows where sequences can be large and many characteristics
 are computed in a batch. Python loops at the inner level produce unacceptable runtimes.
@@ -129,8 +130,8 @@ The following gates MUST pass before any feature branch is merged to `main`:
    violation is documented with a justification in the Complexity Tracking table.
 4. **API consistency check**: Any new public function mirrors the signature contract defined in
    Principle III; `foapy.ma` parity is maintained.
-5. **Performance check**: Any new sequence-processing path uses vectorized numpy; no Python loops over
-   array elements without a documented justification.
+5. **Performance check**: Production code contains no Python iteration constructs or disguised loop
+   wrappers; sequence processing uses C-backed vectorized NumPy operations over complete arrays or batches.
 
 ## Governance
 
@@ -155,4 +156,4 @@ In conflicts between this document and any other guidance, the constitution prev
 expected to call out constitution violations explicitly; authors are expected to resolve them before
 merge, not after.
 
-**Version**: 1.0.0 | **Ratified**: 2026-03-28 | **Last Amended**: 2026-03-28
+**Version**: 1.1.0 | **Ratified**: 2026-03-28 | **Last Amended**: 2026-09-10

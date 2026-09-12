@@ -245,19 +245,35 @@ def test_internal_validator_accepts_1d_input(axis):
     assert is_valid_intervals_chain(np.array([9, -2, 0]), axis=axis) is True
 
 
+def test_internal_validator_accepts_array_like_input():
+    assert is_valid_intervals_chain([9, -2, 0]) is True
+
+
+def test_internal_validator_prepared_1d_fast_path_skips_conversion(monkeypatch):
+    module = importlib.import_module("foapy.core._intervals_chain_validation")
+    prepared = np.array([9, -2, 0])
+
+    def fail_conversion(*args, **kwargs):
+        raise AssertionError("prepared ndarray was converted again")
+
+    monkeypatch.setattr(module.np, "asanyarray", fail_conversion)
+
+    assert module.is_valid_intervals_chain(prepared) is True
+
+
 def test_internal_validator_aggregates_multidimensional_lanes(monkeypatch):
     module = importlib.import_module("foapy.core._intervals_chain_validation")
     seen = []
 
-    def record(lane):
-        seen.append(lane.copy())
+    def record(lanes):
+        seen.append(lanes.copy())
         return True
 
-    monkeypatch.setattr(module, "_is_valid_intervals_chain_1d", record)
+    monkeypatch.setattr(module, "_are_valid_intervals_chain_lanes", record)
 
     assert is_valid_intervals_chain(np.arange(12).reshape(3, 4), axis=1) is True
-    assert len(seen) == 3
-    assert_array_equal(seen[0], [0, 1, 2, 3])
+    assert len(seen) == 1
+    assert_array_equal(seen[0], np.arange(12).reshape(3, 4))
 
 
 def test_internal_validator_structural_errors():
@@ -277,3 +293,117 @@ def test_intervals_tuple_rejects_false_validation(monkeypatch):
 
     with pytest.raises(ValueError, match="Invalid intervals chain"):
         intervals_tuple([1, 1, 1], binding.start, tuple_mode.normal)
+
+
+def test_intervals_tuple_prepares_1d_input_once(monkeypatch):
+    module = importlib.import_module("foapy.core._intervals_tuple")
+    original = module.np.asanyarray
+    calls = []
+
+    def record_conversion(*args, **kwargs):
+        calls.append((args, kwargs))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(module.np, "asanyarray", record_conversion)
+
+    result = module.intervals_tuple([1, 1, 1], binding.start, tuple_mode.normal)
+
+    assert len(calls) == 1
+    assert result.tolist() == [1, 1, 1]
+
+
+def test_intervals_tuple_reuses_prepared_1d_input(monkeypatch):
+    module = importlib.import_module("foapy.core._intervals_tuple")
+    chain = np.array([1, 1, 1], dtype=np.intp)
+
+    def fail_conversion(*args, **kwargs):
+        raise AssertionError("prepared ndarray was converted again")
+
+    monkeypatch.setattr(module.np, "asanyarray", fail_conversion)
+
+    result = module.intervals_tuple(chain, binding.start, tuple_mode.normal)
+
+    assert result.tolist() == [1, 1, 1]
+
+
+def test_intervals_tuple_normalizes_explicit_1d_axis_once(monkeypatch):
+    module = importlib.import_module("foapy.core._intervals_tuple")
+    original = module._normalize_sequence_axis
+    seen = []
+
+    def record_normalization(data, axis):
+        seen.append(axis)
+        return original(data, axis)
+
+    monkeypatch.setattr(module, "_normalize_sequence_axis", record_normalization)
+
+    result = module.intervals_tuple(
+        np.array([1, 1, 1]),
+        binding.start,
+        tuple_mode.normal,
+        axis=-1,
+    )
+
+    assert_array_equal(result, [1, 1, 1])
+    assert seen == [-1]
+
+
+def test_multidimensional_lanes_are_validated_and_transformed_as_one_batch(
+    monkeypatch,
+):
+    module = importlib.import_module("foapy.core._intervals_tuple")
+    events = []
+
+    def validate(lanes, *, axis=None):
+        assert lanes.ndim == 2
+        assert axis == 1
+        events.append(("validate", lanes.tolist()))
+        return True
+
+    def transform(lanes, binding_value, tuple_mode_value):
+        events.append(("transform", lanes.tolist()))
+        return ma.masked_array(lanes.copy(), mask=False)
+
+    monkeypatch.setattr(module, "is_valid_intervals_chain", validate)
+    monkeypatch.setattr(module, "_intervals_tuple_lanes", transform)
+
+    result = module.intervals_tuple(
+        np.array([[1, 2], [3, 4]]),
+        binding.start,
+        tuple_mode.normal,
+        axis=1,
+    )
+
+    assert_equal(result, [[1, 2], [3, 4]])
+    assert events == [
+        ("validate", [[1, 2], [3, 4]]),
+        ("transform", [[1, 2], [3, 4]]),
+    ]
+
+
+def test_false_multidimensional_batch_stops_before_transform(monkeypatch):
+    module = importlib.import_module("foapy.core._intervals_tuple")
+    events = []
+
+    def validate(lanes, *, axis=None):
+        events.append(("validate", lanes.tolist()))
+        return False
+
+    def transform(lanes, binding_value, tuple_mode_value):
+        events.append(("transform", lanes.tolist()))
+        return ma.masked_array(lanes.copy(), mask=False)
+
+    monkeypatch.setattr(module, "is_valid_intervals_chain", validate)
+    monkeypatch.setattr(module, "_intervals_tuple_lanes", transform)
+
+    with pytest.raises(ValueError, match="Invalid intervals chain"):
+        module.intervals_tuple(
+            np.array([[1, 2], [3, 4], [5, 6]]),
+            binding.start,
+            tuple_mode.normal,
+            axis=1,
+        )
+
+    assert events == [
+        ("validate", [[1, 2], [3, 4], [5, 6]]),
+    ]

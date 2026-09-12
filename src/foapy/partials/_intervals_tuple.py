@@ -5,7 +5,7 @@ import numpy.ma as ma
 from numpy import ndarray
 from numpy.typing import ArrayLike
 
-from foapy.core._axis_transform import _apply_to_axis_lanes
+from foapy.core._axis_transform import _apply_to_axis_lanes, _pack_axis_lane_values
 from foapy.core._binding import binding as binding_cls
 from foapy.core._factorize import _normalize_sequence_axis
 from foapy.core._tuple_mode import tuple_mode as tuple_mode_cls
@@ -162,7 +162,7 @@ def intervals_tuple(
     return _apply_to_axis_lanes(
         data,
         axis,
-        lambda lane: _intervals_tuple_1d(lane, binding, tuple_mode),
+        lambda lanes: _intervals_tuple_lanes(lanes, binding, tuple_mode),
     )
 
 
@@ -184,6 +184,44 @@ def _intervals_tuple_1d(ar: ma.MaskedArray, binding: int, tuple_mode: int) -> nd
         return _lossy(compressed, non_masked_idx, binding, n_full)
 
     return _redundant(compressed, non_masked_idx, binding, n_full)
+
+
+def _intervals_tuple_lanes(
+    lanes: ma.MaskedArray, binding: int, tuple_mode: int
+) -> ma.MaskedArray:
+    """Apply one partial tuple mode to a complete masked lane batch."""
+    values = np.asarray(ma.getdata(lanes), dtype=np.intp)
+    masked = ma.getmaskarray(lanes)
+
+    if tuple_mode == tuple_mode_cls.normal:
+        return _pack_axis_lane_values(values, ~masked)
+
+    if binding == binding_cls.end:
+        work = values[:, ::-1]
+        work_mask = masked[:, ::-1]
+    else:
+        work = values
+        work_mask = masked
+
+    valid = ~work_mask
+    positions = np.broadcast_to(
+        np.arange(work.shape[1], dtype=np.intp)[None, :], work.shape
+    )
+
+    if tuple_mode == tuple_mode_cls.lossy:
+        return _pack_axis_lane_values(work, valid & (work <= positions))
+
+    prev_pos = positions - work
+    last = valid.copy()
+    valid_prev = valid & (prev_pos >= 0)
+    lane_indices = np.broadcast_to(
+        np.arange(work.shape[0], dtype=np.intp)[:, None], work.shape
+    )
+    last[lane_indices[valid_prev], prev_pos[valid_prev]] = False
+    trailing = work.shape[1] - positions
+    combined_values = np.concatenate((work, trailing), axis=1)
+    combined_selected = np.concatenate((valid, last), axis=1)
+    return _pack_axis_lane_values(combined_values, combined_selected)
 
 
 def _lossy(compressed, non_masked_idx, binding, n_full):

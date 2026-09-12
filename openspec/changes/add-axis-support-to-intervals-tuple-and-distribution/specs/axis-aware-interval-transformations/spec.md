@@ -53,24 +53,38 @@ Calls to `intervals_tuple()` with one-dimensional input MUST retain the existing
 - **WHEN** an explicit axis is negative, out of range, or applied to scalar input
 - **THEN** an equivalent negative axis succeeds, an out-of-range axis raises NumPy's axis error, and scalar input raises `Not1DArrayException`
 
-### Requirement: Interval tuple uses a provisional internal chain validator
-The implementation MUST provide a non-public `is_valid_intervals_chain(chain, *, axis=None)` helper and MUST NOT export it from `foapy.core` or top-level `foapy`. For one-dimensional input, its provisional content-validity check MUST return `True`. For multidimensional input with an explicit axis, it MUST treat each one-dimensional lane along that axis as a chain and return one aggregate Boolean that is true only when every lane passes the one-dimensional check. `intervals_tuple()` MUST invoke this validation hook before transforming its input and MUST raise `ValueError` when the hook reports an invalid chain.
+### Requirement: Interval tuple uses an efficient provisional internal chain validator
+The implementation MUST provide a non-public `is_valid_intervals_chain(chain, *, axis=None)` helper and MUST NOT export it from `foapy.core` or top-level `foapy`. For one-dimensional input, its provisional content-validity check MUST return `True`. When the helper is called directly with multidimensional input and an explicit axis, it MUST treat each one-dimensional lane along that axis as a chain and return one aggregate Boolean that is true only when every lane passes the one-dimensional check.
+
+`intervals_tuple()` MUST prepare its array representation and normalize its axis no more than once per call. It MUST invoke the validation hook on its prepared one-dimensional input or once on the prepared multidimensional lane matrix before applying the corresponding tuple kernel. Multidimensional validation, transformation, distribution, and variable-length packing MUST use C-backed vectorized NumPy batch operations. Production code MUST NOT use Python loops, comprehensions, generator expressions, `numpy.vectorize`, or `numpy.apply_along_axis`. When the hook reports an invalid lane batch, `intervals_tuple()` MUST raise `ValueError` before transformation begins.
 
 #### Scenario: Provisional one-dimensional validation succeeds
 - **WHEN** the internal validator receives any structurally accepted one-dimensional input
 - **THEN** it returns the Python Boolean `True`
 
+#### Scenario: Prepared one-dimensional validation stays on the fast path
+- **WHEN** `intervals_tuple()` receives a prepared one-dimensional array with omitted or already normalized axis
+- **THEN** it consults the validation hook without repeating array conversion or general axis normalization before calling the one-dimensional tuple kernel
+
 #### Scenario: Multidimensional validation aggregates lanes
 - **WHEN** the internal validator receives multidimensional input with an explicit valid axis
 - **THEN** it applies the provisional check to every lane and returns a single Python Boolean
+
+#### Scenario: Tuple transformation validates a multidimensional batch once
+- **WHEN** `intervals_tuple()` processes multidimensional input with an explicit valid axis
+- **THEN** the prepared lane matrix is validated once before one vectorized batch tuple kernel runs
+
+#### Scenario: Production axis transformations contain no Python iteration
+- **WHEN** the axis transformation, core tuple, core distribution, validation, and partial tuple modules are inspected
+- **THEN** they contain no `for`, `while`, comprehension, generator expression, `numpy.vectorize`, or `numpy.apply_along_axis` implementation path
 
 #### Scenario: Validator remains internal
 - **WHEN** callers inspect the public members of `foapy` and `foapy.core`
 - **THEN** `is_valid_intervals_chain` is not exported
 
 #### Scenario: Tuple transformation consults validation
-- **WHEN** the internal validation hook reports `False` for a chain collection
-- **THEN** `intervals_tuple()` raises `ValueError` before applying a tuple mode
+- **WHEN** the internal validation hook reports `False` for a one-dimensional input or multidimensional lane batch
+- **THEN** `intervals_tuple()` raises `ValueError` before applying a tuple mode and returns no partial result
 
 ### Requirement: Interval distributions process independent lanes along an axis
 The system MUST provide `foapy.core.intervals_distribution(tuple_result, *, axis=None)`. For multidimensional input with an explicit axis, every one-dimensional lane along that axis MUST be distributed independently, and the distribution dimension MUST replace the selected axis. Masked tuple positions MUST be excluded before counting. The result MUST be a `numpy.ma.MaskedArray` whose selected axis has the maximum distribution length across all lanes; shorter distributions MUST be packed from index zero and trailing positions MUST be masked.

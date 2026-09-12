@@ -7,18 +7,25 @@ from foapy.core._axis_transform import _axis_lanes
 from foapy.core._factorize import _normalize_sequence_axis
 
 
-def _is_valid_intervals_chain_1d(chain: np.ndarray) -> bool:
-    """Validate one interval chain; semantic checks will be added later."""
+def _are_valid_intervals_chain_lanes(lanes: np.ndarray) -> bool:
+    """Validate a prepared lane batch; semantic checks will be added later."""
     return True
 
 
 def is_valid_intervals_chain(chain: ArrayLike, *, axis: Optional[int] = None) -> bool:
     """Return whether every selected-axis lane is a valid interval chain."""
-    data = np.asanyarray(chain)
+    if isinstance(chain, np.ndarray) and axis is None and chain.ndim == 1:
+        return True
+
+    data = chain if isinstance(chain, np.ndarray) else np.asanyarray(chain)
 
     if data.ndim == 1:
-        _normalize_sequence_axis(data, axis)
-        return bool(_is_valid_intervals_chain_1d(data))
+        if axis is not None:
+            _normalize_sequence_axis(data, axis)
+        return True
+
+    if data.ndim == 2 and axis in {1, -1}:
+        return bool(_are_valid_intervals_chain_lanes(data))
 
     _, _, lanes = _axis_lanes(data, axis)
-    return bool(all(_is_valid_intervals_chain_1d(lane) for lane in lanes))
+    return bool(_are_valid_intervals_chain_lanes(lanes))

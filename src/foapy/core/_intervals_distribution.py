@@ -75,24 +75,53 @@ def intervals_distribution(
     #  [2 1 1]]
     ```
     """
+    if (
+        axis is None
+        and type(tuple_result) is ndarray
+        and tuple_result.ndim == 1
+        and tuple_result.dtype == np.intp
+    ):
+        if tuple_result.size == 0:
+            return np.array([], dtype=np.intp)
+        return np.bincount(tuple_result - 1).astype(np.intp)
+
     data = np.asanyarray(tuple_result)
 
     if data.ndim == 1:
         if axis is not None:
             _normalize_sequence_axis(data, axis)
+        if ma.isMaskedArray(data):
+            data = ma.asarray(data, dtype=np.intp).compressed()
+        elif data.dtype != np.intp:
+            data = np.asanyarray(data, dtype=np.intp)
         return _intervals_distribution_1d(data)
 
-    return _apply_to_axis_lanes(data, axis, _intervals_distribution_1d)
+    return _apply_to_axis_lanes(data, axis, _intervals_distribution_lanes)
 
 
 def _intervals_distribution_1d(tuple_result: ndarray) -> ndarray:
     """Compute an interval distribution for one one-dimensional tuple."""
-    if ma.isMaskedArray(tuple_result):
-        ar = ma.asarray(tuple_result, dtype=np.intp).compressed()
-    else:
-        ar = np.asanyarray(tuple_result, dtype=np.intp)
-
-    if ar.size == 0:
+    if tuple_result.size == 0:
         return np.array([], dtype=np.intp)
 
-    return np.bincount(ar - 1).astype(np.intp)
+    return np.bincount(tuple_result - 1).astype(np.intp)
+
+
+def _intervals_distribution_lanes(tuple_results: ndarray) -> ma.MaskedArray:
+    """Compute distributions for a complete prepared tuple-lane batch."""
+    values = np.asarray(ma.getdata(tuple_results), dtype=np.intp)
+    valid = ~ma.getmaskarray(tuple_results)
+    if np.any(values[valid] <= 0):
+        raise ValueError("interval values must be positive")
+
+    result_length = int(np.max(values, where=valid, initial=0))
+    counts = np.zeros((values.shape[0], result_length), dtype=np.intp)
+    lane_indices = np.broadcast_to(
+        np.arange(values.shape[0], dtype=np.intp)[:, None], values.shape
+    )
+    np.add.at(counts, (lane_indices[valid], values[valid] - 1), 1)
+    lane_maximums = np.max(values, axis=1, where=valid, initial=0)
+    structural_mask = (
+        np.arange(result_length, dtype=np.intp)[None, :] >= lane_maximums[:, None]
+    )
+    return ma.masked_array(counts, mask=structural_mask)
